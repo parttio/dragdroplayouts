@@ -49,7 +49,7 @@ DragdropDemo {
 	
 
 	public String getCodePath() {		
-		return "com/vaadin/incubator/dragdroplayouts/demo/code/dragfilters.txt";
+		return "fi/jasoft/dragdroplayouts/demo/code/dragfilters.txt";
 	}
 
 }

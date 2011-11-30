@@ -140,6 +140,6 @@ public class DragdropVerticalSplitPanelDemo extends CustomComponent implements
     }
 
     public String getCodePath() {
-        return "com/vaadin/incubator/dragdroplayouts/demo/code/verticalsplitpanel.txt";
+        return "fi/jasoft/dragdroplayouts/demo/code/verticalsplitpanel.txt";
     }
 }
