@@ -14,13 +14,13 @@
 			<description>
 			Vaadin application class to start</description>
 			<param-name>application</param-name>
-			<param-value>com.vaadin.incubator.dragdroplayouts.demo.DragdropApplication</param-value>
+			<param-value>fi.jasoft.dragdroplayouts.demo.DragdropApplication</param-value>
 		</init-param>
 		<init-param>
 			<description>
 			Application widgetset</description>
 			<param-name>widgetset</param-name>
-			<param-value>com.vaadin.incubator.dragdroplayouts.DragDropLayoutsWidgetSet</param-value>
+			<param-value>fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
