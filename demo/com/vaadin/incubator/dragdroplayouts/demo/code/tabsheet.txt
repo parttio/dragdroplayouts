@@ -1,0 +1,79 @@
+ // Create a tabsheet
+final DDTabSheet tabSheet = new DDTabSheet();
+tabSheet.setSizeFull();
+
+// Add a tab
+VerticalLayout layout = new VerticalLayout();
+layout.setCaption("Example");
+layout.addComponent(new Label(
+        "This is an example tab already in the tabsheet."));
+tabSheet.addComponent(layout);
+
+// Enable dragging
+tabSheet.setDragMode(LayoutDragMode.CLONE);
+
+// Enable dropping
+tabSheet.setDropHandler(new DropHandler() {
+
+    public AcceptCriterion getAcceptCriterion() {
+        // Only allow dropping between tabs
+        return new Not(HorizontalLocationIs.CENTER);
+    }
+
+    public void drop(DragAndDropEvent event) {
+
+        // Get the transferable (We now it is from a layout so casting
+        // is safe)
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
+
+        // Get the target details
+        TabSheetTargetDetails details = (TabSheetTargetDetails) event
+                .getTargetDetails();
+
+        Component c = transferable.getComponent();
+        int idx = details.getOverIndex();
+        HorizontalDropLocation location = details.getDropLocation();
+        ComponentContainer source = (ComponentContainer) transferable
+                .getSourceComponent();
+
+        if (c == details.getOverComponent()) {
+            // Dropped on itself
+            return;
+        }
+
+        if (transferable.getSourceComponent() == tabSheet) {
+            // Reordering tabs
+            Tab tab = tabSheet.getTab(c);
+
+            if (location == HorizontalDropLocation.LEFT) {
+
+                int originalIndex = tabSheet.getTabPosition(tab);
+                if (originalIndex > idx) {
+                    tabSheet.setTabPosition(tab, idx);
+                } else {
+                    tabSheet.setTabPosition(tab, idx - 1);
+                }
+
+            } else if (location == HorizontalDropLocation.RIGHT) {
+
+                int originalIndex = tabSheet.getTabPosition(tab);
+                if (originalIndex > idx) {
+                    tabSheet.setTabPosition(tab, idx + 1);
+                } else {
+                    tabSheet.setTabPosition(tab, idx);
+                }
+            }
+
+        } else {
+            // Adding new tab
+            source.removeComponent(c);
+
+            if (location == HorizontalDropLocation.LEFT) {
+                tabSheet.addTab(c, idx);
+            } else if (location == HorizontalDropLocation.RIGHT) {
+                tabSheet.addTab(c, idx + 1);
+            }
+        }
+    }
+});

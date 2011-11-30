@@ -1,0 +1,60 @@
+// Create a 4x4 grid
+final DDGridLayout layout = new DDGridLayout(4, 4);
+layout.setWidth("400px");
+layout.setHeight("400px");
+
+// Drop zone should be the whole center area
+layout.setComponentHorizontalDropRatio(0);
+layout.setComponentVerticalDropRatio(0);
+
+// Enable dragging components
+layout.setDragMode(LayoutDragMode.CLONE);
+
+// Enable dropping components
+layout.setDropHandler(new DropHandler() {
+
+    public AcceptCriterion getAcceptCriterion() {
+    	// Only allow dropping in the middle of the cell
+        return new And(VerticalLocationIs.MIDDLE,
+                HorizontalLocationIs.CENTER);
+    }
+
+    public void drop(DragAndDropEvent event) {
+    	// Get GridLayout specific target details
+        GridLayoutTargetDetails details = (GridLayoutTargetDetails) event
+                .getTargetDetails();
+                
+        // Get the transferable (We now the component comes from a layout so we can cast 
+        // it without checking)        
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
+
+		// Get the cell column
+        int column = details.getOverColumn();
+        
+        // Get the cell row
+        int row = details.getOverRow();
+
+		// Get the dragged component
+        Component c = transferable.getComponent();
+
+		// If cell is empty then drop it there
+        if (layout.getComponent(column, row) == null) {
+            layout.removeComponent(c);
+            layout.addComponent(c, column, row);
+            layout.setComponentAlignment(c, Alignment.MIDDLE_CENTER);
+        }
+    }
+});
+
+// Add some Buttons to the grid
+for (int row = 0; row < 4; row++) {
+    for (int col = 0; col < 4; col++) {
+        if (row == 0 || row == 3 || col == 0 || col == 3) {
+            Button btn = new Button("Button");
+            layout.addComponent(btn, col, row);
+            layout.setComponentAlignment(btn,
+                    Alignment.MIDDLE_CENTER);
+        }
+    }
+}

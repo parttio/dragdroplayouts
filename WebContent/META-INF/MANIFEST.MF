@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Implementation-Title: DragDropLayouts
+Implementation-Version: 0.4
+Vaadin-Package-Version: 1
+Vaadin-Widgetsets: com.vaadin.incubator.dragdroplayouts.DragDropLayout
+ sWidgetSet
+Class-Path: 
+
