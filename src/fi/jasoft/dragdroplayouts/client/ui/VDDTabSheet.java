@@ -41,9 +41,10 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer;
 
 public class VDDTabSheet extends VTabsheet implements VHasDragMode,
-VHasDropHandler, DragStartListener {
+VHasDropHandler, DragStartListener, VDDTabContainer {
 
     public static final String CLASSNAME_NEW_TAB = "new-tab";
 
@@ -76,7 +77,7 @@ VHasDropHandler, DragStartListener {
 
     protected boolean iframeCoversEnabled = false;
 
-    private VDragFilter dragFilter = new VDragFilter();
+    private VDragFilter dragFilter = new VTabDragFilter(this);
 
     public VDDTabSheet() {
         super();
@@ -381,7 +382,6 @@ VHasDropHandler, DragStartListener {
             final UIDL childUIDL = (UIDL) it.next();
             if (childUIDL.getTag().equals("-ac")) {
                 updateDropHandler(childUIDL);
-                break;
             }
         }
 
@@ -396,8 +396,9 @@ VHasDropHandler, DragStartListener {
 
         // Handle iframe covering
         setIframeCoversEnabled(iframeCoversEnabled);
-
-        dragFilter.update(modifiedUIDL, client);
+        
+        // Update dragfilter
+        dragFilter.update(uidl, client);     
     }
 
     /**
@@ -489,12 +490,9 @@ VHasDropHandler, DragStartListener {
         }
     }
 
-    /**
-     * Returns the position of a tab
-     * 
-     * @param tab
-     *            The tab in the tabbar
-     * @return
+    /*
+     * (non-Javadoc)
+     * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#getTabPosition(com.google.gwt.user.client.ui.Widget)
      */
     public int getTabPosition(Widget tab) {
         int idx = -1;
@@ -506,6 +504,15 @@ VHasDropHandler, DragStartListener {
             }
         }
         return idx;
+    }
+    
+    
+    /*
+     * (non-Javadoc)
+     * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#getTabContentPosition(com.google.gwt.user.client.ui.Widget)
+     */
+    public int getTabContentPosition(Widget content){
+    	return tabPanel.getWidgetIndex(content);
     }
 
     private Set<Element> coveredIframes = new HashSet<Element>();

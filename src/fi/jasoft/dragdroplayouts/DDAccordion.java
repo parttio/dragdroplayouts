@@ -34,6 +34,7 @@ import com.vaadin.ui.Component;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDDAccordion;
+import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
@@ -238,14 +239,17 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
         
         if(getDragFilter() != null){
         	// Get components with dragging disabled
-        	Map<Component, Boolean> dragmap = new HashMap<Component, Boolean>();
+        	Map<Integer, Boolean> dragmap = new HashMap<Integer, Boolean>();        	        	
         	Iterator<Component> iter = getComponentIterator();
         	while(iter.hasNext()){
         		Component c = iter.next();
-        		boolean draggable = getDragFilter().isDraggable(c);
-        		dragmap.put(c, draggable);
+        		if(getTab(c).isVisible()){
+        			boolean draggable = getDragFilter().isDraggable(c);
+        			int index = getTabPosition(getTab(c));
+            		dragmap.put(index, draggable);
+        		}
         	}
-        	target.addAttribute("dragmap", dragmap);
+        	target.addAttribute(VDragFilter.DRAGMAP_ATTRIBUTE, dragmap);
         }
     }
 

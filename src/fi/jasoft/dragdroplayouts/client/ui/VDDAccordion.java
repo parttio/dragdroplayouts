@@ -41,9 +41,10 @@ import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer;
 
 public class VDDAccordion extends VAccordion implements VHasDragMode,
-        VHasDropHandler, DragStartListener {
+        VHasDropHandler, DragStartListener, VDDTabContainer {
 
     public static final String CLASSNAME_OVER = "dd-over";
     
@@ -73,7 +74,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
 
     protected boolean iframeCoversEnabled = false;
     
-    private VDragFilter dragFilter = new VDragFilter();
+    private VDragFilter dragFilter = new VTabDragFilter(this);
 
     public VDDAccordion() {
         spacer = GWT.create(HTML.class);
@@ -485,4 +486,22 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
             coveredIframes = null;
         }
     }
+
+    /*
+     * (non-Javadoc)
+     * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#getTabContentPosition(com.google.gwt.user.client.ui.Widget)
+     */
+	public int getTabContentPosition(Widget w) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#getTabPosition(com.google.gwt.user.client.ui.Widget)
+	 */
+	public int getTabPosition(Widget tab) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

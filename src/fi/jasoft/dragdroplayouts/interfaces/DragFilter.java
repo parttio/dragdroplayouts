@@ -21,6 +21,9 @@ import com.vaadin.ui.Component;
 
 /**
  * A Filter for disabling dragging for some components in the layout
+ * 
+ * @since 0.6.0
+ * 
  */
 public interface DragFilter extends Serializable {
 
