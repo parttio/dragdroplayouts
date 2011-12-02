@@ -23,14 +23,34 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
  */
 @SuppressWarnings("serial")
 public final class VerticalLocationIs extends TargetDetailIs {
+
+	public static final String VERTICAL_LOCATION_ATTRIBUTE = "vdetail";
+	
+	/**
+	 * Was the drop made top of the centerline of the component
+	 */
     public static final VerticalLocationIs TOP = new VerticalLocationIs(
             VerticalDropLocation.TOP);
+    
+    /**
+     * Was the drop made below the centeline of the component
+     */
     public static final VerticalLocationIs BOTTOM = new VerticalLocationIs(
             VerticalDropLocation.BOTTOM);
+    
+    /**
+     * Was the drop made in the middle of the component
+     */
     public static final VerticalLocationIs MIDDLE = new VerticalLocationIs(
             VerticalDropLocation.MIDDLE);
 
-    private VerticalLocationIs(VerticalDropLocation l) {
-        super("vdetail", l.name());
+    /**
+     * A target detail for the vertical location of a drop
+     * 
+     * @param location
+     * 		The drop location
+     */
+    private VerticalLocationIs(VerticalDropLocation location) {
+        super(VERTICAL_LOCATION_ATTRIBUTE, location.name());
     }
 }

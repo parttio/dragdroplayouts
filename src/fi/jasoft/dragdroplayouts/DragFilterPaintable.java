@@ -11,7 +11,6 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
 
 import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
-
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
 
 /**
@@ -19,9 +18,6 @@ import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
  * 
  * @author John Ahlroos
  * @since 0.6.3
- * @param <T>
- * 		The type of component this is used with. Determines how the filter is painted
- * 		into the UIDL
  */
 class DragFilterPaintable {
 	

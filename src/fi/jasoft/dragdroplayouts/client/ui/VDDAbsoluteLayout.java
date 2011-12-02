@@ -15,7 +15,6 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -34,6 +33,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,

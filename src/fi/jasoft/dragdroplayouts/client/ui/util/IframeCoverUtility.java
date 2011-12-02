@@ -10,7 +10,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;;
+import com.google.gwt.user.client.Element;
 
 public class IframeCoverUtility {
 

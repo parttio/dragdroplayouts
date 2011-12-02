@@ -15,17 +15,7 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.Container;
@@ -40,6 +30,8 @@ import com.vaadin.terminal.gwt.client.ui.VTwinColSelect;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 
 public final class VDragDropUtil {
 	

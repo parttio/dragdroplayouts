@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fi.jasoft.dragdroplayouts.client.ui;
+package fi.jasoft.dragdroplayouts.client.ui.interfaces;
+
+import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 
 /**
  * Interface for layout which acts as a drag source

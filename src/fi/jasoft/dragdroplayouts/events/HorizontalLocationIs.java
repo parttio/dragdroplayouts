@@ -23,14 +23,34 @@ import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
  */
 @SuppressWarnings("serial")
 public final class HorizontalLocationIs extends TargetDetailIs {
+	
+	public static final String HORIZONTAL_LOCATION_ATTRIBUTE = "hdetail";
+	
+	/**
+	 * Was the drop made to the left of the centerline of the component
+	 */
     public static final HorizontalLocationIs LEFT = new HorizontalLocationIs(
             HorizontalDropLocation.LEFT);
+    
+    /**
+     * Was the drop made in the middle of the component
+     */
     public static final HorizontalLocationIs CENTER = new HorizontalLocationIs(
             HorizontalDropLocation.CENTER);
+    
+    /**
+     * Was the drop made to the right of the centerline of the component
+     */
     public static final HorizontalLocationIs RIGHT = new HorizontalLocationIs(
             HorizontalDropLocation.RIGHT);
 
-    private HorizontalLocationIs(HorizontalDropLocation l) {
-        super("hdetail", l.name());
+    /**
+     * A target detail for the horizontal location of a drop
+     * 
+     * @param location
+     * 		The location of the drop
+     */
+    private HorizontalLocationIs(HorizontalDropLocation location) {
+        super(HORIZONTAL_LOCATION_ATTRIBUTE, location.name());
     }
 }

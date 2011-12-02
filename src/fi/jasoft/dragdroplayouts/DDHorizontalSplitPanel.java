@@ -15,8 +15,6 @@
  */
 package fi.jasoft.dragdroplayouts;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.vaadin.event.Transferable;
@@ -34,7 +32,6 @@ import com.vaadin.ui.HorizontalSplitPanel;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDDHorizontalSplitPanel;
-import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
