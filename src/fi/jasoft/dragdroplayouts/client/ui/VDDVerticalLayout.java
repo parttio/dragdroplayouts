@@ -42,6 +42,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
         VHasDropHandler, DragStartListener {
@@ -65,6 +66,8 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
     protected boolean iframeCoversEnabled = false;
     
     private VDragFilter dragFilter = new VDragFilter();
+    
+    private IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     public VDDVerticalLayout() {
         super();
@@ -78,7 +81,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
             reg.removeHandler();
             reg = null;
         }
-        setIframeCoversEnabled(false);
+        iframeCoverUtility.setIframeCoversEnabled(false, this.getElement());
     }
 
     // The drag mouse handler which handles the creation of the transferable
@@ -106,7 +109,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
         handleCellDropRatioUpdate(modifiedUIDL);
 
         // Iframe cover check
-        setIframeCoversEnabled(iframeCoversEnabled);
+        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled, this.getElement());
         
         dragFilter.update(modifiedUIDL, client);
     }
@@ -504,15 +507,5 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      */
     public VDropHandler getDropHandler() {
         return dropHandler;
-    }
-
-    private Set<Element> coveredIframes = new HashSet<Element>();
-    private void setIframeCoversEnabled(boolean enabled) {
-        if (enabled) {
-            coveredIframes = VDragDropUtil.addIframeCovers(getElement());
-        } else if (coveredIframes != null) {
-            VDragDropUtil.removeIframeCovers(coveredIframes);
-            coveredIframes = null;
-        }
     }
 }

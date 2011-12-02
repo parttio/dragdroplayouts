@@ -37,6 +37,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
         VHasDragMode, VHasDropHandler, DragStartListener {
@@ -64,6 +65,8 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
     protected boolean iframeCoversEnabled = false;
     
     private VDragFilter dragFilter = new VDragFilter();
+    
+    private IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     // The drag mouse handler which handles the creation of the transferable
     private VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
@@ -81,7 +84,7 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
             reg.removeHandler();
             reg = null;
         }
-        setIframeCoversEnabled(false);
+        iframeCoverUtility.setIframeCoversEnabled(false, getElement());
     }
 
     @Override
@@ -150,7 +153,7 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
         handleDragModeUpdate(modifiedUIDL);
 
         // Iframe cover check
-        setIframeCoversEnabled(iframeCoversEnabled);
+        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled, getElement());
         
         dragFilter.update(modifiedUIDL, client);
     }
@@ -428,16 +431,5 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
         MouseEventDetails details = new MouseEventDetails(
                 event.getCurrentGwtEvent(), getElement());
         event.getDropDetails().put("mouseEvent", details.serialize());
-    }
-
-    private Set<Element> coveredIframes = new HashSet<Element>();
-
-    private void setIframeCoversEnabled(boolean enabled) {
-        if (enabled) {
-            coveredIframes = VDragDropUtil.addIframeCovers(getElement());
-        } else if (coveredIframes != null) {
-            VDragDropUtil.removeIframeCovers(coveredIframes);
-            coveredIframes = null;
-        }
     }
 }

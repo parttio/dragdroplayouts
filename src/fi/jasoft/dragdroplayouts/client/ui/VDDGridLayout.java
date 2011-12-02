@@ -42,6 +42,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 public class VDDGridLayout extends VGridLayout implements VHasDragMode,
         VHasDropHandler, DragStartListener {
@@ -73,6 +74,8 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
     protected boolean iframeCoversEnabled = false;
     
     private VDragFilter dragFilter = new VDragFilter();
+    
+    private IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     public VDDGridLayout() {
         super();
@@ -87,7 +90,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
             reg.removeHandler();
             reg = null;
         }
-        setIframeCoversEnabled(false);
+        iframeCoverUtility.setIframeCoversEnabled(false, getElement());
     }
 
     // The drag mouse handler which handles the creation of the transferable
@@ -114,7 +117,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
         handleCellDropRatioUpdate(uidl);
 
         // Iframe cover check
-        setIframeCoversEnabled(iframeCoversEnabled);
+        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled, getElement());
         
         dragFilter.update(uidl, client);
     }
@@ -585,15 +588,5 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
         }
 
         return cd;
-    }
-
-    private Set<Element> coveredIframes = new HashSet<Element>();
-    private void setIframeCoversEnabled(boolean enabled) {
-        if (enabled) {
-            coveredIframes = VDragDropUtil.addIframeCovers(getElement());
-        } else if (coveredIframes != null) {
-            VDragDropUtil.removeIframeCovers(coveredIframes);
-            coveredIframes = null;
-        }
     }
 }

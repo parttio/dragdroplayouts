@@ -42,6 +42,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer;
+import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 public class VDDAccordion extends VAccordion implements VHasDragMode,
         VHasDropHandler, DragStartListener, VDDTabContainer {
@@ -75,6 +76,8 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     protected boolean iframeCoversEnabled = false;
     
     private VDragFilter dragFilter = new VTabDragFilter(this);
+    
+    private IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     public VDDAccordion() {
         spacer = GWT.create(HTML.class);
@@ -90,7 +93,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
             reg.removeHandler();
             reg = null;
         }
-        setIframeCoversEnabled(false);
+        iframeCoverUtility.setIframeCoversEnabled(false, getElement());
     }
 
     /*
@@ -471,20 +474,10 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
         handleCellDropRatioUpdate(modifiedUidl);
 
         // Cover iframes if necessery
-        setIframeCoversEnabled(iframeCoversEnabled);
+        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled, getElement());
         
     	// Drag filters
     	dragFilter.update(modifiedUidl, client);
-    }
-
-    private Set<Element> coveredIframes = new HashSet<Element>();
-    private void setIframeCoversEnabled(boolean enabled) {
-        if (enabled) {
-            coveredIframes = VDragDropUtil.addIframeCovers(getElement());
-        } else if (coveredIframes != null) {
-            VDragDropUtil.removeIframeCovers(coveredIframes);
-            coveredIframes = null;
-        }
     }
 
     /*

@@ -42,6 +42,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer;
+import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 public class VDDTabSheet extends VTabsheet implements VHasDragMode,
 VHasDropHandler, DragStartListener, VDDTabContainer {
@@ -78,6 +79,8 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
     protected boolean iframeCoversEnabled = false;
 
     private VDragFilter dragFilter = new VTabDragFilter(this);
+    
+    private IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     public VDDTabSheet() {
         super();
@@ -105,7 +108,7 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
             reg.removeHandler();
             reg = null;
         }
-        setIframeCoversEnabled(false);
+        iframeCoverUtility.setIframeCoversEnabled(false, getElement());
     }
 
     // The drag mouse handler which handles the creation of the transferable
@@ -395,7 +398,7 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
         handleCellDropRatioUpdate(modifiedUIDL);
 
         // Handle iframe covering
-        setIframeCoversEnabled(iframeCoversEnabled);
+        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled, getElement());
         
         // Update dragfilter
         dragFilter.update(uidl, client);     
@@ -513,15 +516,5 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
      */
     public int getTabContentPosition(Widget content){
     	return tabPanel.getWidgetIndex(content);
-    }
-
-    private Set<Element> coveredIframes = new HashSet<Element>();
-    private void setIframeCoversEnabled(boolean enabled) {
-        if (enabled) {
-            coveredIframes = VDragDropUtil.addIframeCovers(getElement());
-        } else if (coveredIframes != null) {
-            VDragDropUtil.removeIframeCovers(coveredIframes);
-            coveredIframes = null;
-        }
     }
 }

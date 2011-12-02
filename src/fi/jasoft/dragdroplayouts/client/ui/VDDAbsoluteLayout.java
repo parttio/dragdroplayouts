@@ -34,6 +34,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
         VHasDropHandler, DragStartListener {
@@ -52,6 +53,8 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     protected boolean iframeCoversEnabled = false;
     
     private VDragFilter dragFilter = new VDragFilter();
+    
+    private IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     public VDDAbsoluteLayout() {
         super();
@@ -65,12 +68,12 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
             reg.removeHandler();
             reg = null;
         }
-        setIframeCoversEnabled(false);
+        iframeCoverUtility.setIframeCoversEnabled(false, getElement());
     }
 
     @Override
     public boolean requestLayout(Set<Paintable> children) {
-        setIframeCoversEnabled(iframeCoversEnabled);
+        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled, getElement());
         return super.requestLayout(children);
     }
 
@@ -97,7 +100,7 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
          * Always check for iframe covers so new added/removed components get
          * covered
          */
-        setIframeCoversEnabled(iframeCoversEnabled);
+        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled, getElement());
        
     	// Drag filters
     	dragFilter.update(modifiedUIDL, client);
@@ -348,15 +351,5 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
      */
     public VDropHandler getDropHandler() {
         return dropHandler;
-    }
-
-    private Set<com.google.gwt.user.client.Element> coveredIframes = new HashSet<com.google.gwt.user.client.Element>();
-    private void setIframeCoversEnabled(boolean enabled) {
-        if (enabled) {
-            coveredIframes = VDragDropUtil.addIframeCovers(getElement());
-        } else if (coveredIframes != null) {
-            VDragDropUtil.removeIframeCovers(coveredIframes);
-            coveredIframes = null;
-        }
     }
 }

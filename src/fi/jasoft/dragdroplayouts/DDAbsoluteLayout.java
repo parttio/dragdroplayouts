@@ -33,6 +33,7 @@ import com.vaadin.ui.Component;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDDAbsoluteLayout;
+import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
@@ -54,7 +55,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
     /**
      * A filter for dragging components.
      */
-    private DragFilter dragFilter;
+    private DragFilter dragFilter = DragFilter.ALL;
 
     /**
      * Target details for dropping on a absolute layout. Contains the absolute
@@ -172,7 +173,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
         		boolean draggable = getDragFilter().isDraggable(c);
         		dragmap.put(c, draggable);
         	}
-        	target.addAttribute("dragmap", dragmap);
+        	target.addAttribute(VDragFilter.DRAGMAP_ATTRIBUTE, dragmap);
         }
     }
 
