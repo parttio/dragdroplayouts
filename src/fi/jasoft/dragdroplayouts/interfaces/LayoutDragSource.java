@@ -39,21 +39,6 @@ public interface LayoutDragSource extends DragSource {
      *            The mode to set
      */
     void setDragMode(LayoutDragMode mode);
-
-    /**
-     * False to disable the iframe shim used to enable dragging iframe based
-     * components (defaults to true).
-     * 
-     * @return Are the iframes shimmed
-     */
-    void setShim(boolean shim);
-
-    /**
-     * Are shims used over iframes so dragging is possible
-     * 
-     * @return
-     */
-    boolean isShimmed();
     
     /**
   	 * Get a filter which determines which components can be

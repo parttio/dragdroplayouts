@@ -37,12 +37,12 @@ import fi.jasoft.dragdroplayouts.client.ui.VDDHorizontalSplitPanel;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
+import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
+@SuppressWarnings("serial")
 @ClientWidget(VDDHorizontalSplitPanel.class)
 public class DDHorizontalSplitPanel extends HorizontalSplitPanel implements
-        LayoutDragSource, DropTarget {
-
-    private static final long serialVersionUID = 3022845067273082329L;
+        LayoutDragSource, DropTarget, ShimSupport {
 
     /**
      * The drop handler which handles dropped components in the layout.

@@ -37,11 +37,12 @@ import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
+import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
 @SuppressWarnings("serial")
 @ClientWidget(VDDAbsoluteLayout.class)
 public class DDAbsoluteLayout extends AbsoluteLayout implements
-        LayoutDragSource, DropTarget {
+        LayoutDragSource, DropTarget, ShimSupport {
 
     // Drop handler which handles dd drop events
     private DropHandler dropHandler;

@@ -38,11 +38,12 @@ import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
+import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
 @SuppressWarnings("serial")
 @ClientWidget(VDDTabSheet.class)
 public class DDTabSheet extends TabSheet implements LayoutDragSource,
-        DropTarget {
+        DropTarget, ShimSupport {
 
     /**
      * Specifies if dragging components is allowed and if so how it should be

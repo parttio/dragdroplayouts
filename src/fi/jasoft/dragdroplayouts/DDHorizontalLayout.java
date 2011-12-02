@@ -37,6 +37,7 @@ import fi.jasoft.dragdroplayouts.client.ui.VDDHorizontalLayout;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
+import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
 
 /**
@@ -45,7 +46,7 @@ import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
 @SuppressWarnings("serial")
 @ClientWidget(VDDHorizontalLayout.class)
 public class DDHorizontalLayout extends HorizontalLayout implements
-        LayoutDragSource, DropTarget {
+        LayoutDragSource, DropTarget, ShimSupport {
 
     /**
      * The drop handler which handles dropped components in the layout.

@@ -38,10 +38,11 @@ import fi.jasoft.dragdroplayouts.client.ui.VDDGridLayout;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
+import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
 @ClientWidget(VDDGridLayout.class)
 public class DDGridLayout extends GridLayout implements LayoutDragSource,
-        DropTarget {
+        DropTarget, ShimSupport {
 
     private static final long serialVersionUID = -4586419114115623331L;
 

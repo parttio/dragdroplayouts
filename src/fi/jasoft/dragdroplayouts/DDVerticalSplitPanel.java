@@ -37,10 +37,12 @@ import fi.jasoft.dragdroplayouts.client.ui.VDDVerticalSplitPanel;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
+import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
+@SuppressWarnings("serial")
 @ClientWidget(VDDVerticalSplitPanel.class)
 public class DDVerticalSplitPanel extends VerticalSplitPanel implements
-        LayoutDragSource, DropTarget {
+        LayoutDragSource, DropTarget, ShimSupport {
 
     /**
      * The drop handler which handles dropped components in the layout.
