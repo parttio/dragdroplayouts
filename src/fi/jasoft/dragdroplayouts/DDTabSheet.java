@@ -35,6 +35,7 @@ import com.vaadin.ui.TabSheet;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDDTabSheet;
 import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
@@ -252,7 +253,7 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
         target.addAttribute("hDropRatio", horizontalDropRatio);
 
         // Shims
-        target.addAttribute("shims", iframeShims);
+        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
         
         if(getDragFilter() != null){
         	// Get components with dragging disabled

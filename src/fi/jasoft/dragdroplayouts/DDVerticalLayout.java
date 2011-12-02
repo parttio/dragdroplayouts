@@ -34,6 +34,8 @@ import com.vaadin.ui.VerticalLayout;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDDVerticalLayout;
+import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
@@ -156,7 +158,7 @@ public class DDVerticalLayout extends VerticalLayout implements
         target.addAttribute("dragMode", dragMode.ordinal());
 
         // Shims
-        target.addAttribute("shims", iframeShims);
+        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
         
         if(getDragFilter() != null){
         	// Get components with dragging disabled
@@ -167,7 +169,7 @@ public class DDVerticalLayout extends VerticalLayout implements
         		boolean draggable = getDragFilter().isDraggable(c);
         		dragmap.put(c, draggable);
         	}
-        	target.addAttribute("dragmap", dragmap);
+        	target.addAttribute(VDragFilter.DRAGMAP_ATTRIBUTE, dragmap);
         }
     }
 

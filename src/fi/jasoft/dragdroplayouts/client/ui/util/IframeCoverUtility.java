@@ -15,7 +15,9 @@ import com.google.gwt.user.client.Element;;
 public class IframeCoverUtility {
 
 	private static Map<Element, Element> iframeCoverMap = new HashMap<Element, Element>();
-   
+
+	public static final String SHIM_ATTRIBUTE = "shims";
+	
 	/**
      * Adds an iframe cover over an Embedded component
      * 

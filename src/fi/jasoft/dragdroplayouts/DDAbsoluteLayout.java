@@ -34,6 +34,7 @@ import com.vaadin.ui.Component;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
@@ -163,7 +164,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
         target.addAttribute("dragMode", dragMode.ordinal());
 
         // Should shims be used
-        target.addAttribute("shims", iframeShims);
+        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
         
         if(getDragFilter() != null){
         	// Get components with dragging disabled
