@@ -198,17 +198,8 @@ public class DDVerticalSplitPanel extends VerticalSplitPanel implements
         // Shims
         target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
         
-        if(getDragFilter() != null){
-        	// Get components with dragging disabled
-        	Map<Component, Boolean> dragmap = new HashMap<Component, Boolean>();
-        	Iterator<Component> iter = getComponentIterator();
-        	while(iter.hasNext()){
-        		Component c = iter.next();
-        		boolean draggable = getDragFilter().isDraggable(c);
-        		dragmap.put(c, draggable);
-        	}
-        	target.addAttribute(VDragFilter.DRAGMAP_ATTRIBUTE, dragmap);
-        }
+        // Paint the dragfilter into the paint target
+        new DragFilterPaintable(this).paint(target);
     }
 
     /**

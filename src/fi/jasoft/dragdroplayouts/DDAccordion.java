@@ -239,20 +239,8 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
         // Should shims be used
         target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
         
-        if(getDragFilter() != null){
-        	// Get components with dragging disabled
-        	Map<Integer, Boolean> dragmap = new HashMap<Integer, Boolean>();        	        	
-        	Iterator<Component> iter = getComponentIterator();
-        	while(iter.hasNext()){
-        		Component c = iter.next();
-        		if(getTab(c).isVisible()){
-        			boolean draggable = getDragFilter().isDraggable(c);
-        			int index = getTabPosition(getTab(c));
-            		dragmap.put(index, draggable);
-        		}
-        	}
-        	target.addAttribute(VDragFilter.DRAGMAP_ATTRIBUTE, dragmap);
-        }
+        // Paint the dragfilter into the paint target
+        new DragFilterPaintable(this).paint(target);
     }
 
     /**
