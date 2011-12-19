@@ -4,5 +4,5 @@
 	<inherits name="com.vaadin.terminal.gwt.DefaultWidgetSet" />
 	
 	<!-- Drag drop themes -->
-	<stylesheet src="dragdroplayouts.css"/>	    
+	<stylesheet src="fi_jasoft_dragdroplayouts/dragdroplayouts.css"/>	    
 </module>
