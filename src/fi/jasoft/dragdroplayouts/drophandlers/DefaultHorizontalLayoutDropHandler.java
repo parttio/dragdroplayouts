@@ -22,7 +22,6 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
-import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
@@ -137,7 +136,7 @@ public class DefaultHorizontalLayoutDropHandler implements DropHandler {
     protected void handleDropFromLayout(DragAndDropEvent event) {
         LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
                 .getTransferable();
-        VerticalLayoutTargetDetails details = (VerticalLayoutTargetDetails) event
+        HorizontalLayoutTargetDetails details = (HorizontalLayoutTargetDetails) event
                 .getTargetDetails();
         AbstractOrderedLayout layout = (AbstractOrderedLayout) details
                 .getTarget();
@@ -167,9 +166,9 @@ public class DefaultHorizontalLayoutDropHandler implements DropHandler {
         // Increase index if component is dropped after or above a
         // previous
         // component
-        VerticalDropLocation loc = (details).getDropLocation();
-        if (loc == VerticalDropLocation.MIDDLE
-                || loc == VerticalDropLocation.BOTTOM) {
+        HorizontalDropLocation loc = (details).getDropLocation();
+        if (loc == HorizontalDropLocation.CENTER
+                || loc == HorizontalDropLocation.RIGHT) {
             idx++;
         }
 
@@ -195,7 +194,7 @@ public class DefaultHorizontalLayoutDropHandler implements DropHandler {
      */
     public void drop(DragAndDropEvent event) {
         // Get information about the drop
-        VerticalLayoutTargetDetails details = (VerticalLayoutTargetDetails) event
+        HorizontalLayoutTargetDetails details = (HorizontalLayoutTargetDetails) event
                 .getTargetDetails();
         AbstractOrderedLayout layout = (AbstractOrderedLayout) details
                 .getTarget();
