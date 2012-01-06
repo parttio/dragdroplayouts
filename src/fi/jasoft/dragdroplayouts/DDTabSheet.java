@@ -31,8 +31,10 @@ import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet;
 
+import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDDTabSheet;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
@@ -76,8 +78,8 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
 
             // Get over which component (if any) the drop was made and the
             // index of it
-            if (rawDropData.get("to") != null) {
-                Object to = rawDropData.get("to");
+            if (rawDropData.get(Constants.DROP_DETAIL_TO) != null) {
+                Object to = rawDropData.get(Constants.DROP_DETAIL_TO);
                 index = Integer.valueOf(to.toString());
             }
 
@@ -123,7 +125,7 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
          */
         public MouseEventDetails getMouseEvent() {
             return MouseEventDetails
-                    .deSerialize((String) getData("mouseEvent"));
+                    .deSerialize((String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
         }
 
         /**
@@ -133,9 +135,9 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
          * @return The drop location
          */
         public HorizontalDropLocation getDropLocation() {
-            if (getData("hdetail") != null) {
+            if (getData(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION) != null) {
                 return HorizontalDropLocation
-                        .valueOf((String) getData("hdetail"));
+                        .valueOf((String) getData(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION));
             }
             return null;
         }
@@ -147,9 +149,9 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
      * @see com.vaadin.event.dd.DragSource#getTransferable(java.util.Map)
      */
     public Transferable getTransferable(Map<String, Object> rawVariables) {
-        if (rawVariables.get("index") != null) {
+        if (rawVariables.get(Constants.TRANSFERABLE_DETAIL_INDEX) != null) {
             // We dragged a tab, substitute component with tab content
-            int index = Integer.parseInt(rawVariables.get("index").toString());
+            int index = Integer.parseInt(rawVariables.get(Constants.TRANSFERABLE_DETAIL_INDEX).toString());
             Iterator<Component> iter = getComponentIterator();
             int counter = 0;
             Component c = null;
@@ -161,9 +163,9 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
                 counter++;
             }
 
-            rawVariables.put("component", c);
+            rawVariables.put(Constants.TRANSFERABLE_DETAIL_COMPONENT, c);
         } else if (rawVariables.get("component") == null) {
-            rawVariables.put("component", DDTabSheet.this);
+            rawVariables.put(Constants.TRANSFERABLE_DETAIL_COMPONENT, DDTabSheet.this);
         }
 
         return new LayoutBoundTransferable(this, rawVariables);
@@ -179,8 +181,10 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
      *            dropping
      */
     public void setDropHandler(DropHandler dropHandler) {
-        this.dropHandler = dropHandler;
-        requestRepaint();
+    	if(this.dropHandler != dropHandler){
+    		this.dropHandler = dropHandler;
+    	    requestRepaint();
+    	}
     }
 
     /*
@@ -245,10 +249,10 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
         }
 
         // Adds the drag mode (the default is none)
-        target.addAttribute("dragMode", dragMode.ordinal());
+        target.addAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE, dragMode.ordinal());
 
         // Drop ratio
-        target.addAttribute("hDropRatio", horizontalDropRatio);
+        target.addAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO, horizontalDropRatio);
 
         // Shims
         target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
@@ -268,21 +272,25 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentHorizontalDropRatio(float ratio) {
-        if (ratio >= 0 && ratio <= 0.5) {
-            horizontalDropRatio = ratio;
-            requestRepaint();
-        } else {
-            throw new IllegalArgumentException(
-                    "Ratio must be between 0 and 0.5");
-        }
+    	if(horizontalDropRatio != ratio){
+    		if (ratio >= 0 && ratio <= 0.5) {
+	            horizontalDropRatio = ratio;
+	            requestRepaint();
+	        } else {
+	            throw new IllegalArgumentException(
+	                    "Ratio must be between 0 and 0.5");
+	        }
+    	}
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        iframeShims = shim;
-        requestRepaint();
+    	if(iframeShims != shim){
+    		iframeShims = shim;
+    		requestRepaint();    		
+    	}
     }
 
     /**

@@ -131,10 +131,10 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler {
         // Resolve the component
         final Widget w;
         if (root instanceof VDDAccordion
-                && transferable.getData("caption") != null) {
-            w = (Widget) transferable.getData("caption");
-        } else if (transferable.getData("component") != null) {
-            w = (Widget) transferable.getData("component");
+                && transferable.getData(Constants.TRANSFERABLE_DETAIL_CAPTION) != null) {
+            w = (Widget) transferable.getData(Constants.TRANSFERABLE_DETAIL_CAPTION);
+        } else if (transferable.getData(Constants.TRANSFERABLE_DETAIL_COMPONENT) != null) {
+            w = (Widget) transferable.getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
         } else {
             // Failsafe if no widget was found
             w = root;

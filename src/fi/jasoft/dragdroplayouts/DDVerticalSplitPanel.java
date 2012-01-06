@@ -30,8 +30,10 @@ import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalSplitPanel;
 
+import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDDVerticalSplitPanel;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
@@ -99,7 +101,7 @@ public class DDVerticalSplitPanel extends VerticalSplitPanel implements
          */
         public MouseEventDetails getMouseEvent() {
             return MouseEventDetails
-                    .deSerialize((String) getData("mouseEvent"));
+                    .deSerialize((String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
         }
 
         /**
@@ -109,7 +111,7 @@ public class DDVerticalSplitPanel extends VerticalSplitPanel implements
          * @return The drop location
          */
         public VerticalDropLocation getDropLocation() {
-            return VerticalDropLocation.valueOf((String) getData("vdetail"));
+            return VerticalDropLocation.valueOf((String) getData(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION));
         }
     }
 
@@ -149,8 +151,10 @@ public class DDVerticalSplitPanel extends VerticalSplitPanel implements
      *            dropping
      */
     public void setDropHandler(DropHandler dropHandler) {
-        this.dropHandler = dropHandler;
-        requestRepaint();
+    	if(this.dropHandler != dropHandler){
+    		 this.dropHandler = dropHandler;
+    		 requestRepaint();
+    	}
     }
 
     /**
@@ -169,8 +173,10 @@ public class DDVerticalSplitPanel extends VerticalSplitPanel implements
      *            The mode of which how the dragging should be visualized.
      */
     public void setDragMode(LayoutDragMode mode) {
-        dragMode = mode;
-        requestRepaint();
+    	if(dragMode != mode){
+    	  dragMode = mode;
+    	  requestRepaint();
+    	}
     }
 
     /*
@@ -190,7 +196,7 @@ public class DDVerticalSplitPanel extends VerticalSplitPanel implements
         }
 
         // Drag mode
-        target.addAttribute("dragMode", dragMode.ordinal());
+        target.addAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE, dragMode.ordinal());
 
         // Shims
         target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
@@ -203,8 +209,10 @@ public class DDVerticalSplitPanel extends VerticalSplitPanel implements
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        iframeShims = shim;
-        requestRepaint();
+    	if(iframeShims != shim){
+    		iframeShims = shim;
+            requestRepaint();
+    	}
     }
 
     /**

@@ -47,13 +47,10 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
 VHasDropHandler, DragStartListener, VDDTabContainer {
 
     public static final String CLASSNAME_NEW_TAB = "new-tab";
-
     public static final String CLASSNAME_NEW_TAB_LEFT = "new-tab-left";
-
     public static final String CLASSNAME_NEW_TAB_RIGHT = "new-tab-right";
-
     public static final String CLASSNAME_NEW_TAB_CENTER = "new-tab-center";
-
+    
     public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
 
     private LayoutDragMode dragMode = LayoutDragMode.NONE;
@@ -262,7 +259,7 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
 
                     // Check if we are dropping on our self
                     if (VDDTabSheet.this.equals(drag.getTransferable().getData(
-                            "component"))) {
+                    		Constants.TRANSFERABLE_DETAIL_COMPONENT))) {
                         return;
                     }
 
@@ -313,29 +310,29 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
                 // Ove3r the spacer
 
                 // Add index
-                event.getDropDetails().put("to", tabBar.getWidgetCount() - 1);
+                event.getDropDetails().put(Constants.DROP_DETAIL_TO, tabBar.getWidgetCount() - 1);
 
                 // Add drop location
-                event.getDropDetails().put("hdetail",
+                event.getDropDetails().put(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
                         HorizontalDropLocation.RIGHT);
 
             } else {
 
                 // Add index
-                event.getDropDetails().put("to", getTabPosition(w));
+                event.getDropDetails().put(Constants.DROP_DETAIL_TO, getTabPosition(w));
 
                 // Add drop location
                 HorizontalDropLocation location = VDragDropUtil
                         .getHorizontalDropLocation(element, event
                                 .getCurrentGwtEvent().getClientX(),
                                 tabLeftRightDropRatio);
-                event.getDropDetails().put("hdetail", location);
+                event.getDropDetails().put(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION, location);
             }
 
             // Add mouse event details
             MouseEventDetails details = new MouseEventDetails(
                     event.getCurrentGwtEvent(), getElement());
-            event.getDropDetails().put("mouseEvent", details.serialize());
+            event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT, details.serialize());
         }
     }
 
@@ -346,13 +343,13 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
      *            The UIDL
      */
     private void handleDragModeUpdate(UIDL uidl) {
-        if (uidl.hasAttribute("dragMode")) {
+        if (uidl.hasAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)) {
             LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl.getIntAttribute("dragMode")];
+            dragMode = modes[uidl.getIntAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)];
             ddMouseHandler.updateDragMode(dragMode);
             if (reg == null && dragMode != LayoutDragMode.NONE) {
                 // Cover iframes if necessery
-                iframeCoversEnabled = uidl.getBooleanAttribute("shims");
+                iframeCoversEnabled = uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
 
                 // Listen to mouse down events
                 reg = tabBar.addDomHandler(ddMouseHandler,

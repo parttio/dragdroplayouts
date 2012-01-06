@@ -21,6 +21,9 @@ import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
  * Interface for layout which acts as a drag source
  */
 public interface VHasDragMode {
+	
+	public static final String DRAGMODE_ATTRIBUTE = "dragMode";
+	
     /**
      * Returns the drag mode
      * 

@@ -21,6 +21,7 @@ package fi.jasoft.dragdroplayouts.client.ui;
  * @since 6.5
  */
 public enum LayoutDragMode {
+	
     /**
      * Disables dragging components from a layout. This is the default
      * behaviour.

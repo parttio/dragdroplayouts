@@ -30,8 +30,10 @@ import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalLayout;
 
+import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDDVerticalLayout;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
@@ -78,9 +80,8 @@ public class DDVerticalLayout extends VerticalLayout implements
 
             // Get over which component (if any) the drop was made and the
             // index of it
-            Object to = rawDropData.get("to");
-            if (to != null) {
-                index = Integer.valueOf(to.toString());
+            if (getData(Constants.DROP_DETAIL_TO) != null) {
+                index = Integer.valueOf(getData(Constants.DROP_DETAIL_TO).toString());
                 if (index >= 0 && index < components.size()) {
                     over = components.get(index);
                 }
@@ -119,7 +120,7 @@ public class DDVerticalLayout extends VerticalLayout implements
          */
         public MouseEventDetails getMouseEvent() {
             return MouseEventDetails
-                    .deSerialize((String) getData("mouseEvent"));
+                    .deSerialize((String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
         }
 
         /**
@@ -129,7 +130,7 @@ public class DDVerticalLayout extends VerticalLayout implements
          * @return The drop location
          */
         public VerticalDropLocation getDropLocation() {
-            return VerticalDropLocation.valueOf((String) getData("vdetail"));
+            return VerticalDropLocation.valueOf((String) getData(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION));
         }
     }
 
@@ -149,10 +150,10 @@ public class DDVerticalLayout extends VerticalLayout implements
         }
 
         // Drop ratio
-        target.addAttribute("vDropRatio", verticalDropRatio);
+        target.addAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO, verticalDropRatio);
 
         // Drop ratio
-        target.addAttribute("dragMode", dragMode.ordinal());
+        target.addAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE, dragMode.ordinal());
 
         // Shims
         target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
@@ -191,8 +192,10 @@ public class DDVerticalLayout extends VerticalLayout implements
      *            dropping
      */
     public void setDropHandler(DropHandler dropHandler) {
-        this.dropHandler = dropHandler;
-        requestRepaint();
+    	if(this.dropHandler != dropHandler){
+    		this.dropHandler = dropHandler;
+            requestRepaint();	
+    	}
     }
 
     /**
@@ -211,8 +214,10 @@ public class DDVerticalLayout extends VerticalLayout implements
      *            The mode of which how the dragging should be visualized.
      */
     public void setDragMode(LayoutDragMode mode) {
-        dragMode = mode;
-        requestRepaint();
+    	if(dragMode != mode){
+    		 dragMode = mode;
+    	     requestRepaint();
+    	}
     }
 
     /**
@@ -226,21 +231,25 @@ public class DDVerticalLayout extends VerticalLayout implements
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentVerticalDropRatio(float ratio) {
-        if (ratio >= 0 && ratio <= 0.5) {
-            verticalDropRatio = ratio;
-            requestRepaint();
-        } else {
-            throw new IllegalArgumentException(
-                    "Ratio must be between 0 and 0.5");
-        }
+    	if(verticalDropRatio != ratio){
+    		if (ratio >= 0 && ratio <= 0.5) {
+	            verticalDropRatio = ratio;
+	            requestRepaint();
+	        } else {
+	            throw new IllegalArgumentException(
+	                    "Ratio must be between 0 and 0.5");
+	        }
+    	}
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        iframeShims = shim;
-        requestRepaint();
+    	if(iframeShims != shim){
+    		iframeShims = shim;
+    	    requestRepaint();
+    	}
     }
 
     /**

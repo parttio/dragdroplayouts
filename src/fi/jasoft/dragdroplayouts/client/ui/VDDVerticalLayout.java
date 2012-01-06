@@ -120,14 +120,14 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      *            The UIDL
      */
     private void handleDragModeUpdate(UIDL uidl) {
-        if (uidl.hasAttribute("dragMode")) {
+        if (uidl.hasAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)) {
             LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl.getIntAttribute("dragMode")];
+            dragMode = modes[uidl.getIntAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)];
             ddMouseHandler.updateDragMode(dragMode);
             if (dragMode != LayoutDragMode.NONE) {
                 if (reg == null && dragMode != LayoutDragMode.NONE) {
                     // Cover iframes if necessery
-                    iframeCoversEnabled = uidl.getBooleanAttribute("shims");
+                    iframeCoversEnabled = uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
 
                     // Listen to mouse down events
                     reg = addDomHandler(ddMouseHandler,
@@ -152,8 +152,8 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      *            The UIDL
      */
     private void handleCellDropRatioUpdate(UIDL uidl) {
-        if (uidl.hasAttribute("vDropRatio")) {
-            cellTopBottomDropRatio = uidl.getFloatAttribute("vDropRatio");
+        if (uidl.hasAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO)) {
+            cellTopBottomDropRatio = uidl.getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO);
         }
     }
 
@@ -218,7 +218,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
          * The horizontal position within the cell
          */
 
-        event.getDropDetails().put("vdetail",
+        event.getDropDetails().put(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION,
                 getVerticalDropLocation(widget, event));
 
         /*
@@ -226,7 +226,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
          * criteria to verify that a drag is over a certain index.
          */
         WidgetCollection widgets = getChildren();
-        event.getDropDetails().put("to", widgets.indexOf(widget));
+        event.getDropDetails().put(Constants.DROP_DETAIL_TO, widgets.indexOf(widget));
 
         /*
          * Add Classname of component over the drag. This can be used by a a
@@ -237,20 +237,20 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
             Widget w = ((ChildComponentContainer) widget).getWidget();
             if (w != null) {
                 String className = w.getClass().getName();
-                event.getDropDetails().put("overClass", className);
+                event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS, className);
             } else {
-                event.getDropDetails().put("overClass",
+                event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
                         this.getClass().getName());
             }
 
         } else {
-            event.getDropDetails().put("overClass", this.getClass().getName());
+            event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS, this.getClass().getName());
         }
 
         // Add mouse event details
         MouseEventDetails details = new MouseEventDetails(
                 event.getCurrentGwtEvent(), getElement());
-        event.getDropDetails().put("mouseEvent", details.serialize());
+        event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT, details.serialize());
     }
 
     /**

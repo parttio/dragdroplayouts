@@ -180,8 +180,10 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      *            dropping
      */
     public void setDropHandler(DropHandler dropHandler) {
-        this.dropHandler = dropHandler;
-        requestRepaint();
+    	if(this.dropHandler != dropHandler){
+    		this.dropHandler = dropHandler;
+            requestRepaint();
+    	}
     }
 
     /**
@@ -252,21 +254,25 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentVerticalDropRatio(float ratio) {
-        if (ratio >= 0 && ratio <= 0.5) {
-            verticalDropRatio = ratio;
-            requestRepaint();
-        } else {
-            throw new IllegalArgumentException(
-                    "Ratio must be between 0 and 0.5");
-        }
+    	if(ratio != verticalDropRatio){
+    		if (ratio >= 0 && ratio <= 0.5) {
+                verticalDropRatio = ratio;
+                requestRepaint();
+            } else {
+                throw new IllegalArgumentException(
+                        "Ratio must be between 0 and 0.5");
+            }
+    	}
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        iframeShims = shim;
-        requestRepaint();
+    	if(iframeShims != shim){
+    		iframeShims = shim;
+            requestRepaint();
+    	}
     }
 
     /**

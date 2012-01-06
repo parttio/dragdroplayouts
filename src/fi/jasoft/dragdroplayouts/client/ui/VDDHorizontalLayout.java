@@ -39,29 +39,27 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
+import fi.jasoft.dragdroplayouts.DDHorizontalLayout;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
-
 /**
- * Client side widget which communicates with the server. Messages from the
- * server are shown as HTML and mouse clicks are sent to the server.
+ * Client side counterpart for {@link DDHorizontalLayout}
  */
 public class VDDHorizontalLayout extends VHorizontalLayout implements
         VHasDragMode, VHasDropHandler, DragStartListener {
 
+    public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
+
+    public static final String OVER = "v-ddorderedlayout-over";
+    public static final String OVER_SPACED = OVER + "-spaced";
+	
     private Widget currentlyEmphasised;
 
     private LayoutDragMode dragMode = LayoutDragMode.NONE;
 
     private float cellLeftRightDropRatio = DEFAULT_HORIZONTAL_DROP_RATIO;
-    
-    public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
-
-    public static final String OVER = "v-ddorderedlayout-over";
-
-    public static final String OVER_SPACED = OVER + "-spaced";
 
     private VAbstractDropHandler dropHandler;
 
@@ -92,6 +90,10 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
     private VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
             this, dragMode);
 
+    /*
+     * (non-Javadoc)
+     * @see com.vaadin.terminal.gwt.client.ui.VOrderedLayout#updateFromUIDL(com.vaadin.terminal.gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
+     */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
@@ -125,13 +127,13 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
      *            The UIDL
      */
     private void handleDragModeUpdate(UIDL uidl) {
-        if (uidl.hasAttribute("dragMode")) {
+        if (uidl.hasAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)) {
             LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl.getIntAttribute("dragMode")];
+            dragMode = modes[uidl.getIntAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)];
             ddMouseHandler.updateDragMode(dragMode);
             if (reg == null && dragMode != LayoutDragMode.NONE) {
                 // Cover iframes if necessery
-                iframeCoversEnabled = uidl.getBooleanAttribute("shims");
+                iframeCoversEnabled = uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
 
                 // Listen to mouse down events
                 reg = addDomHandler(ddMouseHandler, MouseDownEvent.getType());
@@ -154,8 +156,8 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
      *            The UIDL
      */
     private void handleCellDropRatioUpdate(UIDL uidl) {
-        if (uidl.hasAttribute("hDropRatio")) {
-            cellLeftRightDropRatio = uidl.getFloatAttribute("hDropRatio");
+        if (uidl.hasAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO)) {
+            cellLeftRightDropRatio = uidl.getFloatAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO);
         }
     }
 
@@ -262,7 +264,7 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
         /*
          * The horizontal position within the cell
          */
-        event.getDropDetails().put("hdetail",
+        event.getDropDetails().put(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
                 getHorizontalDropLocation(widget, event));
 
         /*
@@ -270,7 +272,7 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
          * criteria to verify that a drag is over a certain index.
          */
         WidgetCollection widgets = getChildren();
-        event.getDropDetails().put("to", widgets.indexOf(widget));
+        event.getDropDetails().put(Constants.DROP_DETAIL_TO, widgets.indexOf(widget));
 
         /*
          * Add Classname of component over the drag. This can be used by a a
@@ -281,20 +283,20 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
             Widget w = ((ChildComponentContainer) widget).getWidget();
             if (w != null) {
                 String className = w.getClass().getName();
-                event.getDropDetails().put("overClass", className);
+                event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS, className);
             } else {
-                event.getDropDetails().put("overClass",
+                event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
                         this.getClass().getName());
             }
         } else {
-            event.getDropDetails().put("overClass", this.getClass().getName());
+            event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS, this.getClass().getName());
         }
 
         // Add mouse event details
         MouseEventDetails details = new MouseEventDetails(
                 event.getCurrentGwtEvent(),
                 VDDHorizontalLayout.this.getElement());
-        event.getDropDetails().put("mouseEvent", details.serialize());
+        event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT, details.serialize());
     }
 
     /**

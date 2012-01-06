@@ -31,23 +31,30 @@ import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 
+import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDDGridLayout;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
 import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
+/**
+ * Grid layout with drag and drop support
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ */
+@SuppressWarnings("serial")
 @ClientWidget(VDDGridLayout.class)
 public class DDGridLayout extends GridLayout implements LayoutDragSource,
         DropTarget, ShimSupport {
-
-    private static final long serialVersionUID = -4586419114115623331L;
-
+	
+	/**
+	 * Target details for a drop event
+	 */
     public class GridLayoutTargetDetails extends TargetDetailsImpl {
-       
-        private static final long serialVersionUID = 967712285492743651L;
 
         private Component over;
 
@@ -58,14 +65,14 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
         protected GridLayoutTargetDetails(Map<String, Object> rawDropData) {
             super(rawDropData, DDGridLayout.this);
 
-            if (rawDropData.get("row") != null) {
-                row = Integer.valueOf(rawDropData.get("row").toString());
+            if (getData(Constants.DROP_DETAIL_ROW) != null) {
+                row = Integer.valueOf(getData(Constants.DROP_DETAIL_ROW).toString());
             } else {
             	row = -1;
             }
 
-            if (rawDropData.get("column") != null) {
-                column = Integer.valueOf(rawDropData.get("column").toString());
+            if (getData(Constants.DROP_DETAIL_COLUMN) != null) {
+                column = Integer.valueOf(getData(Constants.DROP_DETAIL_COLUMN).toString());
             } else {
             	column = -1;
             }
@@ -115,7 +122,7 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
          */
         public HorizontalDropLocation getHorizontalDropLocation() {
             return HorizontalDropLocation
-                    .valueOf(getData("hdetail").toString());
+                    .valueOf(getData(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION).toString());
         }
 
         /**
@@ -125,7 +132,8 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
          * @return
          */
         public VerticalDropLocation getVerticalDropLocation() {
-            return VerticalDropLocation.valueOf(getData("vdetail").toString());
+            return VerticalDropLocation
+            		.valueOf(getData(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION).toString());
         }
 
         /**
@@ -134,7 +142,7 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
          * @return
          */
         public boolean overEmptyCell() {
-            return Boolean.valueOf(getData("overEmpty").toString());
+            return Boolean.valueOf(getData(Constants.DROP_DETAIL_EMPTY_CELL).toString());
         }
 
         /**
@@ -145,7 +153,7 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
          */
         public MouseEventDetails getMouseEvent() {
             return MouseEventDetails
-                    .deSerialize((String) getData("mouseEvent"));
+                    .deSerialize(getData(Constants.DROP_DETAIL_MOUSE_EVENT).toString());
         }
     }
 
@@ -153,8 +161,6 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      * Contains the transferable details when dragging from a GridLayout.
      */
     public class GridLayoutTransferable extends LayoutBoundTransferable {
-
-        private static final long serialVersionUID = 580459196290377421L;
 
         /**
          * Constructor
@@ -175,7 +181,7 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
          * @return The row index
          */
         public int getSourceRow() {
-            return Integer.valueOf(getData("row").toString());
+            return Integer.valueOf(getData(Constants.DROP_DETAIL_ROW).toString());
         }
 
         /**
@@ -184,7 +190,7 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
          * @return The column index
          */
         public int getSourceColumn() {
-            return Integer.valueOf(getData("column").toString());
+            return Integer.valueOf(getData(Constants.DROP_DETAIL_COLUMN).toString());
         }
     }
 
@@ -237,11 +243,11 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
         }
 
         // Drop ratios
-        target.addAttribute("hDropRatio", horizontalDropRatio);
-        target.addAttribute("vDropRatio", verticalDropRatio);
+        target.addAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO, horizontalDropRatio);
+        target.addAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO, verticalDropRatio);
 
         // Drag mode
-        target.addAttribute("dragMode", dragMode.ordinal());
+        target.addAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE, dragMode.ordinal());
 
         // Shims
         target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
@@ -261,8 +267,10 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      * {@inheritDoc}
      */
     public void setDropHandler(DropHandler dropHandler) {
-        this.dropHandler = dropHandler;
-        requestRepaint();
+    	if(dropHandler != this.dropHandler){
+    		 this.dropHandler = dropHandler;
+    	     requestRepaint();
+    	}
     }
 
     /**
@@ -276,8 +284,10 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      * {@inheritDoc}
      */
     public void setDragMode(LayoutDragMode mode) {
-        dragMode = mode;
-        requestRepaint();
+    	if(dragMode != mode){
+    		 dragMode = mode;
+    		 requestRepaint();
+    	}
     }
 
     /**
@@ -306,13 +316,15 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentHorizontalDropRatio(float ratio) {
-        if (ratio >= 0 && ratio <= 0.5) {
-            horizontalDropRatio = ratio;
-            requestRepaint();
-        } else {
-            throw new IllegalArgumentException(
-                    "Ratio must be between 0 and 0.5");
-        }
+    	if(ratio != horizontalDropRatio){
+    		 if (ratio >= 0 && ratio <= 0.5) {
+	            horizontalDropRatio = ratio;
+	            requestRepaint();
+	        } else {
+	            throw new IllegalArgumentException(
+	                    "Ratio must be between 0 and 0.5");
+	        }
+    	}
     }
 
     /**
@@ -326,21 +338,25 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentVerticalDropRatio(float ratio) {
-        if (ratio >= 0 && ratio <= 0.5) {
-            verticalDropRatio = ratio;
-            requestRepaint();
-        } else {
-            throw new IllegalArgumentException(
-                    "Ratio must be between 0 and 0.5");
-        }
+    	if(ratio != verticalDropRatio){
+    		if (ratio >= 0 && ratio <= 0.5) {
+                verticalDropRatio = ratio;
+                requestRepaint();
+            } else {
+                throw new IllegalArgumentException(
+                        "Ratio must be between 0 and 0.5");
+            }	
+    	}
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        iframeShims = shim;
-        requestRepaint();
+    	if(iframeShims != shim){
+    		 iframeShims = shim;
+    	     requestRepaint();
+    	}
     }
 
     /**

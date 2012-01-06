@@ -28,14 +28,21 @@ import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.ClientWidget;
 
+import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDDAbsoluteLayout;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
 import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
+/**
+ * Absolute layout with drag and drop support
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ */
 @SuppressWarnings("serial")
 @ClientWidget(VDDAbsoluteLayout.class)
 public class DDAbsoluteLayout extends AbsoluteLayout implements
@@ -61,8 +68,12 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
      */
     public class AbsoluteLayoutTargetDetails extends TargetDetailsImpl {
 
-        private static final long serialVersionUID = -1134052129807694072L;
-
+    	/**
+    	 * Constructor
+    	 * 
+    	 * @param rawDropData
+    	 * 		Drop data
+    	 */
         protected AbsoluteLayoutTargetDetails(Map<String, Object> rawDropData) {
             super(rawDropData, DDAbsoluteLayout.this);
         }
@@ -74,7 +85,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
          * @return The amount of pixels from the left edge
          */
         public int getAbsoluteLeft() {
-            return Integer.valueOf(getData("absoluteLeft").toString());
+            return Integer.valueOf(getData(Constants.DROP_DETAIL_ABSOLUTE_LEFT).toString());
         }
 
         /**
@@ -84,7 +95,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
          * @return The amount of pixels from the top edge
          */
         public int getAbsoluteTop() {
-            return Integer.valueOf(getData("absoluteTop").toString());
+            return Integer.valueOf(getData(Constants.DROP_DETAIL_ABSOLUTE_TOP).toString());
         }
 
         /**
@@ -94,7 +105,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
          * @return The amount of pixels from the left edge
          */
         public int getRelativeLeft() {
-            return Integer.valueOf(getData("relativeLeft").toString());
+            return Integer.valueOf(getData(Constants.DROP_DETAIL_RELATIVE_LEFT).toString());
         }
 
         /**
@@ -104,7 +115,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
          * @return The amount of pixels from the top edge
          */
         public int getRelativeTop() {
-            return Integer.valueOf(getData("relativeTop").toString());
+            return Integer.valueOf(getData(Constants.DROP_DETAIL_RELATIVE_TOP).toString());
         }
 
         /**
@@ -113,7 +124,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
          * @return The width in pixels
          */
         public int getComponentHeight() {
-            return Integer.valueOf(getData("compHeight").toString());
+            return Integer.valueOf(getData(Constants.DROP_DETAIL_COMPONENT_HEIGHT).toString());
         }
 
         /**
@@ -122,7 +133,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
          * @return The height in pixels
          */
         public int getComponentWidth() {
-            return Integer.valueOf(getData("compWidth").toString());
+            return Integer.valueOf(getData(Constants.DROP_DETAIL_COMPONENT_WIDTH).toString());
         }
 
         /**
@@ -133,7 +144,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
          */
         public MouseEventDetails getMouseEvent() {
             return MouseEventDetails
-                    .deSerialize((String) getData("mouseEvent"));
+                    .deSerialize((String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
         }
     }
 
@@ -157,22 +168,13 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
         }
 
         // Adds the drag mode (the default is none)
-        target.addAttribute("dragMode", dragMode.ordinal());
+        target.addAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE, dragMode.ordinal());
 
         // Should shims be used
         target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
         
         // Paint the dragfilter into the paint target
         new DragFilterPaintable(this).paint(target);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Auto-generated method stub
-        super.changeVariables(source, variables);
     }
 
     /**
@@ -189,8 +191,10 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
      *            The drop handler to set
      */
     public void setDropHandler(DropHandler dropHandler) {
-        this.dropHandler = dropHandler;
-        requestRepaint();
+    	if(this.dropHandler != dropHandler){
+    		 this.dropHandler = dropHandler;
+    	     requestRepaint();
+    	}
     }
 
     /**
@@ -219,16 +223,20 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
      * {@inheritDoc}
      */
     public void setDragMode(LayoutDragMode mode) {
-        dragMode = mode;
-        requestRepaint();
+    	if(dragMode != mode){
+    		dragMode = mode;
+            requestRepaint();
+    	}
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        iframeShims = shim;
-        requestRepaint();
+    	if(iframeShims != shim){
+    		 iframeShims = shim;
+    	     requestRepaint();
+    	}
     }
 
     /**

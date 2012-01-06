@@ -46,11 +46,9 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
         VHasDropHandler, DragStartListener {
 
     public static final String CLASSNAME = "v-ddgridlayout";
-
     public static final String OVER = CLASSNAME + "-over";
     
     public static final float DEFAULT_HORIZONTAL_RATIO = 0.2f;
-    
     public static final float DEFAULT_VERTICAL_RATIO = 0.2f;
 
     private VAbstractDropHandler dropHandler;
@@ -135,9 +133,9 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      *            The UIDL
      */
     private void handleDragModeUpdate(UIDL uidl) {
-        if (uidl.hasAttribute("dragMode")) {
+        if (uidl.hasAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)) {
             LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl.getIntAttribute("dragMode")];
+            dragMode = modes[uidl.getIntAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)];
             ddMouseHandler.updateDragMode(dragMode);
             if (reg == null && dragMode != LayoutDragMode.NONE) {
                 // Cover iframes if necessery
@@ -160,18 +158,18 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
         CellDetails cd = getCellDetails(event);
         if (cd != null) {
             // Add row
-            event.getDropDetails().put("row", Integer.valueOf(cd.row));
+            event.getDropDetails().put(Constants.DROP_DETAIL_ROW, Integer.valueOf(cd.row));
 
             // Add column
-            event.getDropDetails().put("column", Integer.valueOf(cd.column));
+            event.getDropDetails().put(Constants.DROP_DETAIL_COLUMN, Integer.valueOf(cd.column));
 
             // Add horizontal position
             HorizontalDropLocation hl = getHorizontalDropLocation(cd, event);
-            event.getDropDetails().put("hdetail", hl);
+            event.getDropDetails().put(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION, hl);
 
             // Add vertical position
             VerticalDropLocation vl = getVerticalDropLocation(cd, event);
-            event.getDropDetails().put("vdetail", vl);
+            event.getDropDetails().put(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION, vl);
 
             // Check if the cell we are hovering over has content
             boolean hasContent = false;
@@ -184,7 +182,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
                     break;
                 }
             }
-            event.getDropDetails().put("overEmpty", !hasContent);
+            event.getDropDetails().put(Constants.DROP_DETAIL_EMPTY_CELL, !hasContent);
 
             if (hasContent) {
                 /*
@@ -195,9 +193,9 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
                 Widget w = container.getWidget();
                 if (w != null) {
                     String className = w.getClass().getName();
-                    event.getDropDetails().put("overClass", className);
+                    event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS, className);
                 } else {
-                    event.getDropDetails().put("overClass", VDDGridLayout.this);
+                    event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS, VDDGridLayout.this);
                 }
 
             }
@@ -205,12 +203,12 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
             // Add mouse event details
             MouseEventDetails details = new MouseEventDetails(
                     event.getCurrentGwtEvent(), getElement());
-            event.getDropDetails().put("mouseEvent", details.serialize());
+            event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT, details.serialize());
         }
     }
 
     /**
-     * Returns teh horizontal drop location
+     * Returns the horizontal drop location
      * 
      * @param cell
      *            The cell details
@@ -282,7 +280,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
 
         // Ensure we are not dragging ourself into ourself
         Widget draggedComponent = (Widget) event.getTransferable().getData(
-                "component");
+        		Constants.TRANSFERABLE_DETAIL_COMPONENT);
         if (draggedComponent == VDDGridLayout.this) {
             return;
         }
@@ -339,11 +337,11 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      *            The UIDL
      */
     private void handleCellDropRatioUpdate(UIDL uidl) {
-        if (uidl.hasAttribute("hDropRatio")) {
-            cellLeftRightDropRatio = uidl.getFloatAttribute("hDropRatio");
+        if (uidl.hasAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO)) {
+            cellLeftRightDropRatio = uidl.getFloatAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO);
         }
-        if (uidl.hasAttribute("vDropRatio")) {
-            cellTopBottomDropRatio = uidl.getFloatAttribute("vDropRatio");
+        if (uidl.hasAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO)) {
+            cellTopBottomDropRatio = uidl.getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO);
         }
     }
 

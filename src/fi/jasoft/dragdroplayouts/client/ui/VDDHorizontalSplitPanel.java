@@ -42,7 +42,6 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
         VHasDragMode, VHasDropHandler, DragStartListener {
 
     public static final String OVER = "v-ddsplitpanel-over";
-
     public static final String OVER_SPLITTER = OVER + "-splitter";
 
     private LayoutDragMode dragMode = LayoutDragMode.NONE;
@@ -104,13 +103,13 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      *            The UIDL
      */
     private void handleDragModeUpdate(UIDL uidl) {
-        if (uidl.hasAttribute("dragMode")) {
+        if (uidl.hasAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)) {
             LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl.getIntAttribute("dragMode")];
+            dragMode = modes[uidl.getIntAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)];
             ddMouseHandler.updateDragMode(dragMode);
             if (reg == null && dragMode != LayoutDragMode.NONE) {
                 // Cover iframes if necessery
-                iframeCoversEnabled = uidl.getBooleanAttribute("shims");
+                iframeCoversEnabled = uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
 
                 // Listen to mouse down events
                 reg = addDomHandler(ddMouseHandler, MouseDownEvent.getType());
@@ -272,7 +271,7 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
                     postOverHook(drag);
 
                     Widget w = (Widget) drag.getTransferable().getData(
-                            "component");
+                    		Constants.TRANSFERABLE_DETAIL_COMPONENT);
                     if (VDDHorizontalSplitPanel.this.equals(w)) {
                         return;
                     }
@@ -410,18 +409,18 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
                     null);
         }
 
-        event.getDropDetails().put("hdetail", location);
+        event.getDropDetails().put(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION, location);
 
         if (content != null) {
-            event.getDropDetails().put("overClass",
+            event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
                     content.getClass().getName());
         } else {
-            event.getDropDetails().put("overClass", this.getClass().getName());
+            event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS, this.getClass().getName());
         }
 
         // Add mouse event details
         MouseEventDetails details = new MouseEventDetails(
                 event.getCurrentGwtEvent(), getElement());
-        event.getDropDetails().put("mouseEvent", details.serialize());
+        event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT, details.serialize());
     }
 }

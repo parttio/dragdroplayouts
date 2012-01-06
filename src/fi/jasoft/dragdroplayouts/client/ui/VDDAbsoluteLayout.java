@@ -39,6 +39,8 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
         VHasDropHandler, DragStartListener {
 
+    public static final String CLASSNAME = "v-ddabsolutelayout";
+    
     private VAbstractDropHandler dropHandler;
 
     private LayoutDragMode dragMode = LayoutDragMode.NONE;
@@ -46,7 +48,6 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     private VLayoutDragDropMouseHandler ddHandler = new VLayoutDragDropMouseHandler(
             this, dragMode);
 
-    public static final String CLASSNAME = "v-ddabsolutelayout";
 
     private HandlerRegistration reg;
 
@@ -108,14 +109,14 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
 
 
     private void handleDragModeUpdate(UIDL uidl) {
-        if (uidl.hasAttribute("dragMode")) {
+        if (uidl.hasAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)) {
             LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl.getIntAttribute("dragMode")];
+            dragMode = modes[uidl.getIntAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)];
             ddHandler.updateDragMode(dragMode);
             if (reg == null && dragMode != LayoutDragMode.NONE) {
 
                 // Cover iframes if necessery
-                iframeCoversEnabled = uidl.getBooleanAttribute("shims");
+                iframeCoversEnabled = uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
 
                 // Listen to mouse down events
                 reg = addDomHandler(ddHandler, MouseDownEvent.getType());
@@ -143,8 +144,8 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
         int absoluteLeft = getAbsoluteLeft();
         int absoluteTop = getAbsoluteTop();
 
-        drag.getDropDetails().put("absoluteLeft", absoluteLeft);
-        drag.getDropDetails().put("absoluteTop", absoluteTop);
+        drag.getDropDetails().put(Constants.DROP_DETAIL_ABSOLUTE_LEFT, absoluteLeft);
+        drag.getDropDetails().put(Constants.DROP_DETAIL_ABSOLUTE_TOP, absoluteTop);
 
         // Get relative coordinates
         String offsetLeftStr = drag.getDragImage().getStyle().getMarginLeft();
@@ -159,23 +160,23 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
         int relativeTop = drag.getCurrentGwtEvent().getClientY()
                 - canvas.getAbsoluteTop() + offsetTop;
 
-        drag.getDropDetails().put("relativeLeft", relativeLeft);
-        drag.getDropDetails().put("relativeTop", relativeTop);
+        drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_LEFT, relativeLeft);
+        drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_TOP, relativeTop);
 
         // Get component size
-        Widget w = (Widget) drag.getTransferable().getData("component");
+        Widget w = (Widget) drag.getTransferable().getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
         if (w != null) {
-            drag.getDropDetails().put("compWidth", w.getOffsetWidth());
-            drag.getDropDetails().put("compHeight", w.getOffsetHeight());
+            drag.getDropDetails().put(Constants.DROP_DETAIL_COMPONENT_WIDTH, w.getOffsetWidth());
+            drag.getDropDetails().put(Constants.DROP_DETAIL_COMPONENT_HEIGHT, w.getOffsetHeight());
         } else {
-            drag.getDropDetails().put("compWidth", -1);
-            drag.getDropDetails().put("compHeight", -1);
+            drag.getDropDetails().put(Constants.DROP_DETAIL_COMPONENT_WIDTH, -1);
+            drag.getDropDetails().put(Constants.DROP_DETAIL_COMPONENT_HEIGHT, -1);
         }
 
         // Add mouse event details
         MouseEventDetails details = new MouseEventDetails(
                 drag.getCurrentGwtEvent(), getElement());
-        drag.getDropDetails().put("mouseEvent", details.serialize());
+        drag.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT, details.serialize());
     }
 
     /**
@@ -290,7 +291,7 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
                 @Override
                 public void dragEnter(VDragEvent drag) {
                     super.dragEnter(drag);
-                    Object w = drag.getTransferable().getData("component");
+                    Object w = drag.getTransferable().getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
                     if (w instanceof Container) {
                         drag.getDragImage().addClassName(
                                 CLASSNAME + "-drag-shadow");
@@ -308,7 +309,7 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
                 @Override
                 public void dragLeave(VDragEvent drag) {
                     super.dragLeave(drag);
-                    Object w = drag.getTransferable().getData("component");
+                    Object w = drag.getTransferable().getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
                     if (w instanceof Container) {
                         drag.getDragImage().removeClassName(
                                 CLASSNAME + "-drag-shadow");

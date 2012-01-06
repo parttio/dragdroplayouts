@@ -47,9 +47,8 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
         VHasDropHandler, DragStartListener, VDDTabContainer {
 
     public static final String CLASSNAME_OVER = "dd-over";
-    
     public static final String CLASSNAME_SPACER = "spacer";
-
+    
     public static final float DEFAULT_VERTICAL_RATIO = 0.2f;
     
     private LayoutDragMode dragMode = LayoutDragMode.NONE;
@@ -214,11 +213,11 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
                 public boolean drop(VDragEvent drag) {
                     deEmphasis();
                     Widget w = (Widget) drag.getTransferable().getData(
-                            "component");
+                    		Constants.TRANSFERABLE_DETAIL_COMPONENT);
                     if (w instanceof VCaption) {
                         // Convert dragged caption into the real component
                         StackItem item = (StackItem) w.getParent();
-                        drag.getTransferable().setData("component",
+                        drag.getTransferable().setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
                                 item.getComponent());
                     }
 
@@ -245,7 +244,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
                     postOverHook(drag);
 
                     Widget w = (Widget) drag.getTransferable().getData(
-                            "component");
+                    		Constants.TRANSFERABLE_DETAIL_COMPONENT);
                     if (VDDAccordion.this.equals(w)) {
                         return;
                     }
@@ -292,16 +291,16 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
         if (tab != null) {
             // Add index
             int index = getWidgetIndex(tab);
-            event.getDropDetails().put("to", index);
+            event.getDropDetails().put(Constants.DROP_DETAIL_TO, index);
 
             // Add drop location
             VerticalDropLocation location = getDropLocation(tab, event);
-            event.getDropDetails().put("vdetail", location);
+            event.getDropDetails().put(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION, location);
 
             // Add mouse event details
             MouseEventDetails details = new MouseEventDetails(
                     event.getCurrentGwtEvent(), getElement());
-            event.getDropDetails().put("mouseEvent", details.serialize());
+            event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT, details.serialize());
         }
     }
 
@@ -312,14 +311,14 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
      *            The UIDL
      */
     private void handleDragModeUpdate(UIDL uidl) {
-        if (uidl.hasAttribute("dragMode")) {
+        if (uidl.hasAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)) {
             LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl.getIntAttribute("dragMode")];
+            dragMode = modes[uidl.getIntAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)];
             ddMouseHandler.updateDragMode(dragMode);
             if (reg == null && dragMode != LayoutDragMode.NONE) {
 
                 // Cover iframes if necessery
-                iframeCoversEnabled = uidl.getBooleanAttribute("shims");
+                iframeCoversEnabled = uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
 
                 // Listen to mouse down events
                 reg = addDomHandler(ddMouseHandler, MouseDownEvent.getType());
@@ -438,8 +437,8 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
      *            The UIDL
      */
     private void handleCellDropRatioUpdate(UIDL uidl) {
-        if (uidl.hasAttribute("vDropRatio")) {
-            tabTopBottomDropRatio = uidl.getFloatAttribute("vDropRatio");
+        if (uidl.hasAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO)) {
+            tabTopBottomDropRatio = uidl.getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO);
         }
     }
 

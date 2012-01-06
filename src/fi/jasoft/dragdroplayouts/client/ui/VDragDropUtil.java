@@ -137,10 +137,10 @@ public final class VDragDropUtil {
         VTransferable transferable = new VTransferable();
         transferable.setDragSource(tabsheet);
         if (tabsheet != tab) {
-            transferable.setData("component", tab);
-            transferable.setData("index", tabsheet.getTabPosition(tab));
+            transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, tab);
+            transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX, tabsheet.getTabPosition(tab));
         }
-        transferable.setData("mouseDown",
+        transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
                 new MouseEventDetails(event).serialize());
 
         return transferable;
@@ -165,11 +165,11 @@ public final class VDragDropUtil {
         // Create transferable
         VTransferable transferable = new VTransferable();
         transferable.setDragSource(accordion);
-        transferable.setData("caption", tabCaption);
-        transferable.setData("component", tabCaption.getParent());
-        transferable.setData("index",
+        transferable.setData(Constants.TRANSFERABLE_DETAIL_CAPTION, tabCaption);
+        transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, tabCaption.getParent());
+        transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
                 accordion.getWidgetIndex(tabCaption.getParent()));
-        transferable.setData("mouseDown",
+        transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
                 new MouseEventDetails(event).serialize());
 
         return transferable;
@@ -255,8 +255,8 @@ public final class VDragDropUtil {
     private static VTransferable createTransferable(Container layout, Widget widget, NativeEvent event){
     	 VTransferable transferable = new VTransferable();
          transferable.setDragSource(layout);
-         transferable.setData("component", widget);
-         transferable.setData("mouseDown", new MouseEventDetails(event).serialize());
+         transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, widget);
+         transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN, new MouseEventDetails(event).serialize());
          return transferable;
     }
     
