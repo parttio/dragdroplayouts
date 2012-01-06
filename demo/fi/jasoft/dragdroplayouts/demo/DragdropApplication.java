@@ -34,6 +34,7 @@ public class DragdropApplication extends Application {
             tabs.addComponent(new DragdropVerticalLayoutDemo());
             tabs.addComponent(new DragdropHorizontalLayoutDemo());
             tabs.addComponent(new DragdropGridLayoutDemo());
+            tabs.addComponent(new DragdropCssLayoutDemo());
             tabs.addComponent(new DragdropLayoutDraggingDemo());
             tabs.addComponent(new DragdropHorizontalSplitPanelDemo());
             tabs.addComponent(new DragdropVerticalSplitPanelDemo());
