@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.VButton;
+import com.vaadin.terminal.gwt.client.ui.VCssLayout;
 import com.vaadin.terminal.gwt.client.ui.VSlider;
 import com.vaadin.terminal.gwt.client.ui.VTextField;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
@@ -180,8 +181,19 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler {
         }
 
         // Create the drag image
-        currentDragEvent.createDragImage((Element) w.getElement()
-                .getParentNode().cast(), true);
+        if(root instanceof VCssLayout){
+        	/*
+        	 * CSS Layout does not have an enclosing div so we just use the component dov
+        	 */
+        	 currentDragEvent.createDragImage((Element) w.getElement().cast(), true);
+        	
+        } else {
+        	/*
+        	 * Other layouts uses a enclosing div so we use it.
+        	 */
+        	 currentDragEvent.createDragImage((Element) w.getElement()
+                     .getParentNode().cast(), true);
+        }
 
         if (BrowserInfo.get().isIE7() && w instanceof VTextField) {
             currentDragEvent.createDragImage(w.getElement(), true);
@@ -253,4 +265,12 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler {
         dragStartListeners.remove(listener);
     }
 
+    
+    /**
+     * Returns the currently dragged widget. Only available while dragging.
+     * @return
+     */
+    public Widget getCurrentDraggedWidget(){
+    	return currentDraggedWidget;
+    }
 }

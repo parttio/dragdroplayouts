@@ -17,18 +17,29 @@ package fi.jasoft.dragdroplayouts.client.ui;
 
 import java.util.Iterator;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Float;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VCssLayout;
+import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
+import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
 import fi.jasoft.dragdroplayouts.DDCssLayout;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
@@ -140,6 +151,7 @@ VHasDropHandler, DragStartListener{
                 public boolean drop(VDragEvent drag) {
                     if (super.drop(drag)) {
                         updateDragDetails(drag);
+                        detachDragImageFromLayout(drag);
                         return postDropHook(drag);
                     }
                     return false;
@@ -155,6 +167,7 @@ VHasDropHandler, DragStartListener{
                 @Override
                 public void dragEnter(VDragEvent drag) {
                     super.dragEnter(drag);
+                    attachDragImageToLayout(drag);
                     postEnterHook(drag);
                 };
                 
@@ -168,6 +181,7 @@ VHasDropHandler, DragStartListener{
                 @Override
                 public void dragLeave(VDragEvent drag) {
                     super.dragLeave(drag);
+                    detachDragImageFromLayout(drag);
                     postLeaveHook(drag);
                 };
                 
@@ -184,6 +198,7 @@ VHasDropHandler, DragStartListener{
                     // Update drop details with the location so we can
                     // validate it
                     updateDragDetails(drag);
+                    moveDragImageInLayout(drag);
                     postOverHook(drag);
                 };
             	  
@@ -198,6 +213,11 @@ VHasDropHandler, DragStartListener{
      */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+    	if (client.updateComponent(this, uidl, true)) {
+            return;
+        }
+    	
+    	this.client = client;
     	
     	// Drag mode
     	handleDragModeUpdate(uidl);
@@ -319,4 +339,84 @@ VHasDropHandler, DragStartListener{
                 drag.getCurrentGwtEvent(), getElement());
         drag.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT, details.serialize());
     }
+    
+    private Element placeHolderElement;
+    private void attachDragImageToLayout(VDragEvent drag){
+    	if(placeHolderElement == null){
+    		
+    		int height = Util.getRequiredHeight(ddHandler.getCurrentDraggedWidget());
+    		int width = Util.getRequiredWidth(ddHandler.getCurrentDraggedWidget());
+    		
+    		placeHolderElement = DOM.createDiv();
+    		placeHolderElement.setClassName("v-ddcsslayout-drag-shadow");
+    		placeHolderElement.getStyle().setWidth(width, Unit.PX);
+    		placeHolderElement.getStyle().setHeight(height, Unit.PX);
+    		placeHolderElement.getStyle().setDisplay(Display.INLINE_BLOCK);
+    		
+    	}
+    }
+    
+    private void detachDragImageFromLayout(VDragEvent drag){
+    	if(placeHolderElement != null){
+    		placeHolderElement.removeFromParent();
+    		placeHolderElement = null;
+    	}
+    }
+    
+    private void moveDragImageInLayout(VDragEvent drag){
+    	
+    	if(placeHolderElement == null){
+    		/*
+    		 * Drag image might not have been detach due to lazy attaching in 
+    		 * the DragAndDropManager. Detach it again here if it has not been detached.
+    		 */
+    		attachDragImageToLayout(drag);
+    		return;
+    	}
+    	
+    	if(placeHolderElement.isOrHasChild(drag.getElementOver())){
+    		return;
+    	} 
+    	
+    	if(placeHolderElement.hasParentElement()){
+    		placeHolderElement.removeFromParent();
+    	}
+    	
+    	Widget w = Util.findWidget(drag.getElementOver(), null);
+    	if(w == ddHandler.getCurrentDraggedWidget()){
+    		return;
+    	}
+    	
+    	if(w != null && !w.getStyleName().equals("v-csslayout-container")){
+    		
+    		HorizontalDropLocation hl = VDragDropUtil.getHorizontalDropLocation(w.getElement(), drag.getCurrentGwtEvent().getClientX(), 0.5f);
+    		VerticalDropLocation vl = VDragDropUtil.getVerticalDropLocation(w.getElement(), w.getElement().getOffsetHeight(), drag.getCurrentGwtEvent().getClientY(), 0.5f);
+    		
+    		if(hl == HorizontalDropLocation.LEFT || vl == VerticalDropLocation.TOP){
+    			Element prev = w.getElement().getPreviousSibling().cast();
+    			if(prev == null || !ddHandler.getCurrentDraggedWidget().getElement().isOrHasChild(prev)){
+    				getWidget().getElement().insertBefore(placeHolderElement, w.getElement());
+    			}	
+    		} else if(hl == HorizontalDropLocation.RIGHT){
+    			Element next = w.getElement().getNextSibling().cast();
+    			if(next == null || !ddHandler.getCurrentDraggedWidget().getElement().isOrHasChild(next)){
+    				getWidget().getElement().insertAfter(placeHolderElement, w.getElement()); 
+    			}
+
+    		} else {
+    			//TODO
+    		}
+    		    		  
+    	} else {
+
+    		getWidget().getElement().insertAfter(placeHolderElement, getWidget().getElement().getLastChild()); 
+    		
+    	} 
+    	
+    	  
+    	
+    	
+    	
+    }
+    
 }

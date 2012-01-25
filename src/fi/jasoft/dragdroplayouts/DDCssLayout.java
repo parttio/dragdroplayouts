@@ -25,7 +25,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  * CssLayout with drag and drop support
  * 
  * @author John Ahlroos / www.jasoft.fi
- * @since 0.6.4
+ * @since 0.7.0
  *
  */
 @SuppressWarnings("serial")
