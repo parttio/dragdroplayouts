@@ -9,9 +9,14 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
+import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.ClientWidget;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 
+import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDDCssLayout;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
@@ -52,6 +57,11 @@ LayoutDragSource, DropTarget, ShimSupport{
      */
     public class CssLayoutTargetDetails extends TargetDetailsImpl{
 
+    	private int index = -1;
+    	
+    	private Component over;
+
+    	
     	/**
     	 * Constructor
     	 * 
@@ -59,8 +69,73 @@ LayoutDragSource, DropTarget, ShimSupport{
     	 * 		The drop data
     	 */
 		protected CssLayoutTargetDetails(Map<String, Object> rawDropData) {
-			super(rawDropData);
+			 super(rawDropData, DDCssLayout.this);
+			
+			// Get over which component (if any) the drop was made and the
+            // index of it
+            if (getData(Constants.DROP_DETAIL_TO) != null) {
+                index = Integer.valueOf(getData(Constants.DROP_DETAIL_TO).toString());
+                if(index >= 0 && index < components.size()) {
+                    over = components.get(index);
+                }
+            }
+
+            // Was the drop over no specific cell
+            if (over == null) {
+                over = DDCssLayout.this;
+            }
 		}
+		
+		 /**
+         * Some details about the mouse event
+         * 
+         * @return details about the actual event that caused the event details.
+         *         Practically mouse move or mouse up.
+         */
+        public MouseEventDetails getMouseEvent() {
+            return MouseEventDetails
+                    .deSerialize(getData(Constants.DROP_DETAIL_MOUSE_EVENT).toString());
+        }
+        
+        /**
+         * Get the horizontal position of the dropped component within the
+         * underlying cell.
+         * 
+         * @return The drop location
+         */
+        public HorizontalDropLocation getHorizontalDropLocation() {
+        	 return HorizontalDropLocation.valueOf((String) getData(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION));
+        }
+           
+        
+        /**
+         * Get the horizontal position of the dropped component within the
+         * underlying cell.
+         * 
+         * @return The drop location
+         */
+        public VerticalDropLocation getVerticalDropLocation() {
+            return VerticalDropLocation.valueOf((String) getData(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION));
+        }
+        
+        /**
+         * The index over which the drop was made. If the drop was not made over
+         * any component then it returns -1.
+         * 
+         * @return The index of the component or -1 if over no component.
+         */
+        public int getOverIndex() {
+            return index;
+        }
+        
+        /**
+         * The component over which the drop was made.
+         * 
+         * @return Null if the drop was not over a component, else the component
+         */
+        public Component getOverComponent() {
+            return over;
+        }
     }
     
     /**

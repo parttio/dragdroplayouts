@@ -12,7 +12,10 @@ import com.vaadin.ui.Link;
 import com.vaadin.ui.Button.ClickEvent;
 
 import fi.jasoft.dragdroplayouts.DDCssLayout;
+import fi.jasoft.dragdroplayouts.DDCssLayout.CssLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.drophandlers.DefaultCssLayoutDropHandler;
+import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
 public class DragdropCssLayoutDemo extends CustomComponent implements
 DragdropDemo {
@@ -29,15 +32,7 @@ DragdropDemo {
 	     cssLayout.setDragMode(LayoutDragMode.CLONE);
 	     
 	     // Enable dropping
-	     cssLayout.setDropHandler(new DropHandler() {
-			public AcceptCriterion getAcceptCriterion() {
-				return AcceptAll.get();
-			}
-			
-			public void drop(DragAndDropEvent event) {
-				System.out.println("Drop!");
-			}
-		});
+	     cssLayout.setDropHandler(new DefaultCssLayoutDropHandler());
 	     
 	     // Add some components
         Label lbl = new Label(
