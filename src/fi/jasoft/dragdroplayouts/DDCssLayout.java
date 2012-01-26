@@ -78,6 +78,8 @@ LayoutDragSource, DropTarget, ShimSupport{
                 if(index >= 0 && index < components.size()) {
                     over = components.get(index);
                 }
+            } else {
+            	index = components.size();
             }
 
             // Was the drop over no specific cell

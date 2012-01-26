@@ -165,7 +165,6 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 				 */
 				@Override
 				public boolean drop(VDragEvent drag) {
-					updateDragDetails(drag);
 					detachDragImageFromLayout(drag);
 					return postDropHook(drag) && super.drop(drag);
 				};
@@ -207,11 +206,9 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 				 */
 				@Override
 				public void dragOver(VDragEvent drag) {
-					
 					if(!placeHolderElement.isOrHasChild(drag.getElementOver())){
 						updateDragDetails(drag);
 					}
-					
 					postOverHook(drag);
 
 					// Validate the drop
@@ -400,6 +397,10 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 	 *            The drag event
 	 */
 	protected void updateDragDetails(VDragEvent event) {
+		if(placeHolderElement != null && placeHolderElement.isOrHasChild(event.getElementOver())){
+			return;
+		}
+				
 		Widget widget = (Widget) Util.findWidget(event.getElementOver(), null);
 		if (widget == null) {
 			// Null check
@@ -461,6 +462,10 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 
 	private void moveDragImageInLayout(VDragEvent drag) {
 
+		if(placeHolderElement.isOrHasChild(drag.getElementOver())){
+			return;
+		}
+		
 		if (placeHolderElement == null) {
 			/*
 			 * Drag image might not have been detach due to lazy attaching in
@@ -496,7 +501,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 			return;
 		}
 
-		if (w != null && !w.getStyleName().equals("v-csslayout-container")) {
+		if (w != null && w != this) {
 
 			HorizontalDropLocation hl = getHorizontalDropLocation(w, drag);
 			VerticalDropLocation vl = getVerticalDropLocation(w, drag);
@@ -552,8 +557,16 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 	 */
 	private HorizontalDropLocation getHorizontalDropLocation(Widget container,
 			VDragEvent event) {
-		return VDragDropUtil.getHorizontalDropLocation(container.getElement(),
-				event.getCurrentGwtEvent().getClientX(), horizontalDropRatio);
+		if(container == this){
+			if(getWidget().getElement().getChildCount() == 0){
+				return HorizontalDropLocation.LEFT;
+			} else {
+				return HorizontalDropLocation.RIGHT;
+			}
+		} else {
+			return VDragDropUtil.getHorizontalDropLocation(container.getElement(),
+					event.getCurrentGwtEvent().getClientX(), horizontalDropRatio);
+		}
 	}
 
 	/**
@@ -569,8 +582,16 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 	 */
 	private VerticalDropLocation getVerticalDropLocation(Widget container,
 			VDragEvent event) {
-		return VDragDropUtil.getVerticalDropLocation(container.getElement(),
-				event.getCurrentGwtEvent().getClientY(), verticalDropRatio);
+		if(container == this){
+			if(getWidget().getElement().getChildCount() == 0){
+				return VerticalDropLocation.TOP;
+			} else {
+				return VerticalDropLocation.BOTTOM;
+			}
+		} else {
+			return VDragDropUtil.getVerticalDropLocation(container.getElement(),
+					event.getCurrentGwtEvent().getClientY(), verticalDropRatio);
+		}
 	}
 	
 	/**
