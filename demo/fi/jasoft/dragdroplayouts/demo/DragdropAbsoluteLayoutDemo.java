@@ -9,6 +9,7 @@ import com.vaadin.ui.Link;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.DDAccordion;
+import fi.jasoft.dragdroplayouts.DDCssLayout;
 import fi.jasoft.dragdroplayouts.DDGridLayout;
 import fi.jasoft.dragdroplayouts.DDHorizontalLayout;
 import fi.jasoft.dragdroplayouts.DDHorizontalSplitPanel;
@@ -18,6 +19,7 @@ import fi.jasoft.dragdroplayouts.DDVerticalSplitPanel;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultAbsoluteLayoutDropHandler;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultAccordionDropHandler;
+import fi.jasoft.dragdroplayouts.drophandlers.DefaultCssLayoutDropHandler;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultGridLayoutDropHandler;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultHorizontalLayoutDropHandler;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultHorizontalSplitPanelDropHandler;
@@ -55,6 +57,16 @@ public class DragdropAbsoluteLayoutDemo extends CustomComponent implements
         Link link = new Link("A link to Vaadin", new ExternalResource(
                 "http://www.vaadin.com"));
         layout.addComponent(link, "left:200px; top:100px");
+        
+        DDCssLayout css = new DDCssLayout();
+        css.setWidth("100px");
+        css.setHeight("100px");
+        css.setDragMode(LayoutDragMode.CLONE);
+        css.setDropHandler(new DefaultCssLayoutDropHandler());
+        css.addComponent(new Button("HELLO"));
+        layout.addComponent(css, "left:200px; top:150px");
+        
+        
     }
 
     public String getCodePath() {

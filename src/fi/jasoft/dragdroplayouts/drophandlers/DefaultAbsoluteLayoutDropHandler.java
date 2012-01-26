@@ -34,7 +34,7 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
  *
  */
 @SuppressWarnings("serial")
-public class DefaultAbsoluteLayoutDropHandler implements DropHandler {
+public class DefaultAbsoluteLayoutDropHandler extends AbstractDefaultLayoutDropHandler {
 
 	/**
 	 * Called when a component changed location within the layout
@@ -42,6 +42,7 @@ public class DefaultAbsoluteLayoutDropHandler implements DropHandler {
 	 * @param event
 	 * 		The drag and drop event
 	 */
+	@Override
 	protected void handleComponentReordering(DragAndDropEvent event){
 		AbsoluteLayoutTargetDetails details = (AbsoluteLayoutTargetDetails) event
 		            .getTargetDetails();
@@ -61,39 +62,12 @@ public class DefaultAbsoluteLayoutDropHandler implements DropHandler {
 	}
 	
 	/**
-	 * Handles a drop by a component which has an absolute layout as parent. In this
-	 * case the component is moved.
-	 * 
-	 * @param event
-	 * 		The drag and drop event
-	 */
-	protected void handleDropFromAbsoluteParentLayout(DragAndDropEvent event){
-		AbsoluteLayoutTargetDetails details = (AbsoluteLayoutTargetDetails) event
-	            .getTargetDetails();
-		LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-		        .getTransferable();
-		Component component = transferable.getComponent();
-
-		MouseEventDetails mouseDown = transferable.getMouseDownEvent();
-		MouseEventDetails mouseUp = details.getMouseEvent();
-		int movex = mouseUp.getClientX() - mouseDown.getClientX();
-		int movey = mouseUp.getClientY() - mouseDown.getClientY();
-
-		DDAbsoluteLayout parent = (DDAbsoluteLayout) component.getParent();
-		ComponentPosition position = parent.getPosition(component);
-
-		float x = position.getLeftValue() + movex;
-		float y = position.getTopValue() + movey;
-		position.setLeft(x, Sizeable.UNITS_PIXELS);
-		position.setTop(y, Sizeable.UNITS_PIXELS);
-	}
-	
-	/**
 	 * Handle a drop from another layout
 	 * 
 	 * @param event
 	 * 		The drag and drop event
 	 */	
+	@Override
 	protected void handleDropFromLayout(DragAndDropEvent event){
 		AbsoluteLayoutTargetDetails details = (AbsoluteLayoutTargetDetails) event
 	            .getTargetDetails();
@@ -123,38 +97,4 @@ public class DefaultAbsoluteLayoutDropHandler implements DropHandler {
         layout.addComponent(component, "left:" + leftPixelPosition
                 + "px;top:" + topPixelPosition + "px");
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see com.vaadin.event.dd.DropHandler#drop(com.vaadin.event.dd.DragAndDropEvent)
-	 */
-    public void drop(DragAndDropEvent event) {
-        AbsoluteLayoutTargetDetails details = (AbsoluteLayoutTargetDetails) event
-                .getTargetDetails();
-        Component source = event.getTransferable().getSourceComponent();
-        DDAbsoluteLayout layout = (DDAbsoluteLayout) details.getTarget();
-        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-                .getTransferable();
-        Component component = transferable.getComponent();
-
-        if (layout == source) {
-        	handleComponentReordering(event);
-        } else if (event.getTransferable() instanceof LayoutBoundTransferable) {
-            if (component == layout) {
-                if (component.getParent() instanceof DDAbsoluteLayout) {
-                   handleDropFromAbsoluteParentLayout(event);
-                }
-            } else {
-               handleDropFromLayout(event);
-            }
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.vaadin.event.dd.DropHandler#getAcceptCriterion()
-     */
-    public AcceptCriterion getAcceptCriterion() {
-        return AcceptAll.get();
-    }
 }

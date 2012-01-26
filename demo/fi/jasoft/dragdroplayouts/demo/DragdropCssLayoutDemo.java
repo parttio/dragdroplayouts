@@ -6,6 +6,7 @@ import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
@@ -16,6 +17,7 @@ import fi.jasoft.dragdroplayouts.DDCssLayout.CssLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultCssLayoutDropHandler;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
+import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 
 public class DragdropCssLayoutDemo extends CustomComponent implements
 DragdropDemo {
@@ -33,6 +35,13 @@ DragdropDemo {
 	     
 	     // Enable dropping
 	     cssLayout.setDropHandler(new DefaultCssLayoutDropHandler());
+	     
+	     // Only allow draggin buttons
+	     cssLayout.setDragFilter(new DragFilter() {
+			public boolean isDraggable(Component component) {
+				return component instanceof Button;
+			}
+		});
 	     
 	     // Add some components
         Label lbl = new Label(

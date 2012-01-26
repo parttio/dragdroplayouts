@@ -33,59 +33,41 @@ import fi.jasoft.dragdroplayouts.events.HorizontalLocationIs;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
 @SuppressWarnings("serial")
-public class DefaultHorizontalSplitPanelDropHandler implements DropHandler {
+public class DefaultHorizontalSplitPanelDropHandler extends AbstractDefaultLayoutDropHandler{
 
-    public void drop(DragAndDropEvent event) {
-        // Casting to a layout bound transferable since we assume a component
-        // must come from another layout
-        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-                .getTransferable();
-        HorizontalSplitPanelTargetDetails details = (HorizontalSplitPanelTargetDetails) event
-                .getTargetDetails();
-        Component component = transferable.getComponent();
-        DDHorizontalSplitPanel panel = (DDHorizontalSplitPanel) details
-                .getTarget();
-        ComponentContainer source = (ComponentContainer) transferable
-                .getSourceComponent();
-
-        if (component == panel) {
-            // Dropping myself on myself, if parent is absolute layout then
-            // move
-            if (component.getParent() instanceof DDAbsoluteLayout) {
-                MouseEventDetails mouseDown = transferable.getMouseDownEvent();
-                MouseEventDetails mouseUp = details.getMouseEvent();
-                int movex = mouseUp.getClientX() - mouseDown.getClientX();
-                int movey = mouseUp.getClientY() - mouseDown.getClientY();
-
-                DDAbsoluteLayout parent = (DDAbsoluteLayout) component
-                        .getParent();
-                ComponentPosition position = parent.getPosition(component);
-
-                float x = position.getLeftValue() + movex;
-                float y = position.getTopValue() + movey;
-                position.setLeft(x, Sizeable.UNITS_PIXELS);
-                position.setTop(y, Sizeable.UNITS_PIXELS);
-            }
-
-        } else {
-
-            // Remove component from its source
-            source.removeComponent(component);
-
-            if (details.getDropLocation() == HorizontalDropLocation.LEFT) {
-                // Dropped in the left area
-                panel.setFirstComponent(component);
-
-            } else if (details.getDropLocation() == HorizontalDropLocation.RIGHT) {
-                // Dropped in the right area
-                panel.setSecondComponent(component);
-            }
-        }
-    }
-
+    @Override
     public AcceptCriterion getAcceptCriterion() {
         // Only allow dropping in slots, not on the center bar
         return new Not(HorizontalLocationIs.CENTER);
     }
 
+	@Override
+	protected void handleComponentReordering(DragAndDropEvent event) {
+		handleDropFromLayout(event);
+	}
+
+	@Override
+	protected void handleDropFromLayout(DragAndDropEvent event) {
+		LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+	                .getTransferable();
+		ComponentContainer source = (ComponentContainer) transferable
+	                .getSourceComponent();
+		HorizontalSplitPanelTargetDetails details = (HorizontalSplitPanelTargetDetails) event
+                .getTargetDetails();
+		Component component = transferable.getComponent();
+        DDHorizontalSplitPanel panel = (DDHorizontalSplitPanel) details
+                .getTarget();
+		 
+		 // Remove component from its source
+        source.removeComponent(component);
+
+        if (details.getDropLocation() == HorizontalDropLocation.LEFT) {
+            // Dropped in the left area
+            panel.setFirstComponent(component);
+
+        } else if (details.getDropLocation() == HorizontalDropLocation.RIGHT) {
+            // Dropped in the right area
+            panel.setSecondComponent(component);
+        }
+	}
 }

@@ -37,7 +37,7 @@ import fi.jasoft.dragdroplayouts.events.VerticalLocationIs;
  * A default drop handler for an accordion
  */
 @SuppressWarnings("serial")
-public class DefaultAccordionDropHandler implements DropHandler {
+public class DefaultAccordionDropHandler extends AbstractDefaultLayoutDropHandler {
 
 	/**
 	 * Called when tabs are being rearranged
@@ -45,7 +45,8 @@ public class DefaultAccordionDropHandler implements DropHandler {
 	 * @param event
 	 * 		A drag and drop event
 	 */
-	protected void handleTabReorder(DragAndDropEvent event){
+	@Override
+	protected void handleComponentReordering(DragAndDropEvent event){
 		AccordionTargetDetails details = (AccordionTargetDetails) event
 	                .getTargetDetails();
         DDAccordion acc = (DDAccordion) details.getTarget();
@@ -76,33 +77,6 @@ public class DefaultAccordionDropHandler implements DropHandler {
             }
         }
 	}
-
-	/**
-	 * Handles a drop by a component which has an absolute layout as parent. In this
-	 * case the component is moved.
-	 * 
-	 * @param event
-	 * 		The drag and drop event
-	 */
-	protected void handleDropFromAbsoluteParentLayout(DragAndDropEvent event){
-		 LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-	                .getTransferable();
-		 AccordionTargetDetails details = (AccordionTargetDetails) event
-	                .getTargetDetails();
-		 MouseEventDetails mouseDown = transferable.getMouseDownEvent();
-         MouseEventDetails mouseUp = details.getMouseEvent();
-         int movex = mouseUp.getClientX() - mouseDown.getClientX();
-         int movey = mouseUp.getClientY() - mouseDown.getClientY();
-         Component c = transferable.getComponent();
-
-         DDAbsoluteLayout parent = (DDAbsoluteLayout) c.getParent();
-         ComponentPosition position = parent.getPosition(c);
-
-         float x = position.getLeftValue() + movex;
-         float y = position.getTopValue() + movey;
-         position.setLeft(x, Sizeable.UNITS_PIXELS);
-         position.setTop(y, Sizeable.UNITS_PIXELS);
-	}
 	
 	/**
 	 * Adds a new tab from the drop
@@ -110,7 +84,8 @@ public class DefaultAccordionDropHandler implements DropHandler {
 	 * @param event
 	 * 		The drag and drop event
 	 */
-	protected void addNewTab(DragAndDropEvent event){
+	@Override
+	protected void handleDropFromLayout(DragAndDropEvent event){
 		LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
 	                .getTransferable();
 
@@ -133,34 +108,12 @@ public class DefaultAccordionDropHandler implements DropHandler {
             acc.addTab(c);
         }
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see com.vaadin.event.dd.DropHandler#drop(com.vaadin.event.dd.DragAndDropEvent)
-	 */
-    public void drop(DragAndDropEvent event) {
-        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-                .getTransferable();
-        AccordionTargetDetails details = (AccordionTargetDetails) event
-                .getTargetDetails();
-        DDAccordion acc = (DDAccordion) details.getTarget();
-        Component c = transferable.getComponent();
-        
-        if (transferable.getSourceComponent() == acc) {
-            handleTabReorder(event);
-        } else if (acc == c) {
-            if (c.getParent() instanceof DDAbsoluteLayout) {
-            	handleDropFromAbsoluteParentLayout(event);
-            }
-        } else {
-        	addNewTab(event);
-        }
-    }
 
     /*
      * (non-Javadoc)
      * @see com.vaadin.event.dd.DropHandler#getAcceptCriterion()
      */
+	@Override
     public AcceptCriterion getAcceptCriterion() {
         return new Not(VerticalLocationIs.MIDDLE);
     }

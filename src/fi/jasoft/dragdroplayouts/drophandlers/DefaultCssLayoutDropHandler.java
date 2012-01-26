@@ -19,10 +19,17 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
+import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
 
+import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.DDCssLayout;
 import fi.jasoft.dragdroplayouts.DDCssLayout.CssLayoutTargetDetails;
+import fi.jasoft.dragdroplayouts.DDHorizontalLayout.HorizontalLayoutTargetDetails;
+import fi.jasoft.dragdroplayouts.DDVerticalLayout.VerticalLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
 /**
@@ -33,45 +40,75 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
  *
  */
 @SuppressWarnings("serial")
-public class DefaultCssLayoutDropHandler implements DropHandler {
+public class DefaultCssLayoutDropHandler extends AbstractDefaultLayoutDropHandler {
 
-	
-	/**
-	 * Constructor
-	 */
-	public DefaultCssLayoutDropHandler() {
-		// Default
-	}
-	
 	/*
 	 * (non-Javadoc)
-	 * @see com.vaadin.event.dd.DropHandler#drop(com.vaadin.event.dd.DragAndDropEvent)
+	 * @see fi.jasoft.dragdroplayouts.drophandlers.AbstractDefaultLayoutDropHandler#handleComponentReordering(com.vaadin.event.dd.DragAndDropEvent)
 	 */
-	public void drop(DragAndDropEvent event) {
-		CssLayoutTargetDetails details = (CssLayoutTargetDetails)event.getTargetDetails();
-		LayoutBoundTransferable transferable = (LayoutBoundTransferable)event.getTransferable();
-		DDCssLayout layout = (DDCssLayout) details.getTarget();
-	    Component comp = transferable.getComponent();
-	    int idx = details.getOverIndex();
-		
-	    // Detach
+	@Override
+	protected void handleComponentReordering(DragAndDropEvent event) {
+		 // Component re-ordering
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
+        CssLayoutTargetDetails details = (CssLayoutTargetDetails) event
+                .getTargetDetails();
+        DDCssLayout layout = (DDCssLayout) details.getTarget();
+        Component comp = transferable.getComponent();
+        int idx = details.getOverIndex();
+
+        // Detach
         layout.removeComponent(comp);
-        
+    
         // Add component
         if (idx >= 0 && idx < layout.getComponentCount()) {
             layout.addComponent(comp, idx);
         } else {
             layout.addComponent(comp);
-        }
+        }		
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.vaadin.event.dd.DropHandler#getAcceptCriterion()
+	 * @see fi.jasoft.dragdroplayouts.drophandlers.AbstractDefaultLayoutDropHandler#handleDropFromLayout(com.vaadin.event.dd.DragAndDropEvent)
 	 */
-	public AcceptCriterion getAcceptCriterion() {
-		// Allows dropping everywhere
-		return AcceptAll.get();
+	@Override
+	protected void handleDropFromLayout(DragAndDropEvent event) {
+		 LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+	                .getTransferable();
+	        CssLayoutTargetDetails details = (CssLayoutTargetDetails) event
+	                .getTargetDetails();
+	        DDCssLayout layout = (DDCssLayout) details
+	                .getTarget();
+	        Component source = event.getTransferable().getSourceComponent();
+	        int idx = (details).getOverIndex();
+	        Component comp = transferable.getComponent();
+
+	        // Check that we are not dragging an outer layout into an inner
+	        // layout
+	        Component parent = layout.getParent();
+	        while (parent != null) {
+	            if (parent == comp) {
+	                return;
+	            }
+	            parent = parent.getParent();
+	        }
+
+	        // If source is an instance of a component container then remove
+	        // it
+	        // from there,
+	        // the component cannot have two parents.
+	        if (source instanceof ComponentContainer) {
+	            ComponentContainer sourceLayout = (ComponentContainer) source;
+	            sourceLayout.removeComponent(comp);
+	        }
+
+	        // Add component
+	        if (idx >= 0 && idx < layout.getComponentCount()) {
+	            layout.addComponent(comp, idx);
+	        } else {
+	            layout.addComponent(comp);
+	        }		
 	}
 
 }
