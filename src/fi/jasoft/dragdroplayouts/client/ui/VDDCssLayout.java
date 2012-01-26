@@ -17,17 +17,12 @@ package fi.jasoft.dragdroplayouts.client.ui;
 
 import java.util.Iterator;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.Float;
-import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.WidgetCollection;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -37,7 +32,6 @@ import com.vaadin.terminal.gwt.client.ui.VCssLayout;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
-import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
@@ -53,6 +47,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * Client side implementation for {@link DDCssLayout}
  * 
  * @author John Ahlroos / www.jasoft.fi
+ * @since 0.7.0
  * 
  */
 public class VDDCssLayout extends VCssLayout implements VHasDragMode,
@@ -212,7 +207,11 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 				 */
 				@Override
 				public void dragOver(VDragEvent drag) {
-					updateDragDetails(drag);
+					
+					if(!placeHolderElement.isOrHasChild(drag.getElementOver())){
+						updateDragDetails(drag);
+					}
+					
 					postOverHook(drag);
 
 					// Validate the drop
@@ -361,27 +360,27 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 	private void attachDragImageToLayout(VDragEvent drag) {
 		if (placeHolderElement == null) {
 			placeHolderElement = DOM.createDiv();
-			updatePlaceHolderStyleProperties();
+			moveDragImageInLayout(drag);
 		}
 	}
 	
-	private void updatePlaceHolderStyleProperties(){
-		int height = Util.getRequiredHeight(ddHandler
-				.getCurrentDraggedWidget());
-		int width = Util.getRequiredWidth(ddHandler
-				.getCurrentDraggedWidget());
-		String className = ddHandler.getCurrentDraggedWidget().getElement()
-				.getClassName();
-	
-		className = className.replaceAll(
-				VLayoutDragDropMouseHandler.ACTIVE_DRAG_SOURCE_STYLENAME,
-				"");
+	private void updatePlaceHolderStyleProperties(VDragEvent drag){
+		Widget dragged = (Widget)drag.getTransferable().getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
+		if(dragged != null){
+			int height = Util.getRequiredHeight(dragged);
+			int width = Util.getRequiredWidth(dragged);
+			String className = dragged.getElement().getClassName();
 		
-		placeHolderElement.setClassName(className + " "
-				+ DRAG_SHADOW_STYLE_NAME);
+			className = className.replaceAll(
+					VLayoutDragDropMouseHandler.ACTIVE_DRAG_SOURCE_STYLENAME,
+					"");
+			
+			placeHolderElement.setClassName(className + " "
+					+ DRAG_SHADOW_STYLE_NAME);
 
-		placeHolderElement.getStyle().setWidth(width, Unit.PX);
-		placeHolderElement.getStyle().setHeight(height, Unit.PX);
+			placeHolderElement.getStyle().setWidth(width, Unit.PX);
+			placeHolderElement.getStyle().setHeight(height, Unit.PX);
+		}
 	}
 
 	private void detachDragImageFromLayout(VDragEvent drag) {
@@ -488,8 +487,8 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 		}
 
 		Widget w = Util.findWidget(drag.getElementOver(), null);
-
-		if (w == ddHandler.getCurrentDraggedWidget()) {
+		Widget dragged = (Widget)drag.getTransferable().getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
+		if (w == dragged) {
 			/*
 			 * Dragging drag image over the placeholder should not have any
 			 * effect (except placeholder should be removed)
@@ -506,37 +505,38 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 					|| vl == VerticalDropLocation.TOP) {
 				Element prev = w.getElement().getPreviousSibling().cast();
 				if (prev == null
-						|| !ddHandler.getCurrentDraggedWidget().getElement()
-								.isOrHasChild(prev)) {
-					getWidget().getElement().insertBefore(placeHolderElement,
-							w.getElement());
+						|| !dragged.getElement().isOrHasChild(prev)) {
+					
+					w.getElement().getParentElement().insertBefore(placeHolderElement,
+								w.getElement());
+					
 				}
-			} else if (hl == HorizontalDropLocation.RIGHT) {
+			} else if (hl == HorizontalDropLocation.RIGHT 
+					|| vl == VerticalDropLocation.BOTTOM) {
 				Element next = w.getElement().getNextSibling().cast();
 				if (next == null
-						|| !ddHandler.getCurrentDraggedWidget().getElement()
-								.isOrHasChild(next)) {
-					getWidget().getElement().insertAfter(placeHolderElement,
+						|| !dragged.getElement().isOrHasChild(next)) {
+					w.getElement().getParentElement().insertAfter(placeHolderElement,
 							w.getElement());
 				}
 
 			} else {
 				Element prev = w.getElement().getPreviousSibling().cast();
 				if (prev == null
-						|| !ddHandler.getCurrentDraggedWidget().getElement()
-								.isOrHasChild(prev)) {
-					getWidget().getElement().insertBefore(placeHolderElement,
+						|| !dragged.getElement().isOrHasChild(prev)) {
+					w.getElement().getParentElement().insertBefore(placeHolderElement,
 							w.getElement());
 				}
 			}
 
 		} else {
-
-			getWidget().getElement().insertAfter(placeHolderElement,
-					getWidget().getElement().getLastChild());
+			/*
+			 * First child or hoovering outside of current components
+			 */
+			getWidget().getElement().appendChild(placeHolderElement);
 		}
 
-		updatePlaceHolderStyleProperties();
+		updatePlaceHolderStyleProperties(drag);
 	}
 
 	/**

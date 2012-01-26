@@ -264,13 +264,4 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler {
     public void removeDragStartListener(DragStartListener listener) {
         dragStartListeners.remove(listener);
     }
-
-    
-    /**
-     * Returns the currently dragged widget. Only available while dragging.
-     * @return
-     */
-    public Widget getCurrentDraggedWidget(){
-    	return currentDraggedWidget;
-    }
 }
