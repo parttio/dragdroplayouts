@@ -68,7 +68,7 @@ DragdropDemo {
 	}
 	
 	public String getCodePath() {
-		return "fi/jasoft/dragdroplayouts/demo/DragdropCssLayoutDemo.java";
+		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
 	}
 
 }

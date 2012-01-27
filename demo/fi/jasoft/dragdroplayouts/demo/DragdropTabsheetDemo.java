@@ -61,7 +61,7 @@ public class DragdropTabsheetDemo extends CustomComponent implements
     }
 
     public String getCodePath() {
-        return "fi/jasoft/dragdroplayouts/demo/code/tabsheet.txt";
-    }
+		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
+	}
 
 }

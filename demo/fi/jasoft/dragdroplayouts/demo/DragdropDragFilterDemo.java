@@ -47,9 +47,7 @@ DragdropDemo {
 	    
 	}
 	
-
-	public String getCodePath() {		
-		return "fi/jasoft/dragdroplayouts/demo/code/dragfilters.txt";
+	public String getCodePath() {
+		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
 	}
-
 }

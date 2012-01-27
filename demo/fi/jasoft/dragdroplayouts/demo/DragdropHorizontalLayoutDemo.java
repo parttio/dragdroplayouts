@@ -75,6 +75,6 @@ public class DragdropHorizontalLayoutDemo extends CustomComponent implements
     }
 
     public String getCodePath() {
-        return "fi/jasoft/dragdroplayouts/demo/code/horizontallayout.txt";
-    }
+		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
+	}
 }

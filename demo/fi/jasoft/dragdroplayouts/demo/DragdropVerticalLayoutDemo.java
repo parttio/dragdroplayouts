@@ -73,6 +73,6 @@ public class DragdropVerticalLayoutDemo extends CustomComponent implements
     }
 
     public String getCodePath() {
-        return "fi/jasoft/dragdroplayouts/demo/code/verticallayout.txt";
-    }
+		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
+	}
 }

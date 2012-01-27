@@ -76,8 +76,7 @@ public class DragdropAccordionDemo extends CustomComponent implements
     }
 
     public String getCodePath() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
+	}
 
 }

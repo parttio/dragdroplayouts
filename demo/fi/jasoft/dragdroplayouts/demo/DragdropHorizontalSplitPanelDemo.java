@@ -148,6 +148,6 @@ public class DragdropHorizontalSplitPanelDemo extends CustomComponent implements
     }
 
     public String getCodePath() {
-        return "fi/jasoft/dragdroplayouts/demo/code/horizontalsplitpanel.txt";
-    }
+		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
+	}
 }

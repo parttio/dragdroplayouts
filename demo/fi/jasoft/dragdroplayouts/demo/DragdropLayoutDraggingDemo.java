@@ -74,6 +74,6 @@ public class DragdropLayoutDraggingDemo extends CustomComponent implements
     }
 
     public String getCodePath() {
-        return "fi/jasoft/dragdroplayouts/demo/code/dragginglayouts.txt";
-    }
+		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
+	}
 }

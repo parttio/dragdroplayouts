@@ -2,6 +2,7 @@ package fi.jasoft.dragdroplayouts.demo;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.regex.Pattern;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Component;
@@ -79,14 +80,26 @@ public class DragdropApplication extends Application {
                 StringBuilder codelines = new StringBuilder();
                 String line = reader.readLine();
                 while (line != null) {
-                    codelines.append(line);
-                    codelines.append("\n");
+                	if(line.startsWith("import")){
+                		// Remove imports
+                	} else if(line.startsWith("package")){
+                		// Remove package declaration
+                	} else {
+                		 codelines.append(line);
+                         codelines.append("\n");
+                	}
+                
                     line = reader.readLine();
                 }
 
                 reader.close();
-                code.setValue(codelines.toString());
-
+                
+                String code = codelines.toString();
+               
+                code = Pattern.compile("public String getCodePath.*?}",Pattern.MULTILINE|Pattern.DOTALL).matcher(code).replaceAll("");
+                
+                this.code.setValue(code.trim());
+                
             } catch (Exception e) {
                 code.setValue("No code available.");
             }
