@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 
+import org.vaadin.codelabel.CodeLabel;
+
 import com.vaadin.Application;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
@@ -19,7 +21,7 @@ public class DragdropApplication extends Application {
 
         private TabSheet tabs;
 
-        private Label code;
+        private CodeLabel code;
 
         public MainWindow() {
             setTheme("dragdrop");
@@ -51,7 +53,7 @@ public class DragdropApplication extends Application {
             
             content.addComponent(tabs);
 
-            code = new Label("", Label.CONTENT_PREFORMATTED);
+            code = new CodeLabel("");
 
             Panel codePanel = new Panel();
             codePanel.setSizeFull();

@@ -20,7 +20,7 @@
 			<description>
 			Application widgetset</description>
 			<param-name>widgetset</param-name>
-			<param-value>fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet</param-value>
+			<param-value>fi.jasoft.dragdroplayouts.demo.DemoWidgetSet</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project> <!-- minimal DTD to make Eclipse shut up about the file not having a DTD or Schema (it's a bug in Eclipse) -->
-<project name="DragDropLayouts" basedir="." default="all">
+<!-- Version 1.0 of the Jasoft Addon Template build script -->
+<project name="Vaadin Addon Project" basedir="." default="all">
+	
+	<!-- Cleans up old artifacts -->
+	<target name="clean">
+		<echo>CLEANING UP BUILD DIRECTORIES</echo>
+		<delete>
+			<fileset dir="build">
+				<include name="*.jar"/>
+				<include name="*.war"/>
+			</fileset>
+		</delete>
+	</target>
 	
 	<!-- Sets up all properties for the build and tests -->
 	<target name="configure-project">
 		<echo>CONFIGURING PROJECT PROPERTIES</echo>
 		
 		<property file="build.properties" />
+		
+		<!-- Fail if required properties are not set -->
+		<fail unless="gwt.dir" message="GWT library dir is not defined"/>
+		<fail unless="vaadin.jar" message="Vaadin jar location is not defined"/>
+		<fail unless="junit.dir" message="JUnit library dir is not defined"/>
 		
 		<path id="basic.classpath">
 			<pathelement path="${vaadin.jar}" />
@@ -48,7 +65,7 @@
 	<target name="compile-source" depends="configure-project">
 		<echo>COMPILING SRC FOLDER</echo>
 		<mkdir dir="${classes.dir}/src" />
-	    <javac srcdir="${src.dir}" destdir="${classes.dir}/src" >
+	    <javac srcdir="${src.dir}" destdir="${classes.dir}/src" target="1.5">
 	    	<classpath refid="src.classpath" />
 	    </javac>
 		<copy todir="${classes.dir}/src">
@@ -62,7 +79,7 @@
 	<target name="compile-tests" depends="compile-source">
 		<echo>COMPILING TEST FOLDER</echo>
 		<mkdir dir="${classes.dir}/test" />
-		<javac srcdir="${test.dir}" destdir="${classes.dir}/test" >
+		<javac srcdir="${test.dir}" destdir="${classes.dir}/test" target="1.5" >
 			<classpath refid="tests.classpath" />
 		</javac>
 		<copy todir="${classes.dir}/test">
@@ -75,7 +92,7 @@
 	<target name="compile-demo" depends="compile-source">
 		<echo>COMPILING DEMO FOLDER</echo>
 		<mkdir dir="${classes.dir}/demo" />
-		<javac srcdir="${demo.dir}" destdir="${classes.dir}/demo" >
+		<javac srcdir="${demo.dir}" destdir="${classes.dir}/demo" target="1.5">
 			<classpath refid="demo.classpath" />
 		</javac>
 		<copy todir="${classes.dir}/demo">
@@ -105,7 +122,7 @@
 	    	<arg value="OBF" />
 	    	<arg value="-localWorkers" />
 	    	<arg value="2" />
-	        <arg value="${widgetset}" />
+	        <arg value="${demo.widgetset}" />
 	    	<jvmarg value="-Xss8M" />
 	    	<jvmarg value="-XX:MaxPermSize=256M" />
 	        <jvmarg value="-Djava.awt.headless=true"/>
@@ -145,7 +162,7 @@
 		  	<formatter type="plain" usefile="false" />
 		  	<classpath refid="tests.classpath" />
 		     <batchtest>
-		        	<fileset dir="${classes.dir}">
+		        	<fileset dir="${classes.dir}/test">
 		        		<include name="**/client/**/**Test.class" />
 		        	</fileset>
 		      	</batchtest>
@@ -167,7 +184,7 @@
 		</copy>
 		
 		<!-- Create JAR archive -->
-		<jar destfile="${jar.filename}" basedir="${build.dir}/jar">
+		<jar destfile="build/${jar.filename}" basedir="${build.dir}/jar">
 			<manifest>
 				<attribute name="Vaadin-Package-Version" value="1" />
 				<attribute name="Vaadin-Widgetsets" value="${widgetset}" />
@@ -220,10 +237,10 @@
 		</copy>
 		
 		<!-- Create WAR archive -->
-		<war destfile="${war.filename}" basedir="${build.dir}/war" />			
+		<war destfile="build/${war.filename}" basedir="${build.dir}/war" />			
 	</target>
 	
-	<target name="all" depends="tests-all, jar, war">
+	<target name="all" depends="clean, tests-all, jar, war">
 		
 		<!-- Cleanup job directory -->
 		<delete dir="${build.dir}" />
