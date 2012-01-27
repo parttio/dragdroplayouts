@@ -4,7 +4,7 @@
 	background-color: rgb(169,209,255); /* IE fallback */
 	background-color: rgba(169,209,255,.6);
 	background-position: 0;
-	background-image:none;
+	background-image:none !important;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
