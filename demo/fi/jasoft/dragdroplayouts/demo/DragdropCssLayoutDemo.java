@@ -65,13 +65,10 @@ DragdropDemo {
             }
         });
         cssLayout.addComponent(btn);
-      
 	}
 	
-	
 	public String getCodePath() {
-		// TODO Auto-generated method stub
-		return null;
+		return "fi/jasoft/dragdroplayouts/demo/DragdropCssLayoutDemo.java";
 	}
 
 }

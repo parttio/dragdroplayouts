@@ -17,6 +17,7 @@ package fi.jasoft.dragdroplayouts.client.ui;
 
 import java.util.Iterator;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -165,6 +166,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 				 */
 				@Override
 				public boolean drop(VDragEvent drag) {
+					updateDragDetails(drag);
 					detachDragImageFromLayout(drag);
 					return postDropHook(drag) && super.drop(drag);
 				};
@@ -180,6 +182,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 				public void dragEnter(VDragEvent drag) {
 					super.dragEnter(drag);
 					attachDragImageToLayout(drag);
+					updateDragDetails(drag);
 					postEnterHook(drag);
 				};
 
@@ -206,11 +209,9 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 				 */
 				@Override
 				public void dragOver(VDragEvent drag) {
-					if(!placeHolderElement.isOrHasChild(drag.getElementOver())){
-						updateDragDetails(drag);
-					}
+					updateDragDetails(drag);
 					postOverHook(drag);
-
+					
 					// Validate the drop
 					validate(new VAcceptCallback() {
 						public void accepted(VDragEvent event) {
@@ -357,7 +358,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 	private void attachDragImageToLayout(VDragEvent drag) {
 		if (placeHolderElement == null) {
 			placeHolderElement = DOM.createDiv();
-			moveDragImageInLayout(drag);
+			placeHolderElement.setInnerHTML("&nbsp;");
 		}
 	}
 	
@@ -397,27 +398,31 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 	 *            The drag event
 	 */
 	protected void updateDragDetails(VDragEvent event) {
-		if(placeHolderElement != null && placeHolderElement.isOrHasChild(event.getElementOver())){
+		
+		com.google.gwt.user.client.Element over = event.getElementOver();
+		if(placeHolderElement.isOrHasChild(over)){
+			 //Dragging over the placeholder
 			return;
 		}
-				
-		Widget widget = (Widget) Util.findWidget(event.getElementOver(), null);
+		
+		Widget widget = (Widget) Util.findWidget(over, null);
 		if (widget == null) {
 			// Null check
 			return;
 		}
 
-		/*
-		 * The index over which the drag is. Can be used by a client side
-		 * criteria to verify that a drag is over a certain index.
-		 */
+		int offset = 0;
+		int index = -1;
 		for (int i = 0; i < getWidget().getElement().getChildCount(); i++) {
 			Element child = getWidget().getElement().getChild(i).cast();
-			if (child.isOrHasChild(widget.getElement())) {
-				event.getDropDetails().put(Constants.DROP_DETAIL_TO, i);
+			if(child.isOrHasChild(placeHolderElement)){
+				offset--;
+			} else if (child.isOrHasChild(widget.getElement())) {
+				index = i + offset;
 				break;
 			}
 		}
+		event.getDropDetails().put(Constants.DROP_DETAIL_TO, index);
 
 		/*
 		 * The horizontal position within the cell
@@ -433,26 +438,6 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 				Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION,
 				getVerticalDropLocation(widget, event));
 
-		/*
-		 * Add Classname of component over the drag. This can be used by a a
-		 * client side criteria to verify that a drag is over a specific class
-		 * of component.
-		 */
-		if (widget instanceof ChildComponentContainer) {
-			Widget w = ((ChildComponentContainer) widget).getWidget();
-			if (w != null) {
-				String className = w.getClass().getName();
-				event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
-						className);
-			} else {
-				event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
-						this.getClass().getName());
-			}
-		} else {
-			event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
-					this.getClass().getName());
-		}
-
 		// Add mouse event details
 		MouseEventDetails details = new MouseEventDetails(
 				event.getCurrentGwtEvent(), VDDCssLayout.this.getElement());
@@ -461,10 +446,6 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 	}
 
 	private void moveDragImageInLayout(VDragEvent drag) {
-
-		if(placeHolderElement.isOrHasChild(drag.getElementOver())){
-			return;
-		}
 		
 		if (placeHolderElement == null) {
 			/*
@@ -475,12 +456,8 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 			attachDragImageToLayout(drag);
 			return;
 		}
-
-		if (placeHolderElement.isOrHasChild(drag.getElementOver())) {
-			/*
-			 * Dragging drag image over the placeholder should not have any
-			 * effect
-			 */
+		
+		if(drag.getElementOver().isOrHasChild(placeHolderElement)){
 			return;
 		}
 
@@ -557,16 +534,8 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 	 */
 	private HorizontalDropLocation getHorizontalDropLocation(Widget container,
 			VDragEvent event) {
-		if(container == this){
-			if(getWidget().getElement().getChildCount() == 0){
-				return HorizontalDropLocation.LEFT;
-			} else {
-				return HorizontalDropLocation.RIGHT;
-			}
-		} else {
 			return VDragDropUtil.getHorizontalDropLocation(container.getElement(),
 					event.getCurrentGwtEvent().getClientX(), horizontalDropRatio);
-		}
 	}
 
 	/**
@@ -582,16 +551,8 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 	 */
 	private VerticalDropLocation getVerticalDropLocation(Widget container,
 			VDragEvent event) {
-		if(container == this){
-			if(getWidget().getElement().getChildCount() == 0){
-				return VerticalDropLocation.TOP;
-			} else {
-				return VerticalDropLocation.BOTTOM;
-			}
-		} else {
 			return VDragDropUtil.getVerticalDropLocation(container.getElement(),
 					event.getCurrentGwtEvent().getClientY(), verticalDropRatio);
-		}
 	}
 	
 	/**

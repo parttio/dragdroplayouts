@@ -56,17 +56,7 @@ public class DragdropAbsoluteLayoutDemo extends CustomComponent implements
         layout.addComponent(btn, "left:50px; top:50px");
         Link link = new Link("A link to Vaadin", new ExternalResource(
                 "http://www.vaadin.com"));
-        layout.addComponent(link, "left:200px; top:100px");
-        
-        DDCssLayout css = new DDCssLayout();
-        css.setWidth("100px");
-        css.setHeight("100px");
-        css.setDragMode(LayoutDragMode.CLONE);
-        css.setDropHandler(new DefaultCssLayoutDropHandler());
-        css.addComponent(new Button("HELLO"));
-        layout.addComponent(css, "left:200px; top:150px");
-        
-        
+        layout.addComponent(link, "left:200px; top:100px");    
     }
 
     public String getCodePath() {

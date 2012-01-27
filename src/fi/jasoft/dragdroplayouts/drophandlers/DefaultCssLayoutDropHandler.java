@@ -31,6 +31,7 @@ import fi.jasoft.dragdroplayouts.DDCssLayout.CssLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.DDHorizontalLayout.HorizontalLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.DDVerticalLayout.VerticalLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
+import fi.jasoft.dragdroplayouts.events.VerticalLocationIs;
 
 /**
  * Default CSS Layout drop handler
@@ -60,7 +61,8 @@ public class DefaultCssLayoutDropHandler extends
 		DDCssLayout layout = (DDCssLayout) details.getTarget();
 		Component comp = transferable.getComponent();
 		int idx = details.getOverIndex();
-
+		Component over = details.getOverComponent();
+		
 		// Detach
 		layout.removeComponent(comp);
 
@@ -91,12 +93,18 @@ public class DefaultCssLayoutDropHandler extends
 		Component source = event.getTransferable().getSourceComponent();
 		int idx = (details).getOverIndex();
 		Component comp = transferable.getComponent();
+		Component over = details.getOverComponent();
 		
-		if(hl == HorizontalDropLocation.CENTER 
-				|| hl == HorizontalDropLocation.RIGHT 
-				|| vl == VerticalDropLocation.MIDDLE
-				|| vl == VerticalDropLocation.BOTTOM){
-			idx++;
+		if(over == layout){
+			if(vl == VerticalDropLocation.TOP || hl == HorizontalDropLocation.LEFT){
+				idx = 0;
+			} else if(vl == VerticalDropLocation.BOTTOM || hl == HorizontalDropLocation.RIGHT){
+				idx = -1;
+			}
+		} else {
+			if(vl == VerticalDropLocation.BOTTOM || hl == HorizontalDropLocation.RIGHT){
+				idx++;
+			}
 		}
 
 		// Check that we are not dragging an outer layout into an inner
@@ -125,5 +133,4 @@ public class DefaultCssLayoutDropHandler extends
 			layout.addComponent(comp);
 		}
 	}
-
 }
