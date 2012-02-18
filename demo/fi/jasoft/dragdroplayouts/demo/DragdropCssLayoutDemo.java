@@ -19,8 +19,7 @@ import fi.jasoft.dragdroplayouts.drophandlers.DefaultCssLayoutDropHandler;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 
-public class DragdropCssLayoutDemo extends CustomComponent implements
-DragdropDemo {
+public class DragdropCssLayoutDemo extends CustomComponent {
 
 	public DragdropCssLayoutDemo() {
 		 setCaption("Css Layout");
@@ -66,9 +65,4 @@ DragdropDemo {
         });
         cssLayout.addComponent(btn);
 	}
-	
-	public String getCodePath() {
-		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
-	}
-
 }

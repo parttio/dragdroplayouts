@@ -17,8 +17,7 @@ import fi.jasoft.dragdroplayouts.events.HorizontalLocationIs;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
 @SuppressWarnings("serial")
-public class DragdropHorizontalLayoutDemo extends CustomComponent implements
-        DragdropDemo {
+public class DragdropHorizontalLayoutDemo extends CustomComponent {
 	
 	private static final float EQUAL_HORIZONTAL_RATIO = 0.3f;
 	
@@ -73,8 +72,4 @@ public class DragdropHorizontalLayoutDemo extends CustomComponent implements
         btn3.setWidth("200px");
         layout.addComponent(btn3);
     }
-
-    public String getCodePath() {
-		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
-	}
 }

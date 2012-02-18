@@ -12,8 +12,7 @@ import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultAbsoluteLayoutDropHandler;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 
-public class DragdropDragFilterDemo extends CustomComponent implements
-DragdropDemo {
+public class DragdropDragFilterDemo extends CustomComponent {
 	
 	public DragdropDragFilterDemo() {
 		 setCaption("DragFilters");
@@ -45,9 +44,5 @@ DragdropDemo {
 	     layout.addComponent(new Button("Drag Me Too!"), "left:50px;top:150px");
 	     layout.addComponent(new TextField(null, "You cannot drag me!"), "left:50px;top:200px");
 	    
-	}
-	
-	public String getCodePath() {
-		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
 	}
 }

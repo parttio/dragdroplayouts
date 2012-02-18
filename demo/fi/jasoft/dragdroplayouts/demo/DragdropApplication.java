@@ -67,13 +67,7 @@ public class DragdropApplication extends Application {
 
         private void tabChanged(Component tab) {
             try {
-                String path = "";
-
-                if (tab instanceof DragdropDemo) {
-                    path = ((DragdropDemo) tab).getCodePath();
-                } else {
-                    throw new IllegalArgumentException();
-                }
+                String path = getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
 
                 BufferedReader reader = new BufferedReader(
                         new InputStreamReader(getClass().getClassLoader()

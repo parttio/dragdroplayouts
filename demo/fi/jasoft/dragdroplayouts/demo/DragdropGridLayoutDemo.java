@@ -19,8 +19,7 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.events.VerticalLocationIs;
 
 @SuppressWarnings("serial")
-public class DragdropGridLayoutDemo extends CustomComponent implements
-        DragdropDemo {
+public class DragdropGridLayoutDemo extends CustomComponent {
 	
 	private static final int ROWS = 4;
 	private static final int COLUMNS = 4;
@@ -84,8 +83,4 @@ public class DragdropGridLayoutDemo extends CustomComponent implements
             }
         }
     }
-
-    public String getCodePath() {
-		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
-	}
 }

@@ -11,8 +11,7 @@ import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultAccordionDropHandler;
 
 @SuppressWarnings("serial")
-public class DragdropAccordionDemo extends CustomComponent implements
-        DragdropDemo {
+public class DragdropAccordionDemo extends CustomComponent {
 
 	private static final float EQUAL_DROP_RATIO = 0.5f;
 	
@@ -74,9 +73,4 @@ public class DragdropAccordionDemo extends CustomComponent implements
         v.addComponent(acc);
         v.setExpandRatio(acc, 1);
     }
-
-    public String getCodePath() {
-		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
-	}
-
 }

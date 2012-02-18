@@ -27,8 +27,7 @@ import fi.jasoft.dragdroplayouts.drophandlers.DefaultTabSheetDropHandler;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultVerticalLayoutDropHandler;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultVerticalSplitPanelDropHandler;
 
-public class DragdropAbsoluteLayoutDemo extends CustomComponent implements
-        DragdropDemo {
+public class DragdropAbsoluteLayoutDemo extends CustomComponent {
 
     public DragdropAbsoluteLayoutDemo() {
         setCaption("Absolute Layout");
@@ -58,8 +57,4 @@ public class DragdropAbsoluteLayoutDemo extends CustomComponent implements
                 "http://www.vaadin.com"));
         layout.addComponent(link, "left:200px; top:100px");    
     }
-
-    public String getCodePath() {
-		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
-	}
 }

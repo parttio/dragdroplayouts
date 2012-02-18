@@ -17,8 +17,7 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.events.VerticalLocationIs;
 
 @SuppressWarnings("serial")
-public class DragdropVerticalLayoutDemo extends CustomComponent implements
-        DragdropDemo {
+public class DragdropVerticalLayoutDemo extends CustomComponent {
 
 	private static final float EQUAL_VERTICAL_RATIO = 0.3f;
 	
@@ -71,8 +70,4 @@ public class DragdropVerticalLayoutDemo extends CustomComponent implements
         btn.setWidth("200px");
         layout.addComponent(btn);
     }
-
-    public String getCodePath() {
-		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
-	}
 }

@@ -17,8 +17,7 @@ import fi.jasoft.dragdroplayouts.DDAbsoluteLayout.AbsoluteLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
-public class DragdropLayoutDraggingDemo extends CustomComponent implements
-        DragdropDemo {
+public class DragdropLayoutDraggingDemo extends CustomComponent {
     public DragdropLayoutDraggingDemo() {
         setCaption("Dragging layouts");
         setSizeFull();
@@ -72,8 +71,4 @@ public class DragdropLayoutDraggingDemo extends CustomComponent implements
 
         layout.addComponent(buttons, "left:50px;top:50px");
     }
-
-    public String getCodePath() {
-		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
-	}
 }

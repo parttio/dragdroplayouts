@@ -26,8 +26,7 @@ import fi.jasoft.dragdroplayouts.events.HorizontalLocationIs;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
 @SuppressWarnings("serial")
-public class DragdropVerticalSplitPanelDemo extends CustomComponent implements
-        DragdropDemo {
+public class DragdropVerticalSplitPanelDemo extends CustomComponent {
 
     private int buttonCount = 1;
 
@@ -138,8 +137,4 @@ public class DragdropVerticalSplitPanelDemo extends CustomComponent implements
             }
         });
     }
-
-    public String getCodePath() {
-		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
-	}
 }

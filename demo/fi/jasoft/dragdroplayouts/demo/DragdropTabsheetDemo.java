@@ -10,8 +10,7 @@ import fi.jasoft.dragdroplayouts.DDTabSheet;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultTabSheetDropHandler;
 
-public class DragdropTabsheetDemo extends CustomComponent implements
-        DragdropDemo {
+public class DragdropTabsheetDemo extends CustomComponent {
 
     public DragdropTabsheetDemo() {
         setCaption("Tabsheet");
@@ -59,9 +58,4 @@ public class DragdropTabsheetDemo extends CustomComponent implements
         v.addComponent(tabSheet);
         v.setExpandRatio(tabSheet, 1);
     }
-
-    public String getCodePath() {
-		return getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
-	}
-
 }
