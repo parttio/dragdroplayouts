@@ -24,6 +24,8 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -45,69 +47,99 @@ import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
  * 
  * @author John Ahlroos
  */
-public class VLayoutDragDropMouseHandler implements MouseDownHandler {
+public class VLayoutDragDropMouseHandler implements MouseDownHandler,
+        TouchStartHandler {
 
     public static final String ACTIVE_DRAG_SOURCE_STYLENAME = "v-dd-active-drag-source";
 
     private LayoutDragMode dragMode = LayoutDragMode.NONE;
 
-    private Widget root;
-    
+    private final Widget root;
+
     private Widget currentDraggedWidget;
 
     private HandlerRegistration mouseUpHandlerReg;
 
     private final List<DragStartListener> dragStartListeners = new ArrayList<VLayoutDragDropMouseHandler.DragStartListener>();
-    
+
     /**
      * A listener to listen for drag start events
      */
-    public interface DragStartListener{
+    public interface DragStartListener {
         /**
          * Called when a drag is about to begin
          * 
          * @param widget
-         *      The widget which is about to be dragged
+         *            The widget which is about to be dragged
          * @param mode
-         *      The draggin mode
-         * @return
-         *      Should the dragging be commenced.
+         *            The draggin mode
+         * @return Should the dragging be commenced.
          */
-       boolean dragStart(Widget widget, LayoutDragMode mode);
+        boolean dragStart(Widget widget, LayoutDragMode mode);
     }
 
     /**
      * Constructor
+     * 
      * @param root
-     * 		The root element
+     *            The root element
      * @param dragMode
-     * 		The drag mode of the layout
+     *            The drag mode of the layout
      */
     public VLayoutDragDropMouseHandler(Widget root, LayoutDragMode dragMode) {
         this.dragMode = dragMode;
         this.root = root;
     }
-    
+
     /**
-     * Is the mouse down event a valid mouse drag event, i.e. left mouse
-     * button is pressed without any modifier keys
+     * Is the mouse down event a valid mouse drag event, i.e. left mouse button
+     * is pressed without any modifier keys
      * 
      * @param event
-     * 		The mouse event		
-     * @return
-     * 		Is the mouse event a valid drag event
+     *            The mouse event
+     * @return Is the mouse event a valid drag event
      */
-    private boolean isMouseDragEvent(MouseDownEvent event){
-    	boolean hasModifierKey = event.isAltKeyDown() || event.isControlKeyDown()
-                				|| event.isMetaKeyDown() || event.isShiftKeyDown();
-    	return !(hasModifierKey || event.getNativeButton() > NativeEvent.BUTTON_LEFT);
+    private boolean isMouseDragEvent(NativeEvent event) {
+        boolean hasModifierKey = event.getAltKey() || event.getCtrlKey()
+                || event.getMetaKey() || event.getShiftKey();
+        return !(hasModifierKey || event.getButton() > NativeEvent.BUTTON_LEFT);
     }
 
     /*
      * (non-Javadoc)
-     * @see com.google.gwt.event.dom.client.MouseDownHandler#onMouseDown(com.google.gwt.event.dom.client.MouseDownEvent)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.TouchStartHandler#onTouchStart(com.google
+     * .gwt.event.dom.client.TouchStartEvent)
      */
+    @Override
+    public void onTouchStart(TouchStartEvent event) {
+        initiateDrag(event.getNativeEvent());
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.event.dom.client.MouseDownHandler#onMouseDown(com.google
+     * .gwt.event.dom.client.MouseDownEvent)
+     */
+    @Override
     public void onMouseDown(MouseDownEvent event) {
+        initiateDrag(event.getNativeEvent());
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    /**
+     * Called when the dragging a component should be initiated by both a mouse
+     * down event as well as a touch start event
+     * 
+     * @param event
+     */
+    protected void initiateDrag(NativeEvent event) {
         // Check that dragging is enabled
         if (dragMode == LayoutDragMode.NONE) {
             return;
@@ -120,8 +152,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler {
 
         // Create the transfarable
         VTransferable transferable = VDragDropUtil
-                .createLayoutTransferableFromMouseDown(event.getNativeEvent(),
-                        root);
+                .createLayoutTransferableFromMouseDown(event, root);
 
         // Are we trying to drag the root layout
         if (transferable == null) {
@@ -133,15 +164,18 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler {
         final Widget w;
         if (root instanceof VDDAccordion
                 && transferable.getData(Constants.TRANSFERABLE_DETAIL_CAPTION) != null) {
-            w = (Widget) transferable.getData(Constants.TRANSFERABLE_DETAIL_CAPTION);
-        } else if (transferable.getData(Constants.TRANSFERABLE_DETAIL_COMPONENT) != null) {
-            w = (Widget) transferable.getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
+            w = (Widget) transferable
+                    .getData(Constants.TRANSFERABLE_DETAIL_CAPTION);
+        } else if (transferable
+                .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT) != null) {
+            w = (Widget) transferable
+                    .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
         } else {
             // Failsafe if no widget was found
             w = root;
             VConsole.log("Could not resolve component, using root as component");
         }
-        
+
         // Announce drag start to listeners
         for (DragStartListener dl : dragStartListeners) {
             if (!dl.dragStart(w, dragMode)) {
@@ -164,9 +198,9 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler {
         currentDraggedWidget = w;
 
         // Announce to handler that we are starting a drag operation
-        VDragEvent currentDragEvent = VDragAndDropManager.get().startDrag(transferable,
-                event.getNativeEvent(), true);
-        
+        VDragEvent currentDragEvent = VDragAndDropManager.get().startDrag(
+                transferable, event, true);
+
         if (w instanceof VButton && BrowserInfo.get().isIE()) {
             /*
              * Due to Buttons crazy implementation we need to simulate a mouse
@@ -181,18 +215,20 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler {
         }
 
         // Create the drag image
-        if(root instanceof VCssLayout){
-        	/*
-        	 * CSS Layout does not have an enclosing div so we just use the component dov
-        	 */
-        	 currentDragEvent.createDragImage((Element) w.getElement().cast(), true);
-        	
+        if (root instanceof VCssLayout) {
+            /*
+             * CSS Layout does not have an enclosing div so we just use the
+             * component dov
+             */
+            currentDragEvent.createDragImage((Element) w.getElement().cast(),
+                    true);
+
         } else {
-        	/*
-        	 * Other layouts uses a enclosing div so we use it.
-        	 */
-        	 currentDragEvent.createDragImage((Element) w.getElement()
-                     .getParentNode().cast(), true);
+            /*
+             * Other layouts uses a enclosing div so we use it.
+             */
+            currentDragEvent.createDragImage((Element) w.getElement()
+                    .getParentNode().cast(), true);
         }
 
         if (BrowserInfo.get().isIE7() && w instanceof VTextField) {
@@ -214,27 +250,26 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler {
         // Listen to mouse up for cleanup
         mouseUpHandlerReg = Event
                 .addNativePreviewHandler(new Event.NativePreviewHandler() {
+                    @Override
                     public void onPreviewNativeEvent(NativePreviewEvent event) {
-                if (event.getTypeInt() == Event.ONMOUSEUP) {
-                    if (mouseUpHandlerReg != null) {
-                        mouseUpHandlerReg.removeHandler();
-                        if (currentDraggedWidget != null) {
+                        if (event.getTypeInt() == Event.ONMOUSEUP
+                                || event.getTypeInt() == Event.ONTOUCHEND
+                                || event.getTypeInt() == Event.ONTOUCHCANCEL) {
+                            if (mouseUpHandlerReg != null) {
+                                mouseUpHandlerReg.removeHandler();
+                                if (currentDraggedWidget != null) {
                                     currentDraggedWidget
                                             .removeStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);
                                     currentDraggedWidget = null;
-                        }
-                    }
+                                }
+                            }
 
                             // Ensure capturing is turned off at mouse up
                             Event.releaseCapture(RootPanel.getBodyElement());
-                }
-            }
-        });
+                        }
+                    }
+                });
 
-        // Stop events from passing through so underlaying components
-        // does not react the dragging operations
-        event.preventDefault();
-        event.stopPropagation();
     }
 
     /**
@@ -246,7 +281,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler {
     public void updateDragMode(LayoutDragMode dragMode) {
         this.dragMode = dragMode;
     }
-    
+
     /**
      * Add a drag start listener to monitor drag starts
      * 
@@ -264,4 +299,5 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler {
     public void removeDragStartListener(DragStartListener listener) {
         dragStartListeners.remove(listener);
     }
+
 }

@@ -34,23 +34,22 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 
 public final class VDragDropUtil {
-	
-	private VDragDropUtil(){
-		// Prevent instantiation
-	}
 
-	/**
-	 * Get the vertical drop location in a ordered layout
-	 * 
-	 * @param element
-	 * 		The target element or cell
-	 * @param clientY
-	 * 		The client y-coordinate
-	 * @param topBottomRatio
-	 * 		The ratio how the cell has been divided
-	 * @return
-	 * 		The drop location
-	 */
+    private VDragDropUtil() {
+        // Prevent instantiation
+    }
+
+    /**
+     * Get the vertical drop location in a ordered layout
+     * 
+     * @param element
+     *            The target element or cell
+     * @param clientY
+     *            The client y-coordinate
+     * @param topBottomRatio
+     *            The ratio how the cell has been divided
+     * @return The drop location
+     */
     public static VerticalDropLocation getVerticalDropLocation(Element element,
             int clientY, double topBottomRatio) {
         int offsetHeight = element.getOffsetHeight();
@@ -62,15 +61,14 @@ public final class VDragDropUtil {
      * Get the vertical drop location in a ordered layout
      * 
      * @param element
-     * 		The target element or cell
+     *            The target element or cell
      * @param offsetHeight
-     * 		The height of the cell
+     *            The height of the cell
      * @param clientY
-     * 		The width of the cell
+     *            The width of the cell
      * @param topBottomRatio
-     * 		The ratio of the cell
-     * @return
-     * 		The location of the drop
+     *            The ratio of the cell
+     * @return The location of the drop
      */
     public static VerticalDropLocation getVerticalDropLocation(Element element,
             int offsetHeight, int clientY, double topBottomRatio) {
@@ -92,13 +90,12 @@ public final class VDragDropUtil {
      * Get the horizontal drop location in an ordered layout
      * 
      * @param element
-     * 		The target element or cell
+     *            The target element or cell
      * @param clientX
-     * 		The x-coordinate of the drop
+     *            The x-coordinate of the drop
      * @param leftRightRatio
-     * 		The ratio of how the cell has been divided
-     * @return
-     * 		the drop location relative to the cell
+     *            The ratio of how the cell has been divided
+     * @return the drop location relative to the cell
      */
     public static HorizontalDropLocation getHorizontalDropLocation(
             Element element, int clientX, double leftRightRatio) {
@@ -138,14 +135,15 @@ public final class VDragDropUtil {
         transferable.setDragSource(tabsheet);
         if (tabsheet != tab) {
             transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, tab);
-            transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX, tabsheet.getTabPosition(tab));
+            transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
+                    tabsheet.getTabPosition(tab));
         }
         transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
                 new MouseEventDetails(event).serialize());
 
         return transferable;
     }
-    
+
     /**
      * Creates a transferable for the Accordion
      * 
@@ -166,7 +164,8 @@ public final class VDragDropUtil {
         VTransferable transferable = new VTransferable();
         transferable.setDragSource(accordion);
         transferable.setData(Constants.TRANSFERABLE_DETAIL_CAPTION, tabCaption);
-        transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, tabCaption.getParent());
+        transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
+                tabCaption.getParent());
         transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
                 accordion.getWidgetIndex(tabCaption.getParent()));
         transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
@@ -174,7 +173,7 @@ public final class VDragDropUtil {
 
         return transferable;
     }
-    
+
     /**
      * Creates a transferable from a mouse down event. Returns null if creation
      * was not successful.
@@ -190,7 +189,7 @@ public final class VDragDropUtil {
 
         Widget w = Util.findWidget((Element) event.getEventTarget().cast(),
                 null);
-        
+
         // NPE check
         if (w == null) {
             VConsole.error("Could not find widget");
@@ -222,15 +221,15 @@ public final class VDragDropUtil {
 
         // Ensure we have the right widget
         w = getTransferableWidget(w);
-        
+
         // Find the containing layout of the component
         Container layout = Util.getLayout(w);
 
         // Iterate until parent either is the root or a layout with drag and
         // drop enabled
         while (layout != root && layout != null) {
-            if (layout instanceof VHasDragMode 
-            		&& ((VHasDragMode) layout).getDragMode() != LayoutDragMode.NONE) {
+            if (layout instanceof VHasDragMode
+                    && ((VHasDragMode) layout).getDragMode() != LayoutDragMode.NONE) {
                 // Found parent layout with support for drag and drop
                 break;
             }
@@ -245,23 +244,25 @@ public final class VDragDropUtil {
         }
 
         // Ensure layout allows dragging
-        if(!isDraggingEnabled(layout)){
-        	return null;
+        if (!isDraggingEnabled(layout)) {
+            return null;
         }
 
         return createTransferable(layout, w, event);
     }
-    
-    private static VTransferable createTransferable(Container layout, Widget widget, NativeEvent event){
-    	 VTransferable transferable = new VTransferable();
-         transferable.setDragSource(layout);
-         transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, widget);
-         transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN, new MouseEventDetails(event).serialize());
-         return transferable;
+
+    private static VTransferable createTransferable(Container layout,
+            Widget widget, NativeEvent event) {
+        VTransferable transferable = new VTransferable();
+        transferable.setDragSource(layout);
+        transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, widget);
+        transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
+                new MouseEventDetails(event).serialize());
+        return transferable;
     }
-    
-    private static Widget getTransferableWidget(Widget w){
-    	// Ensure w is Paintable
+
+    private static Widget getTransferableWidget(Widget w) {
+        // Ensure w is Paintable
         while (!(w instanceof Paintable) && w.getParent() != null) {
             w = w.getParent();
         }
@@ -286,25 +287,31 @@ public final class VDragDropUtil {
             // TwinColSelect has paintable buttons..
             w = w.getParent().getParent().getParent();
         }
-        
+
         return w;
     }
 
-    private static boolean isDraggingEnabled(Container layout){
-    	if (layout instanceof VHasDragMode) {
+    /**
+     * Is dragging enabled for a component container
+     * 
+     * @param layout
+     *            The component container to check
+     * @return
+     */
+    private static boolean isDraggingEnabled(Container layout) {
+        if (layout instanceof VHasDragMode) {
             LayoutDragMode dm = ((VHasDragMode) layout).getDragMode();
             return dm != LayoutDragMode.NONE;
-        } 
-    	return false;
+        }
+        return false;
     }
-    
+
     /**
      * Removes the Drag and drop fake paintable from an UIDL
      * 
      * @param uidl
-     * 		The uidl which contains a dragdrop paintable (-ac)
-     * @return
-     * 		UIDL stripped of the paintable
+     *            The uidl which contains a dragdrop paintable (-ac)
+     * @return UIDL stripped of the paintable
      */
     public static native UIDL removeDragDropCriteraFromUIDL(UIDL uidl)
     /*-{
@@ -321,9 +328,8 @@ public final class VDragDropUtil {
      * Measures the left margin of an element
      * 
      * @param element
-     * 		The element to measure
-     * @return
-     * 		Left margin in pixels
+     *            The element to measure
+     * @return Left margin in pixels
      */
     public static int measureMarginLeft(Element element) {
         return element.getAbsoluteLeft()
@@ -334,9 +340,8 @@ public final class VDragDropUtil {
      * Measures the top margin of an element
      * 
      * @param element
-     * 		The element to measure
-     * @return
-     * 		Top margin in pixels
+     *            The element to measure
+     * @return Top margin in pixels
      */
     public static int measureMarginTop(Element element) {
         return element.getAbsoluteTop()
