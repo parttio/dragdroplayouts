@@ -17,8 +17,6 @@ package fi.jasoft.dragdroplayouts.client.ui;
 
 import java.util.Iterator;
 
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -44,13 +42,13 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 public class VDDTabSheet extends VTabsheet implements VHasDragMode,
-VHasDropHandler, DragStartListener, VDDTabContainer {
+        VHasDropHandler, DragStartListener, VDDTabContainer {
 
     public static final String CLASSNAME_NEW_TAB = "new-tab";
     public static final String CLASSNAME_NEW_TAB_LEFT = "new-tab-left";
     public static final String CLASSNAME_NEW_TAB_RIGHT = "new-tab-right";
     public static final String CLASSNAME_NEW_TAB_CENTER = "new-tab-center";
-    
+
     public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
 
     private LayoutDragMode dragMode = LayoutDragMode.NONE;
@@ -61,8 +59,6 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
 
     private ApplicationConnection client;
 
-    private HandlerRegistration reg;
-
     private final ComplexPanel tabBar;
     private final VTabsheetPanel tabPanel;
 
@@ -70,13 +66,13 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
 
     private Element currentlyEmphasised;
 
-    private Element newTab = DOM.createDiv();
+    private final Element newTab = DOM.createDiv();
 
     protected boolean iframeCoversEnabled = false;
 
-    private VDragFilter dragFilter = new VTabDragFilter(this);
-    
-    private IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
+    private final VDragFilter dragFilter = new VTabDragFilter(this);
+
+    private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     public VDDTabSheet() {
         super();
@@ -84,10 +80,10 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
         newTab.setClassName(CLASSNAME_NEW_TAB);
 
         // Get the tabBar
-        tabBar = (ComplexPanel)getChildren().get(0);
+        tabBar = (ComplexPanel) getChildren().get(0);
 
         // Get the content
-        tabPanel = (VTabsheetPanel)getChildren().get(1);
+        tabPanel = (VTabsheetPanel) getChildren().get(1);
 
         // Get the spacer
         Element tBody = tabBar.getElement();
@@ -97,18 +93,20 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
         ddMouseHandler.addDragStartListener(this);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.ui.Widget#onUnload()
+     */
     @Override
     protected void onUnload() {
         super.onUnload();
-        if (reg != null) {
-            reg.removeHandler();
-            reg = null;
-        }
+        ddMouseHandler.detach();
         iframeCoverUtility.setIframeCoversEnabled(false, getElement());
     }
 
     // The drag mouse handler which handles the creation of the transferable
-    private VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
+    private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
             this, dragMode);
 
     /*
@@ -117,6 +115,7 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
      * @see
      * com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler#getDropHandler()
      */
+    @Override
     public VDropHandler getDropHandler() {
         return dropHandler;
     }
@@ -124,9 +123,9 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
+     * @see fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
      */
+    @Override
     public LayoutDragMode getDragMode() {
         return dragMode;
     }
@@ -169,6 +168,7 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
      * Can be used to listen to drag start events, must return true for the drag
      * to commence. Return false to interrupt the drag:
      */
+    @Override
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
         Widget w = tabPanel.getWidget(getTabPosition(widget));
         return dragMode != LayoutDragMode.NONE && dragFilter.isDraggable(w);
@@ -191,6 +191,7 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
                  * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
                  * getApplicationConnection()
                  */
+                @Override
                 public ApplicationConnection getApplicationConnection() {
                     return client;
                 }
@@ -259,12 +260,13 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
 
                     // Check if we are dropping on our self
                     if (VDDTabSheet.this.equals(drag.getTransferable().getData(
-                    		Constants.TRANSFERABLE_DETAIL_COMPONENT))) {
+                            Constants.TRANSFERABLE_DETAIL_COMPONENT))) {
                         return;
                     }
 
                     // Validate the drop
                     validate(new VAcceptCallback() {
+                        @Override
                         public void accepted(VDragEvent event) {
                             emphasis(event.getElementOver(), event);
                         }
@@ -310,29 +312,35 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
                 // Ove3r the spacer
 
                 // Add index
-                event.getDropDetails().put(Constants.DROP_DETAIL_TO, tabBar.getWidgetCount() - 1);
+                event.getDropDetails().put(Constants.DROP_DETAIL_TO,
+                        tabBar.getWidgetCount() - 1);
 
                 // Add drop location
-                event.getDropDetails().put(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
+                event.getDropDetails().put(
+                        Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
                         HorizontalDropLocation.RIGHT);
 
             } else {
 
                 // Add index
-                event.getDropDetails().put(Constants.DROP_DETAIL_TO, getTabPosition(w));
+                event.getDropDetails().put(Constants.DROP_DETAIL_TO,
+                        getTabPosition(w));
 
                 // Add drop location
                 HorizontalDropLocation location = VDragDropUtil
                         .getHorizontalDropLocation(element, event
                                 .getCurrentGwtEvent().getClientX(),
                                 tabLeftRightDropRatio);
-                event.getDropDetails().put(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION, location);
+                event.getDropDetails().put(
+                        Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
+                        location);
             }
 
             // Add mouse event details
             MouseEventDetails details = new MouseEventDetails(
                     event.getCurrentGwtEvent(), getElement());
-            event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT, details.serialize());
+            event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
+                    details.serialize());
         }
     }
 
@@ -345,22 +353,23 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
     private void handleDragModeUpdate(UIDL uidl) {
         if (uidl.hasAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)) {
             LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl.getIntAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)];
+            dragMode = modes[uidl
+                    .getIntAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)];
             ddMouseHandler.updateDragMode(dragMode);
-            if (reg == null && dragMode != LayoutDragMode.NONE) {
+            if (dragMode != LayoutDragMode.NONE) {
                 // Cover iframes if necessery
-                iframeCoversEnabled = uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
+                iframeCoversEnabled = uidl
+                        .getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
 
                 // Listen to mouse down events
-                reg = tabBar.addDomHandler(ddMouseHandler,
-                        MouseDownEvent.getType());
-            } else if (dragMode == LayoutDragMode.NONE && reg != null) {
+                ddMouseHandler.attachTo(tabBar);
+
+            } else if (dragMode == LayoutDragMode.NONE) {
                 // Remove iframe covers
                 iframeCoversEnabled = false;
 
                 // Remove mouse down handler
-                reg.removeHandler();
-                reg = null;
+                ddMouseHandler.detach();
             }
         }
     }
@@ -394,10 +403,11 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
         handleCellDropRatioUpdate(modifiedUIDL);
 
         // Handle iframe covering
-        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled, getElement());
-        
+        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled,
+                getElement());
+
         // Update dragfilter
-        dragFilter.update(uidl, client);     
+        dragFilter.update(uidl, client);
     }
 
     /**
@@ -433,12 +443,12 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
                     if (index == 0) {
                         currentlyEmphasised = tab.getElement();
                         currentlyEmphasised
-                        .addClassName(CLASSNAME_NEW_TAB_LEFT);
+                                .addClassName(CLASSNAME_NEW_TAB_LEFT);
                     } else {
                         Widget prevTab = tabBar.getWidget(index - 1);
                         currentlyEmphasised = prevTab.getElement();
                         currentlyEmphasised
-                        .addClassName(CLASSNAME_NEW_TAB_RIGHT);
+                                .addClassName(CLASSNAME_NEW_TAB_RIGHT);
                     }
 
                 } else if (location == HorizontalDropLocation.RIGHT) {
@@ -448,7 +458,6 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
                     tab.getElement().addClassName(CLASSNAME_NEW_TAB_CENTER);
                     currentlyEmphasised = tab.getElement();
                 }
-
 
             }
         }
@@ -491,8 +500,12 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
 
     /*
      * (non-Javadoc)
-     * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#getTabPosition(com.google.gwt.user.client.ui.Widget)
+     * 
+     * @see
+     * fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#getTabPosition
+     * (com.google.gwt.user.client.ui.Widget)
      */
+    @Override
     public int getTabPosition(Widget tab) {
         int idx = -1;
         for (int i = 0; i < tabBar.getWidgetCount(); i++) {
@@ -504,13 +517,15 @@ VHasDropHandler, DragStartListener, VDDTabContainer {
         }
         return idx;
     }
-    
-    
+
     /*
      * (non-Javadoc)
-     * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#getTabContentPosition(com.google.gwt.user.client.ui.Widget)
+     * 
+     * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#
+     * getTabContentPosition(com.google.gwt.user.client.ui.Widget)
      */
-    public int getTabContentPosition(Widget content){
-    	return tabPanel.getWidgetIndex(content);
+    @Override
+    public int getTabContentPosition(Widget content) {
+        return tabPanel.getWidgetIndex(content);
     }
 }

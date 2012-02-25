@@ -20,8 +20,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
@@ -48,9 +46,9 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
 
     public static final String CLASSNAME_OVER = "dd-over";
     public static final String CLASSNAME_SPACER = "spacer";
-    
+
     public static final float DEFAULT_VERTICAL_RATIO = 0.2f;
-    
+
     private LayoutDragMode dragMode = LayoutDragMode.NONE;
 
     private VAbstractDropHandler dropHandler;
@@ -61,21 +59,19 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
 
     private ApplicationConnection client;
 
-    private HandlerRegistration reg;
+    private final Map<Element, StackItem> elementTabMap = new HashMap<Element, StackItem>();
 
-    private Map<Element, StackItem> elementTabMap = new HashMap<Element, StackItem>();
-
-    private Widget spacer;
+    private final Widget spacer;
 
     // The drag mouse handler which handles the creation of the transferable
-    private VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
+    private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
             this, dragMode);
 
     protected boolean iframeCoversEnabled = false;
-    
-    private VDragFilter dragFilter = new VTabDragFilter(this);
-    
-    private IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
+
+    private final VDragFilter dragFilter = new VTabDragFilter(this);
+
+    private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     public VDDAccordion() {
         spacer = GWT.create(HTML.class);
@@ -84,13 +80,15 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
         ddMouseHandler.addDragStartListener(this);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.ui.Widget#onUnload()
+     */
     @Override
     protected void onUnload() {
         super.onUnload();
-        if (reg != null) {
-            reg.removeHandler();
-            reg = null;
-        }
+        ddMouseHandler.detach();
         iframeCoverUtility.setIframeCoversEnabled(false, getElement());
     }
 
@@ -100,6 +98,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
      * @see
      * com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler#getDropHandler()
      */
+    @Override
     public VDropHandler getDropHandler() {
         return dropHandler;
     }
@@ -107,9 +106,9 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
+     * @see fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
      */
+    @Override
     public LayoutDragMode getDragMode() {
         return dragMode;
     }
@@ -152,8 +151,10 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
      * Can be used to listen to drag start events, must return true for the drag
      * to commence. Return false to interrupt the drag:
      */
+    @Override
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-    	return dragMode != LayoutDragMode.NONE && dragFilter.isDraggable(widget);
+        return dragMode != LayoutDragMode.NONE
+                && dragFilter.isDraggable(widget);
     }
 
     /**
@@ -173,6 +174,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
                  * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
                  * getApplicationConnection()
                  */
+                @Override
                 public ApplicationConnection getApplicationConnection() {
                     return client;
                 }
@@ -213,11 +215,12 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
                 public boolean drop(VDragEvent drag) {
                     deEmphasis();
                     Widget w = (Widget) drag.getTransferable().getData(
-                    		Constants.TRANSFERABLE_DETAIL_COMPONENT);
+                            Constants.TRANSFERABLE_DETAIL_COMPONENT);
                     if (w instanceof VCaption) {
                         // Convert dragged caption into the real component
                         StackItem item = (StackItem) w.getParent();
-                        drag.getTransferable().setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
+                        drag.getTransferable().setData(
+                                Constants.TRANSFERABLE_DETAIL_COMPONENT,
                                 item.getComponent());
                     }
 
@@ -244,13 +247,14 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
                     postOverHook(drag);
 
                     Widget w = (Widget) drag.getTransferable().getData(
-                    		Constants.TRANSFERABLE_DETAIL_COMPONENT);
+                            Constants.TRANSFERABLE_DETAIL_COMPONENT);
                     if (VDDAccordion.this.equals(w)) {
                         return;
                     }
 
                     // Validate the drop
                     validate(new VAcceptCallback() {
+                        @Override
                         public void accepted(VDragEvent event) {
                             emphasis(event.getElementOver(), event);
                         }
@@ -295,12 +299,14 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
 
             // Add drop location
             VerticalDropLocation location = getDropLocation(tab, event);
-            event.getDropDetails().put(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION, location);
+            event.getDropDetails().put(
+                    Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION, location);
 
             // Add mouse event details
             MouseEventDetails details = new MouseEventDetails(
                     event.getCurrentGwtEvent(), getElement());
-            event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT, details.serialize());
+            event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
+                    details.serialize());
         }
     }
 
@@ -313,24 +319,25 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     private void handleDragModeUpdate(UIDL uidl) {
         if (uidl.hasAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)) {
             LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl.getIntAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)];
+            dragMode = modes[uidl
+                    .getIntAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)];
             ddMouseHandler.updateDragMode(dragMode);
-            if (reg == null && dragMode != LayoutDragMode.NONE) {
+            if (dragMode != LayoutDragMode.NONE) {
 
                 // Cover iframes if necessery
-                iframeCoversEnabled = uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
+                iframeCoversEnabled = uidl
+                        .getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
 
                 // Listen to mouse down events
-                reg = addDomHandler(ddMouseHandler, MouseDownEvent.getType());
+                ddMouseHandler.attach();
 
-            } else if (dragMode == LayoutDragMode.NONE && reg != null) {
+            } else if (dragMode == LayoutDragMode.NONE) {
 
                 // Remove iframe covers
                 iframeCoversEnabled = false;
 
                 // Remove mouse down handler
-                reg.removeHandler();
-                reg = null;
+                ddMouseHandler.detach();
             }
         }
     }
@@ -384,22 +391,22 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
                 } else {
                     tab.getWidget(0).addStyleName(CLASSNAME_OVER);
                 }
-            } else if(!spacer.isAttached()){
-            	if (location == VerticalDropLocation.TOP){
-        		   insert(spacer, getElement(), getWidgetIndex(tab), true);
-                   tab.setHeight((tab.getOffsetHeight() - spacer
-                           .getOffsetHeight()) + "px");
-            	} else if(location == VerticalDropLocation.BOTTOM){
-	        		 insert(spacer, getElement(), getWidgetIndex(tab) + 1, true);
-	                 int newHeight = tab.getOffsetHeight()
-	                         - spacer.getOffsetHeight();
-	                 if (getWidgetIndex(spacer) == getWidgetCount() - 1) {
-	                     newHeight -= spacer.getOffsetHeight();
-	                 }
-	                 if (newHeight >= 0) {
-	                     tab.setHeight(newHeight + "px");
-	                 }
-            	}
+            } else if (!spacer.isAttached()) {
+                if (location == VerticalDropLocation.TOP) {
+                    insert(spacer, getElement(), getWidgetIndex(tab), true);
+                    tab.setHeight((tab.getOffsetHeight() - spacer
+                            .getOffsetHeight()) + "px");
+                } else if (location == VerticalDropLocation.BOTTOM) {
+                    insert(spacer, getElement(), getWidgetIndex(tab) + 1, true);
+                    int newHeight = tab.getOffsetHeight()
+                            - spacer.getOffsetHeight();
+                    if (getWidgetIndex(spacer) == getWidgetCount() - 1) {
+                        newHeight -= spacer.getOffsetHeight();
+                    }
+                    if (newHeight >= 0) {
+                        tab.setHeight(newHeight + "px");
+                    }
+                }
             }
             currentlyEmphasised = tab;
         }
@@ -438,7 +445,8 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
      */
     private void handleCellDropRatioUpdate(UIDL uidl) {
         if (uidl.hasAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO)) {
-            tabTopBottomDropRatio = uidl.getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO);
+            tabTopBottomDropRatio = uidl
+                    .getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO);
         }
     }
 
@@ -472,27 +480,35 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
         handleCellDropRatioUpdate(modifiedUidl);
 
         // Cover iframes if necessery
-        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled, getElement());
-        
-    	// Drag filters
-    	dragFilter.update(modifiedUidl, client);
+        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled,
+                getElement());
+
+        // Drag filters
+        dragFilter.update(modifiedUidl, client);
     }
 
     /*
      * (non-Javadoc)
-     * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#getTabContentPosition(com.google.gwt.user.client.ui.Widget)
+     * 
+     * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#
+     * getTabContentPosition(com.google.gwt.user.client.ui.Widget)
      */
-	public int getTabContentPosition(Widget w) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public int getTabContentPosition(Widget w) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#getTabPosition(com.google.gwt.user.client.ui.Widget)
-	 */
-	public int getTabPosition(Widget tab) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#getTabPosition
+     * (com.google.gwt.user.client.ui.Widget)
+     */
+    @Override
+    public int getTabPosition(Widget tab) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

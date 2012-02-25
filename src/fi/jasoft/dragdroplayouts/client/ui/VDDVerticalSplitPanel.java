@@ -17,8 +17,6 @@ package fi.jasoft.dragdroplayouts.client.ui;
 
 import java.util.Iterator;
 
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -49,8 +47,6 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
 
     private VAbstractDropHandler dropHandler;
 
-    private HandlerRegistration reg;
-
     private ApplicationConnection client;
 
     private Element firstContainer;
@@ -62,13 +58,13 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
     private Element currentEmphasis;
 
     protected boolean iframeCoversEnabled = false;
-    
-    private VDragFilter dragFilter = new VDragFilter();
-    
-    private IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
+
+    private final VDragFilter dragFilter = new VDragFilter();
+
+    private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     // The drag mouse handler which handles the creation of the transferable
-    private VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
+    private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
             this, dragMode);
 
     public VDDVerticalSplitPanel() {
@@ -79,10 +75,7 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
     @Override
     protected void onUnload() {
         super.onUnload();
-        if (reg != null) {
-            reg.removeHandler();
-            reg = null;
-        }
+        ddMouseHandler.detach();
         iframeCoverUtility.setIframeCoversEnabled(false, getElement());
     }
 
@@ -106,21 +99,23 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
     private void handleDragModeUpdate(UIDL uidl) {
         if (uidl.hasAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)) {
             LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl.getIntAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)];
+            dragMode = modes[uidl
+                    .getIntAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)];
             ddMouseHandler.updateDragMode(dragMode);
-            if (reg == null && dragMode != LayoutDragMode.NONE) {
+            if (dragMode != LayoutDragMode.NONE) {
                 // Cover iframes if necessery
-                iframeCoversEnabled = uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
+                iframeCoversEnabled = uidl
+                        .getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
 
                 // Listen to mouse down events
-                reg = addDomHandler(ddMouseHandler, MouseDownEvent.getType());
-            } else if (dragMode == LayoutDragMode.NONE && reg != null) {
+                ddMouseHandler.attach();
+
+            } else if (dragMode == LayoutDragMode.NONE) {
                 // Remove iframe covers
                 iframeCoversEnabled = false;
 
                 // Remove mouse down handler
-                reg.removeHandler();
-                reg = null;
+                ddMouseHandler.detach();
             }
         }
     }
@@ -152,8 +147,9 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
         handleDragModeUpdate(modifiedUIDL);
 
         // Iframe cover check
-        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled, getElement());
-        
+        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled,
+                getElement());
+
         dragFilter.update(modifiedUIDL, client);
     }
 
@@ -195,8 +191,10 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
      * Can be used to listen to drag start events, must return true for the drag
      * to commence. Return false to interrupt the drag:
      */
+    @Override
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-    	return dragMode != LayoutDragMode.NONE && dragFilter.isDraggable(widget);
+        return dragMode != LayoutDragMode.NONE
+                && dragFilter.isDraggable(widget);
     }
 
     /**
@@ -216,6 +214,7 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
                  * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
                  * getApplicationConnection()
                  */
+                @Override
                 public ApplicationConnection getApplicationConnection() {
                     return client;
                 }
@@ -280,13 +279,14 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
                     postOverHook(drag);
 
                     Widget w = (Widget) drag.getTransferable().getData(
-                    		Constants.TRANSFERABLE_DETAIL_COMPONENT);
+                            Constants.TRANSFERABLE_DETAIL_COMPONENT);
                     if (VDDVerticalSplitPanel.this.equals(w)) {
                         return;
                     }
 
                     // Validate the drop
                     validate(new VAcceptCallback() {
+                        @Override
                         public void accepted(VDragEvent event) {
                             emphasis(event.getElementOver());
                         }
@@ -318,6 +318,7 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
      * @see
      * com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler#getDropHandler()
      */
+    @Override
     public VDropHandler getDropHandler() {
         return dropHandler;
     }
@@ -325,9 +326,9 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
+     * @see fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
      */
+    @Override
     public LayoutDragMode getDragMode() {
         return dragMode;
     }
@@ -417,18 +418,21 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
                     null);
         }
 
-        event.getDropDetails().put(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION, location);
+        event.getDropDetails().put(
+                Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION, location);
 
         if (content != null) {
             event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
                     content.getClass().getName());
         } else {
-            event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS, this.getClass().getName());
+            event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
+                    this.getClass().getName());
         }
 
         // Add mouse event details
         MouseEventDetails details = new MouseEventDetails(
                 event.getCurrentGwtEvent(), getElement());
-        event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT, details.serialize());
+        event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
+                details.serialize());
     }
 }

@@ -16,6 +16,7 @@
 package fi.jasoft.dragdroplayouts.client.ui;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.google.gwt.dom.client.Document;
@@ -33,6 +34,7 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.VButton;
 import com.vaadin.terminal.gwt.client.ui.VCssLayout;
@@ -59,6 +61,8 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
     private Widget currentDraggedWidget;
 
     private HandlerRegistration mouseUpHandlerReg;
+
+    private final List<HandlerRegistration> handlers = new LinkedList<HandlerRegistration>();
 
     private final List<DragStartListener> dragStartListeners = new ArrayList<VLayoutDragDropMouseHandler.DragStartListener>();
 
@@ -146,7 +150,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
         }
 
         // Dragging can only be done with left mouse button and no modifier keys
-        if (!isMouseDragEvent(event)) {
+        if (!isMouseDragEvent(event) || !Util.isTouchEvent(event)) {
             return;
         }
 
@@ -300,4 +304,36 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
         dragStartListeners.remove(listener);
     }
 
+    /**
+     * Start listening to events
+     */
+    public void attach() {
+        if (handlers.isEmpty()) {
+            handlers.add(root.addDomHandler(this, MouseDownEvent.getType()));
+            handlers.add(root.addDomHandler(this, TouchStartEvent.getType()));
+        }
+    }
+
+    /**
+     * Attach to another widget than root
+     * 
+     * @param widget
+     *            The widget to attach to
+     */
+    public void attachTo(Widget widget) {
+        if (handlers.isEmpty()) {
+            handlers.add(widget.addDomHandler(this, MouseDownEvent.getType()));
+            handlers.add(widget.addDomHandler(this, TouchStartEvent.getType()));
+        }
+    }
+
+    /**
+     * Stop listening to events
+     */
+    public void detach() {
+        for (HandlerRegistration reg : handlers) {
+            reg.removeHandler();
+        }
+        handlers.clear();
+    }
 }
