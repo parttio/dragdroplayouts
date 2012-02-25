@@ -118,8 +118,6 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
      */
     public void onTouchStart(TouchStartEvent event) {
         initiateDrag(event.getNativeEvent());
-        event.preventDefault();
-        event.stopPropagation();
     }
 
     /*
