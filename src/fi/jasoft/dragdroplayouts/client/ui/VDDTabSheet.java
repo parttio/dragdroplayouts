@@ -323,8 +323,9 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
 
                 // Add drop location
                 HorizontalDropLocation location = VDragDropUtil
-                        .getHorizontalDropLocation(element, event
-                                .getCurrentGwtEvent().getClientX(),
+                        .getHorizontalDropLocation(element, Util
+                                .getTouchOrMouseClientX(event
+                                        .getCurrentGwtEvent()),
                                 tabLeftRightDropRatio);
                 event.getDropDetails().put(
                         Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
@@ -427,8 +428,9 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
                 // Over a tab
                 VCaption tab = (VCaption) w;
                 HorizontalDropLocation location = VDragDropUtil
-                        .getHorizontalDropLocation(element, event
-                                .getCurrentGwtEvent().getClientX(),
+                        .getHorizontalDropLocation(element, Util
+                                .getTouchOrMouseClientX(event
+                                        .getCurrentGwtEvent()),
                                 tabLeftRightDropRatio);
 
                 if (location == HorizontalDropLocation.LEFT) {

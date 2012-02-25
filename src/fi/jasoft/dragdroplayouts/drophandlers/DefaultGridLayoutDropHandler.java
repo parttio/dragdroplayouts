@@ -16,9 +16,6 @@
 package fi.jasoft.dragdroplayouts.drophandlers;
 
 import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropHandler;
-import com.vaadin.event.dd.acceptcriteria.AcceptAll;
-import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
@@ -35,9 +32,10 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
  * A default drop handler for GridLayout
  */
 @SuppressWarnings("serial")
-public class DefaultGridLayoutDropHandler extends AbstractDefaultLayoutDropHandler {
+public class DefaultGridLayoutDropHandler extends
+        AbstractDefaultLayoutDropHandler {
 
-    private Alignment dropAlignment;
+    private final Alignment dropAlignment;
 
     /**
      * Constructor
@@ -53,127 +51,52 @@ public class DefaultGridLayoutDropHandler extends AbstractDefaultLayoutDropHandl
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.event.dd.DropHandler#drop(com.vaadin.event.dd.DragAndDropEvent
-     * )
+     * fi.jasoft.dragdroplayouts.drophandlers.AbstractDefaultLayoutDropHandler
+     * #handleComponentReordering(com.vaadin.event.dd.DragAndDropEvent)
      */
-    public void drop(DragAndDropEvent event) {
+    @Override
+    protected void handleComponentReordering(DragAndDropEvent event) {
         GridLayoutTargetDetails details = (GridLayoutTargetDetails) event
                 .getTargetDetails();
-
         DDGridLayout layout = (DDGridLayout) details.getTarget();
-        Component source = event.getTransferable().getSourceComponent();
-
-        int row = details.getOverRow();
-        int column = details.getOverColumn();
-
-        Component comp = null;
-        if (layout == source) {
-            // Component re-ordering
-            LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-                    .getTransferable();
-            comp = transferable.getComponent();
-            layout.removeComponent(comp);
-
-        } else if (event.getTransferable() instanceof LayoutBoundTransferable) {
-            // Dragged from another layout
-            LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-                    .getTransferable();
-
-            comp = transferable.getComponent();
-
-            if (comp == layout) {
-                // Dropping myself on myself, if parent is absolute layout then
-                // move
-                if (comp.getParent() instanceof DDAbsoluteLayout) {
-                    MouseEventDetails mouseDown = transferable
-                            .getMouseDownEvent();
-                    MouseEventDetails mouseUp = details.getMouseEvent();
-                    int movex = mouseUp.getClientX() - mouseDown.getClientX();
-                    int movey = mouseUp.getClientY() - mouseDown.getClientY();
-
-                    DDAbsoluteLayout parent = (DDAbsoluteLayout) comp
-                            .getParent();
-                    ComponentPosition position = parent.getPosition(comp);
-
-                    float x = position.getLeftValue() + movex;
-                    float y = position.getTopValue() + movey;
-                    position.setLeft(x, Sizeable.UNITS_PIXELS);
-                    position.setTop(y, Sizeable.UNITS_PIXELS);
-
-                    return;
-                }
-
-            } else {
-
-                // Check that we are not dragging an outer layout into an inner
-                // layout
-                Component parent = layout.getParent();
-                while (parent != null) {
-                    if (parent == comp) {
-                        return;
-                    }
-                    parent = parent.getParent();
-                }
-
-                // Remove component from its source
-                if (source instanceof ComponentContainer) {
-                    ComponentContainer sourceLayout = (ComponentContainer) source;
-                    sourceLayout.removeComponent(comp);
-                }
-            }
-
-        } else {
-            // Cannot add component, aborting..
-            return;
-        }
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see fi.jasoft.dragdroplayouts.drophandlers.AbstractDefaultLayoutDropHandler#handleComponentReordering(com.vaadin.event.dd.DragAndDropEvent)
-     */
-	@Override
-	protected void handleComponentReordering(DragAndDropEvent event) {
-		GridLayoutTargetDetails details = (GridLayoutTargetDetails) event
-                .getTargetDetails(); 
-		DDGridLayout layout = (DDGridLayout) details.getTarget();
         LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
                 .getTransferable();
         Component comp = transferable.getComponent();
         layout.removeComponent(comp);
-        
+
         int row = details.getOverRow();
         int column = details.getOverColumn();
-		addComponent(event, comp, column, row);
-	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see fi.jasoft.dragdroplayouts.drophandlers.AbstractDefaultLayoutDropHandler#handleDropFromLayout(com.vaadin.event.dd.DragAndDropEvent)
-	 */
-	@Override
-	protected void handleDropFromLayout(DragAndDropEvent event) {
+        addComponent(event, comp, column, row);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * fi.jasoft.dragdroplayouts.drophandlers.AbstractDefaultLayoutDropHandler
+     * #handleDropFromLayout(com.vaadin.event.dd.DragAndDropEvent)
+     */
+    @Override
+    protected void handleDropFromLayout(DragAndDropEvent event) {
         LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
                 .getTransferable();
         GridLayoutTargetDetails details = (GridLayoutTargetDetails) event
-                .getTargetDetails(); 
-		DDGridLayout layout = (DDGridLayout) details.getTarget();
-		Component source = event.getTransferable().getSourceComponent();
+                .getTargetDetails();
+        DDGridLayout layout = (DDGridLayout) details.getTarget();
+        Component source = event.getTransferable().getSourceComponent();
         Component comp = transferable.getComponent();
 
         if (comp == layout) {
             // Dropping myself on myself, if parent is absolute layout then
             // move
             if (comp.getParent() instanceof DDAbsoluteLayout) {
-                MouseEventDetails mouseDown = transferable
-                        .getMouseDownEvent();
+                MouseEventDetails mouseDown = transferable.getMouseDownEvent();
                 MouseEventDetails mouseUp = details.getMouseEvent();
                 int movex = mouseUp.getClientX() - mouseDown.getClientX();
                 int movey = mouseUp.getClientY() - mouseDown.getClientY();
 
-                DDAbsoluteLayout parent = (DDAbsoluteLayout) comp
-                        .getParent();
+                DDAbsoluteLayout parent = (DDAbsoluteLayout) comp.getParent();
                 ComponentPosition position = parent.getPosition(comp);
 
                 float x = position.getLeftValue() + movex;
@@ -202,17 +125,18 @@ public class DefaultGridLayoutDropHandler extends AbstractDefaultLayoutDropHandl
                 sourceLayout.removeComponent(comp);
             }
         }
-	
+
         int row = details.getOverRow();
         int column = details.getOverColumn();
         addComponent(event, comp, column, row);
-	}
-	
-	protected void addComponent(DragAndDropEvent event, Component component, int column, int row){
-		GridLayoutTargetDetails details = (GridLayoutTargetDetails) event
-                .getTargetDetails(); 
-		DDGridLayout layout = (DDGridLayout) details.getTarget();
-		
+    }
+
+    protected void addComponent(DragAndDropEvent event, Component component,
+            int column, int row) {
+        GridLayoutTargetDetails details = (GridLayoutTargetDetails) event
+                .getTargetDetails();
+        DDGridLayout layout = (DDGridLayout) details.getTarget();
+
         // If no components exist in the grid, then just add the
         // component
         if (!layout.getComponentIterator().hasNext()) {
@@ -232,6 +156,6 @@ public class DefaultGridLayoutDropHandler extends AbstractDefaultLayoutDropHandl
         if (dropAlignment != null) {
             layout.setComponentAlignment(component, dropAlignment);
         }
-	}
+    }
 
 }

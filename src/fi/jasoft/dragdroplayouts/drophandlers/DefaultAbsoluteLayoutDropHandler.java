@@ -52,9 +52,6 @@ public class DefaultAbsoluteLayoutDropHandler extends
         int leftPixelPosition = details.getRelativeLeft();
         int topPixelPosition = details.getRelativeTop();
 
-        System.out.println("Dropped at " + leftPixelPosition + ", "
-                + topPixelPosition);
-
         ComponentPosition position = layout.getPosition(component);
 
         position.setLeft((float) leftPixelPosition, Sizeable.UNITS_PIXELS);

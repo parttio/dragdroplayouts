@@ -524,7 +524,8 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
     private HorizontalDropLocation getHorizontalDropLocation(Widget container,
             VDragEvent event) {
         return VDragDropUtil.getHorizontalDropLocation(container.getElement(),
-                event.getCurrentGwtEvent().getClientX(), horizontalDropRatio);
+                Util.getTouchOrMouseClientX(event.getCurrentGwtEvent()),
+                horizontalDropRatio);
     }
 
     /**
@@ -541,7 +542,8 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
     private VerticalDropLocation getVerticalDropLocation(Widget container,
             VDragEvent event) {
         return VDragDropUtil.getVerticalDropLocation(container.getElement(),
-                event.getCurrentGwtEvent().getClientY(), verticalDropRatio);
+                Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),
+                verticalDropRatio);
     }
 
     /**

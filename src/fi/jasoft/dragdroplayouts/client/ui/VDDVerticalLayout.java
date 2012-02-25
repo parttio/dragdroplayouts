@@ -28,6 +28,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VVerticalLayout;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
@@ -190,10 +191,9 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      */
     private VerticalDropLocation getVerticalDropLocation(Widget container,
             VDragEvent event) {
-        return VDragDropUtil
-                .getVerticalDropLocation(container.getElement(), event
-                        .getCurrentGwtEvent().getClientY(),
-                        cellTopBottomDropRatio);
+        return VDragDropUtil.getVerticalDropLocation(container.getElement(),
+                Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),
+                cellTopBottomDropRatio);
     }
 
     /**

@@ -148,7 +148,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
         }
 
         // Dragging can only be done with left mouse button and no modifier keys
-        if (!isMouseDragEvent(event) || !Util.isTouchEvent(event)) {
+        if (!isMouseDragEvent(event) && !Util.isTouchEvent(event)) {
             return;
         }
 
@@ -211,8 +211,10 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
              */
             VButton button = (VButton) w;
             NativeEvent evt = Document.get().createMouseMoveEvent(1,
-                    event.getScreenX(), event.getScreenY(), event.getClientX(),
-                    event.getClientY(), false, false, false, false, 0);
+                    event.getScreenX(), event.getScreenY(),
+                    Util.getTouchOrMouseClientX(event),
+                    Util.getTouchOrMouseClientY(event), false, false, false,
+                    false, 0);
             button.getElement().dispatchEvent(evt);
         }
 

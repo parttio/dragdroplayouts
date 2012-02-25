@@ -28,6 +28,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VHorizontalLayout;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
@@ -201,10 +202,9 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
      */
     private HorizontalDropLocation getHorizontalDropLocation(Widget container,
             VDragEvent event) {
-        return VDragDropUtil
-                .getHorizontalDropLocation(container.getElement(), event
-                        .getCurrentGwtEvent().getClientX(),
-                        cellLeftRightDropRatio);
+        return VDragDropUtil.getHorizontalDropLocation(container.getElement(),
+                Util.getTouchOrMouseClientX(event.getCurrentGwtEvent()),
+                cellLeftRightDropRatio);
     }
 
     /**

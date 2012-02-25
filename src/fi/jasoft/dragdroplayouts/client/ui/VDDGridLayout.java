@@ -26,6 +26,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
@@ -91,6 +92,14 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
     private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
             this, dragMode);
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.terminal.gwt.client.ui.VGridLayout#updateFromUIDL(com.vaadin
+     * .terminal.gwt.client.UIDL,
+     * com.vaadin.terminal.gwt.client.ApplicationConnection)
+     */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         super.updateFromUIDL(uidl, client);
@@ -230,7 +239,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
 
         // Get the horizontal location
         HorizontalDropLocation hdetail;
-        int x = event.getCurrentGwtEvent().getClientX()
+        int x = Util.getTouchOrMouseClientX(event.getCurrentGwtEvent())
                 - canvas.getAbsoluteLeft() - cell.x;
 
         assert (x >= 0 && x <= cell.width);
@@ -259,7 +268,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
 
         // Get the vertical location
         VerticalDropLocation vdetail;
-        int y = event.getCurrentGwtEvent().getClientY()
+        int y = Util.getTouchOrMouseClientY(event.getCurrentGwtEvent())
                 - canvas.getAbsoluteTop() - cell.y;
 
         assert (y >= 0 && y <= cell.height);
@@ -543,9 +552,9 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
     }
 
     private CellDetails getCellDetails(VDragEvent event) {
-        int x = event.getCurrentGwtEvent().getClientX()
+        int x = Util.getTouchOrMouseClientX(event.getCurrentGwtEvent())
                 - canvas.getAbsoluteLeft();
-        int y = event.getCurrentGwtEvent().getClientY()
+        int y = Util.getTouchOrMouseClientY(event.getCurrentGwtEvent())
                 - canvas.getAbsoluteTop();
         return getCellDetailsByCoordinates(x, y);
     }

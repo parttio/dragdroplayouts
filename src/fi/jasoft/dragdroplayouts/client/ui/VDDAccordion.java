@@ -27,6 +27,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.ui.VAccordion;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
@@ -356,12 +357,12 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
         VerticalDropLocation location;
         if (tab.isOpen()) {
             location = VDragDropUtil.getVerticalDropLocation(tab.getElement(),
-                    event.getCurrentGwtEvent().getClientY(),
+                    Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),
                     tabTopBottomDropRatio);
         } else {
             location = VDragDropUtil.getVerticalDropLocation(tab.getWidget(0)
-                    .getElement(), event.getCurrentGwtEvent().getClientY(),
-                    tabTopBottomDropRatio);
+                    .getElement(), Util.getTouchOrMouseClientY(event
+                    .getCurrentGwtEvent()), tabTopBottomDropRatio);
         }
         return location;
     }

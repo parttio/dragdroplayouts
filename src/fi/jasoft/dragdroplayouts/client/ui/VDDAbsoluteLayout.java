@@ -24,6 +24,7 @@ import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
@@ -147,13 +148,14 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
         String offsetLeftStr = drag.getDragImage().getStyle().getMarginLeft();
         int offsetLeft = Integer.parseInt(offsetLeftStr.substring(0,
                 offsetLeftStr.length() - 2));
-        int relativeLeft = drag.getCurrentGwtEvent().getClientX()
-                - canvas.getAbsoluteLeft() + offsetLeft;
+        int relativeLeft = Util.getTouchOrMouseClientX(drag
+                .getCurrentGwtEvent()) - canvas.getAbsoluteLeft() + offsetLeft;
 
         String offsetTopStr = drag.getDragImage().getStyle().getMarginTop();
         int offsetTop = Integer.parseInt(offsetTopStr.substring(0,
                 offsetTopStr.length() - 2));
-        int relativeTop = drag.getCurrentGwtEvent().getClientY()
+        int relativeTop = Util
+                .getTouchOrMouseClientY(drag.getCurrentGwtEvent())
                 - canvas.getAbsoluteTop() + offsetTop;
 
         drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_LEFT,
