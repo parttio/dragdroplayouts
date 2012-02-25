@@ -6,7 +6,4 @@
 	<!-- Drag drop themes -->
 	<stylesheet src="fi_jasoft_dragdroplayouts/dragdroplayouts.css"/>	    
 
-    <inherits name="fi.jasoft.dragdroplayouts.demo.DemoWidgetSet" />
-
-    <inherits name="org.vaadin.codelabel.CodelabelWidgetset" />
 </module>
