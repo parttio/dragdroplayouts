@@ -121,7 +121,6 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      * Returns the drop handler used when the user drops a component over the
      * Grid Layout
      */
-    @Override
     public VDropHandler getDropHandler() {
         return dropHandler;
     }
@@ -335,7 +334,6 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
 
     }
 
-    @Override
     public LayoutDragMode getDragMode() {
         return dragMode;
     }
@@ -396,7 +394,6 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      * Can be used to listen to drag start events, must return true for the drag
      * to commence. Return false to interrupt the drag:
      */
-    @Override
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
         return dragMode != LayoutDragMode.NONE
                 && dragFilter.isDraggable(widget);
@@ -413,7 +410,6 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
         if (dropHandler == null) {
             dropHandler = new VAbstractDropHandler() {
 
-                @Override
                 public ApplicationConnection getApplicationConnection() {
                     return client;
                 };
@@ -500,7 +496,6 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
 
                     // Emphasis drop location
                     validate(new VAcceptCallback() {
-                        @Override
                         public void accepted(VDragEvent event) {
                             CellDetails cd = getCellDetails(event);
                             if (cd != null) {

@@ -98,7 +98,6 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
      * @see
      * com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler#getDropHandler()
      */
-    @Override
     public VDropHandler getDropHandler() {
         return dropHandler;
     }
@@ -108,7 +107,6 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
      * 
      * @see fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
      */
-    @Override
     public LayoutDragMode getDragMode() {
         return dragMode;
     }
@@ -151,7 +149,6 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
      * Can be used to listen to drag start events, must return true for the drag
      * to commence. Return false to interrupt the drag:
      */
-    @Override
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
         return dragMode != LayoutDragMode.NONE
                 && dragFilter.isDraggable(widget);
@@ -174,7 +171,6 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
                  * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
                  * getApplicationConnection()
                  */
-                @Override
                 public ApplicationConnection getApplicationConnection() {
                     return client;
                 }
@@ -254,7 +250,6 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
 
                     // Validate the drop
                     validate(new VAcceptCallback() {
-                        @Override
                         public void accepted(VDragEvent event) {
                             emphasis(event.getElementOver(), event);
                         }
@@ -493,7 +488,6 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
      * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#
      * getTabContentPosition(com.google.gwt.user.client.ui.Widget)
      */
-    @Override
     public int getTabContentPosition(Widget w) {
         // TODO Auto-generated method stub
         return 0;
@@ -506,7 +500,6 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
      * fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#getTabPosition
      * (com.google.gwt.user.client.ui.Widget)
      */
-    @Override
     public int getTabPosition(Widget tab) {
         // TODO Auto-generated method stub
         return 0;

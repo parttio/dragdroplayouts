@@ -245,7 +245,6 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
      * Can be used to listen to drag start events, must return true for the drag
      * to commence. Return false to interrupt the drag:
      */
-    @Override
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
         return dragMode != LayoutDragMode.NONE
                 && dragFilter.isDraggable(widget);
@@ -354,7 +353,6 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
     /**
      * Returns the current drag mode which determines how the drag is visualized
      */
-    @Override
     public LayoutDragMode getDragMode() {
         return dragMode;
     }
@@ -389,7 +387,6 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
          * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
          * getApplicationConnection()
          */
-        @Override
         public ApplicationConnection getApplicationConnection() {
             return client;
         }
@@ -493,7 +490,6 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
 
             // Validate the drop
             validate(new VAcceptCallback() {
-                @Override
                 public void accepted(VDragEvent event) {
                     ChildComponentContainer c = getContainerFromDragEvent(event);
                     if (c != null) {
@@ -522,7 +518,6 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
     /**
      * Get the drop handler attached to the Layout
      */
-    @Override
     public VDropHandler getDropHandler() {
         return dropHandler;
     }

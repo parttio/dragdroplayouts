@@ -115,7 +115,6 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * @see
      * com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler#getDropHandler()
      */
-    @Override
     public VDropHandler getDropHandler() {
         return dropHandler;
     }
@@ -125,7 +124,6 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * 
      * @see fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
      */
-    @Override
     public LayoutDragMode getDragMode() {
         return dragMode;
     }
@@ -168,7 +166,6 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * Can be used to listen to drag start events, must return true for the drag
      * to commence. Return false to interrupt the drag:
      */
-    @Override
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
         Widget w = tabPanel.getWidget(getTabPosition(widget));
         return dragMode != LayoutDragMode.NONE && dragFilter.isDraggable(w);
@@ -191,7 +188,6 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
                  * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
                  * getApplicationConnection()
                  */
-                @Override
                 public ApplicationConnection getApplicationConnection() {
                     return client;
                 }
@@ -266,7 +262,6 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
 
                     // Validate the drop
                     validate(new VAcceptCallback() {
-                        @Override
                         public void accepted(VDragEvent event) {
                             emphasis(event.getElementOver(), event);
                         }
@@ -505,7 +500,6 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#getTabPosition
      * (com.google.gwt.user.client.ui.Widget)
      */
-    @Override
     public int getTabPosition(Widget tab) {
         int idx = -1;
         for (int i = 0; i < tabBar.getWidgetCount(); i++) {
@@ -524,7 +518,6 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#
      * getTabContentPosition(com.google.gwt.user.client.ui.Widget)
      */
-    @Override
     public int getTabContentPosition(Widget content) {
         return tabPanel.getWidgetIndex(content);
     }

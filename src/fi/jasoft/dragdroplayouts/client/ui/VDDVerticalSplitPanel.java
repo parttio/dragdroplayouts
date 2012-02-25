@@ -191,7 +191,6 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
      * Can be used to listen to drag start events, must return true for the drag
      * to commence. Return false to interrupt the drag:
      */
-    @Override
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
         return dragMode != LayoutDragMode.NONE
                 && dragFilter.isDraggable(widget);
@@ -214,7 +213,6 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
                  * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
                  * getApplicationConnection()
                  */
-                @Override
                 public ApplicationConnection getApplicationConnection() {
                     return client;
                 }
@@ -286,7 +284,6 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
 
                     // Validate the drop
                     validate(new VAcceptCallback() {
-                        @Override
                         public void accepted(VDragEvent event) {
                             emphasis(event.getElementOver());
                         }
@@ -318,7 +315,6 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
      * @see
      * com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler#getDropHandler()
      */
-    @Override
     public VDropHandler getDropHandler() {
         return dropHandler;
     }
@@ -328,7 +324,6 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
      * 
      * @see fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
      */
-    @Override
     public LayoutDragMode getDragMode() {
         return dragMode;
     }

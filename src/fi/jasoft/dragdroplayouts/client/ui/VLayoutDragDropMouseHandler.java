@@ -116,7 +116,6 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
      * com.google.gwt.event.dom.client.TouchStartHandler#onTouchStart(com.google
      * .gwt.event.dom.client.TouchStartEvent)
      */
-    @Override
     public void onTouchStart(TouchStartEvent event) {
         initiateDrag(event.getNativeEvent());
         event.preventDefault();
@@ -130,7 +129,6 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
      * com.google.gwt.event.dom.client.MouseDownHandler#onMouseDown(com.google
      * .gwt.event.dom.client.MouseDownEvent)
      */
-    @Override
     public void onMouseDown(MouseDownEvent event) {
         initiateDrag(event.getNativeEvent());
         event.preventDefault();
@@ -254,7 +252,6 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
         // Listen to mouse up for cleanup
         mouseUpHandlerReg = Event
                 .addNativePreviewHandler(new Event.NativePreviewHandler() {
-                    @Override
                     public void onPreviewNativeEvent(NativePreviewEvent event) {
                         if (event.getTypeInt() == Event.ONMOUSEUP
                                 || event.getTypeInt() == Event.ONTOUCHEND

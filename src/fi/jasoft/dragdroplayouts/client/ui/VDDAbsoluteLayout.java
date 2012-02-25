@@ -221,7 +221,6 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
      * Can be used to listen to drag start events, must return true for the drag
      * to commence. Return false to interrupt the drag:
      */
-    @Override
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
         return dragMode != LayoutDragMode.NONE
                 && dragFilter.isDraggable(widget);
@@ -243,7 +242,6 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
                  * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
                  * getApplicationConnection()
                  */
-                @Override
                 public ApplicationConnection getApplicationConnection() {
                     return client;
                 }
@@ -352,7 +350,6 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
      * 
      * @return
      */
-    @Override
     public LayoutDragMode getDragMode() {
         return dragMode;
     }
@@ -360,7 +357,6 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     /**
      * Returns the drop handler which handles the drop events
      */
-    @Override
     public VDropHandler getDropHandler() {
         return dropHandler;
     }

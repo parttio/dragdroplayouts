@@ -299,7 +299,6 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
     /**
      * Returns the current drag mode which determines how the drag is visualized
      */
-    @Override
     public LayoutDragMode getDragMode() {
         return dragMode;
     }
@@ -342,7 +341,6 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      * Can be used to listen to drag start events, must return true for the drag
      * to commence. Return false to interrupt the drag:
      */
-    @Override
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
         return dragMode != LayoutDragMode.NONE
                 && dragFilter.isDraggable(widget);
@@ -367,7 +365,6 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
                  * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
                  * getApplicationConnection()
                  */
-                @Override
                 public ApplicationConnection getApplicationConnection() {
                     return client;
                 }
@@ -475,7 +472,6 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
 
                     // Validate the drop
                     validate(new VAcceptCallback() {
-                        @Override
                         public void accepted(VDragEvent event) {
                             ChildComponentContainer c = getContainerFromDragEvent(event);
                             if (c != null) {
@@ -510,7 +506,6 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
     /**
      * Get the drop handler attached to the Layout
      */
-    @Override
     public VDropHandler getDropHandler() {
         return dropHandler;
     }
