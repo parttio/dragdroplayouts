@@ -1,0 +1,77 @@
+apply plugin: 'war'
+apply plugin: 'jetty'
+
+// Project settings
+widgetsetClass = 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
+demoWidgetsetClass = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
+sourceCompatibility = 1.5
+targetCompatibility = 1.5
+webAppDirName = 'WebContent'
+
+// Repositories
+repositories{
+    mavenCentral()
+    mavenRepo url: 'http://maven.vaadin.com/vaadin-addons'
+}
+
+// Dependencies
+dependencies{
+    compile group:'com.vaadin',         name:'vaadin',          version:'6.7.5'
+    compile group:'com.google.gwt',     name:'gwt-user',        version:'2.3.0'
+    compile group:'com.google.gwt',     name:'gwt-dev',         version:'2.3.0'
+    compile group:'javax.validation',   name:'validation-api',  version:'1.0.0.GA'
+    compile group:'javax.validation',   name:'validation-api',  version:'1.0.0.GA',     classifier:'sources'
+    compile group:'org.vaadin.addons',  name:'codelabel',       version:'1.0'
+}
+
+
+/*
+ *  Widgetset compilation needed by the war task
+ */
+task widgetset << {
+        // Target directory for the build result
+        targetDir = new File('WebContent/VAADIN/widgetsets')
+         
+        // Compile
+        ant.java(classname:'com.google.gwt.dev.Compiler',failOnError: 'yes', fork: 'true', maxmemory: '512m')
+        {
+                classpath {
+                    pathElement(path: configurations.compile.asPath)
+                    pathElement(path: sourceSets.main.runtimeClasspath.asPath)
+                    sourceSets.main.java.srcDirs.each{
+                        pathelement(location:it.absolutePath)
+                    }
+                }
+
+                jvmarg(value: '-Xmx1024M')
+                jvmarg(value: '-Xms512M')
+
+                arg(line: '-draftCompile')
+                arg(line: '-logLevel INFO')
+                arg(line: '-style PRETTY')
+                arg(line: '-localWorkers 2')
+                arg(line: '-war '+targetDir)
+                arg(line: demoWidgetsetClass)
+        }
+}
+
+/*
+ * Builds the deployable demo application
+ */
+war{
+    // Source and resource paths
+    sourceSets{
+        main{
+            java{
+                srcDir 'src'
+                srcDir 'demo'
+            }
+        }
+    }
+    
+    // Include widgetset
+    dependsOn widgetset
+    
+    // Include sources
+    from sourceSets.main.allJava
+}
