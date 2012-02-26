@@ -1,5 +1,6 @@
 apply plugin: 'war'
 apply plugin: 'jetty'
+apply plugin: 'eclipse-wtp'
 
 // Project settings
 widgetsetClass = 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
