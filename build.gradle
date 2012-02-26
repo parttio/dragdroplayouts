@@ -1,13 +1,33 @@
 apply plugin: 'war'
-apply plugin: 'jetty'
+apply plugin: 'java'
 apply plugin: 'eclipse-wtp'
 
-// Project settings
-widgetsetClass = 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
-demoWidgetsetClass = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
+// Global settings
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
+group = 'fi.jasoft.dragdroplayouts'
+version = 'development'
+
+// Demo settings
+demoWidgetsetClass = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
 webAppDirName = 'WebContent'
+
+// Addon settings
+widgetsetClass = 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
+addonName = 'DragDropLayouts'
+addonAuthor = 'John Ahlroos'
+addonLicence = 'Apache 2.0'
+archivesBaseName = 'dragdroplayouts'
+
+// Sources
+sourceSets{
+    main{
+        java{
+            srcDir 'src'
+            srcDir 'demo'
+        }
+    }
+}
 
 // Repositories
 repositories{
@@ -60,19 +80,37 @@ task widgetset << {
  * Builds the deployable demo application
  */
 war{
-    // Source and resource paths
-    sourceSets{
-        main{
-            java{
-                srcDir 'src'
-                srcDir 'demo'
-            }
-        }
-    }
-    
+        
     // Include widgetset
     dependsOn widgetset
     
     // Include sources
+    from sourceSets.main.allJava 
+    
+    // WAR filename
+    archiveName = addonName + '.war'
+}
+
+/*
+ * Builds the Vaadin addon package
+ */
+jar{
+    
+    // Include sources
     from sourceSets.main.allJava
+    
+    // Exclude demo sources
+    exclude 'fi/jasoft/dragdroplayouts/**/demo/**/*'
+    
+    // Create manifest
+    manifest{
+        attributes(
+            'Vaadin-Package-Version': 1,
+            'Vaadin-Widgetsets': widgetsetClass,
+            'Vaadin-License-Title': addonLicence,
+            'Implementation-Title': addonName,
+            'Implementation-Version': version,
+            'Implementation-Vendor': addonAuthor,
+        )
+    }
 }
