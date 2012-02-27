@@ -18,10 +18,11 @@ apply plugin: 'java'
 apply plugin: 'jetty'
 
 // Global settings
+environment = System().getenv()
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
 group = 'fi.jasoft.dragdroplayouts'
-version = 'development'
+version = environment.BUILD_VERSION
 webAppDirName = 'WebContent'
 
 // Demo settings
