@@ -15,17 +15,17 @@
  */
 apply plugin: 'war'
 apply plugin: 'java'
-apply plugin: 'eclipse-wtp'
+apply plugin: 'jetty'
 
 // Global settings
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
 group = 'fi.jasoft.dragdroplayouts'
 version = 'development'
+webAppDirName = 'WebContent'
 
 // Demo settings
 demoWidgetsetClass = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
-webAppDirName = 'WebContent'
 
 // Addon settings
 widgetsetClass = 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
@@ -70,47 +70,58 @@ dependencies{
 /*
  *  Widgetset compilation needed by the war task
  */
-task widgetset << {
-        // Target directory for the build result
-        targetDir = new File('WebContent/VAADIN/widgetsets')
-         
+task widgetset {
+
+    // Set the widgetset file as the input
+    widgetsetFile = new File('src/'+demoWidgetsetClass.replaceAll(/\./,'/')+".gwt.xml")
+    inputs.file widgetsetFile
+
+    // Target directory as the output
+    targetDir = new File('WebContent/VAADIN/widgetsets')
+    outputs.dir targetDir
+
+    doLast{
         // Compile
         ant.java(classname:'com.google.gwt.dev.Compiler',failOnError: 'yes', fork: 'true', maxmemory: '512m')
         {
-                classpath {
-                    pathElement(path: configurations.compile.asPath)
-                    pathElement(path: sourceSets.main.runtimeClasspath.asPath)
-                    sourceSets.main.java.srcDirs.each{
-                        pathelement(location:it.absolutePath)
-                    }
+            classpath {
+                pathElement(path: configurations.compile.asPath)
+                pathElement(path: sourceSets.main.runtimeClasspath.asPath)
+                sourceSets.main.java.srcDirs.each{
+                    pathelement(location:it.absolutePath)
                 }
+            }
 
-                jvmarg(value: '-Xmx1024M')
-                jvmarg(value: '-Xms512M')
+            jvmarg(value: '-Xmx1024M')
+            jvmarg(value: '-Xms512M')
 
-                arg(line: '-draftCompile')
-                arg(line: '-logLevel INFO')
-                arg(line: '-style PRETTY')
-                arg(line: '-localWorkers 2')
-                arg(line: '-war '+targetDir)
-                arg(line: demoWidgetsetClass)
+            arg(line: '-draftCompile')
+            arg(line: '-logLevel INFO')
+            arg(line: '-style PRETTY')
+            arg(line: '-localWorkers 2')
+            arg(line: '-war '+targetDir)
+            arg(line: demoWidgetsetClass)
         }
+    }
 }
 
 /*
  * Builds the deployable demo application
  */
 war{
-    
+  
     // WAR filename
     archiveName = addonName + '.war'
         
     // Include widgetset
-    dependsOn widgetset, test
+    dependsOn test, widgetset
     
-    // Include sources
-    from sourceSets.main.allJava include 'fi/**/*.java' into 'WEB-INF/classes'    
-    
+    // Add sources
+    webInf{
+        into('classes'){
+            from sourceSets.main.allJava
+        }
+    }
 }
 
 /*
