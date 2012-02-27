@@ -72,10 +72,15 @@ dependencies{
  */
 task widgetset {
 
-    // Set the widgetset file as the input
+    // Monitor changes in widgetset to rebuild widgetset
     widgetsetFile = new File('src/'+demoWidgetsetClass.replaceAll(/\./,'/')+".gwt.xml")
     inputs.file widgetsetFile
 
+    // Monitor changes in client side classes 
+    sourceSets.main.java.srcDirs.each{
+        inputs.files fileTree(it.absolutePath).include('**/*/client/**/*.java')
+    } 
+    
     // Target directory as the output
     targetDir = new File('WebContent/VAADIN/widgetsets')
     outputs.dir targetDir
