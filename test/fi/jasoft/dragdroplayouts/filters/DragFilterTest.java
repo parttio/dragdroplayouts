@@ -17,10 +17,10 @@ import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
  */
 public class DragFilterTest extends TestCase {
 
-	/**
-	 * Tests the premade literal filters
-	 */
-	@Test
+    /**
+     * Tests the premade literal filters
+     */
+    @Test
     public void testLiteralFilters() {
         assertTrue(DragFilter.ALL.isDraggable(null));
         assertFalse(DragFilter.NONE.isDraggable(null));
@@ -32,12 +32,13 @@ public class DragFilterTest extends TestCase {
         assertSame(DragFilter.NONE, reserialize(DragFilter.NONE));
     }
 
-	/**
-	 * Helper for re-serializing a filter
-	 * @param value
-	 * 		The value to re-serialize
-	 * @return
-	 */
+    /**
+     * Helper for re-serializing a filter
+     * 
+     * @param value
+     *            The value to re-serialize
+     * @return
+     */
     @SuppressWarnings("unchecked")
     private static final <S> S reserialize(final S value) {
         if (value == null)
