@@ -20,7 +20,7 @@ apply plugin: 'jetty'
 // Global settings
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
-group = 'fi.jasoft.dragdroplayouts'
+group = 'fi.jasoft'
 version = System.properties['BUILD_VERSION']
 webAppDirName = 'WebContent'
 
