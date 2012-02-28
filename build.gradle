@@ -57,7 +57,7 @@ repositories{
 
 // Dependencies
 dependencies{
-    compile     group:'com.vaadin',         name:'vaadin',          version:'6.7.5'
+    compile     group:'com.vaadin',         name:'vaadin',          version:'6.+'
     compile     group:'org.vaadin.addons',  name:'codelabel',       version:'1.0'
     compile     group:'com.google.gwt',     name:'gwt-user',        version:'2.3.0'
     compile     group:'com.google.gwt',     name:'gwt-dev',         version:'2.3.0'
@@ -80,6 +80,11 @@ task widgetset {
     sourceSets.main.java.srcDirs.each{
         inputs.files fileTree(it.absolutePath).include('**/*/client/**/*.java')
     } 
+    
+    /* Monitor changes in dependencies since upgrading a 
+     * dependency should also trigger a recompile of the widgetset
+     */
+    inputs.files configurations.compile
     
     // Target directory as the output
     targetDir = new File('WebContent/VAADIN/widgetsets')
