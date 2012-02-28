@@ -73,7 +73,7 @@ dependencies{
 task widgetset {
 
     // Monitor changes in widgetset to rebuild widgetset
-    widgetsetFile = new File('src/'+demoWidgetsetClass.replaceAll(/\./,'/')+".gwt.xml")
+    widgetsetFile = new File('demo/'+demoWidgetsetClass.replaceAll(/\./,'/')+".gwt.xml")
     inputs.file widgetsetFile
 
     // Monitor changes in client side classes 
