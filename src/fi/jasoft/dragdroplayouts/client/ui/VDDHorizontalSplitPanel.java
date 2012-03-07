@@ -106,10 +106,9 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      *            The UIDL
      */
     private void handleDragModeUpdate(UIDL uidl) {
-        if (uidl.hasAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)) {
+        if (uidl.hasAttribute(Constants.DRAGMODE_ATTRIBUTE)) {
             LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl
-                    .getIntAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)];
+            dragMode = modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)];
             ddMouseHandler.updateDragMode(dragMode);
             if (dragMode != LayoutDragMode.NONE) {
                 // Cover iframes if necessery

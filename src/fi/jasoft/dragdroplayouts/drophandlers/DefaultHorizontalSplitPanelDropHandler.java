@@ -16,24 +16,20 @@
 package fi.jasoft.dragdroplayouts.drophandlers;
 
 import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.Not;
-import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
-import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 
-import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.DDHorizontalSplitPanel;
 import fi.jasoft.dragdroplayouts.DDHorizontalSplitPanel.HorizontalSplitPanelTargetDetails;
 import fi.jasoft.dragdroplayouts.events.HorizontalLocationIs;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
 @SuppressWarnings("serial")
-public class DefaultHorizontalSplitPanelDropHandler extends AbstractDefaultLayoutDropHandler{
+public class DefaultHorizontalSplitPanelDropHandler extends
+        AbstractDefaultLayoutDropHandler {
 
     @Override
     public AcceptCriterion getAcceptCriterion() {
@@ -41,24 +37,24 @@ public class DefaultHorizontalSplitPanelDropHandler extends AbstractDefaultLayou
         return new Not(HorizontalLocationIs.CENTER);
     }
 
-	@Override
-	protected void handleComponentReordering(DragAndDropEvent event) {
-		handleDropFromLayout(event);
-	}
+    @Override
+    protected void handleComponentReordering(DragAndDropEvent event) {
+        handleDropFromLayout(event);
+    }
 
-	@Override
-	protected void handleDropFromLayout(DragAndDropEvent event) {
-		LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-	                .getTransferable();
-		ComponentContainer source = (ComponentContainer) transferable
-	                .getSourceComponent();
-		HorizontalSplitPanelTargetDetails details = (HorizontalSplitPanelTargetDetails) event
+    @Override
+    protected void handleDropFromLayout(DragAndDropEvent event) {
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
+        ComponentContainer source = (ComponentContainer) transferable
+                .getSourceComponent();
+        HorizontalSplitPanelTargetDetails details = (HorizontalSplitPanelTargetDetails) event
                 .getTargetDetails();
-		Component component = transferable.getComponent();
+        Component component = transferable.getComponent();
         DDHorizontalSplitPanel panel = (DDHorizontalSplitPanel) details
                 .getTarget();
-		 
-		 // Remove component from its source
+
+        // Remove component from its source
         source.removeComponent(component);
 
         if (details.getDropLocation() == HorizontalDropLocation.LEFT) {
@@ -69,5 +65,5 @@ public class DefaultHorizontalSplitPanelDropHandler extends AbstractDefaultLayou
             // Dropped in the right area
             panel.setSecondComponent(component);
         }
-	}
+    }
 }

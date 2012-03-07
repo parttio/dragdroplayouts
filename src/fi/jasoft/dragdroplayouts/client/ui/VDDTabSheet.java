@@ -347,10 +347,9 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      *            The UIDL
      */
     private void handleDragModeUpdate(UIDL uidl) {
-        if (uidl.hasAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)) {
+        if (uidl.hasAttribute(Constants.DRAGMODE_ATTRIBUTE)) {
             LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl
-                    .getIntAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)];
+            dragMode = modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)];
             ddMouseHandler.updateDragMode(dragMode);
             if (dragMode != LayoutDragMode.NONE) {
                 // Cover iframes if necessery
@@ -490,8 +489,9 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      *            The UIDL
      */
     private void handleCellDropRatioUpdate(UIDL uidl) {
-        if (uidl.hasAttribute("hDropRatio")) {
-            tabLeftRightDropRatio = uidl.getFloatAttribute("hDropRatio");
+        if (uidl.hasAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO)) {
+            tabLeftRightDropRatio = uidl
+                    .getFloatAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO);
         }
     }
 

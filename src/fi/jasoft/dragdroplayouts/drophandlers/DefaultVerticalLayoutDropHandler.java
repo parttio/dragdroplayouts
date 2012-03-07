@@ -16,19 +16,12 @@
 package fi.jasoft.dragdroplayouts.drophandlers;
 
 import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropHandler;
-import com.vaadin.event.dd.acceptcriteria.AcceptAll;
-import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
-import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 
-import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.DDVerticalLayout.VerticalLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
@@ -36,7 +29,8 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
  * A default drop handler for vertical layouts
  */
 @SuppressWarnings("serial")
-public class DefaultVerticalLayoutDropHandler extends AbstractDefaultLayoutDropHandler{
+public class DefaultVerticalLayoutDropHandler extends
+        AbstractDefaultLayoutDropHandler {
 
     private Alignment dropAlignment;
 
@@ -151,6 +145,5 @@ public class DefaultVerticalLayoutDropHandler extends AbstractDefaultLayoutDropH
         if (dropAlignment != null) {
             layout.setComponentAlignment(comp, dropAlignment);
         }
-
     }
 }

@@ -21,6 +21,8 @@ import com.vaadin.event.TransferableImpl;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.ui.Component;
 
+import fi.jasoft.dragdroplayouts.client.ui.Constants;
+
 /**
  * Abstract base class for layout based transferable's.
  */
@@ -46,13 +48,14 @@ public class LayoutBoundTransferable extends TransferableImpl {
      * @return The component
      */
     public Component getComponent() {
-        return (Component) getData("component");
+        return (Component) getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
     }
 
     /**
      * @return the mouse down event that started the drag and drop operation
      */
     public MouseEventDetails getMouseDownEvent() {
-        return MouseEventDetails.deSerialize((String) getData("mouseDown"));
+        return MouseEventDetails
+                .deSerialize((String) getData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN));
     }
 }

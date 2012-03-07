@@ -16,18 +16,13 @@
 package fi.jasoft.dragdroplayouts.drophandlers;
 
 import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.Not;
-import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
-import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.TabSheet.Tab;
 
-import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.DDTabSheet;
 import fi.jasoft.dragdroplayouts.DDTabSheet.TabSheetTargetDetails;
 import fi.jasoft.dragdroplayouts.events.HorizontalLocationIs;
@@ -35,66 +30,65 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
 @SuppressWarnings("serial")
 public class DefaultTabSheetDropHandler extends
-		AbstractDefaultLayoutDropHandler {
+        AbstractDefaultLayoutDropHandler {
 
-	public AcceptCriterion getAcceptCriterion() {
-		// Only allow drops between tabs
-		return new Not(HorizontalLocationIs.CENTER);
-	}
+    @Override
+    public AcceptCriterion getAcceptCriterion() {
+        // Only allow drops between tabs
+        return new Not(HorizontalLocationIs.CENTER);
+    }
 
-	@Override
-	protected void handleComponentReordering(DragAndDropEvent event) {
-		LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-				.getTransferable();
-		TabSheetTargetDetails details = (TabSheetTargetDetails) event
-				.getTargetDetails();
-		DDTabSheet tabSheet = (DDTabSheet) details.getTarget();
-		Component c = transferable.getComponent();
-		Tab tab = tabSheet.getTab(c);
-		HorizontalDropLocation location = details.getDropLocation();
-		int idx = details.getOverIndex();
+    @Override
+    protected void handleComponentReordering(DragAndDropEvent event) {
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
+        TabSheetTargetDetails details = (TabSheetTargetDetails) event
+                .getTargetDetails();
+        DDTabSheet tabSheet = (DDTabSheet) details.getTarget();
+        Component c = transferable.getComponent();
+        Tab tab = tabSheet.getTab(c);
+        HorizontalDropLocation location = details.getDropLocation();
+        int idx = details.getOverIndex();
 
-		if (location == HorizontalDropLocation.LEFT) {
-			// Left of previous tab
-			int originalIndex = tabSheet.getTabPosition(tab);
-			if (originalIndex > idx) {
-				tabSheet.setTabPosition(tab, idx);
-			} else if (idx - 1 >= 0) {
-				tabSheet.setTabPosition(tab, idx - 1);
-			}
+        if (location == HorizontalDropLocation.LEFT) {
+            // Left of previous tab
+            int originalIndex = tabSheet.getTabPosition(tab);
+            if (originalIndex > idx) {
+                tabSheet.setTabPosition(tab, idx);
+            } else if (idx - 1 >= 0) {
+                tabSheet.setTabPosition(tab, idx - 1);
+            }
 
-		} else if (location == HorizontalDropLocation.RIGHT) {
-			// Right of previous tab
-			int originalIndex = tabSheet.getTabPosition(tab);
-			if (originalIndex > idx) {
-				tabSheet.setTabPosition(tab, idx + 1);
-			} else {
-				tabSheet.setTabPosition(tab, idx);
-			}
-		}
+        } else if (location == HorizontalDropLocation.RIGHT) {
+            // Right of previous tab
+            int originalIndex = tabSheet.getTabPosition(tab);
+            if (originalIndex > idx) {
+                tabSheet.setTabPosition(tab, idx + 1);
+            } else {
+                tabSheet.setTabPosition(tab, idx);
+            }
+        }
 
-	}
+    }
 
-	@Override
-	protected void handleDropFromLayout(DragAndDropEvent event) {
-		LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-				.getTransferable();
-		TabSheetTargetDetails details = (TabSheetTargetDetails) event
-				.getTargetDetails();
-		DDTabSheet tabSheet = (DDTabSheet) details.getTarget();
-		Component c = transferable.getComponent();
-		HorizontalDropLocation location = details.getDropLocation();
-		int idx = details.getOverIndex();
-		ComponentContainer source = (ComponentContainer) transferable
-				.getSourceComponent();
+    @Override
+    protected void handleDropFromLayout(DragAndDropEvent event) {
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
+        TabSheetTargetDetails details = (TabSheetTargetDetails) event
+                .getTargetDetails();
+        DDTabSheet tabSheet = (DDTabSheet) details.getTarget();
+        Component c = transferable.getComponent();
+        HorizontalDropLocation location = details.getDropLocation();
+        int idx = details.getOverIndex();
+        ComponentContainer source = (ComponentContainer) transferable
+                .getSourceComponent();
 
-		source.removeComponent(c);
-		if (location == HorizontalDropLocation.LEFT) {
-			tabSheet.addTab(c, idx);
-		} else if (location == HorizontalDropLocation.RIGHT) {
-			tabSheet.addTab(c, idx + 1);
-		}
-
-	}
-
+        source.removeComponent(c);
+        if (location == HorizontalDropLocation.LEFT) {
+            tabSheet.addTab(c, idx);
+        } else if (location == HorizontalDropLocation.RIGHT) {
+            tabSheet.addTab(c, idx + 1);
+        }
+    }
 }

@@ -14,17 +14,18 @@ import com.google.gwt.user.client.Element;
 
 public class IframeCoverUtility {
 
-	private static Map<Element, Element> iframeCoverMap = new HashMap<Element, Element>();
+    public static final String SHIM_STYLENAME = "v-dragdrop-iframe-cover";
 
-	public static final String SHIM_ATTRIBUTE = "shims";
-	
-	/**
+    private static Map<Element, Element> iframeCoverMap = new HashMap<Element, Element>();
+
+    public static final String SHIM_ATTRIBUTE = "shims";
+
+    /**
      * Adds an iframe cover over an Embedded component
      * 
      * @param iframe
-     * 		The iframe element
-     * @return
-     * 		The element which covers the iframe
+     *            The iframe element
+     * @return The element which covers the iframe
      */
     private static Element addIframeCover(Element iframe) {
         if (iframeCoverMap.containsKey(iframe)) {
@@ -58,7 +59,7 @@ public class IframeCoverUtility {
 
         // Style the cover
         Element cover = DOM.createDiv();
-        cover.setClassName("v-dragdrop-iframe-cover");
+        cover.setClassName(SHIM_STYLENAME);
         Style coverStyle = cover.getStyle();
         coverStyle.setPosition(Position.ABSOLUTE);
         coverStyle.setWidth(100, Unit.PCT);
@@ -77,7 +78,7 @@ public class IframeCoverUtility {
      * Removes a iframe cover
      * 
      * @param iframe
-     * 		The iframe element which has been covered
+     *            The iframe element which has been covered
      */
     private static void removeIframeCover(Element iframe) {
         Element coverContainer = iframeCoverMap.get(iframe);
@@ -93,9 +94,8 @@ public class IframeCoverUtility {
      * Adds iframe covers for all child iframe elements
      * 
      * @param rootElement
-     * 		The parent element
-     * @return
-     * 		A set of elements with the iframe covers
+     *            The parent element
+     * @return A set of elements with the iframe covers
      */
     private static Set<Element> addIframeCovers(Element rootElement) {
         Set<Element> coveredIframes = new HashSet<Element>();
@@ -113,7 +113,7 @@ public class IframeCoverUtility {
      * Removes iframe covers from a set of iframes
      * 
      * @param iframes
-     * 		The iframes to remove the covers from
+     *            The iframes to remove the covers from
      */
     private static void removeIframeCovers(Set<Element> iframes) {
         if (iframes != null) {
@@ -122,17 +122,17 @@ public class IframeCoverUtility {
             }
         }
     }
-    
+
     // The covered ifream covers
     private Set<Element> coveredIframes = new HashSet<Element>();
-    
+
     /**
      * Enable IFrame covers for a element
      * 
      * @param enabled
-     * 		Enable/Disable Iframe covers
+     *            Enable/Disable Iframe covers
      * @param root
-     * 		The root element where to put the IFrame covers
+     *            The root element where to put the IFrame covers
      */
     public void setIframeCoversEnabled(boolean enabled, Element root) {
         if (enabled) {

@@ -16,46 +16,43 @@
 package fi.jasoft.dragdroplayouts.drophandlers;
 
 import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.Not;
-import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
-import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 
-import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.DDVerticalSplitPanel;
 import fi.jasoft.dragdroplayouts.DDVerticalSplitPanel.VerticalSplitPanelTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.events.VerticalLocationIs;
 
 @SuppressWarnings("serial")
-public class DefaultVerticalSplitPanelDropHandler extends AbstractDefaultLayoutDropHandler {
+public class DefaultVerticalSplitPanelDropHandler extends
+        AbstractDefaultLayoutDropHandler {
 
+    @Override
     public AcceptCriterion getAcceptCriterion() {
         // Only allow dropping in slots, not on the center bar
         return new Not(VerticalLocationIs.MIDDLE);
     }
 
-	@Override
-	protected void handleComponentReordering(DragAndDropEvent event) {
-		handleDropFromLayout(event);
-		
-	}
+    @Override
+    protected void handleComponentReordering(DragAndDropEvent event) {
+        handleDropFromLayout(event);
 
-	@Override
-	protected void handleDropFromLayout(DragAndDropEvent event) {
-		 LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-	                .getTransferable();
-	        VerticalSplitPanelTargetDetails details = (VerticalSplitPanelTargetDetails) event
-	                .getTargetDetails();
-	        Component component = transferable.getComponent();
-	        DDVerticalSplitPanel panel = (DDVerticalSplitPanel) details.getTarget();
-	        ComponentContainer source = (ComponentContainer) transferable
-	                .getSourceComponent();
+    }
+
+    @Override
+    protected void handleDropFromLayout(DragAndDropEvent event) {
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
+        VerticalSplitPanelTargetDetails details = (VerticalSplitPanelTargetDetails) event
+                .getTargetDetails();
+        Component component = transferable.getComponent();
+        DDVerticalSplitPanel panel = (DDVerticalSplitPanel) details.getTarget();
+        ComponentContainer source = (ComponentContainer) transferable
+                .getSourceComponent();
 
         // Remove component from its source
         source.removeComponent(component);
@@ -68,7 +65,5 @@ public class DefaultVerticalSplitPanelDropHandler extends AbstractDefaultLayoutD
             // Dropped in the right area
             panel.setSecondComponent(component);
         }
-		
-	}
-
+    }
 }

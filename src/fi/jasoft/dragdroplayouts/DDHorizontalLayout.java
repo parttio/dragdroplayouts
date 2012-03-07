@@ -33,7 +33,6 @@ import com.vaadin.ui.HorizontalLayout;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDDHorizontalLayout;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
@@ -65,7 +64,7 @@ public class DDHorizontalLayout extends HorizontalLayout implements
 
     // Are the iframes shimmed
     private boolean iframeShims = true;
-    
+
     /**
      * A filter for dragging components.
      */
@@ -81,15 +80,15 @@ public class DDHorizontalLayout extends HorizontalLayout implements
 
         private int index = -1;
 
-        protected HorizontalLayoutTargetDetails(
-                Map<String, Object> rawDropData) {
+        protected HorizontalLayoutTargetDetails(Map<String, Object> rawDropData) {
             super(rawDropData, DDHorizontalLayout.this);
-            
+
             // Get over which component (if any) the drop was made and the
             // index of it
             if (getData(Constants.DROP_DETAIL_TO) != null) {
-                index = Integer.valueOf(getData(Constants.DROP_DETAIL_TO).toString());
-                if(index >= 0 && index < components.size()) {
+                index = Integer.valueOf(getData(Constants.DROP_DETAIL_TO)
+                        .toString());
+                if (index >= 0 && index < components.size()) {
                     over = components.get(index);
                 }
             }
@@ -126,8 +125,8 @@ public class DDHorizontalLayout extends HorizontalLayout implements
          *         Practically mouse move or mouse up.
          */
         public MouseEventDetails getMouseEvent() {
-            return MouseEventDetails
-                    .deSerialize(getData(Constants.DROP_DETAIL_MOUSE_EVENT).toString());
+            return MouseEventDetails.deSerialize(getData(
+                    Constants.DROP_DETAIL_MOUSE_EVENT).toString());
         }
 
         /**
@@ -138,8 +137,9 @@ public class DDHorizontalLayout extends HorizontalLayout implements
          */
         public HorizontalDropLocation getDropLocation() {
             if (getData(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION) != null) {
-                return HorizontalDropLocation
-                        .valueOf(getData(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION).toString());
+                return HorizontalDropLocation.valueOf(getData(
+                        Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION)
+                        .toString());
             } else {
                 return null;
             }
@@ -162,14 +162,15 @@ public class DDHorizontalLayout extends HorizontalLayout implements
         }
 
         // Drop ratios
-        target.addAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO, horizontalDropRatio);
+        target.addAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO,
+                horizontalDropRatio);
 
         // Drag mode
-        target.addAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE, dragMode.ordinal());
+        target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, dragMode.ordinal());
 
         // Shims
         target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
-        
+
         // Paint the dragfilter into the paint target
         new DragFilterPaintable(this).paint(target);
     }
@@ -210,10 +211,10 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      *            dropping
      */
     public void setDropHandler(DropHandler dropHandler) {
-    	if(this.dropHandler != dropHandler){
-    		this.dropHandler = dropHandler;
-    		requestRepaint();
-    	}
+        if (this.dropHandler != dropHandler) {
+            this.dropHandler = dropHandler;
+            requestRepaint();
+        }
     }
 
     /**
@@ -232,10 +233,10 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      *            The mode of which how the dragging should be visualized.
      */
     public void setDragMode(LayoutDragMode mode) {
-    	if(dragMode != mode){
-    		dragMode = mode;
-    	    requestRepaint();
-    	}
+        if (dragMode != mode) {
+            dragMode = mode;
+            requestRepaint();
+        }
     }
 
     /**
@@ -249,25 +250,25 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentHorizontalDropRatio(float ratio) {
-    	if(horizontalDropRatio != ratio){
-    		if (ratio >= 0 && ratio <= 0.5) {
+        if (horizontalDropRatio != ratio) {
+            if (ratio >= 0 && ratio <= 0.5) {
                 horizontalDropRatio = ratio;
                 requestRepaint();
             } else {
                 throw new IllegalArgumentException(
                         "Ratio must be between 0 and 0.5");
             }
-    	}
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-    	if(iframeShims != shim){
-    		iframeShims = shim;
+        if (iframeShims != shim) {
+            iframeShims = shim;
             requestRepaint();
-    	}
+        }
     }
 
     /**
@@ -276,21 +277,21 @@ public class DDHorizontalLayout extends HorizontalLayout implements
     public boolean isShimmed() {
         return iframeShims;
     }
-    
+
     /**
      * {@inheritDoc}
      */
-	public DragFilter getDragFilter() {
-		return dragFilter;
-	}
+    public DragFilter getDragFilter() {
+        return dragFilter;
+    }
 
-	/**
+    /**
      * {@inheritDoc}
      */
-	public void setDragFilter(DragFilter dragFilter) {
-		if(this.dragFilter != dragFilter){
-			this.dragFilter = dragFilter;
-			requestRepaint();
-		}
-	}
+    public void setDragFilter(DragFilter dragFilter) {
+        if (this.dragFilter != dragFilter) {
+            this.dragFilter = dragFilter;
+            requestRepaint();
+        }
+    }
 }

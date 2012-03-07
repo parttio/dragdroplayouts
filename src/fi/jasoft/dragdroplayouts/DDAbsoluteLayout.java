@@ -31,7 +31,6 @@ import com.vaadin.ui.ClientWidget;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDDAbsoluteLayout;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
@@ -56,7 +55,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
 
     // Are the iframes shimmed
     private boolean iframeShims = true;
-    
+
     /**
      * A filter for dragging components.
      */
@@ -68,12 +67,12 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
      */
     public class AbsoluteLayoutTargetDetails extends TargetDetailsImpl {
 
-    	/**
-    	 * Constructor
-    	 * 
-    	 * @param rawDropData
-    	 * 		Drop data
-    	 */
+        /**
+         * Constructor
+         * 
+         * @param rawDropData
+         *            Drop data
+         */
         protected AbsoluteLayoutTargetDetails(Map<String, Object> rawDropData) {
             super(rawDropData, DDAbsoluteLayout.this);
         }
@@ -85,7 +84,8 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
          * @return The amount of pixels from the left edge
          */
         public int getAbsoluteLeft() {
-            return Integer.valueOf(getData(Constants.DROP_DETAIL_ABSOLUTE_LEFT).toString());
+            return Integer.valueOf(getData(Constants.DROP_DETAIL_ABSOLUTE_LEFT)
+                    .toString());
         }
 
         /**
@@ -95,7 +95,8 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
          * @return The amount of pixels from the top edge
          */
         public int getAbsoluteTop() {
-            return Integer.valueOf(getData(Constants.DROP_DETAIL_ABSOLUTE_TOP).toString());
+            return Integer.valueOf(getData(Constants.DROP_DETAIL_ABSOLUTE_TOP)
+                    .toString());
         }
 
         /**
@@ -105,7 +106,8 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
          * @return The amount of pixels from the left edge
          */
         public int getRelativeLeft() {
-            return Integer.valueOf(getData(Constants.DROP_DETAIL_RELATIVE_LEFT).toString());
+            return Integer.valueOf(getData(Constants.DROP_DETAIL_RELATIVE_LEFT)
+                    .toString());
         }
 
         /**
@@ -115,7 +117,8 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
          * @return The amount of pixels from the top edge
          */
         public int getRelativeTop() {
-            return Integer.valueOf(getData(Constants.DROP_DETAIL_RELATIVE_TOP).toString());
+            return Integer.valueOf(getData(Constants.DROP_DETAIL_RELATIVE_TOP)
+                    .toString());
         }
 
         /**
@@ -124,7 +127,8 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
          * @return The width in pixels
          */
         public int getComponentHeight() {
-            return Integer.valueOf(getData(Constants.DROP_DETAIL_COMPONENT_HEIGHT).toString());
+            return Integer.valueOf(getData(
+                    Constants.DROP_DETAIL_COMPONENT_HEIGHT).toString());
         }
 
         /**
@@ -133,7 +137,8 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
          * @return The height in pixels
          */
         public int getComponentWidth() {
-            return Integer.valueOf(getData(Constants.DROP_DETAIL_COMPONENT_WIDTH).toString());
+            return Integer.valueOf(getData(
+                    Constants.DROP_DETAIL_COMPONENT_WIDTH).toString());
         }
 
         /**
@@ -168,11 +173,11 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
         }
 
         // Adds the drag mode (the default is none)
-        target.addAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE, dragMode.ordinal());
+        target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, dragMode.ordinal());
 
         // Should shims be used
         target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
-        
+
         // Paint the dragfilter into the paint target
         new DragFilterPaintable(this).paint(target);
     }
@@ -191,10 +196,10 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
      *            The drop handler to set
      */
     public void setDropHandler(DropHandler dropHandler) {
-    	if(this.dropHandler != dropHandler){
-    		 this.dropHandler = dropHandler;
-    	     requestRepaint();
-    	}
+        if (this.dropHandler != dropHandler) {
+            this.dropHandler = dropHandler;
+            requestRepaint();
+        }
     }
 
     /**
@@ -223,20 +228,20 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
      * {@inheritDoc}
      */
     public void setDragMode(LayoutDragMode mode) {
-    	if(dragMode != mode){
-    		dragMode = mode;
+        if (dragMode != mode) {
+            dragMode = mode;
             requestRepaint();
-    	}
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-    	if(iframeShims != shim){
-    		 iframeShims = shim;
-    	     requestRepaint();
-    	}
+        if (iframeShims != shim) {
+            iframeShims = shim;
+            requestRepaint();
+        }
     }
 
     /**
@@ -249,17 +254,17 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
     /**
      * {@inheritDoc}
      */
-	public DragFilter getDragFilter() {
-		return dragFilter;
-	}
+    public DragFilter getDragFilter() {
+        return dragFilter;
+    }
 
-	/**
+    /**
      * {@inheritDoc}
      */
-	public void setDragFilter(DragFilter dragFilter) {
-		if(this.dragFilter != dragFilter){
-			this.dragFilter = dragFilter;
-			requestRepaint();
-		}
-	}
+    public void setDragFilter(DragFilter dragFilter) {
+        if (this.dragFilter != dragFilter) {
+            this.dragFilter = dragFilter;
+            requestRepaint();
+        }
+    }
 }

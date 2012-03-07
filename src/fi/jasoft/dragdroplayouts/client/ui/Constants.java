@@ -7,9 +7,9 @@ package fi.jasoft.dragdroplayouts.client.ui;
  * @since 0.6.4
  */
 public interface Constants {
-	
-	// Drop details
-	public static final String DROP_DETAIL_TO = "to";
+
+    // Drop details
+    public static final String DROP_DETAIL_TO = "to";
     public static final String DROP_DETAIL_ROW = "row";
     public static final String DROP_DETAIL_COLUMN = "column";
     public static final String DROP_DETAIL_VERTICAL_DROP_LOCATION = "vdetail";
@@ -23,15 +23,15 @@ public interface Constants {
     public static final String DROP_DETAIL_ABSOLUTE_TOP = "absoluteTop";
     public static final String DROP_DETAIL_RELATIVE_LEFT = "relativeLeft";
     public static final String DROP_DETAIL_RELATIVE_TOP = "relativeTop";
-    
+
     // Transferable details
     public static final String TRANSFERABLE_DETAIL_COMPONENT = "component";
     public static final String TRANSFERABLE_DETAIL_INDEX = "index";
     public static final String TRANSFERABLE_DETAIL_MOUSEDOWN = "mouseDown";
     public static final String TRANSFERABLE_DETAIL_CAPTION = "caption";
-    
+
     // Attributes
     public static final String ATTRIBUTE_HORIZONTAL_DROP_RATIO = "hDropRatio";
     public static final String ATTRIBUTE_VERTICAL_DROP_RATIO = "vDropRatio";
-
+    public static final String DRAGMODE_ATTRIBUTE = "dragMode";
 }

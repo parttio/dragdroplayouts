@@ -16,18 +16,13 @@
 package fi.jasoft.dragdroplayouts.drophandlers;
 
 import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.Not;
-import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
-import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.TabSheet.Tab;
 
-import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.DDAccordion;
 import fi.jasoft.dragdroplayouts.DDAccordion.AccordionTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
@@ -37,26 +32,27 @@ import fi.jasoft.dragdroplayouts.events.VerticalLocationIs;
  * A default drop handler for an accordion
  */
 @SuppressWarnings("serial")
-public class DefaultAccordionDropHandler extends AbstractDefaultLayoutDropHandler {
+public class DefaultAccordionDropHandler extends
+        AbstractDefaultLayoutDropHandler {
 
-	/**
-	 * Called when tabs are being rearranged
-	 * 
-	 * @param event
-	 * 		A drag and drop event
-	 */
-	@Override
-	protected void handleComponentReordering(DragAndDropEvent event){
-		AccordionTargetDetails details = (AccordionTargetDetails) event
-	                .getTargetDetails();
+    /**
+     * Called when tabs are being rearranged
+     * 
+     * @param event
+     *            A drag and drop event
+     */
+    @Override
+    protected void handleComponentReordering(DragAndDropEvent event) {
+        AccordionTargetDetails details = (AccordionTargetDetails) event
+                .getTargetDetails();
         DDAccordion acc = (DDAccordion) details.getTarget();
         VerticalDropLocation location = details.getDropLocation();
         LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
                 .getTransferable();
         Component c = transferable.getComponent();
         int idx = details.getOverIndex();
-        
-		Tab tab = acc.getTab(c);
+
+        Tab tab = acc.getTab(c);
 
         if (location == VerticalDropLocation.TOP) {
             // Left of previous tab
@@ -76,18 +72,18 @@ public class DefaultAccordionDropHandler extends AbstractDefaultLayoutDropHandle
                 acc.setTabPosition(tab, idx);
             }
         }
-	}
-	
-	/**
-	 * Adds a new tab from the drop
-	 * 
-	 * @param event
-	 * 		The drag and drop event
-	 */
-	@Override
-	protected void handleDropFromLayout(DragAndDropEvent event){
-		LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-	                .getTransferable();
+    }
+
+    /**
+     * Adds a new tab from the drop
+     * 
+     * @param event
+     *            The drag and drop event
+     */
+    @Override
+    protected void handleDropFromLayout(DragAndDropEvent event) {
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
 
         // Get the target details
         AccordionTargetDetails details = (AccordionTargetDetails) event
@@ -98,8 +94,8 @@ public class DefaultAccordionDropHandler extends AbstractDefaultLayoutDropHandle
         VerticalDropLocation location = details.getDropLocation();
         ComponentContainer source = (ComponentContainer) transferable
                 .getSourceComponent();
-        
-		source.removeComponent(c);
+
+        source.removeComponent(c);
         if (location == VerticalDropLocation.TOP) {
             acc.addTab(c, idx);
         } else if (location == VerticalDropLocation.BOTTOM) {
@@ -107,13 +103,14 @@ public class DefaultAccordionDropHandler extends AbstractDefaultLayoutDropHandle
         } else {
             acc.addTab(c);
         }
-	}
+    }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.vaadin.event.dd.DropHandler#getAcceptCriterion()
      */
-	@Override
+    @Override
     public AcceptCriterion getAcceptCriterion() {
         return new Not(VerticalLocationIs.MIDDLE);
     }

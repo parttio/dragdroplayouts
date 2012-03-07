@@ -19,27 +19,27 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * An interface for layouts which has separated tab and content from each other
+ * 
  * @author John Ahlroos
  * @since 0.6.3
  */
 public interface VDDTabContainer {
 
-	/**
-	 * Get the position of a tabs content
-	 * 
-	 * @param w
-	 * 		The tabs content
-	 */
-	int getTabContentPosition(Widget w);
-	
-	
-	/**
+    /**
+     * Get the position of a tabs content
+     * 
+     * @param w
+     *            The tabs content
+     */
+    int getTabContentPosition(Widget w);
+
+    /**
      * Returns the position of a tab
      * 
      * @param tab
      *            The tab in the tabbar
      * @return
      */
-	public int getTabPosition(Widget tab);
-	
+    public int getTabPosition(Widget tab);
+
 }

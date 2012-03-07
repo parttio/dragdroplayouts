@@ -18,26 +18,26 @@ package fi.jasoft.dragdroplayouts.events;
 import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
+import fi.jasoft.dragdroplayouts.client.ui.Constants;
+
 /**
  * A client side criterion for determining the vertical location
  */
 @SuppressWarnings("serial")
 public final class VerticalLocationIs extends TargetDetailIs {
 
-	public static final String VERTICAL_LOCATION_ATTRIBUTE = "vdetail";
-	
-	/**
-	 * Was the drop made top of the centerline of the component
-	 */
+    /**
+     * Was the drop made top of the centerline of the component
+     */
     public static final VerticalLocationIs TOP = new VerticalLocationIs(
             VerticalDropLocation.TOP);
-    
+
     /**
      * Was the drop made below the centeline of the component
      */
     public static final VerticalLocationIs BOTTOM = new VerticalLocationIs(
             VerticalDropLocation.BOTTOM);
-    
+
     /**
      * Was the drop made in the middle of the component
      */
@@ -48,9 +48,9 @@ public final class VerticalLocationIs extends TargetDetailIs {
      * A target detail for the vertical location of a drop
      * 
      * @param location
-     * 		The drop location
+     *            The drop location
      */
     private VerticalLocationIs(VerticalDropLocation location) {
-        super(VERTICAL_LOCATION_ATTRIBUTE, location.name());
+        super(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION, location.name());
     }
 }

@@ -103,10 +103,9 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     }
 
     private void handleDragModeUpdate(UIDL uidl) {
-        if (uidl.hasAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)) {
+        if (uidl.hasAttribute(Constants.DRAGMODE_ATTRIBUTE)) {
             LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl
-                    .getIntAttribute(VHasDragMode.DRAGMODE_ATTRIBUTE)];
+            dragMode = modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)];
             ddHandler.updateDragMode(dragMode);
             if (dragMode != LayoutDragMode.NONE) {
 
