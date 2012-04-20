@@ -33,11 +33,12 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
-        VHasDragMode, VHasDropHandler, DragStartListener {
+        VHasDragMode, VHasDropHandler, DragStartListener, VHasDragFilter {
 
     public static final String OVER = "v-ddsplitpanel-over";
     public static final String OVER_SPLITTER = OVER + "-splitter";
@@ -430,5 +431,16 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
                 event.getCurrentGwtEvent(), getElement());
         event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
                 details.serialize());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter#getDragFilter
+     * ()
+     */
+    public VDragFilter getDragFilter() {
+        return dragFilter;
     }
 }

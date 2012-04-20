@@ -39,11 +39,12 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
-        VHasDropHandler, DragStartListener {
+        VHasDropHandler, DragStartListener, VHasDragFilter {
 
     private Widget currentlyEmphasised;
 
@@ -507,5 +508,16 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      */
     public VDropHandler getDropHandler() {
         return dropHandler;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter#getDragFilter
+     * ()
+     */
+    public VDragFilter getDragFilter() {
+        return dragFilter;
     }
 }

@@ -38,11 +38,12 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 public class VDDGridLayout extends VGridLayout implements VHasDragMode,
-        VHasDropHandler, DragStartListener {
+        VHasDropHandler, DragStartListener, VHasDragFilter {
 
     public static final String CLASSNAME = "v-ddgridlayout";
     public static final String OVER = CLASSNAME + "-over";
@@ -604,5 +605,16 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
         }
 
         return cd;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter#getDragFilter
+     * ()
+     */
+    public VDragFilter getDragFilter() {
+        return dragFilter;
     }
 }

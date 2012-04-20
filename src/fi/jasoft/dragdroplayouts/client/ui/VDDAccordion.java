@@ -39,11 +39,12 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 public class VDDAccordion extends VAccordion implements VHasDragMode,
-        VHasDropHandler, DragStartListener, VDDTabContainer {
+        VHasDropHandler, DragStartListener, VDDTabContainer, VHasDragFilter {
 
     public static final String CLASSNAME_OVER = "dd-over";
     public static final String CLASSNAME_SPACER = "spacer";
@@ -503,5 +504,16 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     public int getTabPosition(Widget tab) {
         // TODO Auto-generated method stub
         return 0;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter#getDragFilter
+     * ()
+     */
+    public VDragFilter getDragFilter() {
+        return dragFilter;
     }
 }

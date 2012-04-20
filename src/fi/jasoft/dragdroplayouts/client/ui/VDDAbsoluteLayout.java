@@ -32,11 +32,12 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
-        VHasDropHandler, DragStartListener {
+        VHasDropHandler, DragStartListener, VHasDragFilter {
 
     public static final String CLASSNAME = "v-ddabsolutelayout";
 
@@ -360,5 +361,16 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
      */
     public VDropHandler getDropHandler() {
         return dropHandler;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter#getDragFilter
+     * ()
+     */
+    public VDragFilter getDragFilter() {
+        return dragFilter;
     }
 }

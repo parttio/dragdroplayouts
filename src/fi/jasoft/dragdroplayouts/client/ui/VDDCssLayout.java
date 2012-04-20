@@ -37,6 +37,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
 import fi.jasoft.dragdroplayouts.DDCssLayout;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
@@ -48,7 +49,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * 
  */
 public class VDDCssLayout extends VCssLayout implements VHasDragMode,
-        VHasDropHandler, DragStartListener {
+        VHasDropHandler, DragStartListener, VHasDragFilter {
 
     public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
     public static final float DEFAULT_VERTICAL_DROP_RATIO = 0.2f;
@@ -561,6 +562,17 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
             verticalDropRatio = uidl
                     .getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter#getDragFilter
+     * ()
+     */
+    public VDragFilter getDragFilter() {
+        return dragFilter;
     }
 
 }

@@ -146,9 +146,6 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             return;
         }
 
-        event.preventDefault();
-        event.stopPropagation();
-
         // Create the transfarable
         VTransferable transferable = VDragDropUtil
                 .createLayoutTransferableFromMouseDown(event, root);
@@ -158,6 +155,9 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             VConsole.error("Creating transferable on mouse down returned null");
             return;
         }
+
+        event.preventDefault();
+        event.stopPropagation();
 
         // Resolve the component
         final Widget w;

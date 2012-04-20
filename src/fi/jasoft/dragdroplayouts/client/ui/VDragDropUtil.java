@@ -31,6 +31,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 
 public final class VDragDropUtil {
@@ -244,7 +245,7 @@ public final class VDragDropUtil {
         }
 
         // Ensure layout allows dragging
-        if (!isDraggingEnabled(layout)) {
+        if (!isDraggingEnabled(layout, w)) {
             return null;
         }
 
@@ -298,12 +299,17 @@ public final class VDragDropUtil {
      *            The component container to check
      * @return
      */
-    private static boolean isDraggingEnabled(Container layout) {
+    private static boolean isDraggingEnabled(Container layout, Widget w) {
+        boolean draggingEnabled = false;
         if (layout instanceof VHasDragMode) {
             LayoutDragMode dm = ((VHasDragMode) layout).getDragMode();
-            return dm != LayoutDragMode.NONE;
+            draggingEnabled = dm != LayoutDragMode.NONE;
         }
-        return false;
+        if (layout instanceof VHasDragFilter) {
+            draggingEnabled = draggingEnabled
+                    && ((VHasDragFilter) layout).getDragFilter().isDraggable(w);
+        }
+        return draggingEnabled;
     }
 
     /**
