@@ -1,6 +1,7 @@
 package fi.jasoft.dragdroplayouts.demo;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 
@@ -8,7 +9,6 @@ import org.vaadin.codelabel.CodeLabel;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
@@ -45,15 +45,26 @@ public class DragdropApplication extends Application {
             tabs.addComponent(new DragdropAccordionDemo());
             tabs.addComponent(new DragdropDragFilterDemo());
 
-            tabs.addListener(new TabSheet.SelectedTabChangeListener(){
+            tabs.addListener(new TabSheet.SelectedTabChangeListener() {
                 public void selectedTabChange(SelectedTabChangeEvent event) {
-                    tabChanged(event.getTabSheet().getSelectedTab());
+                    try {
+                        tabChanged(event.getTabSheet().getSelectedTab());
+                    } catch (IOException e) {
+                        code.setValue("No source code available.");
+                        e.printStackTrace();
+                    }
                 }
             });
-            
+
             content.addComponent(tabs);
 
             code = new CodeLabel("");
+            try {
+                tabChanged(tabs.getSelectedTab());
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
             Panel codePanel = new Panel();
             codePanel.setSizeFull();
@@ -61,44 +72,42 @@ public class DragdropApplication extends Application {
             content.addComponent(codePanel);
 
             setContent(content);
-
-            tabChanged(tabs.getComponentIterator().next());
         }
 
-        private void tabChanged(Component tab) {
-            try {
-                String path = getClass().getCanonicalName().replaceAll("\\.", "/")+".java";
+        private void tabChanged(Component tab) throws IOException {
+            String path = tab.getClass().getCanonicalName()
+                    .replaceAll("\\.", "/")
+                    + ".java";
 
-                BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(getClass().getClassLoader()
-                                .getResourceAsStream(path)));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    getClass().getClassLoader().getResourceAsStream(path)));
 
-                StringBuilder codelines = new StringBuilder();
-                String line = reader.readLine();
-                while (line != null) {
-                	if(line.startsWith("import")){
-                		// Remove imports
-                	} else if(line.startsWith("package")){
-                		// Remove package declaration
-                	} else {
-                		 codelines.append(line);
-                         codelines.append("\n");
-                	}
-                
-                    line = reader.readLine();
+            StringBuilder codelines = new StringBuilder();
+            String line = reader.readLine();
+            while (line != null) {
+                if (line.startsWith("import")) {
+                    // Remove imports
+                } else if (line.startsWith("package")) {
+                    // Remove package declaration
+                } else {
+                    codelines.append(line);
+                    codelines.append("\n");
                 }
 
-                reader.close();
-                
-                String code = codelines.toString();
-               
-                code = Pattern.compile("public String getCodePath.*?}",Pattern.MULTILINE|Pattern.DOTALL).matcher(code).replaceAll("");
-                
-                this.code.setValue(code.trim());
-                
-            } catch (Exception e) {
-                code.setValue("No code available.");
+                line = reader.readLine();
             }
+
+            reader.close();
+
+            String code = codelines.toString();
+
+            code = Pattern
+                    .compile("public String getCodePath.*?}",
+                            Pattern.MULTILINE | Pattern.DOTALL).matcher(code)
+                    .replaceAll("");
+
+            this.code.setValue(code.trim());
+
         }
     }
 
