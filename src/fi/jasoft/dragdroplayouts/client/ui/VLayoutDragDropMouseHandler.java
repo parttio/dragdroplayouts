@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
@@ -36,7 +35,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.ui.VButton;
 import com.vaadin.terminal.gwt.client.ui.VCssLayout;
 import com.vaadin.terminal.gwt.client.ui.VSlider;
 import com.vaadin.terminal.gwt.client.ui.VTextField;
@@ -200,21 +198,6 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
         // Announce to handler that we are starting a drag operation
         VDragEvent currentDragEvent = VDragAndDropManager.get().startDrag(
                 transferable, event, true);
-
-        if (w instanceof VButton && BrowserInfo.get().isIE()) {
-            /*
-             * Due to Buttons crazy implementation we need to simulate a mouse
-             * move to get the drag going in IE without first focusing the
-             * button. Crazy shit.
-             */
-            VButton button = (VButton) w;
-            NativeEvent evt = Document.get().createMouseMoveEvent(1,
-                    event.getScreenX(), event.getScreenY(),
-                    Util.getTouchOrMouseClientX(event),
-                    Util.getTouchOrMouseClientY(event), false, false, false,
-                    false, 0);
-            button.getElement().dispatchEvent(evt);
-        }
 
         // Create the drag image
         if (root instanceof VCssLayout) {
