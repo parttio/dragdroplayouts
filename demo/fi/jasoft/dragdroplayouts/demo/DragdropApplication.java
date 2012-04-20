@@ -2,6 +2,7 @@ package fi.jasoft.dragdroplayouts.demo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 
@@ -79,8 +80,15 @@ public class DragdropApplication extends Application {
                     .replaceAll("\\.", "/")
                     + ".java";
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    getClass().getClassLoader().getResourceAsStream(path)));
+            InputStream is = getClass().getClassLoader().getResourceAsStream(
+                    path);
+            if (is == null) {
+                code.setValue("No source code available.");
+                return;
+            }
+
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(is));
 
             StringBuilder codelines = new StringBuilder();
             String line = reader.readLine();
