@@ -127,8 +127,6 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
      */
     public void onMouseDown(MouseDownEvent event) {
         initiateDrag(event.getNativeEvent());
-        event.preventDefault();
-        event.stopPropagation();
     }
 
     /**
@@ -147,6 +145,9 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
         if (!isMouseDragEvent(event) && !Util.isTouchEvent(event)) {
             return;
         }
+
+        event.preventDefault();
+        event.stopPropagation();
 
         // Create the transfarable
         VTransferable transferable = VDragDropUtil
@@ -191,6 +192,13 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             VSlider slider = (VSlider) w;
             slider.setFocus(true);
             slider.setFocus(false);
+        }
+
+        /*
+         * Ensure textfields get focus when dragging so they can be used
+         */
+        if (w instanceof VTextField) {
+            ((VTextField) w).setFocus(true);
         }
 
         currentDraggedWidget = w;
