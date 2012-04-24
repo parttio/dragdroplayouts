@@ -21,7 +21,7 @@ apply plugin: 'jetty'
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
 group = 'fi.jasoft'
-version = 'development'
+version = System.properties['BUILD_VERSION']
 webAppDirName = 'WebContent'
 
 // Demo settings
