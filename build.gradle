@@ -21,7 +21,7 @@ apply plugin: 'jetty'
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
 group = 'fi.jasoft'
-version = System.properties['BUILD_VERSION']
+version = 'development'
 webAppDirName = 'WebContent'
 
 // Demo settings
@@ -143,8 +143,10 @@ jar{
     dependsOn test
     
     // Include sources
-    from sourceSets.main.allJava
-    
+    sourceSets.main.java.srcDirs.each{ 
+        from it
+    }
+        
     // Exclude demo sources
     exclude 'fi/jasoft/dragdroplayouts/**/demo/**/*'
     
