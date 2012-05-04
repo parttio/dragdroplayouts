@@ -25,6 +25,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.ui.VFormLayout;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable;
 import com.vaadin.terminal.gwt.client.ui.VTwinColSelect;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
@@ -264,16 +265,24 @@ public final class VDragDropUtil {
 
     private static Widget getTransferableWidget(Widget w) {
         // Ensure w is Paintable
-        while (!(w instanceof Paintable) && w.getParent() != null) {
+        while (!(w instanceof Paintable)
+                && !(w instanceof VCaption || w instanceof VFormLayout.Caption)
+                && w.getParent() != null) {
             w = w.getParent();
         }
 
         // Are we grabbing the caption of a component
-        boolean isCaption = w instanceof VCaption;
+        boolean isCaption = w instanceof VCaption
+                || w instanceof VFormLayout.Caption;
 
         if (isCaption) {
             // Dragging caption means dragging component the caption belongs to
-            Widget owner = (Widget) ((VCaption) w).getOwner();
+            Widget owner = null;
+            if (w instanceof VCaption) {
+                owner = (Widget) ((VCaption) w).getOwner();
+            } else if (w instanceof VFormLayout.Caption) {
+                owner = (Widget) ((VFormLayout.Caption) w).getOwner();
+            }
             if (owner != null) {
                 w = owner;
             }

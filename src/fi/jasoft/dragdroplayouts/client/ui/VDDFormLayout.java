@@ -18,7 +18,6 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
-import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
@@ -29,8 +28,6 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
         VHasDropHandler, DragStartListener, VHasDragFilter {
 
     private Element currentlyEmphasised;
-
-    private boolean spacingEnabled = false;
 
     private LayoutDragMode dragMode = LayoutDragMode.NONE;
 
@@ -44,7 +41,7 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
 
     public static final String OVER_SPACED = OVER + "-spaced";
 
-    public static final float DEFAULT_VERTICAL_DROP_RATIO = 0.2f;
+    public static final float DEFAULT_VERTICAL_DROP_RATIO = 0.3333f;
 
     private VAbstractDropHandler dropHandler;
 
@@ -85,8 +82,6 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
                 break;
             }
         }
-
-        spacingEnabled = uidl.hasAttribute("spacing");
 
         this.client = client;
 
@@ -193,9 +188,9 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
                 cellTopBottomDropRatio);
     }
 
-    static boolean elementIsRow(Element e) {
-        if (e.getClassName() != null
-                && e.getClassName().contains("v-formlayout-row")) {
+    private static boolean elementIsRow(Element e) {
+        String className = e.getClassName() == null ? "" : e.getClassName();
+        if (className.contains("v-formlayout-row")) {
             return true;
         }
         return false;
@@ -248,21 +243,8 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
          * client side criteria to verify that a drag is over a specific class
          * of component.
          */
-        if (widget instanceof ChildComponentContainer) {
-            Widget w = ((ChildComponentContainer) widget).getWidget();
-            if (w != null) {
-                String className = w.getClass().getName();
-                event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
-                        className);
-            } else {
-                event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
-                        this.getClass().getName());
-            }
-
-        } else {
-            event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
-                    this.getClass().getName());
-        }
+        String className = widget.getClass().getName();
+        event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS, className);
 
         // Add mouse event details
         MouseEventDetails details = new MouseEventDetails(
@@ -300,6 +282,8 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
         currentlyEmphasised = rowElement;
 
         // Add drop location specific style
+        UIObject.setStyleName(rowElement, OVER, true);
+
         if (rowElement != this.getElement()) {
             VerticalDropLocation vl = getVerticalDropLocation(rowElement, event);
             GWT.log(vl.toString());
@@ -430,6 +414,9 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
                      */
                     Element e = event.getElementOver();
 
+                    /**
+                     * Check if element is inside one of the table widgets
+                     */
                     for (int i = 0; i < table.getRowCount(); i++) {
                         Element caption = table.getWidget(i, COLUMN_CAPTION)
                                 .getElement();
@@ -440,6 +427,22 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
                         if (caption.isOrHasChild(e) || error.isOrHasChild(e)
                                 || widget.isOrHasChild(e)) {
                             return table.getWidget(i, COLUMN_WIDGET);
+                        }
+                    }
+
+                    /*
+                     * Is the element a element outside the row structure but
+                     * inside the layout
+                     */
+                    Element rowElement = getRowFromChildElement(e,
+                            VDDFormLayout.this.getElement());
+                    if (rowElement != null) {
+                        Element tableElement = rowElement.getParentElement();
+                        for (int i = 0; i < tableElement.getChildCount(); i++) {
+                            Element r = tableElement.getChild(i).cast();
+                            if (r.equals(rowElement)) {
+                                return table.getWidget(i, COLUMN_WIDGET);
+                            }
                         }
                     }
 
