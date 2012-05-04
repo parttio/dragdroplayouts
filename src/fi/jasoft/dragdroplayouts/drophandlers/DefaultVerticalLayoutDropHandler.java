@@ -36,6 +36,13 @@ public class DefaultVerticalLayoutDropHandler extends
 
     /**
      * Constructor
+     */
+    public DefaultVerticalLayoutDropHandler() {
+
+    }
+
+    /**
+     * Constructor
      * 
      * @param dropCellAlignment
      *            The cell alignment of the component after it has been dropped

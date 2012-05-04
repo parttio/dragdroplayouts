@@ -2,6 +2,7 @@ package fi.jasoft.dragdroplayouts.demo;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
@@ -9,6 +10,7 @@ import com.vaadin.ui.TextField;
 import fi.jasoft.dragdroplayouts.DDFormLayout;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultFormLayoutDropHandler;
+import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 
 public class DragdropFormLayoutDemo extends CustomComponent {
 
@@ -20,8 +22,15 @@ public class DragdropFormLayoutDemo extends CustomComponent {
         layout.setSizeFull();
         setCompositionRoot(layout);
 
-        // Allow dragging
+        // Allow dragging all components
         layout.setDragMode(LayoutDragMode.CLONE);
+
+        // Limit dragging to the TextFields
+        layout.setDragFilter(new DragFilter() {
+            public boolean isDraggable(Component component) {
+                return component instanceof TextField;
+            }
+        });
 
         // Allow dropping
         layout.setDropHandler(new DefaultFormLayoutDropHandler());
