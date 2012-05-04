@@ -36,6 +36,7 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.VCssLayout;
+import com.vaadin.terminal.gwt.client.ui.VFormLayout;
 import com.vaadin.terminal.gwt.client.ui.VSlider;
 import com.vaadin.terminal.gwt.client.ui.VTextField;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
@@ -211,10 +212,24 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
         if (root instanceof VCssLayout) {
             /*
              * CSS Layout does not have an enclosing div so we just use the
-             * component dov
+             * component div
              */
             currentDragEvent.createDragImage((Element) w.getElement().cast(),
                     true);
+
+        } else if (root instanceof VFormLayout) {
+            /*
+             * Dragging a component in a form layout should include the caption
+             * and error indicator as well
+             */
+            Element rowElement = (Element) VDDFormLayout
+                    .getRowFromChildElement(
+                            (com.google.gwt.dom.client.Element) w.getElement()
+                                    .cast(),
+                            (com.google.gwt.dom.client.Element) root
+                                    .getElement().cast()).cast();
+
+            currentDragEvent.createDragImage(rowElement, true);
 
         } else {
             /*

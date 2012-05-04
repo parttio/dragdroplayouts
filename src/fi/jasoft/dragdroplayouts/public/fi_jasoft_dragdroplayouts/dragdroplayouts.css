@@ -12,13 +12,16 @@
 }
 
 /* Horizontal and vertical styles */
-.v-ddorderedlayout-over{
+.v-ddorderedlayout-over,
+.v-ddformlayout-over-over{
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
 }
 .v-ddorderedlayout-over-middle,
-.v-ddorderedlayout-over-center{	
+.v-ddorderedlayout-over-center,
+.v-ddformlayout-over-middle,
+.v-ddformlayout-over-center{	
 	background-color: rgb(169,209,255); /* IE fallback */
 	background-color: rgba(169,209,255,.6);
 }
@@ -34,15 +37,18 @@
 	border-right: 2px solid #1d9dff;
 	margin-left: -2px;		
 }
-.v-ddorderedlayout-over.v-ddorderedlayout-over-top{
+.v-ddorderedlayout-over.v-ddorderedlayout-over-top,
+.v-ddformlayout-over.v-ddformlayout-over-top{
 	border-top: 2px solid #1d9dff;
 	margin-bottom: -2px;
 }
-.v-ddorderedlayout-over-spaced.v-ddorderedlayout-over-top{
+.v-ddorderedlayout-over-spaced.v-ddorderedlayout-over-top,
+.v-ddformlayout-over-spaced.v-ddformlayout-over-top{
 	border-top: 7px solid #1d9dff;
 	padding-top: 0px !important;
 }
-.v-ddorderedlayout-over.v-ddorderedlayout-over-bottom{		
+.v-ddorderedlayout-over.v-ddorderedlayout-over-bottom,
+.v-ddformlayout-over.v-ddformlayout-over-bottom{		
 	border-bottom: 2px solid #1d9dff;
 	margin-top: -2px;
 }
@@ -65,7 +71,8 @@
 }
 
 /* Drag and drop styles */
-.v-ddorderedlayout-over{
+.v-ddorderedlayout-over,
+.v-ddformlayout-over{
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
