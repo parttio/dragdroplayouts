@@ -158,7 +158,13 @@
 }
 
 /* FormLayout styles */
-.v-ddformlayout-over{ }
+.v-ddformlayout-over{
+	-moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px; 
+    background-color: rgb(169,209,255); /* IE fallback */
+    background-color: rgba(169,209,255,.6);    
+}
 
 .v-ddformlayout-over.v-ddformlayout-over-top .v-formlayout-captioncell,
 .v-ddformlayout-over.v-ddformlayout-over-top .v-formlayout-errorcell,

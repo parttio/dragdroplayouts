@@ -414,6 +414,13 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
                      */
                     Element e = event.getElementOver();
 
+                    if (table.getRowCount() == 0) {
+                        /*
+                         * Empty layout
+                         */
+                        return VDDFormLayout.this;
+                    }
+
                     /**
                      * Check if element is inside one of the table widgets
                      */
