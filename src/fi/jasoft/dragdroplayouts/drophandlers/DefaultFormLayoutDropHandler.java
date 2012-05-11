@@ -60,10 +60,23 @@ public class DefaultFormLayoutDropHandler extends
         int idx = details.getOverIndex();
         int oldIdx = layout.getComponentIndex(comp);
 
+        if (idx == oldIdx) {
+            // Dropping on myself
+            return;
+        }
+
         // Detach
         layout.removeComponent(comp);
-        if (oldIdx < idx) {
+        if (idx > 0 && idx > oldIdx) {
             idx--;
+        }
+
+        // Increase index if component is dropped after or above a previous
+        // component
+        VerticalDropLocation loc = details.getDropLocation();
+        if (loc == VerticalDropLocation.MIDDLE
+                || loc == VerticalDropLocation.BOTTOM) {
+            idx++;
         }
 
         // Add component
