@@ -118,6 +118,12 @@ public class DDFormLayout extends FormLayout implements LayoutDragSource,
             return VerticalDropLocation
                     .valueOf((String) getData(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION));
         }
+
+        @Override
+        public Object getData(String key) {
+            // TODO Auto-generated method stub
+            return super.getData(key);
+        }
     }
 
     /*

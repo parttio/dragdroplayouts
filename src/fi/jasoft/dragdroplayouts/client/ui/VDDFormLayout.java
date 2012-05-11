@@ -2,7 +2,6 @@ package fi.jasoft.dragdroplayouts.client.ui;
 
 import java.util.Iterator;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -213,10 +212,6 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
      *            The drag event
      */
     protected void updateDropDetails(Widget widget, VDragEvent event) {
-        if (widget == null) {
-            return;
-        }
-
         /*
          * The horizontal position within the cell
          */
@@ -231,6 +226,7 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
          * The index over which the drag is. Can be used by a client side
          * criteria to verify that a drag is over a certain index.
          */
+        event.getDropDetails().put(Constants.DROP_DETAIL_TO, "-1");
         for (int i = 0; i < table.getRowCount(); i++) {
             Widget w = table.getWidget(i, COLUMN_WIDGET);
             if (widget.equals(w)) {
@@ -281,14 +277,12 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
 
         currentlyEmphasised = rowElement;
 
-        // Add drop location specific style
-        UIObject.setStyleName(rowElement, OVER, true);
-
         if (rowElement != this.getElement()) {
             VerticalDropLocation vl = getVerticalDropLocation(rowElement, event);
-            GWT.log(vl.toString());
             UIObject.setStyleName(rowElement, OVER + "-"
                     + vl.toString().toLowerCase(), true);
+        } else {
+            UIObject.setStyleName(rowElement, OVER, true);
         }
     }
 
@@ -474,7 +468,6 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
                     emphasis(null, null);
 
                     // Update the drop details so we can validate the drop
-
                     Widget c = getTableRowWidgetFromDragEvent(drag);
                     if (c != null) {
                         updateDropDetails(c, drag);
@@ -496,6 +489,26 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
                         }
                     }, drag);
                 };
+
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see
+                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
+                 * #dragEnter(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
+                 */
+                @Override
+                public void dragEnter(VDragEvent drag) {
+                    emphasis(null, null);
+
+                    Widget c = getTableRowWidgetFromDragEvent(drag);
+                    if (c != null) {
+                        updateDropDetails(c, drag);
+                    } else {
+                        updateDropDetails(VDDFormLayout.this, drag);
+                    }
+                    super.dragEnter(drag);
+                }
 
                 /*
                  * (non-Javadoc)

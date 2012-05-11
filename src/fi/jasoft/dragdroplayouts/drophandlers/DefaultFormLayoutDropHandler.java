@@ -1,6 +1,9 @@
 package fi.jasoft.dragdroplayouts.drophandlers;
 
 import com.vaadin.event.dd.DragAndDropEvent;
+import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.event.dd.acceptcriteria.Or;
+import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
@@ -9,7 +12,9 @@ import com.vaadin.ui.ComponentContainer;
 
 import fi.jasoft.dragdroplayouts.DDFormLayout;
 import fi.jasoft.dragdroplayouts.DDFormLayout.FormLayoutTargetDetails;
+import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
+import fi.jasoft.dragdroplayouts.events.VerticalLocationIs;
 
 public class DefaultFormLayoutDropHandler extends
         AbstractDefaultLayoutDropHandler {
@@ -132,5 +137,12 @@ public class DefaultFormLayoutDropHandler extends
         if (dropAlignment != null) {
             layout.setComponentAlignment(comp, dropAlignment);
         }
+    }
+
+    @Override
+    public AcceptCriterion getAcceptCriterion() {
+        
+        TargetDetailIs isOverEmptyLayout = new TargetDetailIs(Constants.DROP_DETAIL_TO, "-1");                
+        return new Or(isOverEmptyLayout, VerticalLocationIs.TOP, VerticalLocationIs.BOTTOM);
     }
 }
