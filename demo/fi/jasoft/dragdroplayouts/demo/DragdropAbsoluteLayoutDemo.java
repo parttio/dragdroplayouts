@@ -8,10 +8,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
-import fi.jasoft.dragdroplayouts.DDFormLayout;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultAbsoluteLayoutDropHandler;
-import fi.jasoft.dragdroplayouts.drophandlers.DefaultFormLayoutDropHandler;
 
 public class DragdropAbsoluteLayoutDemo extends CustomComponent {
 
@@ -42,12 +40,5 @@ public class DragdropAbsoluteLayoutDemo extends CustomComponent {
         Link link = new Link("A link to Vaadin", new ExternalResource(
                 "http://www.vaadin.com"));
         layout.addComponent(link, "left:200px; top:100px");
-
-        DDFormLayout form = new DDFormLayout();
-        form.setWidth("200px");
-        form.setHeight("200px");
-        form.setDropHandler(new DefaultFormLayoutDropHandler());
-        layout.addComponent(form, "left:200px; top:200px");
-
     }
 }

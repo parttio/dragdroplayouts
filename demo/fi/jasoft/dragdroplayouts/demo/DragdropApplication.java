@@ -34,12 +34,13 @@ public class DragdropApplication extends Application {
             tabs.setSizeFull();
             tabs.setImmediate(true);
 
-            tabs.addComponent(new DragdropFormLayoutDemo());
             tabs.addComponent(new DragdropAbsoluteLayoutDemo());
             tabs.addComponent(new DragdropVerticalLayoutDemo());
             tabs.addComponent(new DragdropHorizontalLayoutDemo());
             tabs.addComponent(new DragdropGridLayoutDemo());
             tabs.addComponent(new DragdropCssLayoutDemo());
+            tabs.addComponent(new DragdropFormLayoutDemo());
+
             tabs.addComponent(new DragdropLayoutDraggingDemo());
             tabs.addComponent(new DragdropHorizontalSplitPanelDemo());
             tabs.addComponent(new DragdropVerticalSplitPanelDemo());
