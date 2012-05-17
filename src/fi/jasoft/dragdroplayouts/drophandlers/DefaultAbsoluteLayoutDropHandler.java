@@ -28,6 +28,8 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 /**
  * A default drop handler for absolute layouts
  * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.4.0
  */
 @SuppressWarnings("serial")
 public class DefaultAbsoluteLayoutDropHandler extends

@@ -30,6 +30,9 @@ import fi.jasoft.dragdroplayouts.events.VerticalLocationIs;
 
 /**
  * A default drop handler for an accordion
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.6.0
  */
 @SuppressWarnings("serial")
 public class DefaultAccordionDropHandler extends

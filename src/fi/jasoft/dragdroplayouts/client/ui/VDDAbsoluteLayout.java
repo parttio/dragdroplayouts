@@ -31,11 +31,18 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 
+import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
+/**
+ * Client side implementation for {@link DDAbsoluteLayout}
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.4.0
+ */
 public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
         VHasDropHandler, DragStartListener, VHasDragFilter {
 

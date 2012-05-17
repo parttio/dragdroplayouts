@@ -38,11 +38,18 @@ import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
+import fi.jasoft.dragdroplayouts.DDVerticalLayout;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
+/**
+ * Client side implementation for {@link DDVerticalLayout}
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.4.0
+ */
 public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
         VHasDropHandler, DragStartListener, VHasDragFilter {
 

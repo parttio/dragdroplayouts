@@ -30,6 +30,9 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
 /**
  * A default drop handler for GridLayout
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.6.0
  */
 @SuppressWarnings("serial")
 public class DefaultGridLayoutDropHandler extends

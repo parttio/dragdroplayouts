@@ -25,6 +25,9 @@ import fi.jasoft.dragdroplayouts.client.ui.Constants;
 
 /**
  * Abstract base class for layout based transferable's.
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.4.0
  */
 @SuppressWarnings("serial")
 public class LayoutBoundTransferable extends TransferableImpl {

@@ -19,6 +19,9 @@ import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 
 /**
  * Interface for layout which acts as a drag source
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.6.0
  */
 public interface VHasDragMode {
 

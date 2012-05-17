@@ -46,7 +46,8 @@ import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
 /**
  * Mouse handler for starting component drag operations
  * 
- * @author John Ahlroos
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.4.0
  */
 public class VLayoutDragDropMouseHandler implements MouseDownHandler,
         TouchStartHandler {

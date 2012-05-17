@@ -18,10 +18,11 @@ package fi.jasoft.dragdroplayouts.client.ui;
 /**
  * LayoutDragMode specifies how dragging is visualized.
  * 
+ * @author John Ahlroos / www.jasoft.fi
  * @since 6.5
  */
 public enum LayoutDragMode {
-	
+
     /**
      * Disables dragging components from a layout. This is the default
      * behaviour.

@@ -22,6 +22,9 @@ import com.vaadin.ui.Component;
 /**
  * A drag filter for either allowing all or allowing no drags
  * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.6.0
+ * 
  */
 final class DragFilterLiteral implements DragFilter {
 

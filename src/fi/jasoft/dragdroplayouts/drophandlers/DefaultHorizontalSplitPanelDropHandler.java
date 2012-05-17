@@ -27,6 +27,12 @@ import fi.jasoft.dragdroplayouts.DDHorizontalSplitPanel.HorizontalSplitPanelTarg
 import fi.jasoft.dragdroplayouts.events.HorizontalLocationIs;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
+/**
+ * Defalt drop handler for horizontal split panels
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.6.0
+ */
 @SuppressWarnings("serial")
 public class DefaultHorizontalSplitPanelDropHandler extends
         AbstractDefaultLayoutDropHandler {

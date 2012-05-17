@@ -22,6 +22,7 @@ import com.vaadin.ui.Component;
 /**
  * A Filter for disabling dragging for some components in the layout
  * 
+ * @author John Ahlroos / www.jasoft.fi
  * @since 0.6.0
  * 
  */
@@ -46,4 +47,3 @@ public interface DragFilter extends Serializable {
      */
     static final DragFilter NONE = new DragFilterLiteral(false);
 }
-

@@ -22,6 +22,9 @@ import fi.jasoft.dragdroplayouts.client.ui.Constants;
 
 /**
  * A client side criterion for determining the vertical location
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.4.0
  */
 @SuppressWarnings("serial")
 public final class VerticalLocationIs extends TargetDetailIs {

@@ -28,6 +28,12 @@ import fi.jasoft.dragdroplayouts.DDTabSheet.TabSheetTargetDetails;
 import fi.jasoft.dragdroplayouts.events.HorizontalLocationIs;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
+/**
+ * Default drop handler for tabsheets
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.6.0
+ */
 @SuppressWarnings("serial")
 public class DefaultTabSheetDropHandler extends
         AbstractDefaultLayoutDropHandler {

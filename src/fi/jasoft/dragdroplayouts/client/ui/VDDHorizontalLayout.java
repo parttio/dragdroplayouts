@@ -45,7 +45,10 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 /**
- * Client side counterpart for {@link DDHorizontalLayout}
+ * Client side implementation for {@link DDHorizontalLayout}
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.4.0
  */
 public class VDDHorizontalLayout extends VHorizontalLayout implements
         VHasDragMode, VHasDropHandler, DragStartListener, VHasDragFilter {

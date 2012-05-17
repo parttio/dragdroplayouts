@@ -19,8 +19,14 @@ import com.vaadin.event.dd.DragSource;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 
+/**
+ * Interface for layout drag sources
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.6.0
+ */
 public interface LayoutDragSource extends DragSource {
-    
+
     /**
      * Gets the drag mode which controls how drags can be made. The layout
      * supports two modes, NONE which disables dragging from the layout and
@@ -39,40 +45,40 @@ public interface LayoutDragSource extends DragSource {
      *            The mode to set
      */
     void setDragMode(LayoutDragMode mode);
-    
-    /**
-  	 * Get a filter which determines which components can be
-  	 * dragged from the layout and which cannot. 
-  	 * 
-  	 * This does not effect the drag mode, but only provides a
-  	 * means to make exceptions in the drag mode.
-  	 * 
-  	 * The drag filter is only used when dragging is enabled in the layout, 
-  	 * i.e drag mode is NOT {@link LayoutDragMode#NONE}
-  	 * 
-  	 * By default the drag filter permits dragging all components
-  	 * when the layout drag mode allows it.
-  	 *
-  	 * @param dragFilter
-  	 * 		The filter to use, by default {@link DragFilter#ALL} is used.
-  	 */
-  	DragFilter getDragFilter(); 
 
-  	/**
-  	 * Set a filter which determines which components can be
-  	 * dragged from the layout and which cannot. 
-  	 * 
-  	 * This does not effect the drag mode, but only provides a
-  	 * means to make exceptions in the drag mode. 
-  	 * 
-  	 * The drag filter is only used when dragging is enabled in the layout, 
-  	 * i.e drag mode is NOT {@link LayoutDragMode#NONE}
-  	 * 
-  	 * By default the drag filter permits dragging all components
-  	 * when the layout drag mode allows it.
-  	 *
-  	 * @param dragFilter
-  	 * 		The filter to use, by default {@link DragFilter#ALL} is used.
-  	 */
-  	void setDragFilter(DragFilter dragFilter);
+    /**
+     * Get a filter which determines which components can be dragged from the
+     * layout and which cannot.
+     * 
+     * This does not effect the drag mode, but only provides a means to make
+     * exceptions in the drag mode.
+     * 
+     * The drag filter is only used when dragging is enabled in the layout, i.e
+     * drag mode is NOT {@link LayoutDragMode#NONE}
+     * 
+     * By default the drag filter permits dragging all components when the
+     * layout drag mode allows it.
+     * 
+     * @param dragFilter
+     *            The filter to use, by default {@link DragFilter#ALL} is used.
+     */
+    DragFilter getDragFilter();
+
+    /**
+     * Set a filter which determines which components can be dragged from the
+     * layout and which cannot.
+     * 
+     * This does not effect the drag mode, but only provides a means to make
+     * exceptions in the drag mode.
+     * 
+     * The drag filter is only used when dragging is enabled in the layout, i.e
+     * drag mode is NOT {@link LayoutDragMode#NONE}
+     * 
+     * By default the drag filter permits dragging all components when the
+     * layout drag mode allows it.
+     * 
+     * @param dragFilter
+     *            The filter to use, by default {@link DragFilter#ALL} is used.
+     */
+    void setDragFilter(DragFilter dragFilter);
 }

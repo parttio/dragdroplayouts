@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * An interface for layouts which has separated tab and content from each other
  * 
- * @author John Ahlroos
+ * @author John Ahlroos / www.jasoft.fi
  * @since 0.6.3
  */
 public interface VDDTabContainer {

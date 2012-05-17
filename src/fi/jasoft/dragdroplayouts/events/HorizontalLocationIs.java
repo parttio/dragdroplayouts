@@ -22,6 +22,9 @@ import fi.jasoft.dragdroplayouts.client.ui.Constants;
 
 /**
  * A client side criterion for determining the horizontal location
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.6.0
  */
 @SuppressWarnings("serial")
 public final class HorizontalLocationIs extends TargetDetailIs {

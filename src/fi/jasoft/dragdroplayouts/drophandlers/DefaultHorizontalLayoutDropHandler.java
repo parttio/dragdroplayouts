@@ -16,28 +16,24 @@
 package fi.jasoft.dragdroplayouts.drophandlers;
 
 import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropHandler;
-import com.vaadin.event.dd.acceptcriteria.AcceptAll;
-import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
-import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 
-import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.DDHorizontalLayout.HorizontalLayoutTargetDetails;
-import fi.jasoft.dragdroplayouts.DDVerticalLayout.VerticalLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
 /**
  * A default drop handler for horizontal layouts
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.6.0
  */
 @SuppressWarnings("serial")
-public class DefaultHorizontalLayoutDropHandler extends AbstractDefaultLayoutDropHandler{
+public class DefaultHorizontalLayoutDropHandler extends
+        AbstractDefaultLayoutDropHandler {
 
     private Alignment dropAlignment;
 
