@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 John Ahlroos
+ * Copyright 2012 John Ahlroos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,51 +27,52 @@ import com.vaadin.terminal.gwt.client.ValueMap;
 
 /**
  * A drag filter which uses PIDs to check the components draggability
- * @author John Ahlroos
+ * 
+ * @author John Ahlroos / www.jasoft.fi
  * @since 0.6.1
  */
 public class VDragFilter {
 
     private final Map<Paintable, Boolean> dragmap = new HashMap<Paintable, Boolean>();
-    
+
     public static final String DRAGMAP_ATTRIBUTE = "dragmap";
-    
+
     /**
      * Update the drag map from an UIDL request
      * 
      * @param uidl
-     * 		The UIDL 
+     *            The UIDL
      * 
      * @param client
-     * 		The associated application connection
+     *            The associated application connection
      */
-    public void update(UIDL uidl, ApplicationConnection client){
-    	dragmap.clear();
-    	if(uidl.hasAttribute(DRAGMAP_ATTRIBUTE)){	
-    		ValueMap vmap = uidl.getMapAttribute(DRAGMAP_ATTRIBUTE);
-    		Set<String> pids = vmap.getKeySet();
-    		for(String pid : pids){
-    			Paintable p = client.getPaintable(pid);
-    			boolean draggable = vmap.getBoolean(pid);
-    			if(p != null){			
-    				dragmap.put(p, draggable);
-    			}
-    		}
-    	}
+    public void update(UIDL uidl, ApplicationConnection client) {
+        dragmap.clear();
+        if (uidl.hasAttribute(DRAGMAP_ATTRIBUTE)) {
+            ValueMap vmap = uidl.getMapAttribute(DRAGMAP_ATTRIBUTE);
+            Set<String> pids = vmap.getKeySet();
+            for (String pid : pids) {
+                Paintable p = client.getPaintable(pid);
+                boolean draggable = vmap.getBoolean(pid);
+                if (p != null) {
+                    dragmap.put(p, draggable);
+                }
+            }
+        }
     }
-    
+
     /**
      * Returns true if a widget is draggable
      * 
      * @param widget
-     * 		The widget to check for
+     *            The widget to check for
      * 
      * @return
      */
-    public boolean isDraggable(Widget widget){
-    	if(dragmap.containsKey(widget)){
-    		return dragmap.get(widget);
-    	}
-    	return false;
+    public boolean isDraggable(Widget widget) {
+        if (dragmap.containsKey(widget)) {
+            return dragmap.get(widget);
+        }
+        return false;
     }
 }

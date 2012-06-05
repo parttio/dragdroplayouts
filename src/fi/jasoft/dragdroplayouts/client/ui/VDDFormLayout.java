@@ -1,3 +1,18 @@
+/*
+ * Copyright 2012 John Ahlroos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package fi.jasoft.dragdroplayouts.client.ui;
 
 import java.util.Iterator;
@@ -18,11 +33,18 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
+import fi.jasoft.dragdroplayouts.DDFormLayout;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
+/**
+ * Client side implementation for {@link DDFormLayout}
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.4.0
+ */
 public class VDDFormLayout extends VFormLayout implements VHasDragMode,
         VHasDropHandler, DragStartListener, VHasDragFilter {
 

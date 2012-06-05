@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 John Ahlroos
+ * Copyright 2012 John Ahlroos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,12 @@ import fi.jasoft.dragdroplayouts.DDTabSheet.TabSheetTargetDetails;
 import fi.jasoft.dragdroplayouts.events.HorizontalLocationIs;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
+/**
+ * Default drop handler for tabsheets
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.6.0
+ */
 @SuppressWarnings("serial")
 public class DefaultTabSheetDropHandler extends
         AbstractDefaultLayoutDropHandler {

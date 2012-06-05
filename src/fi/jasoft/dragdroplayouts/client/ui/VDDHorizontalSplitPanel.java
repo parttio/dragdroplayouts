@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 John Ahlroos
+ * Copyright 2012 John Ahlroos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,18 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 
+import fi.jasoft.dragdroplayouts.DDHorizontalSplitPanel;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
+/**
+ * Client side implementation for {@link DDHorizontalSplitPanel}
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.4.0
+ */
 public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
         VHasDragMode, VHasDropHandler, DragStartListener, VHasDragFilter {
 

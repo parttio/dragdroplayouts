@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 John Ahlroos
+ * Copyright 2012 John Ahlroos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,10 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 /**
- * Client side counterpart for {@link DDHorizontalLayout}
+ * Client side implementation for {@link DDHorizontalLayout}
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.4.0
  */
 public class VDDHorizontalLayout extends VHorizontalLayout implements
         VHasDragMode, VHasDropHandler, DragStartListener, VHasDragFilter {

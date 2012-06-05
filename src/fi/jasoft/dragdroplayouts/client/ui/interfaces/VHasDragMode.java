@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 John Ahlroos
+ * Copyright 2012 John Ahlroos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@ import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 
 /**
  * Interface for layout which acts as a drag source
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.6.0
  */
 public interface VHasDragMode {
 

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2012 John Ahlroos
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package fi.jasoft.dragdroplayouts.drophandlers;
 
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -16,6 +31,12 @@ import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.events.VerticalLocationIs;
 
+/**
+ * Default drop handler for Form layouts
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.8.0
+ */
 public class DefaultFormLayoutDropHandler extends
         AbstractDefaultLayoutDropHandler {
 
@@ -28,7 +49,7 @@ public class DefaultFormLayoutDropHandler extends
      *            The cell alignment of the component after it has been dropped
      */
     public DefaultFormLayoutDropHandler() {
-       
+
     }
 
     /**
@@ -154,8 +175,10 @@ public class DefaultFormLayoutDropHandler extends
 
     @Override
     public AcceptCriterion getAcceptCriterion() {
-        
-        TargetDetailIs isOverEmptyLayout = new TargetDetailIs(Constants.DROP_DETAIL_TO, "-1");                
-        return new Or(isOverEmptyLayout, VerticalLocationIs.TOP, VerticalLocationIs.BOTTOM);
+
+        TargetDetailIs isOverEmptyLayout = new TargetDetailIs(
+                Constants.DROP_DETAIL_TO, "-1");
+        return new Or(isOverEmptyLayout, VerticalLocationIs.TOP,
+                VerticalLocationIs.BOTTOM);
     }
 }

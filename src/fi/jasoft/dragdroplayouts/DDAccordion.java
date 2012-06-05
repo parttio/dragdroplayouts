@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 John Ahlroos
+ * Copyright 2012 John Ahlroos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,12 @@ import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
 import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
+/**
+ * Accourdion with drag and drop support
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.4.0
+ */
 @SuppressWarnings("serial")
 @ClientWidget(VDDAccordion.class)
 public class DDAccordion extends Accordion implements LayoutDragSource,
@@ -60,7 +66,7 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
 
     // Are the iframes shimmed
     private boolean iframeShims = true;
-    
+
     /**
      * A filter for dragging components.
      */
@@ -180,10 +186,10 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      *            dropping
      */
     public void setDropHandler(DropHandler dropHandler) {
-    	if(this.dropHandler != dropHandler){
-    		this.dropHandler = dropHandler;
+        if (this.dropHandler != dropHandler) {
+            this.dropHandler = dropHandler;
             requestRepaint();
-    	}
+        }
     }
 
     /**
@@ -238,7 +244,7 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
 
         // Should shims be used
         target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
-        
+
         // Paint the dragfilter into the paint target
         new DragFilterPaintable(this).paint(target);
     }
@@ -254,25 +260,25 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentVerticalDropRatio(float ratio) {
-    	if(ratio != verticalDropRatio){
-    		if (ratio >= 0 && ratio <= 0.5) {
+        if (ratio != verticalDropRatio) {
+            if (ratio >= 0 && ratio <= 0.5) {
                 verticalDropRatio = ratio;
                 requestRepaint();
             } else {
                 throw new IllegalArgumentException(
                         "Ratio must be between 0 and 0.5");
             }
-    	}
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-    	if(iframeShims != shim){
-    		iframeShims = shim;
+        if (iframeShims != shim) {
+            iframeShims = shim;
             requestRepaint();
-    	}
+        }
     }
 
     /**
@@ -281,21 +287,21 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
     public boolean isShimmed() {
         return iframeShims;
     }
-    
+
     /**
      * {@inheritDoc}
      */
-	public DragFilter getDragFilter() {
-		return dragFilter;
-	}
+    public DragFilter getDragFilter() {
+        return dragFilter;
+    }
 
-	/**
+    /**
      * {@inheritDoc}
      */
-	public void setDragFilter(DragFilter dragFilter) {
-		if(this.dragFilter != dragFilter){
-			this.dragFilter = dragFilter;
-			requestRepaint();
-		}
-	}
+    public void setDragFilter(DragFilter dragFilter) {
+        if (this.dragFilter != dragFilter) {
+            this.dragFilter = dragFilter;
+            requestRepaint();
+        }
+    }
 }

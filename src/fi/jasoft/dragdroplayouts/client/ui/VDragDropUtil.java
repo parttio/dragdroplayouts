@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 John Ahlroos
+ * Copyright 2012 John Ahlroos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,12 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 
+/**
+ * Utility class for Drag and Drop operations
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.5.0
+ */
 public final class VDragDropUtil {
 
     private VDragDropUtil() {

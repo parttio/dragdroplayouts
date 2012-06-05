@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 John Ahlroos
+ * Copyright 2012 John Ahlroos
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,6 +27,9 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
 /**
  * A default drop handler for vertical layouts
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.6.0
  */
 @SuppressWarnings("serial")
 public class DefaultVerticalLayoutDropHandler extends

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 John Ahlroos
+ * Copyright 2012 John Ahlroos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * An interface for layouts which has separated tab and content from each other
  * 
- * @author John Ahlroos
+ * @author John Ahlroos / www.jasoft.fi
  * @since 0.6.3
  */
 public interface VDDTabContainer {

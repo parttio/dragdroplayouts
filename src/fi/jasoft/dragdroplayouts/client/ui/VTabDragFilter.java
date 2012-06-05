@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 John Ahlroos
+ * Copyright 2012 John Ahlroos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,52 +29,58 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer;
 /**
  * A filter which uses the tabs index to recognice to draggability
  * 
- * @author John Ahlroos
+ * @author John Ahlroos / www.jasoft.fi
  * @since 0.6.3
  */
 public class VTabDragFilter extends VDragFilter {
 
-	private final VDDTabContainer tabsheet;
-	
-	private final Map<Integer, Boolean> dragmap = new HashMap<Integer, Boolean>();
-	
-	/**
-	 * Default constructor
-	 * 
-	 * @param root
-	 * 		The Tabsheet to check the tabs of
-	 */
-	public VTabDragFilter(VDDTabContainer root) {
-		tabsheet = root;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see fi.jasoft.dragdroplayouts.client.ui.VDragFilter#update(com.vaadin.terminal.gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
-	 */
-	@Override
-	public void update(UIDL uidl, ApplicationConnection client) {
-		dragmap.clear();
-    	if(uidl.hasAttribute(DRAGMAP_ATTRIBUTE)){	
-    		ValueMap vmap = uidl.getMapAttribute(DRAGMAP_ATTRIBUTE);
-    		Set<String> indexes = vmap.getKeySet();
-    		for(String index : indexes){
-    			boolean draggable = vmap.getBoolean(index);
-    			dragmap.put(Integer.valueOf(index), draggable);
-    		}
-    	}
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see fi.jasoft.dragdroplayouts.client.ui.VDragFilter#isDraggable(com.google.gwt.user.client.ui.Widget)
-	 */
-	@Override
-	public boolean isDraggable(Widget widget) {
-		int index = tabsheet.getTabContentPosition(widget);
-		if(dragmap.containsKey(index)){
-    		return dragmap.get(index);
-    	}
-    	return false;
-	}
+    private final VDDTabContainer tabsheet;
+
+    private final Map<Integer, Boolean> dragmap = new HashMap<Integer, Boolean>();
+
+    /**
+     * Default constructor
+     * 
+     * @param root
+     *            The Tabsheet to check the tabs of
+     */
+    public VTabDragFilter(VDDTabContainer root) {
+        tabsheet = root;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * fi.jasoft.dragdroplayouts.client.ui.VDragFilter#update(com.vaadin.terminal
+     * .gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
+     */
+    @Override
+    public void update(UIDL uidl, ApplicationConnection client) {
+        dragmap.clear();
+        if (uidl.hasAttribute(DRAGMAP_ATTRIBUTE)) {
+            ValueMap vmap = uidl.getMapAttribute(DRAGMAP_ATTRIBUTE);
+            Set<String> indexes = vmap.getKeySet();
+            for (String index : indexes) {
+                boolean draggable = vmap.getBoolean(index);
+                dragmap.put(Integer.valueOf(index), draggable);
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * fi.jasoft.dragdroplayouts.client.ui.VDragFilter#isDraggable(com.google
+     * .gwt.user.client.ui.Widget)
+     */
+    @Override
+    public boolean isDraggable(Widget widget) {
+        int index = tabsheet.getTabContentPosition(widget);
+        if (dragmap.containsKey(index)) {
+            return dragmap.get(index);
+        }
+        return false;
+    }
 }

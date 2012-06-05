@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 John Ahlroos
+ * Copyright 2012 John Ahlroos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,11 @@ package fi.jasoft.dragdroplayouts.client.ui;
 /**
  * LayoutDragMode specifies how dragging is visualized.
  * 
+ * @author John Ahlroos / www.jasoft.fi
  * @since 6.5
  */
 public enum LayoutDragMode {
-	
+
     /**
      * Disables dragging components from a layout. This is the default
      * behaviour.

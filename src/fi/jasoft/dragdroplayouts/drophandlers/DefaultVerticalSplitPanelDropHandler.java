@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 John Ahlroos
+ * Copyright 2012 John Ahlroos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,12 @@ import fi.jasoft.dragdroplayouts.DDVerticalSplitPanel.VerticalSplitPanelTargetDe
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.events.VerticalLocationIs;
 
+/**
+ * Default drop handler for vertical splitpanels
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.6.0
+ */
 @SuppressWarnings("serial")
 public class DefaultVerticalSplitPanelDropHandler extends
         AbstractDefaultLayoutDropHandler {

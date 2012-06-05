@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 John Ahlroos
+ * Copyright 2012 John Ahlroos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,9 @@ import com.vaadin.ui.Component;
 
 /**
  * A drag filter for either allowing all or allowing no drags
+ * 
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.6.0
  * 
  */
 final class DragFilterLiteral implements DragFilter {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 John Ahlroos
+ * Copyright 2012 John Ahlroos
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,8 @@ import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
 /**
  * Mouse handler for starting component drag operations
  * 
- * @author John Ahlroos
+ * @author John Ahlroos / www.jasoft.fi
+ * @since 0.4.0
  */
 public class VLayoutDragDropMouseHandler implements MouseDownHandler,
         TouchStartHandler {
