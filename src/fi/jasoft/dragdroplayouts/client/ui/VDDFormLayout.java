@@ -148,7 +148,7 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
     /**
      * Removes any applies drag and drop style applied by emphasis()
      */
-    private void deEmphasis() {
+    protected void deEmphasis() {
         if (currentlyEmphasised != null) {
             // Universal over style
             UIObject.setStyleName(currentlyEmphasised, OVER, false);
@@ -179,7 +179,7 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
      *            The drag event
      * @return The horizontal drop location
      */
-    private VerticalDropLocation getVerticalDropLocation(Element rowElement,
+    protected VerticalDropLocation getVerticalDropLocation(Element rowElement,
             VDragEvent event) {
         return VDragDropUtil.getVerticalDropLocation(
                 (com.google.gwt.user.client.Element) rowElement,

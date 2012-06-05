@@ -167,7 +167,7 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
     /**
      * Removes any applies drag and drop style applied by emphasis()
      */
-    private void deEmphasis() {
+    protected void deEmphasis() {
         if (currentlyEmphasised != null) {
             // Universal over style
             UIObject.setStyleName(currentlyEmphasised.getElement(), OVER, false);
@@ -200,8 +200,8 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
      *            The drag event
      * @return The horizontal drop location
      */
-    private HorizontalDropLocation getHorizontalDropLocation(Widget container,
-            VDragEvent event) {
+    protected HorizontalDropLocation getHorizontalDropLocation(
+            Widget container, VDragEvent event) {
         return VDragDropUtil.getHorizontalDropLocation(container.getElement(),
                 Util.getTouchOrMouseClientX(event.getCurrentGwtEvent()),
                 cellLeftRightDropRatio);

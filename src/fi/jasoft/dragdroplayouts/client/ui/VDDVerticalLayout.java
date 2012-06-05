@@ -157,7 +157,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
     /**
      * Removes any applies drag and drop style applied by emphasis()
      */
-    private void deEmphasis() {
+    protected void deEmphasis() {
         if (currentlyEmphasised != null) {
             // Universal over style
             UIObject.setStyleName(currentlyEmphasised.getElement(), OVER, false);
@@ -189,7 +189,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      *            The drag event
      * @return The horizontal drop location
      */
-    private VerticalDropLocation getVerticalDropLocation(Widget container,
+    protected VerticalDropLocation getVerticalDropLocation(Widget container,
             VDragEvent event) {
         return VDragDropUtil.getVerticalDropLocation(container.getElement(),
                 Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),

@@ -234,7 +234,8 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      *            The drag event
      * @return
      */
-    private HorizontalDropLocation getHorizontalDropLocation(CellDetails cell,
+    protected HorizontalDropLocation getHorizontalDropLocation(
+            CellDetails cell,
             VDragEvent event) {
 
         // Get the horizontal location
@@ -263,7 +264,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      *            The drag event
      * @return
      */
-    private VerticalDropLocation getVerticalDropLocation(CellDetails cell,
+    protected VerticalDropLocation getVerticalDropLocation(CellDetails cell,
             VDragEvent event) {
 
         // Get the vertical location
@@ -321,7 +322,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
     /**
      * Removes any emphasis previously set by emphasis
      */
-    private void deEmphasis() {
+    protected void deEmphasis() {
 
         UIObject.setStyleName(dragShadow.getElement(), OVER, false);
 

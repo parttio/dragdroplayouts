@@ -353,7 +353,17 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
         return item;
     }
 
-    private VerticalDropLocation getDropLocation(StackItem tab, VDragEvent event) {
+    /**
+     * Returns the drop location of a tab
+     * 
+     * @param tab
+     *            The tab that was dragged
+     * @param event
+     *            The drag event
+     * @return
+     */
+    protected VerticalDropLocation getDropLocation(StackItem tab,
+            VDragEvent event) {
         VerticalDropLocation location;
         if (tab.isOpen()) {
             location = VDragDropUtil.getVerticalDropLocation(tab.getElement(),
