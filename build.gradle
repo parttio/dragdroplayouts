@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 apply plugin: 'war'
-apply plugin: 'java'
-apply plugin: 'jetty'
+apply plugin: 'eclipse-wtp'
 
 // Global settings
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
 group = 'fi.jasoft'
-version = System.properties['BUILD_VERSION']
+version = System.properties.hasProperty('BUILD_VERSION') ? System.properties['BUILD_VERSION'] : 'development';
 webAppDirName = 'WebContent'
 
 // Demo settings
