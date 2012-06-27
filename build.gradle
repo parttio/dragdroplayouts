@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 apply plugin: 'war'
-apply plugin: 'eclipse-wtp'
+apply plugin: 'jetty'
 
 // Use wrapper
-task wrapper(type: Wrapper) { gradleVersion = '0.9' }
+task wrapper(type: Wrapper) { gradleVersion = '1.0' }
 
 // Global settings
 sourceCompatibility = 1.5
