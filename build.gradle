@@ -16,6 +16,9 @@
 apply plugin: 'war'
 apply plugin: 'eclipse-wtp'
 
+// Use wrapper
+task wrapper(type: Wrapper) { gradleVersion = '0.9' }
+
 // Global settings
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
@@ -64,7 +67,6 @@ dependencies{
     compile     group:'javax.validation',   name:'validation-api',  version:'1.0.0.GA',     classifier:'sources'
     testCompile group: 'junit',             name: 'junit',          version: '4.8.+'
 }
-
 
 /*
  *  Widgetset compilation needed by the war task
