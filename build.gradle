@@ -24,7 +24,7 @@ task wrapper(type: Wrapper) { gradleVersion = '1.1' }
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
 group = 'fi.jasoft'
-version = System.properties.hasProperty('BUILD_VERSION') ? System.properties['BUILD_VERSION'] : 'development';
+version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : 'development';
 webAppDirName = 'WebContent'
 archivesBaseName = 'dragdroplayouts'
 
