@@ -60,14 +60,14 @@ repositories{
 
 // Dependencies
 dependencies{
-    compile     group:'com.vaadin',         name:'vaadin',          version:'6.+'
-    compile     group:'org.vaadin.addons',  name:'codelabel',       version:'1.0'
-    compile     group:'com.google.gwt',     name:'gwt-user',        version:'2.3.0'
-    compile     group:'com.google.gwt',     name:'gwt-dev',         version:'2.3.0'
-    compile     group:'javax.validation',   name:'validation-api',  version:'1.0.0.GA'
-    compile     group:'javax.validation',   name:'validation-api',  version:'1.0.0.GA',     classifier:'sources'
-   	compile		group:'de.sven-jacobs',		name:'loremipsum',		version:'1.0'
-    testCompile group: 'junit',             name: 'junit',          version: '4.8.+'
+    compile     	group:'com.vaadin',         name:'vaadin',          version:'6.+'
+    compile     	group:'org.vaadin.addons',  name:'codelabel',       version:'1.0'
+    providedCompile group:'com.google.gwt',     name:'gwt-user',        version:'2.3.0'
+    providedCompile	group:'com.google.gwt',     name:'gwt-dev',         version:'2.3.0'
+    providedCompile group:'javax.validation',   name:'validation-api',  version:'1.0.0.GA'
+    providedCompile	group:'javax.validation',   name:'validation-api',  version:'1.0.0.GA',     classifier:'sources'
+   	compile			group:'de.sven-jacobs',		name:'loremipsum',		version:'1.0'
+    testCompile 	group: 'junit',             name: 'junit',          version: '4.8.+'
 }
 
 /*
@@ -108,9 +108,12 @@ task widgetset {
             jvmarg(value: '-Xmx1024M')
             jvmarg(value: '-Xms512M')
 
-            arg(line: '-draftCompile')
+			if(version == 'development'){
+            	arg(line: '-draftCompile')
+            	arg(line: '-style PRETTY')
+            }
+            
             arg(line: '-logLevel INFO')
-            arg(line: '-style PRETTY')
             arg(line: '-localWorkers 2')
             arg(line: '-war '+targetDir)
             arg(line: demoWidgetsetClass)
@@ -128,6 +131,9 @@ war{
         
     // Include widgetset
     dependsOn test, widgetset
+       
+    // Exclude unneccessery GWT Compiler artifacts 
+    exclude "VAADIN/widgetsets/**/WEB-INF/**"
     
     // Add sources
     webInf{
@@ -135,6 +141,7 @@ war{
             from sourceSets.main.allJava
         }
     }
+    
 }
 
 /*
