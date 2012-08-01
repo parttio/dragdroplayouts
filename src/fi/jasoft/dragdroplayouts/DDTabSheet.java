@@ -253,7 +253,13 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
         }
 
         // Adds the drag mode (the default is none)
-        target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, dragMode.ordinal());
+        if (isEnabled()) {
+            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+                    dragMode.ordinal());
+        } else {
+            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+                    LayoutDragMode.NONE.ordinal());
+        }
 
         // Drop ratio
         target.addAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO,

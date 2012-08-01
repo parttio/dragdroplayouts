@@ -168,7 +168,13 @@ public class DDFormLayout extends FormLayout implements LayoutDragSource,
                 verticalDropRatio);
 
         // Drop ratio
-        target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, dragMode.ordinal());
+        if (isEnabled()) {
+            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+                    dragMode.ordinal());
+        } else {
+            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+                    LayoutDragMode.NONE.ordinal());
+        }
 
         // Shims
         target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);

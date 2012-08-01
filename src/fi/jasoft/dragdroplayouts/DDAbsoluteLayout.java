@@ -173,7 +173,13 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
         }
 
         // Adds the drag mode (the default is none)
-        target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, dragMode.ordinal());
+        if (isEnabled()) {
+            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+                    dragMode.ordinal());
+        } else {
+            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+                    LayoutDragMode.NONE.ordinal());
+        }
 
         // Should shims be used
         target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);

@@ -31,6 +31,7 @@ import com.vaadin.ui.Accordion;
 import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
 
+import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDDAccordion;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
@@ -237,7 +238,13 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
         }
 
         // Adds the drag mode (the default is none)
-        target.addAttribute("dragMode", dragMode.ordinal());
+        if (isEnabled()) {
+            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+                    dragMode.ordinal());
+        } else {
+            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+                    LayoutDragMode.NONE.ordinal());
+        }
 
         // Set the drop ratio
         target.addAttribute("vDropRatio", verticalDropRatio);
