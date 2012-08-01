@@ -55,8 +55,6 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     private final VLayoutDragDropMouseHandler ddHandler = new VLayoutDragDropMouseHandler(
             this, dragMode);
 
-    protected boolean iframeCoversEnabled = false;
-
     private final VDragFilter dragFilter = new VDragFilter();
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
@@ -69,14 +67,17 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     @Override
     protected void onUnload() {
         super.onUnload();
-        ddHandler.detach();
-        iframeCoverUtility.setIframeCoversEnabled(false, getElement());
+        dragMode = LayoutDragMode.NONE;
+        ddHandler.updateDragMode(dragMode);
+        iframeCoverUtility
+                .setIframeCoversEnabled(false, getElement(), dragMode);
     }
 
     @Override
     public boolean requestLayout(Set<Paintable> children) {
-        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled,
-                getElement());
+        iframeCoverUtility.setIframeCoversEnabled(
+                iframeCoverUtility.isIframeCoversEnabled(), getElement(),
+                dragMode);
         return super.requestLayout(children);
     }
 
@@ -103,8 +104,9 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
          * Always check for iframe covers so new added/removed components get
          * covered
          */
-        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled,
-                getElement());
+        iframeCoverUtility.setIframeCoversEnabled(
+                iframeCoverUtility.isIframeCoversEnabled(), getElement(),
+                dragMode);
 
         // Drag filters
         dragFilter.update(modifiedUIDL, client);
@@ -115,23 +117,10 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
             LayoutDragMode[] modes = LayoutDragMode.values();
             dragMode = modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)];
             ddHandler.updateDragMode(dragMode);
-            if (dragMode != LayoutDragMode.NONE) {
-
-                // Cover iframes if necessery
-                iframeCoversEnabled = uidl
-                        .getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
-
-                // Listen to mouse down events
-                ddHandler.attach();
-
-            } else if (dragMode == LayoutDragMode.NONE) {
-
-                // Remove iframe covers
-                iframeCoversEnabled = false;
-
-                // Remove mouse down handler
-                ddHandler.detach();
-            }
+            iframeCoverUtility
+                    .setIframeCoversEnabled(
+                            uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
+                            getElement(), dragMode);
         }
     }
 

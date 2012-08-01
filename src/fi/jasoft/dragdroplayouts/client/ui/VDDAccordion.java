@@ -76,8 +76,6 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
             this, dragMode);
 
-    protected boolean iframeCoversEnabled = false;
-
     private final VDragFilter dragFilter = new VTabDragFilter(this);
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
@@ -97,8 +95,10 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     @Override
     protected void onUnload() {
         super.onUnload();
-        ddMouseHandler.detach();
-        iframeCoverUtility.setIframeCoversEnabled(false, getElement());
+        dragMode = LayoutDragMode.NONE;
+        ddMouseHandler.updateDragMode(dragMode);
+        iframeCoverUtility
+                .setIframeCoversEnabled(false, getElement(), dragMode);
     }
 
     /*
@@ -325,23 +325,10 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
             LayoutDragMode[] modes = LayoutDragMode.values();
             dragMode = modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)];
             ddMouseHandler.updateDragMode(dragMode);
-            if (dragMode != LayoutDragMode.NONE) {
-
-                // Cover iframes if necessery
-                iframeCoversEnabled = uidl
-                        .getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
-
-                // Listen to mouse down events
-                ddMouseHandler.attach();
-
-            } else if (dragMode == LayoutDragMode.NONE) {
-
-                // Remove iframe covers
-                iframeCoversEnabled = false;
-
-                // Remove mouse down handler
-                ddMouseHandler.detach();
-            }
+            iframeCoverUtility
+                    .setIframeCoversEnabled(
+                            uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
+                            getElement(), dragMode);
         }
     }
 
@@ -493,8 +480,9 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
         handleCellDropRatioUpdate(modifiedUidl);
 
         // Cover iframes if necessery
-        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled,
-                getElement());
+        iframeCoverUtility.setIframeCoversEnabled(
+                iframeCoverUtility.isIframeCoversEnabled(), getElement(),
+                dragMode);
 
         // Drag filters
         dragFilter.update(modifiedUidl, client);

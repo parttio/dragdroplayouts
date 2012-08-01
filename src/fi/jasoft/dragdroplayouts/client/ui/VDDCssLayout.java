@@ -66,8 +66,6 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 
     protected ApplicationConnection client;
 
-    protected boolean iframeCoversEnabled = false;
-
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     private float horizontalDropRatio = DEFAULT_HORIZONTAL_DROP_RATIO;
@@ -259,8 +257,9 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
          * Always check for iframe covers so new added/removed components get
          * covered
          */
-        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled,
-                getElement());
+        iframeCoverUtility.setIframeCoversEnabled(
+                iframeCoverUtility.isIframeCoversEnabled(), getElement(),
+                dragMode);
 
         // Drag filters
         dragFilter.update(modifiedUIDL, client);
@@ -277,23 +276,10 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
             LayoutDragMode[] modes = LayoutDragMode.values();
             dragMode = modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)];
             ddHandler.updateDragMode(dragMode);
-            if (dragMode != LayoutDragMode.NONE) {
-
-                // Cover iframes if necessery
-                iframeCoversEnabled = uidl
-                        .getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
-
-                // Listen to mouse down events
-                ddHandler.attach();
-
-            } else if (dragMode == LayoutDragMode.NONE) {
-
-                // Remove iframe covers
-                iframeCoversEnabled = false;
-
-                // Remove mouse down handler
-                ddHandler.detach();
-            }
+            iframeCoverUtility
+                    .setIframeCoversEnabled(
+                            uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
+                            getElement(), dragMode);
         }
     }
 
@@ -305,8 +291,10 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
     @Override
     protected void onUnload() {
         super.onUnload();
-        ddHandler.detach();
-        iframeCoverUtility.setIframeCoversEnabled(false, getElement());
+        dragMode = LayoutDragMode.NONE;
+        ddHandler.updateDragMode(dragMode);
+        iframeCoverUtility
+                .setIframeCoversEnabled(false, getElement(), dragMode);
     }
 
     /**
@@ -522,8 +510,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      * @return The horizontal drop location
      */
     protected HorizontalDropLocation getHorizontalDropLocation(
-            Widget container,
-            VDragEvent event) {
+            Widget container, VDragEvent event) {
         return VDragDropUtil.getHorizontalDropLocation(container.getElement(),
                 Util.getTouchOrMouseClientX(event.getCurrentGwtEvent()),
                 horizontalDropRatio);

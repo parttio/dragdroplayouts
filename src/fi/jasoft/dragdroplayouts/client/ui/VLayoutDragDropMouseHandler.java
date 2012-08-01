@@ -66,6 +66,8 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
     private final List<DragStartListener> dragStartListeners = new ArrayList<VLayoutDragDropMouseHandler.DragStartListener>();
 
+    private Widget attachTarget;
+
     /**
      * A listener to listen for drag start events
      */
@@ -288,6 +290,11 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
      */
     public void updateDragMode(LayoutDragMode dragMode) {
         this.dragMode = dragMode;
+        if (dragMode == LayoutDragMode.NONE) {
+            detach();
+        } else {
+            attach();
+        }
     }
 
     /**
@@ -311,33 +318,35 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
     /**
      * Start listening to events
      */
-    public void attach() {
+    private void attach() {
         if (handlers.isEmpty()) {
-            handlers.add(root.addDomHandler(this, MouseDownEvent.getType()));
-            handlers.add(root.addDomHandler(this, TouchStartEvent.getType()));
-        }
-    }
-
-    /**
-     * Attach to another widget than root
-     * 
-     * @param widget
-     *            The widget to attach to
-     */
-    public void attachTo(Widget widget) {
-        if (handlers.isEmpty()) {
-            handlers.add(widget.addDomHandler(this, MouseDownEvent.getType()));
-            handlers.add(widget.addDomHandler(this, TouchStartEvent.getType()));
+            if (attachTarget == null) {
+                handlers.add(root.addDomHandler(this, MouseDownEvent.getType()));
+                handlers.add(root.addDomHandler(this, TouchStartEvent.getType()));
+            } else {
+                handlers.add(attachTarget.addDomHandler(this,
+                        MouseDownEvent.getType()));
+                handlers.add(attachTarget.addDomHandler(this,
+                        TouchStartEvent.getType()));
+            }
         }
     }
 
     /**
      * Stop listening to events
      */
-    public void detach() {
+    private void detach() {
         for (HandlerRegistration reg : handlers) {
             reg.removeHandler();
         }
         handlers.clear();
+    }
+
+    public Widget getAttachTarget() {
+        return attachTarget;
+    }
+
+    public void setAttachTarget(Widget attachTarget) {
+        this.attachTarget = attachTarget;
     }
 }

@@ -76,8 +76,6 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
 
     private final Element newTab = DOM.createDiv();
 
-    protected boolean iframeCoversEnabled = false;
-
     private final VDragFilter dragFilter = new VTabDragFilter(this);
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
@@ -99,6 +97,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
                 .getChild(0).cast();
 
         ddMouseHandler.addDragStartListener(this);
+        ddMouseHandler.setAttachTarget(tabBar);
     }
 
     /*
@@ -109,8 +108,10 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
     @Override
     protected void onUnload() {
         super.onUnload();
-        ddMouseHandler.detach();
-        iframeCoverUtility.setIframeCoversEnabled(false, getElement());
+        dragMode = LayoutDragMode.NONE;
+        ddMouseHandler.updateDragMode(dragMode);
+        iframeCoverUtility
+                .setIframeCoversEnabled(false, getElement(), dragMode);
     }
 
     // The drag mouse handler which handles the creation of the transferable
@@ -359,21 +360,10 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
             LayoutDragMode[] modes = LayoutDragMode.values();
             dragMode = modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)];
             ddMouseHandler.updateDragMode(dragMode);
-            if (dragMode != LayoutDragMode.NONE) {
-                // Cover iframes if necessery
-                iframeCoversEnabled = uidl
-                        .getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
-
-                // Listen to mouse down events
-                ddMouseHandler.attachTo(tabBar);
-
-            } else if (dragMode == LayoutDragMode.NONE) {
-                // Remove iframe covers
-                iframeCoversEnabled = false;
-
-                // Remove mouse down handler
-                ddMouseHandler.detach();
-            }
+            iframeCoverUtility
+                    .setIframeCoversEnabled(
+                            uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
+                            getElement(), dragMode);
         }
     }
 
@@ -406,8 +396,9 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
         handleCellDropRatioUpdate(modifiedUIDL);
 
         // Handle iframe covering
-        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled,
-                getElement());
+        iframeCoverUtility.setIframeCoversEnabled(
+                iframeCoverUtility.isIframeCoversEnabled(), getElement(),
+                dragMode);
 
         // Update dragfilter
         dragFilter.update(uidl, client);

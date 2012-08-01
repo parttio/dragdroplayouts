@@ -27,6 +27,8 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 
+import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+
 /**
  * Utility class for handling Iframe components
  * 
@@ -155,12 +157,17 @@ public class IframeCoverUtility {
      * @param root
      *            The root element where to put the IFrame covers
      */
-    public void setIframeCoversEnabled(boolean enabled, Element root) {
-        if (enabled) {
+    public void setIframeCoversEnabled(boolean enabled, Element root,
+            LayoutDragMode mode) {
+        if (enabled && mode != LayoutDragMode.NONE) {
             coveredIframes = addIframeCovers(root);
         } else if (coveredIframes != null) {
             removeIframeCovers(coveredIframes);
             coveredIframes = null;
         }
+    }
+
+    public boolean isIframeCoversEnabled() {
+        return coveredIframes != null;
     }
 }

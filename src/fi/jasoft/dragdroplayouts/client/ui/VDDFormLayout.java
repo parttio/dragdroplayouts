@@ -66,8 +66,6 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
 
     private VAbstractDropHandler dropHandler;
 
-    protected boolean iframeCoversEnabled = false;
-
     private final VDragFilter dragFilter = new VDragFilter();
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
@@ -85,8 +83,10 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
     @Override
     protected void onUnload() {
         super.onUnload();
-        ddMouseHandler.detach();
-        iframeCoverUtility.setIframeCoversEnabled(false, this.getElement());
+        dragMode = LayoutDragMode.NONE;
+        ddMouseHandler.updateDragMode(dragMode);
+        iframeCoverUtility.setIframeCoversEnabled(false, this.getElement(),
+                dragMode);
     }
 
     // The drag mouse handler which handles the creation of the transferable
@@ -116,8 +116,9 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
         handleCellDropRatioUpdate(modifiedUIDL);
 
         // Iframe cover check
-        iframeCoverUtility.setIframeCoversEnabled(iframeCoversEnabled,
-                this.getElement());
+        iframeCoverUtility.setIframeCoversEnabled(
+                iframeCoverUtility.isIframeCoversEnabled(), this.getElement(),
+                dragMode);
 
         dragFilter.update(modifiedUIDL, client);
     }
@@ -133,23 +134,10 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
             LayoutDragMode[] modes = LayoutDragMode.values();
             dragMode = modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)];
             ddMouseHandler.updateDragMode(dragMode);
-            if (dragMode != LayoutDragMode.NONE) {
-                if (dragMode != LayoutDragMode.NONE) {
-                    // Cover iframes if necessery
-                    iframeCoversEnabled = uidl
-                            .getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE);
-
-                    // Listen to mouse down events
-                    ddMouseHandler.attach();
-
-                } else if (dragMode == LayoutDragMode.NONE) {
-                    // Remove iframe covers
-                    iframeCoversEnabled = false;
-
-                    // Remove mouse down handler
-                    ddMouseHandler.detach();
-                }
-            }
+            iframeCoverUtility
+                    .setIframeCoversEnabled(
+                            uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
+                            getElement(), dragMode);
         }
     }
 
