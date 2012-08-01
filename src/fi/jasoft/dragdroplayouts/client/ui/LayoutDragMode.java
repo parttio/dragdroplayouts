@@ -15,6 +15,7 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui;
 
+
 /**
  * LayoutDragMode specifies how dragging is visualized.
  * 
@@ -32,5 +33,11 @@ public enum LayoutDragMode {
     /**
      * Makes a copy of the component which is shown when dragging.
      */
-    CLONE;
+    CLONE,
+
+    /**
+     * The same as {@link LayoutDragMode#CLONE} except that components can only
+     * be dragged from their captions.
+     */
+    CAPTION;
 }

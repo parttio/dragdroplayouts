@@ -37,6 +37,7 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.VCssLayout;
 import com.vaadin.terminal.gwt.client.ui.VFormLayout;
+import com.vaadin.terminal.gwt.client.ui.VPanel;
 import com.vaadin.terminal.gwt.client.ui.VSlider;
 import com.vaadin.terminal.gwt.client.ui.VTextField;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
@@ -150,18 +151,42 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             return;
         }
 
+        // Get target widget
+        Element targetElement = event.getEventTarget().cast();
+        Widget target = Util.findWidget(targetElement, null);
+
+        // Abort if drag mode is caption mode and widget is not a caption
+        boolean isPanelCaption = target instanceof VPanel
+                && targetElement.getParentElement().getClassName()
+                        .equals("v-panel-caption");
+        boolean isCaption = isPanelCaption
+                || VDragDropUtil.isCaptionOrCaptionless(target);
+
+        if (dragMode == LayoutDragMode.CAPTION && !isCaption) {
+            /*
+             * Ensure target is a caption in caption mode
+             */
+            return;
+        }
+
+        if (dragMode == LayoutDragMode.CAPTION
+                && Util.getLayout(target) != root) {
+            /*
+             * Ensure that captions in nested layouts don't get accepted if in
+             * caption mode
+             */
+            return;
+        }
+
         // Create the transfarable
         VTransferable transferable = VDragDropUtil
-                .createLayoutTransferableFromMouseDown(event, root);
+                .createLayoutTransferableFromMouseDown(event, root, target);
 
         // Are we trying to drag the root layout
         if (transferable == null) {
             VConsole.error("Creating transferable on mouse down returned null");
             return;
         }
-
-        event.preventDefault();
-        event.stopPropagation();
 
         // Resolve the component
         final Widget w;
@@ -178,6 +203,9 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             w = root;
             VConsole.log("Could not resolve component, using root as component");
         }
+
+        event.preventDefault();
+        event.stopPropagation();
 
         // Announce drag start to listeners
         for (DragStartListener dl : dragStartListeners) {

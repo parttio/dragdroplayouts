@@ -25,12 +25,16 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.ui.VButton;
 import com.vaadin.terminal.gwt.client.ui.VFormLayout;
+import com.vaadin.terminal.gwt.client.ui.VLink;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable;
 import com.vaadin.terminal.gwt.client.ui.VTwinColSelect;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Link;
 
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
@@ -193,23 +197,20 @@ public final class VDragDropUtil {
      * @return A transferable or NULL if something failed
      */
     public static VTransferable createLayoutTransferableFromMouseDown(
-            NativeEvent event, Widget root) {
-
-        Widget w = Util.findWidget((Element) event.getEventTarget().cast(),
-                null);
+            NativeEvent event, Widget root, Widget target) {
 
         // NPE check
-        if (w == null) {
+        if (target == null) {
             VConsole.error("Could not find widget");
             return null;
         }
 
         // Special treatment for Tabsheet
         if (root instanceof VDDTabSheet) {
-            if (w instanceof VCaption || w == root) {
+            if (isCaption(target) || target == root) {
                 // We are dragging a tabsheet tab, handle it
                 return createTabsheetTransferableFromMouseDown(
-                        (VDDTabSheet) root, w, event);
+                        (VDDTabSheet) root, target, event);
             } else {
                 return null;
             }
@@ -217,10 +218,10 @@ public final class VDragDropUtil {
 
         // Special treatment for Accordion
         if (root instanceof VDDAccordion) {
-            if (w instanceof VCaption || w == root) {
+            if (isCaption(target) || target == root) {
                 // We are dragging a Accordion tab, handle it
                 return createAccordionTransferableFromMouseDown(
-                        (VDDAccordion) root, (VCaption) w, event);
+                        (VDDAccordion) root, (VCaption) target, event);
             } else {
                 // Do not allow dragging content, only the "tab"
                 return null;
@@ -228,10 +229,10 @@ public final class VDragDropUtil {
         }
 
         // Ensure we have the right widget
-        w = getTransferableWidget(w);
+        target = getTransferableWidget(target);
 
         // Find the containing layout of the component
-        Container layout = Util.getLayout(w);
+        Container layout = Util.getLayout(target);
 
         // Iterate until parent either is the root or a layout with drag and
         // drop enabled
@@ -241,22 +242,22 @@ public final class VDragDropUtil {
                 // Found parent layout with support for drag and drop
                 break;
             }
-            w = (Widget) layout;
-            layout = Util.getLayout(w);
+            target = (Widget) layout;
+            layout = Util.getLayout(target);
         }
 
         // Consistency check
-        if (w == null || root == w || layout == null) {
+        if (target == null || root == target || layout == null) {
             VConsole.error("Consistency check failed");
             return null;
         }
 
         // Ensure layout allows dragging
-        if (!isDraggingEnabled(layout, w)) {
+        if (!isDraggingEnabled(layout, target)) {
             return null;
         }
 
-        return createTransferable(layout, w, event);
+        return createTransferable(layout, target, event);
     }
 
     private static VTransferable createTransferable(Container layout,
@@ -269,19 +270,38 @@ public final class VDragDropUtil {
         return transferable;
     }
 
+    /**
+     * Resolve if widget is a Vaadin Caption
+     * 
+     * @param w
+     *            Widget to check
+     * @return True if the widget is a caption widget, false otherwise
+     */
+    public static boolean isCaption(Widget w) {
+        return w instanceof VCaption || w instanceof VFormLayout.Caption;
+    }
+
+    /**
+     * Does the same as {@link #isCaption(Widget)} but also returns true for
+     * Vaadin widgets that do not have a caption like {@link Button} and
+     * {@link Link}
+     * 
+     * @param w
+     *            The widget to check
+     * @return True if the widget is a caption widget, false otherwise
+     */
+    public static boolean isCaptionOrCaptionless(Widget w) {
+        return isCaption(w) || w instanceof VButton || w instanceof VLink;
+    }
+
     private static Widget getTransferableWidget(Widget w) {
         // Ensure w is Paintable
-        while (!(w instanceof Paintable)
-                && !(w instanceof VCaption || w instanceof VFormLayout.Caption)
+        while (!(w instanceof Paintable) && !isCaption(w)
                 && w.getParent() != null) {
             w = w.getParent();
         }
 
-        // Are we grabbing the caption of a component
-        boolean isCaption = w instanceof VCaption
-                || w instanceof VFormLayout.Caption;
-
-        if (isCaption) {
+        if (isCaption(w)) {
             // Dragging caption means dragging component the caption belongs to
             Widget owner = null;
             if (w instanceof VCaption) {
