@@ -46,7 +46,9 @@ public class DragdropApplication extends Application {
             tabs.addComponent(new DragdropVerticalSplitPanelDemo());
             tabs.addComponent(new DragdropTabsheetDemo());
             tabs.addComponent(new DragdropAccordionDemo());
+
             tabs.addComponent(new DragdropDragFilterDemo());
+            tabs.addComponent(new DragdropCaptionModeDemo());
 
             tabs.addListener(new TabSheet.SelectedTabChangeListener() {
                 public void selectedTabChange(SelectedTabChangeEvent event) {
