@@ -197,7 +197,7 @@ public class DDHorizontalSplitPanel extends HorizontalSplitPanel implements
         super.paintContent(target);
 
         // Add drop handler
-        if (dropHandler != null) {
+        if (dropHandler != null && isEnabled()) {
             dropHandler.getAcceptCriterion().paint(target);
         }
 

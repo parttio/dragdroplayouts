@@ -233,7 +233,7 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
         super.paintContent(target);
 
         // Add drop handler
-        if (dropHandler != null) {
+        if (dropHandler != null && isEnabled()) {
             dropHandler.getAcceptCriterion().paint(target);
         }
 

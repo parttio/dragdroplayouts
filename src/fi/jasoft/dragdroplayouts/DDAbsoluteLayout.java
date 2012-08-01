@@ -168,7 +168,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
         super.paintContent(target);
 
         // Paint the drop handler criterions
-        if (dropHandler != null) {
+        if (dropHandler != null && isEnabled()) {
             dropHandler.getAcceptCriterion().paint(target);
         }
 
