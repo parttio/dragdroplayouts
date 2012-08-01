@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 apply plugin: 'war'
+apply plugin: 'eclipse-wtp'
 apply plugin: 'jetty'
 
 // Use wrapper
-task wrapper(type: Wrapper) { gradleVersion = '1.0' }
+task wrapper(type: Wrapper) { gradleVersion = '1.1' }
 
 // Global settings
 sourceCompatibility = 1.5
@@ -25,16 +26,16 @@ targetCompatibility = 1.5
 group = 'fi.jasoft'
 version = System.properties.hasProperty('BUILD_VERSION') ? System.properties['BUILD_VERSION'] : 'development';
 webAppDirName = 'WebContent'
+archivesBaseName = 'dragdroplayouts'
 
 // Demo settings
-demoWidgetsetClass = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
+def demoWidgetsetClass = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
 
 // Addon settings
-widgetsetClass = 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
-addonName = 'DragDropLayouts'
-addonAuthor = 'John Ahlroos'
-addonLicence = 'Apache 2.0'
-archivesBaseName = 'dragdroplayouts'
+def widgetsetClass = 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
+def addonName = 'DragDropLayouts'
+def addonAuthor = 'John Ahlroos'
+def addonLicence = 'Apache 2.0'
 
 // Using custom source folders
 sourceSets{
@@ -74,7 +75,7 @@ dependencies{
 task widgetset {
 
     // Monitor changes in widgetset to rebuild widgetset
-    widgetsetFile = new File('demo/'+demoWidgetsetClass.replaceAll(/\./,'/')+".gwt.xml")
+    def widgetsetFile = new File('demo/'+demoWidgetsetClass.replaceAll(/\./,'/')+".gwt.xml")
     inputs.file widgetsetFile
 
     // Monitor changes in client side classes 
@@ -88,7 +89,7 @@ task widgetset {
     inputs.files configurations.compile
     
     // Target directory as the output
-    targetDir = new File('WebContent/VAADIN/widgetsets')
+    def targetDir = new File('WebContent/VAADIN/widgetsets')
     outputs.dir targetDir
 
     doLast{
