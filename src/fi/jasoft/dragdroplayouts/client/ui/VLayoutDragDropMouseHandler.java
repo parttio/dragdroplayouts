@@ -35,14 +35,14 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.ui.VCssLayout;
-import com.vaadin.terminal.gwt.client.ui.VFormLayout;
-import com.vaadin.terminal.gwt.client.ui.VPanel;
-import com.vaadin.terminal.gwt.client.ui.VSlider;
-import com.vaadin.terminal.gwt.client.ui.VTextField;
+import com.vaadin.terminal.gwt.client.ui.csslayout.VCssLayout;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
+import com.vaadin.terminal.gwt.client.ui.formlayout.VFormLayout;
+import com.vaadin.terminal.gwt.client.ui.panel.VPanel;
+import com.vaadin.terminal.gwt.client.ui.slider.VSlider;
+import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
 
 /**
  * Mouse handler for starting component drag operations
@@ -169,14 +169,16 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             return;
         }
 
-        if (dragMode == LayoutDragMode.CAPTION
-                && Util.getLayout(target) != root) {
-            /*
-             * Ensure that captions in nested layouts don't get accepted if in
-             * caption mode
-             */
-            return;
-        }
+        // FIXME
+        // if (dragMode == LayoutDragMode.CAPTION
+        // && Util.getLayout(target) != root) {
+        //
+        // /*
+        // * Ensure that captions in nested layouts don't get accepted if in
+        // * caption mode
+        // */
+        // return;
+        // }
 
         // Create the transfarable
         VTransferable transferable = VDragDropUtil
@@ -268,12 +270,6 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
              */
             currentDragEvent.createDragImage((Element) w.getElement()
                     .getParentNode().cast(), true);
-        }
-
-        if (BrowserInfo.get().isIE7() && w instanceof VTextField) {
-            currentDragEvent.createDragImage(w.getElement(), true);
-            // Capture something so focus is not applied to elements
-            Event.setCapture(RootPanel.getBodyElement());
         }
 
         Element clone = currentDragEvent.getDragImage();
@@ -376,5 +372,9 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
     public void setAttachTarget(Widget attachTarget) {
         this.attachTarget = attachTarget;
+    }
+
+    public LayoutDragMode getDragMode() {
+        return dragMode;
     }
 }

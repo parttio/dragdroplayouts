@@ -29,7 +29,7 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.ui.VAccordion;
+import com.vaadin.terminal.gwt.client.ui.accordion.VAccordion;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;

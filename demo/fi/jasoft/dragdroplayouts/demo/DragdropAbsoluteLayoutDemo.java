@@ -6,6 +6,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
+import com.vaadin.ui.Notification;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
@@ -33,7 +34,7 @@ public class DragdropAbsoluteLayoutDemo extends CustomComponent {
         layout.addComponent(lbl);
         Button btn = new Button("Button 1", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                getApplication().getMainWindow().showNotification("Click!");
+                Notification.show("Click!");
             }
         });
         layout.addComponent(btn, "left:50px; top:50px");

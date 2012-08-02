@@ -5,6 +5,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
 import fi.jasoft.dragdroplayouts.DDFormLayout;
@@ -43,7 +44,7 @@ public class DragdropFormLayoutDemo extends CustomComponent {
         layout.addComponent(new TextField("Email address"));
         layout.addComponent(new Button("Submit", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                getWindow().showNotification("Form submitted");
+                Notification.show("Form submitted");
             }
         }));
     }

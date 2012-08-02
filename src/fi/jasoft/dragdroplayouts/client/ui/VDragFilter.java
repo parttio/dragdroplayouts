@@ -21,7 +21,7 @@ import java.util.Set;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ValueMap;
 
@@ -33,7 +33,7 @@ import com.vaadin.terminal.gwt.client.ValueMap;
  */
 public class VDragFilter {
 
-    private final Map<Paintable, Boolean> dragmap = new HashMap<Paintable, Boolean>();
+    private final Map<String, Boolean> dragmap = new HashMap<String, Boolean>();
 
     public static final String DRAGMAP_ATTRIBUTE = "dragmap";
 
@@ -52,11 +52,8 @@ public class VDragFilter {
             ValueMap vmap = uidl.getMapAttribute(DRAGMAP_ATTRIBUTE);
             Set<String> pids = vmap.getKeySet();
             for (String pid : pids) {
-                Paintable p = client.getPaintable(pid);
                 boolean draggable = vmap.getBoolean(pid);
-                if (p != null) {
-                    dragmap.put(p, draggable);
-                }
+                dragmap.put(pid, draggable);
             }
         }
     }
@@ -64,14 +61,15 @@ public class VDragFilter {
     /**
      * Returns true if a widget is draggable
      * 
-     * @param widget
-     *            The widget to check for
+     * @param pid
+     *            The pid of the widget
      * 
      * @return
      */
     public boolean isDraggable(Widget widget) {
-        if (dragmap.containsKey(widget)) {
-            return dragmap.get(widget);
+        ComponentConnector connector = VDragDropUtil.findConnectorFor(widget);
+        if (dragmap.containsKey(connector.getConnectorId())) {
+            return dragmap.get(connector.getConnectorId());
         }
         return false;
     }

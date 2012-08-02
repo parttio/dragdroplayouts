@@ -27,14 +27,14 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.ui.VTabsheet;
-import com.vaadin.terminal.gwt.client.ui.VTabsheetPanel;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
+import com.vaadin.terminal.gwt.client.ui.tabsheet.VTabsheet;
+import com.vaadin.terminal.gwt.client.ui.tabsheet.VTabsheetPanel;
 
 import fi.jasoft.dragdroplayouts.DDTabSheet;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;

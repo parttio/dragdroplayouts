@@ -13,25 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fi.jasoft.dragdroplayouts.client.ui;
-
-import java.util.Iterator;
-import java.util.Set;
+package fi.jasoft.dragdroplayouts.client.ui.absolutelayout;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Container;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout;
+import com.vaadin.terminal.gwt.client.ui.absolutelayout.VAbsoluteLayout;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
+import fi.jasoft.dragdroplayouts.client.ui.Constants;
+import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
@@ -50,10 +52,8 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
 
     private VAbstractDropHandler dropHandler;
 
-    private LayoutDragMode dragMode = LayoutDragMode.NONE;
-
     private final VLayoutDragDropMouseHandler ddHandler = new VLayoutDragDropMouseHandler(
-            this, dragMode);
+            this, LayoutDragMode.NONE);
 
     private final VDragFilter dragFilter = new VDragFilter();
 
@@ -67,62 +67,19 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     @Override
     protected void onUnload() {
         super.onUnload();
-        dragMode = LayoutDragMode.NONE;
-        ddHandler.updateDragMode(dragMode);
-        iframeCoverUtility
-                .setIframeCoversEnabled(false, getElement(), dragMode);
+        ddHandler.updateDragMode(LayoutDragMode.NONE);
+        iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
+                LayoutDragMode.NONE);
     }
 
-    @Override
-    public boolean requestLayout(Set<Paintable> children) {
-        iframeCoverUtility.setIframeCoversEnabled(
-                iframeCoverUtility.isIframeCoversEnabled(), getElement(),
-                dragMode);
-        return super.requestLayout(children);
-    }
-
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-
-        // Drag mode
-        handleDragModeUpdate(uidl);
-
-        // Drop handlers
-        UIDL c = null;
-        for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
-            c = (UIDL) it.next();
-            if (c.getTag().equals("-ac")) {
-                updateDropHandler(c);
-                break;
-            }
-        }
-
-        UIDL modifiedUIDL = VDragDropUtil.removeDragDropCriteraFromUIDL(uidl);
-        super.updateFromUIDL(modifiedUIDL, client);
-
-        /*
-         * Always check for iframe covers so new added/removed components get
-         * covered
-         */
-        iframeCoverUtility.setIframeCoversEnabled(
-                iframeCoverUtility.isIframeCoversEnabled(), getElement(),
-                dragMode);
-
-        // Drag filters
-        dragFilter.update(modifiedUIDL, client);
-    }
-
-    private void handleDragModeUpdate(UIDL uidl) {
-        if (uidl.hasAttribute(Constants.DRAGMODE_ATTRIBUTE)) {
-            LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)];
-            ddHandler.updateDragMode(dragMode);
-            iframeCoverUtility
-                    .setIframeCoversEnabled(
-                            uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
-                            getElement(), dragMode);
-        }
-    }
+    // FIXME
+    // @Override
+    // public boolean requestLayout(Set<Paintable> children) {
+    // iframeCoverUtility.setIframeCoversEnabled(
+    // iframeCoverUtility.isIframeCoversEnabled(), getElement(),
+    // dragMode);
+    // return super.requestLayout(children);
+    // }
 
     /**
      * Updates the drag details while a component is dragged
@@ -175,8 +132,8 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
         }
 
         // Add mouse event details
-        MouseEventDetails details = new MouseEventDetails(
-                drag.getCurrentGwtEvent(), getElement());
+        MouseEventDetails details = MouseEventDetailsBuilder
+                .buildMouseEventDetails(drag.getCurrentGwtEvent(), getElement());
         drag.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
                 details.serialize());
     }
@@ -220,7 +177,7 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
      * to commence. Return false to interrupt the drag:
      */
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return dragMode != LayoutDragMode.NONE
+        return ddHandler.getDragMode() != LayoutDragMode.NONE
                 && dragFilter.isDraggable(widget);
     }
 
@@ -230,31 +187,9 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
      * @param childUidl
      *            The child UIDL containing the rules
      */
-    protected void updateDropHandler(UIDL childUidl) {
+    void updateDropHandler(UIDL childUidl) {
         if (dropHandler == null) {
             dropHandler = new VAbstractDropHandler() {
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
-                 * getApplicationConnection()
-                 */
-                public ApplicationConnection getApplicationConnection() {
-                    return client;
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #getPaintable()
-                 */
-                @Override
-                public Paintable getPaintable() {
-                    return VDDAbsoluteLayout.this;
-                }
 
                 /*
                  * (non-Javadoc)
@@ -296,10 +231,11 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
                     super.dragEnter(drag);
                     Object w = drag.getTransferable().getData(
                             Constants.TRANSFERABLE_DETAIL_COMPONENT);
-                    if (w instanceof Container) {
-                        drag.getDragImage().addClassName(
-                                CLASSNAME + "-drag-shadow");
-                    }
+                    // FIXME
+                    // if (w instanceof Container) {
+                    // drag.getDragImage().addClassName(
+                    // CLASSNAME + "-drag-shadow");
+                    // }
                     postEnterHook(drag);
                 };
 
@@ -315,10 +251,11 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
                     super.dragLeave(drag);
                     Object w = drag.getTransferable().getData(
                             Constants.TRANSFERABLE_DETAIL_COMPONENT);
-                    if (w instanceof Container) {
-                        drag.getDragImage().removeClassName(
-                                CLASSNAME + "-drag-shadow");
-                    }
+                    // FIXME
+                    // if (w instanceof Container) {
+                    // drag.getDragImage().removeClassName(
+                    // CLASSNAME + "-drag-shadow");
+                    // }
                     postLeaveHook(drag);
                 };
 
@@ -337,19 +274,20 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
                     // validate it
                     updateDragDetails(drag);
                     postOverHook(drag);
-                };
+                }
+
+                public ApplicationConnection getApplicationConnection() {
+                    return client;
+                }
+
+                @Override
+                public ComponentConnector getConnector() {
+                    return ConnectorMap.get(client).getConnector(
+                            VDDAbsoluteLayout.this);
+                }
             };
         }
         dropHandler.updateAcceptRules(childUidl);
-    }
-
-    /**
-     * Returns the drag mode
-     * 
-     * @return
-     */
-    public LayoutDragMode getDragMode() {
-        return dragMode;
     }
 
     /**
@@ -368,5 +306,17 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
      */
     public VDragFilter getDragFilter() {
         return dragFilter;
+    }
+
+    IframeCoverUtility getIframeCoverUtility() {
+        return iframeCoverUtility;
+    }
+
+    VLayoutDragDropMouseHandler getMouseHandler() {
+        return ddHandler;
+    }
+
+    public LayoutDragMode getDragMode() {
+        return ddHandler.getDragMode();
     }
 }

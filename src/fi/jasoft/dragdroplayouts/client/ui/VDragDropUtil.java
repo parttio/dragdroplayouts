@@ -15,24 +15,29 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui;
 
+import java.util.List;
+
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ApplicationConfiguration;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.ui.VButton;
-import com.vaadin.terminal.gwt.client.ui.VFormLayout;
-import com.vaadin.terminal.gwt.client.ui.VLink;
-import com.vaadin.terminal.gwt.client.ui.VScrollTable;
-import com.vaadin.terminal.gwt.client.ui.VTwinColSelect;
+import com.vaadin.terminal.gwt.client.ui.button.VButton;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.terminal.gwt.client.ui.formlayout.VFormLayout;
+import com.vaadin.terminal.gwt.client.ui.link.VLink;
+import com.vaadin.terminal.gwt.client.ui.table.VScrollTable;
+import com.vaadin.terminal.gwt.client.ui.twincolselect.VTwinColSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Link;
 
@@ -144,14 +149,15 @@ public final class VDragDropUtil {
 
         // Create transferable
         VTransferable transferable = new VTransferable();
-        transferable.setDragSource(tabsheet);
+        transferable.setDragSource(VDragDropUtil.findConnectorFor(tabsheet));
         if (tabsheet != tab) {
             transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, tab);
             transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
                     tabsheet.getTabPosition(tab));
         }
         transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
-                new MouseEventDetails(event).serialize());
+                MouseEventDetailsBuilder.buildMouseEventDetails(event)
+                        .serialize());
 
         return transferable;
     }
@@ -174,14 +180,15 @@ public final class VDragDropUtil {
 
         // Create transferable
         VTransferable transferable = new VTransferable();
-        transferable.setDragSource(accordion);
+        transferable.setDragSource(VDragDropUtil.findConnectorFor(accordion));
         transferable.setData(Constants.TRANSFERABLE_DETAIL_CAPTION, tabCaption);
         transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
                 tabCaption.getParent());
         transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
                 accordion.getWidgetIndex(tabCaption.getParent()));
         transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
-                new MouseEventDetails(event).serialize());
+                MouseEventDetailsBuilder.buildMouseEventDetails(event)
+                        .serialize());
 
         return transferable;
     }
@@ -266,7 +273,8 @@ public final class VDragDropUtil {
         transferable.setDragSource(layout);
         transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, widget);
         transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
-                new MouseEventDetails(event).serialize());
+                MouseEventDetailsBuilder.buildMouseEventDetails(event)
+                        .serialize());
         return transferable;
     }
 
@@ -387,5 +395,22 @@ public final class VDragDropUtil {
     public static int measureMarginTop(Element element) {
         return element.getAbsoluteTop()
                 - element.getParentElement().getAbsoluteTop();
+    }
+
+    public static ComponentConnector findConnectorFor(Widget widget) {
+        List<ApplicationConnection> runningApplications = ApplicationConfiguration
+                .getRunningApplications();
+        for (ApplicationConnection applicationConnection : runningApplications) {
+            ConnectorMap connectorMap = ConnectorMap.get(applicationConnection);
+            ComponentConnector connector = connectorMap.getConnector(widget);
+            if (connector == null) {
+                continue;
+            }
+            if (connector.getConnection() == applicationConnection) {
+                return connector;
+            }
+        }
+
+        return null;
     }
 }
