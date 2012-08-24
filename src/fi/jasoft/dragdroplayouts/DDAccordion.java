@@ -28,12 +28,11 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Accordion;
-import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.VDDAccordion;
+import fi.jasoft.dragdroplayouts.client.ui.accordion.DDAccordionState;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
@@ -41,13 +40,12 @@ import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
 import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
 /**
- * Accourdion with drag and drop support
+ * Accordion with drag and drop support
  * 
  * @author John Ahlroos / www.jasoft.fi
  * @since 0.4.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VDDAccordion.class)
 public class DDAccordion extends Accordion implements LayoutDragSource,
         DropTarget, ShimSupport {
 
@@ -63,7 +61,7 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
     private DropHandler dropHandler;
 
     // The ratio how drop c
-    private float verticalDropRatio = VDDAccordion.DEFAULT_VERTICAL_RATIO;
+    private float verticalDropRatio = DDAccordionState.DEFAULT_VERTICAL_RATIO;
 
     // Are the iframes shimmed
     private boolean iframeShims = true;

@@ -1,4 +1,4 @@
-package fi.jasoft.dragdroplayouts.client.ui.absolutelayout;
+package fi.jasoft.dragdroplayouts.client.ui.accordion;
 
 import java.util.Iterator;
 
@@ -6,46 +6,57 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.Connect;
-import com.vaadin.terminal.gwt.client.ui.absolutelayout.AbsoluteLayoutConnector;
+import com.vaadin.terminal.gwt.client.ui.accordion.AccordionConnector;
 
-import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
+import fi.jasoft.dragdroplayouts.DDAccordion;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
-@Connect(DDAbsoluteLayout.class)
-public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
-        implements Paintable, VHasDragMode {
+@Connect(DDAccordion.class)
+public class DDAccordionConnector extends AccordionConnector implements
+        Paintable, VHasDragMode {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public VDDAbsoluteLayout getWidget() {
-        return (VDDAbsoluteLayout) super.getWidget();
+    public VDDAccordion getWidget() {
+        return (VDDAccordion) super.getWidget();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public DDAbsoluteLayoutState getState() {
-        return (DDAbsoluteLayoutState) super.getState();
+    public DDAccordionState getState() {
+        return (DDAccordionState) super.getState();
     }
 
     /**
      * {@inheritDoc}
      */
+    public LayoutDragMode getDragMode() {
+        return getState().getDragMode();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        super.updateFromUIDL(uidl, client);
 
-        // Drag mode
+        // Handles changes in dropHandler
         handleDragModeUpdate(uidl);
 
+        // Handle drop ratio settings
+        handleCellDropRatioUpdate(uidl);
+
         // Drop handlers
-        UIDL c = null;
         for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
-            c = (UIDL) it.next();
+            final UIDL c = (UIDL) it.next();
             if (c.getTag().equals("-ac")) {
                 getWidget().updateDropHandler(c);
                 break;
@@ -62,8 +73,15 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
 
         // Drag filters
         getWidget().getDragFilter().update(uidl, client);
+
     }
 
+    /**
+     * Handles drag mode changes recieved from the server
+     * 
+     * @param uidl
+     *            The UIDL
+     */
     private void handleDragModeUpdate(UIDL uidl) {
         if (uidl.hasAttribute(Constants.DRAGMODE_ATTRIBUTE)) {
             LayoutDragMode[] modes = LayoutDragMode.values();
@@ -72,7 +90,6 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
 
             getWidget().getMouseHandler().updateDragMode(
                     getState().getDragMode());
-
             IframeCoverUtility iframes = getWidget().getIframeCoverUtility();
             iframes.setIframeCoversEnabled(
                     uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
@@ -80,7 +97,19 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
         }
     }
 
-    public LayoutDragMode getDragMode() {
-        return getState().getDragMode();
+    /**
+     * Handles updates the the hoover zones of the tab which specifies at which
+     * position a component is dropped over a tab
+     * 
+     * @param uidl
+     *            The UIDL
+     */
+    private void handleCellDropRatioUpdate(UIDL uidl) {
+        if (uidl.hasAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO)) {
+            getState()
+                    .setTabTopBottomDropRatio(
+                            uidl.getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO));
+        }
     }
+
 }

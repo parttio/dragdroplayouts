@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fi.jasoft.dragdroplayouts.client.ui;
+package fi.jasoft.dragdroplayouts.client.ui.horizontallayout;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,6 +39,11 @@ import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
 import fi.jasoft.dragdroplayouts.DDHorizontalLayout;
+import fi.jasoft.dragdroplayouts.client.ui.Constants;
+import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
+import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;

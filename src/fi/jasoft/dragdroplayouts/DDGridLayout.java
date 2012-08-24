@@ -27,13 +27,12 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
-import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.VDDGridLayout;
+import fi.jasoft.dragdroplayouts.client.ui.gridlayout.VDDGridLayout;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
@@ -47,7 +46,6 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  * @since 0.4.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VDDGridLayout.class)
 public class DDGridLayout extends GridLayout implements LayoutDragSource,
         DropTarget, ShimSupport {
 

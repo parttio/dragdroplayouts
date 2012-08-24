@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fi.jasoft.dragdroplayouts.client.ui;
+package fi.jasoft.dragdroplayouts.client.ui.tabsheet;
 
 import java.util.Iterator;
 
@@ -37,6 +37,12 @@ import com.vaadin.terminal.gwt.client.ui.tabsheet.VTabsheet;
 import com.vaadin.terminal.gwt.client.ui.tabsheet.VTabsheetPanel;
 
 import fi.jasoft.dragdroplayouts.DDTabSheet;
+import fi.jasoft.dragdroplayouts.client.ui.Constants;
+import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
+import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
+import fi.jasoft.dragdroplayouts.client.ui.VTabDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;

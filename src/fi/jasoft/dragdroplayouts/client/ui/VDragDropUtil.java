@@ -23,11 +23,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.button.VButton;
@@ -41,8 +42,10 @@ import com.vaadin.terminal.gwt.client.ui.twincolselect.VTwinColSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Link;
 
+import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.tabsheet.VDDTabSheet;
 
 /**
  * Utility class for Drag and Drop operations
@@ -239,38 +242,27 @@ public final class VDragDropUtil {
         target = getTransferableWidget(target);
 
         // Find the containing layout of the component
-        Container layout = Util.getLayout(target);
-
-        // Iterate until parent either is the root or a layout with drag and
-        // drop enabled
-        while (layout != root && layout != null) {
-            if (layout instanceof VHasDragMode
-                    && ((VHasDragMode) layout).getDragMode() != LayoutDragMode.NONE) {
-                // Found parent layout with support for drag and drop
-                break;
-            }
-            target = (Widget) layout;
-            layout = Util.getLayout(target);
-        }
+        ServerConnector layoutConnector = VDragDropUtil
+                .findConnectorFor(target).getParent();
 
         // Consistency check
-        if (target == null || root == target || layout == null) {
+        if (target == null || root == target || layoutConnector == null) {
             VConsole.error("Consistency check failed");
             return null;
         }
 
         // Ensure layout allows dragging
-        if (!isDraggingEnabled(layout, target)) {
+        if (!isDraggingEnabled(layoutConnector, target)) {
             return null;
         }
 
-        return createTransferable(layout, target, event);
+        return createTransferable(layoutConnector, target, event);
     }
 
-    private static VTransferable createTransferable(Container layout,
+    private static VTransferable createTransferable(Connector layout,
             Widget widget, NativeEvent event) {
         VTransferable transferable = new VTransferable();
-        transferable.setDragSource(layout);
+        // transferable.setDragSource(layout);
         transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, widget);
         transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
                 MouseEventDetailsBuilder.buildMouseEventDetails(event)
@@ -342,7 +334,7 @@ public final class VDragDropUtil {
      *            The component container to check
      * @return
      */
-    private static boolean isDraggingEnabled(Container layout, Widget w) {
+    private static boolean isDraggingEnabled(Connector layout, Widget w) {
         boolean draggingEnabled = false;
         if (layout instanceof VHasDragMode) {
             LayoutDragMode dm = ((VHasDragMode) layout).getDragMode();

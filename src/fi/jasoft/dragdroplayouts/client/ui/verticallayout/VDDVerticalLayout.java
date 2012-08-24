@@ -13,56 +13,62 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fi.jasoft.dragdroplayouts.client.ui;
+package fi.jasoft.dragdroplayouts.client.ui.verticallayout;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
-import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.WidgetCollection;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.ui.VFormLayout;
+import com.vaadin.terminal.gwt.client.ui.VVerticalLayout;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
-import fi.jasoft.dragdroplayouts.DDFormLayout;
+import fi.jasoft.dragdroplayouts.DDVerticalLayout;
+import fi.jasoft.dragdroplayouts.client.ui.Constants;
+import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
+import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 /**
- * Client side implementation for {@link DDFormLayout}
+ * Client side implementation for {@link DDVerticalLayout}
  * 
  * @author John Ahlroos / www.jasoft.fi
  * @since 0.4.0
  */
-public class VDDFormLayout extends VFormLayout implements VHasDragMode,
+public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
         VHasDropHandler, DragStartListener, VHasDragFilter {
 
-    private Element currentlyEmphasised;
+    private Widget currentlyEmphasised;
 
     private LayoutDragMode dragMode = LayoutDragMode.NONE;
 
     private float cellTopBottomDropRatio = DEFAULT_VERTICAL_DROP_RATIO;
 
-    private static final int COLUMN_CAPTION = 0;
-    private static final int COLUMN_ERRORFLAG = 1;
-    private static final int COLUMN_WIDGET = 2;
-
-    public static final String OVER = "v-ddformlayout-over";
+    public static final String OVER = "v-ddorderedlayout-over";
 
     public static final String OVER_SPACED = OVER + "-spaced";
 
-    public static final float DEFAULT_VERTICAL_DROP_RATIO = 0.3333f;
+    public static final float DEFAULT_VERTICAL_DROP_RATIO = 0.2f;
 
     private VAbstractDropHandler dropHandler;
 
@@ -70,14 +76,9 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
-    private final VFormLayoutTable table;
-
-    protected ApplicationConnection client;
-
-    public VDDFormLayout() {
+    public VDDVerticalLayout() {
         super();
         ddMouseHandler.addDragStartListener(this);
-        table = (VFormLayoutTable) getWidget();
     }
 
     @Override
@@ -104,8 +105,6 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
             }
         }
 
-        this.client = client;
-
         UIDL modifiedUIDL = VDragDropUtil.removeDragDropCriteraFromUIDL(uidl);
         super.updateFromUIDL(modifiedUIDL, client);
 
@@ -117,7 +116,7 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
 
         // Iframe cover check
         iframeCoverUtility.setIframeCoversEnabled(
-                iframeCoverUtility.isIframeCoversEnabled(), this.getElement(),
+                iframeCoverUtility.isIframeCoversEnabled(), getElement(),
                 dragMode);
 
         dragFilter.update(modifiedUIDL, client);
@@ -161,16 +160,17 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
     protected void deEmphasis() {
         if (currentlyEmphasised != null) {
             // Universal over style
-            UIObject.setStyleName(currentlyEmphasised, OVER, false);
-            UIObject.setStyleName(currentlyEmphasised, OVER_SPACED, false);
+            UIObject.setStyleName(currentlyEmphasised.getElement(), OVER, false);
+            UIObject.setStyleName(currentlyEmphasised.getElement(),
+                    OVER_SPACED, false);
 
             // Vertical styles
-            UIObject.setStyleName(currentlyEmphasised, OVER + "-"
+            UIObject.setStyleName(currentlyEmphasised.getElement(), OVER + "-"
                     + VerticalDropLocation.TOP.toString().toLowerCase(), false);
-            UIObject.setStyleName(currentlyEmphasised, OVER + "-"
+            UIObject.setStyleName(currentlyEmphasised.getElement(), OVER + "-"
                     + VerticalDropLocation.MIDDLE.toString().toLowerCase(),
                     false);
-            UIObject.setStyleName(currentlyEmphasised, OVER + "-"
+            UIObject.setStyleName(currentlyEmphasised.getElement(), OVER + "-"
                     + VerticalDropLocation.BOTTOM.toString().toLowerCase(),
                     false);
 
@@ -189,27 +189,11 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
      *            The drag event
      * @return The horizontal drop location
      */
-    protected VerticalDropLocation getVerticalDropLocation(Element rowElement,
+    protected VerticalDropLocation getVerticalDropLocation(Widget container,
             VDragEvent event) {
-        return VDragDropUtil.getVerticalDropLocation(
-                (com.google.gwt.user.client.Element) rowElement,
+        return VDragDropUtil.getVerticalDropLocation(container.getElement(),
                 Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),
                 cellTopBottomDropRatio);
-    }
-
-    private static boolean elementIsRow(Element e) {
-        String className = e.getClassName() == null ? "" : e.getClassName();
-        if (className.contains("v-formlayout-row")) {
-            return true;
-        }
-        return false;
-    }
-
-    static Element getRowFromChildElement(Element e, Element root) {
-        while (!elementIsRow(e) && e != root && e.getParentElement() != null) {
-            e = e.getParentElement().cast();
-        }
-        return e;
     }
 
     /**
@@ -222,35 +206,46 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
      *            The drag event
      */
     protected void updateDropDetails(Widget widget, VDragEvent event) {
+        if (widget == null) {
+            return;
+        }
+
         /*
          * The horizontal position within the cell
          */
+
         event.getDropDetails().put(
                 Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION,
-                getVerticalDropLocation(
-                        VDDFormLayout.getRowFromChildElement(
-                                widget.getElement(),
-                                VDDFormLayout.this.getElement()), event));
+                getVerticalDropLocation(widget, event));
 
         /*
          * The index over which the drag is. Can be used by a client side
          * criteria to verify that a drag is over a certain index.
          */
-        event.getDropDetails().put(Constants.DROP_DETAIL_TO, "-1");
-        for (int i = 0; i < table.getRowCount(); i++) {
-            Widget w = table.getWidget(i, COLUMN_WIDGET);
-            if (widget.equals(w)) {
-                event.getDropDetails().put(Constants.DROP_DETAIL_TO, i);
-            }
-        }
+        WidgetCollection widgets = getChildren();
+        event.getDropDetails().put(Constants.DROP_DETAIL_TO,
+                widgets.indexOf(widget));
 
         /*
          * Add Classname of component over the drag. This can be used by a a
          * client side criteria to verify that a drag is over a specific class
          * of component.
          */
-        String className = widget.getClass().getName();
-        event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS, className);
+        if (widget instanceof ChildComponentContainer) {
+            Widget w = ((ChildComponentContainer) widget).getWidget();
+            if (w != null) {
+                String className = w.getClass().getName();
+                event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
+                        className);
+            } else {
+                event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
+                        this.getClass().getName());
+            }
+
+        } else {
+            event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
+                    this.getClass().getName());
+        }
 
         // Add mouse event details
         MouseEventDetails details = new MouseEventDetails(
@@ -269,30 +264,35 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
      * @param event
      *            The drag event
      */
-    protected void emphasis(Widget widget, VDragEvent event) {
+    protected void emphasis(Widget container, VDragEvent event) {
 
         // Remove emphasis from previous hovers
         deEmphasis();
 
         // Null check..
-        if (widget == null) {
+        if (container == null) {
             return;
         }
 
-        /*
-         * Get row for widget
-         */
-        Element rowElement = getRowFromChildElement(widget.getElement(),
-                VDDFormLayout.this.getElement());
+        currentlyEmphasised = container;
 
-        currentlyEmphasised = rowElement;
-
-        if (rowElement != this.getElement()) {
-            VerticalDropLocation vl = getVerticalDropLocation(rowElement, event);
-            UIObject.setStyleName(rowElement, OVER + "-"
-                    + vl.toString().toLowerCase(), true);
+        // Assign the container the drag and drop over style
+        if (spacingEnabled) {
+            UIObject.setStyleName(container.getElement(), OVER_SPACED, true);
         } else {
-            UIObject.setStyleName(rowElement, OVER, true);
+            UIObject.setStyleName(container.getElement(), OVER, true);
+        }
+
+        // Add drop location specific style
+        if (container != this) {
+            UIObject.setStyleName(container.getElement(), OVER
+                    + "-"
+                    + getVerticalDropLocation(container, event).toString()
+                            .toLowerCase(), true);
+        } else {
+            UIObject.setStyleName(container.getElement(), OVER + "-"
+                    + VerticalDropLocation.MIDDLE.toString().toLowerCase(),
+                    true);
         }
     }
 
@@ -357,6 +357,8 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
         if (dropHandler == null) {
             dropHandler = new VAbstractDropHandler() {
 
+                private Map<Element, ChildComponentContainer> elementContainerMap;
+
                 /*
                  * (non-Javadoc)
                  * 
@@ -376,7 +378,7 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
                  */
                 @Override
                 public Paintable getPaintable() {
-                    return VDDFormLayout.this;
+                    return VDDVerticalLayout.this;
                 }
 
                 /*
@@ -406,62 +408,43 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
                     emphasis(null, null);
 
                     // Update the details
-                    updateDropDetails(getTableRowWidgetFromDragEvent(drag),
-                            drag);
+                    updateDropDetails(getContainerFromDragEvent(drag), drag);
                     return postDropHook(drag) && super.drop(drag);
                 };
 
-                private Widget getTableRowWidgetFromDragEvent(VDragEvent event) {
-
-                    /**
-                     * Find the widget of the row
-                     */
-                    Element e = event.getElementOver();
-
-                    if (table.getRowCount() == 0) {
-                        /*
-                         * Empty layout
-                         */
-                        return VDDFormLayout.this;
+                /**
+                 * Finds the container (or widget) that the drag event was over
+                 * 
+                 * @param event
+                 *            The drag event
+                 * @return
+                 */
+                private ChildComponentContainer getContainerFromDragEvent(
+                        VDragEvent event) {
+                    if (elementContainerMap == null) {
+                        elementContainerMap = new HashMap<Element, ChildComponentContainer>();
                     }
 
-                    /**
-                     * Check if element is inside one of the table widgets
-                     */
-                    for (int i = 0; i < table.getRowCount(); i++) {
-                        Element caption = table.getWidget(i, COLUMN_CAPTION)
-                                .getElement();
-                        Element error = table.getWidget(i, COLUMN_ERRORFLAG)
-                                .getElement();
-                        Element widget = table.getWidget(i, COLUMN_WIDGET)
-                                .getElement();
-                        if (caption.isOrHasChild(e) || error.isOrHasChild(e)
-                                || widget.isOrHasChild(e)) {
-                            return table.getWidget(i, COLUMN_WIDGET);
-                        }
-                    }
+                    ChildComponentContainer cont = null;
 
-                    /*
-                     * Is the element a element outside the row structure but
-                     * inside the layout
-                     */
-                    Element rowElement = getRowFromChildElement(e,
-                            VDDFormLayout.this.getElement());
-                    if (rowElement != null) {
-                        Element tableElement = rowElement.getParentElement();
-                        for (int i = 0; i < tableElement.getChildCount(); i++) {
-                            Element r = tableElement.getChild(i).cast();
-                            if (r.equals(rowElement)) {
-                                return table.getWidget(i, COLUMN_WIDGET);
+                    // Check if we have a reference stored
+                    cont = elementContainerMap.get(event.getElementOver());
+
+                    if (cont == null) {
+                        // Else search for the element
+                        for (ChildComponentContainer c : widgetToComponentContainer
+                                .values()) {
+                            if (DOM.isOrHasChild(c.getElement(),
+                                    event.getElementOver())) {
+                                cont = c;
+                                elementContainerMap.put(event.getElementOver(),
+                                        cont);
+                                break;
                             }
                         }
                     }
 
-                    /*
-                     * Element was not found in rows so defaulting to the form
-                     * layout instead
-                     */
-                    return VDDFormLayout.this;
+                    return cont;
                 }
 
                 /*
@@ -477,12 +460,12 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
                     // Remove any emphasis
                     emphasis(null, null);
 
-                    // Update the drop details so we can validate the drop
-                    Widget c = getTableRowWidgetFromDragEvent(drag);
+                    // Update the dropdetails so we can validate the drop
+                    ChildComponentContainer c = getContainerFromDragEvent(drag);
                     if (c != null) {
                         updateDropDetails(c, drag);
                     } else {
-                        updateDropDetails(VDDFormLayout.this, drag);
+                        updateDropDetails(VDDVerticalLayout.this, drag);
                     }
 
                     postOverHook(drag);
@@ -490,35 +473,15 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
                     // Validate the drop
                     validate(new VAcceptCallback() {
                         public void accepted(VDragEvent event) {
-                            Widget c = getTableRowWidgetFromDragEvent(event);
+                            ChildComponentContainer c = getContainerFromDragEvent(event);
                             if (c != null) {
                                 emphasis(c, event);
                             } else {
-                                emphasis(VDDFormLayout.this, event);
+                                emphasis(VDDVerticalLayout.this, event);
                             }
                         }
                     }, drag);
                 };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragEnter(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragEnter(VDragEvent drag) {
-                    emphasis(null, null);
-
-                    Widget c = getTableRowWidgetFromDragEvent(drag);
-                    if (c != null) {
-                        updateDropDetails(c, drag);
-                    } else {
-                        updateDropDetails(VDDFormLayout.this, drag);
-                    }
-                    super.dragEnter(drag);
-                }
 
                 /*
                  * (non-Javadoc)
@@ -530,6 +493,7 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
                 @Override
                 public void dragLeave(VDragEvent drag) {
                     emphasis(null, drag);
+                    elementContainerMap = null;
                     postLeaveHook(drag);
                 };
             };

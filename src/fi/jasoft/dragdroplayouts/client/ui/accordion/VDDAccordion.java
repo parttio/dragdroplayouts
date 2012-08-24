@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fi.jasoft.dragdroplayouts.client.ui;
+package fi.jasoft.dragdroplayouts.client.ui.accordion;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -24,8 +23,10 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
@@ -38,7 +39,13 @@ import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
 import fi.jasoft.dragdroplayouts.DDAccordion;
+import fi.jasoft.dragdroplayouts.client.ui.Constants;
+import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
+import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.VTabDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
@@ -56,13 +63,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     public static final String CLASSNAME_OVER = "dd-over";
     public static final String CLASSNAME_SPACER = "spacer";
 
-    public static final float DEFAULT_VERTICAL_RATIO = 0.2f;
-
-    private LayoutDragMode dragMode = LayoutDragMode.NONE;
-
     private VAbstractDropHandler dropHandler;
-
-    private float tabTopBottomDropRatio = DEFAULT_VERTICAL_RATIO;
 
     private StackItem currentlyEmphasised;
 
@@ -74,7 +75,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
 
     // The drag mouse handler which handles the creation of the transferable
     private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
-            this, dragMode);
+            this, LayoutDragMode.NONE);
 
     private final VDragFilter dragFilter = new VTabDragFilter(this);
 
@@ -95,10 +96,9 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     @Override
     protected void onUnload() {
         super.onUnload();
-        dragMode = LayoutDragMode.NONE;
-        ddMouseHandler.updateDragMode(dragMode);
-        iframeCoverUtility
-                .setIframeCoversEnabled(false, getElement(), dragMode);
+        ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
+        iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
+                LayoutDragMode.NONE);
     }
 
     /*
@@ -117,7 +117,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
      * @see fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
      */
     public LayoutDragMode getDragMode() {
-        return dragMode;
+        return ddMouseHandler.getDragMode();
     }
 
     /**
@@ -159,7 +159,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
      * to commence. Return false to interrupt the drag:
      */
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return dragMode != LayoutDragMode.NONE
+        return ddMouseHandler.getDragMode() != LayoutDragMode.NONE
                 && dragFilter.isDraggable(widget);
     }
 
@@ -182,18 +182,6 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
                  */
                 public ApplicationConnection getApplicationConnection() {
                     return client;
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #getPaintable()
-                 */
-                @Override
-                public Paintable getPaintable() {
-                    return VDDAccordion.this;
                 }
 
                 /*
@@ -277,6 +265,12 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
                     deEmphasis();
                     updateDropDetails(drag);
                     postLeaveHook(drag);
+                }
+
+                @Override
+                public ComponentConnector getConnector() {
+                    return ConnectorMap.get(client).getConnector(
+                            VDDAccordion.this);
                 };
             };
         }
@@ -307,28 +301,12 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
                     Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION, location);
 
             // Add mouse event details
-            MouseEventDetails details = new MouseEventDetails(
-                    event.getCurrentGwtEvent(), getElement());
+            MouseEventDetails details = MouseEventDetailsBuilder
+                    .buildMouseEventDetails(event.getCurrentGwtEvent(),
+                            getElement());
+
             event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
                     details.serialize());
-        }
-    }
-
-    /**
-     * Handles drag mode changes recieved from the server
-     * 
-     * @param uidl
-     *            The UIDL
-     */
-    private void handleDragModeUpdate(UIDL uidl) {
-        if (uidl.hasAttribute(Constants.DRAGMODE_ATTRIBUTE)) {
-            LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)];
-            ddMouseHandler.updateDragMode(dragMode);
-            iframeCoverUtility
-                    .setIframeCoversEnabled(
-                            uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
-                            getElement(), dragMode);
         }
     }
 
@@ -359,14 +337,16 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     protected VerticalDropLocation getDropLocation(StackItem tab,
             VDragEvent event) {
         VerticalDropLocation location;
+        float ratio = ((DDAccordionState) ConnectorMap.get(client)
+                .getConnector(this).getState()).getTabTopBottomDropRatio();
         if (tab.isOpen()) {
             location = VDragDropUtil.getVerticalDropLocation(tab.getElement(),
                     Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),
-                    tabTopBottomDropRatio);
+                    ratio);
         } else {
             location = VDragDropUtil.getVerticalDropLocation(tab.getWidget(0)
                     .getElement(), Util.getTouchOrMouseClientY(event
-                    .getCurrentGwtEvent()), tabTopBottomDropRatio);
+                    .getCurrentGwtEvent()), ratio);
         }
         return location;
     }
@@ -436,58 +416,6 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
         }
     }
 
-    /**
-     * Handles updates the the hoover zones of the tab which specifies at which
-     * position a component is dropped over a tab
-     * 
-     * @param uidl
-     *            The UIDL
-     */
-    private void handleCellDropRatioUpdate(UIDL uidl) {
-        if (uidl.hasAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO)) {
-            tabTopBottomDropRatio = uidl
-                    .getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.terminal.gwt.client.ui.VTabsheet#updateFromUIDL(com.vaadin
-     * .terminal.gwt.client.UIDL,
-     * com.vaadin.terminal.gwt.client.ApplicationConnection)
-     */
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        this.client = client;
-
-        for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
-            final UIDL childUIDL = (UIDL) it.next();
-            if (childUIDL.getTag().equals("-ac")) {
-                updateDropHandler(childUIDL);
-                break;
-            }
-        }
-
-        UIDL modifiedUidl = VDragDropUtil.removeDragDropCriteraFromUIDL(uidl);
-        super.updateFromUIDL(modifiedUidl, client);
-
-        // Handles changes in dropHandler
-        handleDragModeUpdate(modifiedUidl);
-
-        // Handle drop ratio settings
-        handleCellDropRatioUpdate(modifiedUidl);
-
-        // Cover iframes if necessery
-        iframeCoverUtility.setIframeCoversEnabled(
-                iframeCoverUtility.isIframeCoversEnabled(), getElement(),
-                dragMode);
-
-        // Drag filters
-        dragFilter.update(modifiedUidl, client);
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -520,5 +448,13 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
      */
     public VDragFilter getDragFilter() {
         return dragFilter;
+    }
+
+    IframeCoverUtility getIframeCoverUtility() {
+        return iframeCoverUtility;
+    }
+
+    VLayoutDragDropMouseHandler getMouseHandler() {
+        return ddMouseHandler;
     }
 }

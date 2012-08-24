@@ -44,6 +44,9 @@ import com.vaadin.terminal.gwt.client.ui.panel.VPanel;
 import com.vaadin.terminal.gwt.client.ui.slider.VSlider;
 import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
 
+import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
+import fi.jasoft.dragdroplayouts.client.ui.formlayout.VDDFormLayout;
+
 /**
  * Mouse handler for starting component drag operations
  * 
@@ -255,14 +258,14 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
              * Dragging a component in a form layout should include the caption
              * and error indicator as well
              */
-            Element rowElement = (Element) VDDFormLayout
-                    .getRowFromChildElement(
-                            (com.google.gwt.dom.client.Element) w.getElement()
-                                    .cast(),
-                            (com.google.gwt.dom.client.Element) root
-                                    .getElement().cast()).cast();
-
-            currentDragEvent.createDragImage(rowElement, true);
+//            Element rowElement = (Element) VDDFormLayout
+//                    .getRowFromChildElement(
+//                            (com.google.gwt.dom.client.Element) w.getElement()
+//                                    .cast(),
+//                            (com.google.gwt.dom.client.Element) root
+//                                    .getElement().cast()).cast();
+//
+//            currentDragEvent.createDragImage(rowElement, true);
 
         } else {
             /*

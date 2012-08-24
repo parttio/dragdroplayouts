@@ -27,13 +27,11 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
-import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.VDDCssLayout;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
@@ -48,7 +46,6 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  * 
  */
 @SuppressWarnings("serial")
-@ClientWidget(VDDCssLayout.class)
 public class DDCssLayout extends CssLayout implements LayoutDragSource,
         DropTarget, ShimSupport {
 
@@ -241,15 +238,11 @@ public class DDCssLayout extends CssLayout implements LayoutDragSource,
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
-     * @see
-     * com.vaadin.ui.CssLayout#paintContent(com.vaadin.terminal.PaintTarget)
      */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
 
         // Paint the drop handler criterions
         if (dropHandler != null && isEnabled()) {

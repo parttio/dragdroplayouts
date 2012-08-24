@@ -26,15 +26,13 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
-import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.VDDFormLayout;
-import fi.jasoft.dragdroplayouts.client.ui.VDDVerticalLayout;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
+import fi.jasoft.dragdroplayouts.client.ui.verticallayout.VDDVerticalLayout;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
@@ -47,7 +45,6 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  * @since 0.8.0
  * 
  */
-@ClientWidget(VDDFormLayout.class)
 public class DDFormLayout extends FormLayout implements LayoutDragSource,
         DropTarget, ShimSupport {
     /**
@@ -155,9 +152,7 @@ public class DDFormLayout extends FormLayout implements LayoutDragSource,
      * com.vaadin.ui.AbstractOrderedLayout#translateDropTargetDetails(java.util
      * .Map)
      */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
 
         if (dropHandler != null && isEnabled()) {
             dropHandler.getAcceptCriterion().paint(target);

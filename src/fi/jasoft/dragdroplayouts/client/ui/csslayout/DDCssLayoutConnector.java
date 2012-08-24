@@ -1,4 +1,4 @@
-package fi.jasoft.dragdroplayouts.client.ui.absolutelayout;
+package fi.jasoft.dragdroplayouts.client.ui.csslayout;
 
 import java.util.Iterator;
 
@@ -6,32 +6,32 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.Connect;
-import com.vaadin.terminal.gwt.client.ui.absolutelayout.AbsoluteLayoutConnector;
+import com.vaadin.terminal.gwt.client.ui.csslayout.CssLayoutConnector;
 
-import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
+import fi.jasoft.dragdroplayouts.DDCssLayout;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
-@Connect(DDAbsoluteLayout.class)
-public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
-        implements Paintable, VHasDragMode {
+@Connect(DDCssLayout.class)
+public class DDCssLayoutConnector extends CssLayoutConnector implements
+        Paintable, VHasDragMode {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public VDDAbsoluteLayout getWidget() {
-        return (VDDAbsoluteLayout) super.getWidget();
+    public VDDCssLayout getWidget() {
+        return (VDDCssLayout) super.getWidget();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public DDAbsoluteLayoutState getState() {
-        return (DDAbsoluteLayoutState) super.getState();
+    public DDCssLayoutState getState() {
+        return (DDCssLayoutState) super.getState();
     }
 
     /**
@@ -52,6 +52,9 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
             }
         }
 
+        // Handle drop ratio settings
+        handleCellDropRatioUpdate(uidl);
+
         /*
          * Always check for iframe covers so new added/removed components get
          * covered
@@ -64,23 +67,52 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
         getWidget().getDragFilter().update(uidl, client);
     }
 
+    /**
+     * Handle updates to the dragmode
+     * 
+     * @param uidl
+     *            The recieved UIDL
+     */
     private void handleDragModeUpdate(UIDL uidl) {
         if (uidl.hasAttribute(Constants.DRAGMODE_ATTRIBUTE)) {
             LayoutDragMode[] modes = LayoutDragMode.values();
             getState().setDragMode(
                     modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)]);
-
             getWidget().getMouseHandler().updateDragMode(
                     getState().getDragMode());
-
-            IframeCoverUtility iframes = getWidget().getIframeCoverUtility();
-            iframes.setIframeCoversEnabled(
-                    uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
-                    getWidget().getElement(), getState().getDragMode());
+            getWidget()
+                    .getIframeCoverUtility()
+                    .setIframeCoversEnabled(
+                            uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
+                            getWidget().getElement(), getState().getDragMode());
         }
     }
 
+    /**
+     * Handles updates the the hoover zones of the cell which specifies at which
+     * position a component is dropped over a cell
+     * 
+     * @param uidl
+     *            The UIDL
+     */
+    private void handleCellDropRatioUpdate(UIDL uidl) {
+        if (uidl.hasAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO)) {
+            getState()
+                    .setHorizontalDropRatio(
+                            uidl.getFloatAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO));
+        }
+        if (uidl.hasAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO)) {
+            getState()
+                    .setVerticalDropRatio(
+                            uidl.getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO));
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public LayoutDragMode getDragMode() {
         return getState().getDragMode();
     }
+
 }

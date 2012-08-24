@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fi.jasoft.dragdroplayouts.client.ui;
-
-import java.util.Iterator;
+package fi.jasoft.dragdroplayouts.client.ui.csslayout;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.ui.VCssLayout;
+import com.vaadin.terminal.gwt.client.ui.csslayout.VCssLayout;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
@@ -36,6 +36,11 @@ import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
 import fi.jasoft.dragdroplayouts.DDCssLayout;
+import fi.jasoft.dragdroplayouts.client.ui.Constants;
+import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
+import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
@@ -51,26 +56,18 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 public class VDDCssLayout extends VCssLayout implements VHasDragMode,
         VHasDropHandler, DragStartListener, VHasDragFilter {
 
-    public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
-    public static final float DEFAULT_VERTICAL_DROP_RATIO = 0.2f;
     public static final String DRAG_SHADOW_STYLE_NAME = "v-ddcsslayout-drag-shadow";
-
-    private LayoutDragMode dragMode = LayoutDragMode.NONE;
-
-    private final VDragFilter dragFilter = new VDragFilter();
 
     private VAbstractDropHandler dropHandler;
 
     private final VLayoutDragDropMouseHandler ddHandler = new VLayoutDragDropMouseHandler(
-            this, dragMode);
+            this, LayoutDragMode.NONE);
 
     protected ApplicationConnection client;
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
-    private float horizontalDropRatio = DEFAULT_HORIZONTAL_DROP_RATIO;
-
-    private float verticalDropRatio = DEFAULT_VERTICAL_DROP_RATIO;
+    private final VDragFilter dragFilter = new VDragFilter();
 
     /**
      * Default constructor
@@ -85,7 +82,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      * to commence. Return false to interrupt the drag:
      */
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return dragMode != LayoutDragMode.NONE
+        return ddHandler.getDragMode() != LayoutDragMode.NONE
                 && dragFilter.isDraggable(widget);
     }
 
@@ -102,7 +99,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      * @return
      */
     public LayoutDragMode getDragMode() {
-        return dragMode;
+        return ddHandler.getDragMode();
     }
 
     /**
@@ -136,18 +133,6 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
                 @Override
                 protected void dragAccepted(VDragEvent drag) {
                     // Intentionally left empty
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #getPaintable()
-                 */
-                @Override
-                public Paintable getPaintable() {
-                    return VDDCssLayout.this;
                 }
 
                 /*
@@ -211,6 +196,12 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
                             moveDragImageInLayout(event);
                         }
                     }, drag);
+                }
+
+                @Override
+                public ComponentConnector getConnector() {
+                    return ConnectorMap.get(client).getConnector(
+                            VDDCssLayout.this);
                 };
 
             };
@@ -221,80 +212,14 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.terminal.gwt.client.ui.VCssLayout#updateFromUIDL(com.vaadin
-     * .terminal.gwt.client.UIDL,
-     * com.vaadin.terminal.gwt.client.ApplicationConnection)
-     */
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (client.updateComponent(this, uidl, true)) {
-            return;
-        }
-
-        this.client = client;
-
-        // Drag mode
-        handleDragModeUpdate(uidl);
-
-        // Drop handlers
-        UIDL c = null;
-        for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
-            c = (UIDL) it.next();
-            if (c.getTag().equals("-ac")) {
-                updateDropHandler(c);
-                break;
-            }
-        }
-
-        UIDL modifiedUIDL = VDragDropUtil.removeDragDropCriteraFromUIDL(uidl);
-        super.updateFromUIDL(modifiedUIDL, client);
-
-        // Handle drop ratio settings
-        handleCellDropRatioUpdate(modifiedUIDL);
-
-        /*
-         * Always check for iframe covers so new added/removed components get
-         * covered
-         */
-        iframeCoverUtility.setIframeCoversEnabled(
-                iframeCoverUtility.isIframeCoversEnabled(), getElement(),
-                dragMode);
-
-        // Drag filters
-        dragFilter.update(modifiedUIDL, client);
-    }
-
-    /**
-     * Handle updates to the dragmode
-     * 
-     * @param uidl
-     *            The recieved UIDL
-     */
-    private void handleDragModeUpdate(UIDL uidl) {
-        if (uidl.hasAttribute(Constants.DRAGMODE_ATTRIBUTE)) {
-            LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)];
-            ddHandler.updateDragMode(dragMode);
-            iframeCoverUtility
-                    .setIframeCoversEnabled(
-                            uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
-                            getElement(), dragMode);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see com.google.gwt.user.client.ui.Widget#onUnload()
      */
     @Override
     protected void onUnload() {
         super.onUnload();
-        dragMode = LayoutDragMode.NONE;
-        ddHandler.updateDragMode(dragMode);
-        iframeCoverUtility
-                .setIframeCoversEnabled(false, getElement(), dragMode);
+        ddHandler.updateDragMode(LayoutDragMode.NONE);
+        iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
+                LayoutDragMode.NONE);
     }
 
     /**
@@ -418,8 +343,9 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
                 getVerticalDropLocation(widget, event));
 
         // Add mouse event details
-        MouseEventDetails details = new MouseEventDetails(
-                event.getCurrentGwtEvent(), VDDCssLayout.this.getElement());
+        MouseEventDetails details = MouseEventDetailsBuilder
+                .buildMouseEventDetails(event.getCurrentGwtEvent(),
+                        getElement());
         event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
                 details.serialize());
     }
@@ -511,9 +437,10 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      */
     protected HorizontalDropLocation getHorizontalDropLocation(
             Widget container, VDragEvent event) {
+        float ratio = ((DDCssLayoutState) ConnectorMap.get(client)
+                .getConnector(this).getState()).getHorizontalDropRatio();
         return VDragDropUtil.getHorizontalDropLocation(container.getElement(),
-                Util.getTouchOrMouseClientX(event.getCurrentGwtEvent()),
-                horizontalDropRatio);
+                Util.getTouchOrMouseClientX(event.getCurrentGwtEvent()), ratio);
     }
 
     /**
@@ -529,27 +456,10 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      */
     protected VerticalDropLocation getVerticalDropLocation(Widget container,
             VDragEvent event) {
+        float ratio = ((DDCssLayoutState) ConnectorMap.get(client)
+                .getConnector(this).getState()).getVerticalDropRatio();
         return VDragDropUtil.getVerticalDropLocation(container.getElement(),
-                Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),
-                verticalDropRatio);
-    }
-
-    /**
-     * Handles updates the the hoover zones of the cell which specifies at which
-     * position a component is dropped over a cell
-     * 
-     * @param uidl
-     *            The UIDL
-     */
-    private void handleCellDropRatioUpdate(UIDL uidl) {
-        if (uidl.hasAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO)) {
-            horizontalDropRatio = uidl
-                    .getFloatAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO);
-        }
-        if (uidl.hasAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO)) {
-            verticalDropRatio = uidl
-                    .getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO);
-        }
+                Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()), ratio);
     }
 
     /*
@@ -561,6 +471,14 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      */
     public VDragFilter getDragFilter() {
         return dragFilter;
+    }
+
+    IframeCoverUtility getIframeCoverUtility() {
+        return iframeCoverUtility;
+    }
+
+    VLayoutDragDropMouseHandler getMouseHandler() {
+        return ddHandler;
     }
 
 }

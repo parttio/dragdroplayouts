@@ -26,13 +26,11 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
-import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalSplitPanel;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.VDDVerticalSplitPanel;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
@@ -46,7 +44,6 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  * @since 0.4.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VDDVerticalSplitPanel.class)
 public class DDVerticalSplitPanel extends VerticalSplitPanel implements
         LayoutDragSource, DropTarget, ShimSupport {
 
@@ -185,16 +182,11 @@ public class DDVerticalSplitPanel extends VerticalSplitPanel implements
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
-     * @see
-     * com.vaadin.ui.AbstractOrderedLayout#translateDropTargetDetails(java.util
-     * .Map)
      */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
 
         // Add drop handler
         if (dropHandler != null && isEnabled()) {
