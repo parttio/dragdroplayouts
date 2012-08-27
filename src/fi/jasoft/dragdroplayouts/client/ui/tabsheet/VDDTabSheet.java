@@ -15,15 +15,15 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.tabsheet;
 
-import java.util.Iterator;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
@@ -42,8 +42,8 @@ import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
-import fi.jasoft.dragdroplayouts.client.ui.VTabDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.VTabDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
@@ -63,13 +63,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
     public static final String CLASSNAME_NEW_TAB_RIGHT = "new-tab-right";
     public static final String CLASSNAME_NEW_TAB_CENTER = "new-tab-center";
 
-    public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
-
-    private LayoutDragMode dragMode = LayoutDragMode.NONE;
-
     private VAbstractDropHandler dropHandler;
-
-    private float tabLeftRightDropRatio = DEFAULT_HORIZONTAL_DROP_RATIO;
 
     private ApplicationConnection client;
 
@@ -85,6 +79,9 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
     private final VDragFilter dragFilter = new VTabDragFilter(this);
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
+
+    private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
+            this, LayoutDragMode.NONE);
 
     public VDDTabSheet() {
         super();
@@ -114,15 +111,10 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
     @Override
     protected void onUnload() {
         super.onUnload();
-        dragMode = LayoutDragMode.NONE;
-        ddMouseHandler.updateDragMode(dragMode);
-        iframeCoverUtility
-                .setIframeCoversEnabled(false, getElement(), dragMode);
+        ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
+        iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
+                LayoutDragMode.NONE);
     }
-
-    // The drag mouse handler which handles the creation of the transferable
-    private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
-            this, dragMode);
 
     /*
      * (non-Javadoc)
@@ -140,7 +132,8 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * @see fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
      */
     public LayoutDragMode getDragMode() {
-        return dragMode;
+        return ((DDTabSheetState) ConnectorMap.get(client).getConnector(this)
+                .getState()).getDragMode();
     }
 
     /**
@@ -183,7 +176,8 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      */
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
         Widget w = tabPanel.getWidget(getTabPosition(widget));
-        return dragMode != LayoutDragMode.NONE && dragFilter.isDraggable(w);
+        return getDragMode() != LayoutDragMode.NONE
+                && dragFilter.isDraggable(w);
     }
 
     /**
@@ -193,7 +187,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * @param childUidl
      *            The UIDL
      */
-    protected void updateDropHandler(UIDL childUidl) {
+    public void updateDropHandler(UIDL childUidl) {
         if (dropHandler == null) {
             dropHandler = new VAbstractDropHandler() {
 
@@ -207,16 +201,10 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
                     return client;
                 }
 
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #getPaintable()
-                 */
                 @Override
-                public Paintable getPaintable() {
-                    return VDDTabSheet.this;
+                public ComponentConnector getConnector() {
+                    return ConnectorMap.get(client).getConnector(
+                            VDDTabSheet.this);
                 }
 
                 /*
@@ -337,77 +325,25 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
                         getTabPosition(w));
 
                 // Add drop location
+                float ratio = ((DDTabSheetState) ConnectorMap.get(client)
+                        .getConnector(VDDTabSheet.this).getState())
+                        .getTabLeftRightDropRatio();
                 HorizontalDropLocation location = VDragDropUtil
                         .getHorizontalDropLocation(element, Util
                                 .getTouchOrMouseClientX(event
-                                        .getCurrentGwtEvent()),
-                                tabLeftRightDropRatio);
+                                        .getCurrentGwtEvent()), ratio);
                 event.getDropDetails().put(
                         Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
                         location);
             }
 
             // Add mouse event details
-            MouseEventDetails details = new MouseEventDetails(
-                    event.getCurrentGwtEvent(), getElement());
+            MouseEventDetails details = MouseEventDetailsBuilder
+                    .buildMouseEventDetails(event.getCurrentGwtEvent(),
+                            getElement());
             event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
                     details.serialize());
         }
-    }
-
-    /**
-     * Handles drag mode changes recieved from the server
-     * 
-     * @param uidl
-     *            The UIDL
-     */
-    private void handleDragModeUpdate(UIDL uidl) {
-        if (uidl.hasAttribute(Constants.DRAGMODE_ATTRIBUTE)) {
-            LayoutDragMode[] modes = LayoutDragMode.values();
-            dragMode = modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)];
-            ddMouseHandler.updateDragMode(dragMode);
-            iframeCoverUtility
-                    .setIframeCoversEnabled(
-                            uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
-                            getElement(), dragMode);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.terminal.gwt.client.ui.VTabsheet#updateFromUIDL(com.vaadin
-     * .terminal.gwt.client.UIDL,
-     * com.vaadin.terminal.gwt.client.ApplicationConnection)
-     */
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        this.client = client;
-
-        for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
-            final UIDL childUIDL = (UIDL) it.next();
-            if (childUIDL.getTag().equals("-ac")) {
-                updateDropHandler(childUIDL);
-            }
-        }
-
-        UIDL modifiedUIDL = VDragDropUtil.removeDragDropCriteraFromUIDL(uidl);
-        super.updateFromUIDL(modifiedUIDL, client);
-
-        // Handles changes in dropHandler
-        handleDragModeUpdate(modifiedUIDL);
-
-        // Handle drop ratio settings
-        handleCellDropRatioUpdate(modifiedUIDL);
-
-        // Handle iframe covering
-        iframeCoverUtility.setIframeCoversEnabled(
-                iframeCoverUtility.isIframeCoversEnabled(), getElement(),
-                dragMode);
-
-        // Update dragfilter
-        dragFilter.update(uidl, client);
     }
 
     /**
@@ -431,11 +367,13 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
             } else if (w instanceof VCaption) {
                 // Over a tab
                 VCaption tab = (VCaption) w;
+                float ratio = ((DDTabSheetState) ConnectorMap.get(client)
+                        .getConnector(VDDTabSheet.this).getState())
+                        .getTabLeftRightDropRatio();
                 HorizontalDropLocation location = VDragDropUtil
                         .getHorizontalDropLocation(element, Util
                                 .getTouchOrMouseClientX(event
-                                        .getCurrentGwtEvent()),
-                                tabLeftRightDropRatio);
+                                        .getCurrentGwtEvent()), ratio);
 
                 if (location == HorizontalDropLocation.LEFT) {
 
@@ -486,20 +424,6 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
         }
     }
 
-    /**
-     * Handles updates the the hoover zones of the tab which specifies at which
-     * position a component is dropped over a tab
-     * 
-     * @param uidl
-     *            The UIDL
-     */
-    private void handleCellDropRatioUpdate(UIDL uidl) {
-        if (uidl.hasAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO)) {
-            tabLeftRightDropRatio = uidl
-                    .getFloatAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO);
-        }
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -538,5 +462,13 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      */
     public VDragFilter getDragFilter() {
         return dragFilter;
+    }
+
+    IframeCoverUtility getIframeCoverUtility() {
+        return iframeCoverUtility;
+    }
+
+    VLayoutDragDropMouseHandler getMouseHandler() {
+        return ddMouseHandler;
     }
 }

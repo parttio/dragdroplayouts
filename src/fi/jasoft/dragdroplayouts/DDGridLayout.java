@@ -32,7 +32,7 @@ import com.vaadin.ui.GridLayout;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.gridlayout.VDDGridLayout;
+import fi.jasoft.dragdroplayouts.client.ui.gridlayout.DDGridLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
@@ -201,9 +201,9 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
 
     private LayoutDragMode dragMode = LayoutDragMode.NONE;
 
-    private float horizontalDropRatio = VDDGridLayout.DEFAULT_HORIZONTAL_RATIO;
+    private float horizontalDropRatio = DDGridLayoutState.DEFAULT_HORIZONTAL_RATIO;
 
-    private float verticalDropRatio = VDDGridLayout.DEFAULT_VERTICAL_RATIO;
+    private float verticalDropRatio = DDGridLayoutState.DEFAULT_VERTICAL_RATIO;
 
     // Are the iframes shimmed
     private boolean iframeShims = true;

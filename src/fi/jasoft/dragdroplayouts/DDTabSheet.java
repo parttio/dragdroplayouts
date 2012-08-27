@@ -32,7 +32,7 @@ import com.vaadin.ui.TabSheet;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.tabsheet.VDDTabSheet;
+import fi.jasoft.dragdroplayouts.client.ui.tabsheet.DDTabSheetState;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
@@ -60,7 +60,7 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
      */
     private DropHandler dropHandler;
 
-    private float horizontalDropRatio = VDDTabSheet.DEFAULT_HORIZONTAL_DROP_RATIO;
+    private float horizontalDropRatio = DDTabSheetState.DEFAULT_HORIZONTAL_DROP_RATIO;
 
     // Are the iframes shimmed
     private boolean iframeShims = true;
