@@ -49,6 +49,8 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 public class DDGridLayout extends GridLayout implements LayoutDragSource,
         DropTarget, ShimSupport {
 
+    private DropHandler dropHandler;
+
     /**
      * Target details for a drop event
      */
@@ -197,22 +199,6 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
         }
     }
 
-    private DropHandler dropHandler;
-
-    private LayoutDragMode dragMode = LayoutDragMode.NONE;
-
-    private float horizontalDropRatio = DDGridLayoutState.DEFAULT_HORIZONTAL_RATIO;
-
-    private float verticalDropRatio = DDGridLayoutState.DEFAULT_VERTICAL_RATIO;
-
-    // Are the iframes shimmed
-    private boolean iframeShims = true;
-
-    /**
-     * A filter for dragging components.
-     */
-    private DragFilter dragFilter = DragFilter.ALL;
-
     /**
      * Constructor for grid of given size (number of cells). Note that grid's
      * final size depends on the items that are added into the grid. Grid grows
@@ -247,21 +233,22 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
 
         // Drop ratios
         target.addAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO,
-                horizontalDropRatio);
-        target.addAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO,
-                verticalDropRatio);
+                getState().getCellLeftRightDropRatio());
+        target.addAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO, getState()
+                .getCellTopBottomDropRatio());
 
         // Drag mode
         if (isEnabled()) {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
-                    dragMode.ordinal());
+            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, getState()
+                    .getDragMode().ordinal());
         } else {
             target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
                     LayoutDragMode.NONE.ordinal());
         }
 
         // Shims
-        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
+        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, getState()
+                .isIframeShims());
 
         // Paint the dragfilter into the paint target
         new DragFilterPaintable(this).paint(target);
@@ -288,17 +275,14 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      * {@inheritDoc}
      */
     public LayoutDragMode getDragMode() {
-        return dragMode;
+        return getState().getDragMode();
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragMode(LayoutDragMode mode) {
-        if (dragMode != mode) {
-            dragMode = mode;
-            requestRepaint();
-        }
+        getState().setDragMode(mode);
     }
 
     /**
@@ -327,10 +311,9 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentHorizontalDropRatio(float ratio) {
-        if (ratio != horizontalDropRatio) {
+        if (ratio != getState().getCellLeftRightDropRatio()) {
             if (ratio >= 0 && ratio <= 0.5) {
-                horizontalDropRatio = ratio;
-                requestRepaint();
+                getState().setCellLeftRightDropRatio(ratio);
             } else {
                 throw new IllegalArgumentException(
                         "Ratio must be between 0 and 0.5");
@@ -349,10 +332,9 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentVerticalDropRatio(float ratio) {
-        if (ratio != verticalDropRatio) {
+        if (ratio != getState().getCellTopBottomDropRatio()) {
             if (ratio >= 0 && ratio <= 0.5) {
-                verticalDropRatio = ratio;
-                requestRepaint();
+                getState().setCellTopBottomDropRatio(ratio);
             } else {
                 throw new IllegalArgumentException(
                         "Ratio must be between 0 and 0.5");
@@ -364,33 +346,32 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        if (iframeShims != shim) {
-            iframeShims = shim;
-            requestRepaint();
-        }
+        getState().setIframeShims(shim);
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-        return iframeShims;
+        return getState().isIframeShims();
     }
 
     /**
      * {@inheritDoc}
      */
     public DragFilter getDragFilter() {
-        return dragFilter;
+        return getState().getDragFilter();
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragFilter(DragFilter dragFilter) {
-        if (this.dragFilter != dragFilter) {
-            this.dragFilter = dragFilter;
-            requestRepaint();
-        }
+        getState().setDragFilter(dragFilter);
+    }
+
+    @Override
+    public DDGridLayoutState getState() {
+        return (DDGridLayoutState) super.getState();
     }
 }

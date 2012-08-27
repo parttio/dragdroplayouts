@@ -32,6 +32,7 @@ import com.vaadin.ui.CssLayout;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.csslayout.DDCssLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
@@ -48,17 +49,6 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 @SuppressWarnings("serial")
 public class DDCssLayout extends CssLayout implements LayoutDragSource,
         DropTarget, ShimSupport {
-
-    /**
-     * A filter for dragging components.
-     */
-    private DragFilter dragFilter = DragFilter.ALL;
-
-    // The current drag mode, default is dragging is not supported
-    private LayoutDragMode dragMode = LayoutDragMode.NONE;
-
-    // Are the iframes shimmed
-    private boolean iframeShims = true;
 
     // Drop handler which handles dd drop events
     private DropHandler dropHandler;
@@ -163,17 +153,14 @@ public class DDCssLayout extends CssLayout implements LayoutDragSource,
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        if (iframeShims != shim) {
-            iframeShims = shim;
-            requestRepaint();
-        }
+        getState().setIframeShims(shim);
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-        return iframeShims;
+        return getState().isIframeShims();
     }
 
     /**
@@ -208,34 +195,28 @@ public class DDCssLayout extends CssLayout implements LayoutDragSource,
      * {@inheritDoc}
      */
     public LayoutDragMode getDragMode() {
-        return dragMode;
+        return getState().getDragMode();
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragMode(LayoutDragMode mode) {
-        if (dragMode != mode) {
-            dragMode = mode;
-            requestRepaint();
-        }
+        getState().setDragMode(mode);
     }
 
     /**
      * {@inheritDoc}
      */
     public DragFilter getDragFilter() {
-        return this.dragFilter;
+        return getState().getDragFilter();
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragFilter(DragFilter dragFilter) {
-        if (this.dragFilter != dragFilter) {
-            this.dragFilter = dragFilter;
-            requestRepaint();
-        }
+        getState().setDragFilter(dragFilter);
     }
 
     /**
@@ -251,17 +232,23 @@ public class DDCssLayout extends CssLayout implements LayoutDragSource,
 
         // Adds the drag mode (the default is none)
         if (isEnabled()) {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
-                    dragMode.ordinal());
+            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, getState()
+                    .getDragMode().ordinal());
         } else {
             target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
                     LayoutDragMode.NONE.ordinal());
         }
 
         // Should shims be used
-        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
+        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, getState()
+                .isIframeShims());
 
         // Paint the dragfilter into the paint target
         new DragFilterPaintable(this).paint(target);
+    }
+
+    @Override
+    public DDCssLayoutState getState() {
+        return (DDCssLayoutState) super.getState();
     }
 }

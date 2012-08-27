@@ -31,6 +31,7 @@ import com.vaadin.ui.HorizontalSplitPanel;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.horizontalsplitpanel.DDHorizontalSplitPanelState;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
@@ -51,20 +52,6 @@ public class DDHorizontalSplitPanel extends HorizontalSplitPanel implements
      * The drop handler which handles dropped components in the layout.
      */
     private DropHandler dropHandler;
-
-    /**
-     * Specifies if dragging components is allowed and if so how it should be
-     * visualized
-     */
-    private LayoutDragMode dragMode = LayoutDragMode.NONE;
-
-    // Are the iframes shimmed
-    private boolean iframeShims = true;
-
-    /**
-     * A filter for dragging components.
-     */
-    private DragFilter dragFilter = DragFilter.ALL;
 
     /**
      * Contains the location and other information about the drop.
@@ -166,7 +153,7 @@ public class DDHorizontalSplitPanel extends HorizontalSplitPanel implements
      * @return
      */
     public LayoutDragMode getDragMode() {
-        return dragMode;
+        return getState().getDragMode();
     }
 
     /**
@@ -176,10 +163,7 @@ public class DDHorizontalSplitPanel extends HorizontalSplitPanel implements
      *            The mode of which how the dragging should be visualized.
      */
     public void setDragMode(LayoutDragMode mode) {
-        if (dragMode != mode) {
-            dragMode = mode;
-            requestRepaint();
-        }
+        getState().setDragMode(mode);
     }
 
     /**
@@ -195,15 +179,16 @@ public class DDHorizontalSplitPanel extends HorizontalSplitPanel implements
 
         // Drag mode
         if (isEnabled()) {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
-                    dragMode.ordinal());
+            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, getState()
+                    .getDragMode().ordinal());
         } else {
             target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
                     LayoutDragMode.NONE.ordinal());
         }
 
         // Shims
-        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
+        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, getState()
+                .isIframeShims());
 
         // Paint the dragfilter into the paint target
         new DragFilterPaintable(this).paint(target);
@@ -213,33 +198,32 @@ public class DDHorizontalSplitPanel extends HorizontalSplitPanel implements
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        if (iframeShims != shim) {
-            iframeShims = shim;
-            requestRepaint();
-        }
+        getState().setIframeShims(shim);
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-        return iframeShims;
+        return getState().isIframeShims();
     }
 
     /**
      * {@inheritDoc}
      */
     public DragFilter getDragFilter() {
-        return dragFilter;
+        return getState().getDragFilter();
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragFilter(DragFilter dragFilter) {
-        if (this.dragFilter != dragFilter) {
-            this.dragFilter = dragFilter;
-            requestRepaint();
-        }
+        getState().setDragFilter(dragFilter);
+    }
+
+    @Override
+    public DDHorizontalSplitPanelState getState() {
+        return (DDHorizontalSplitPanelState) super.getState();
     }
 }

@@ -31,7 +31,7 @@ import com.vaadin.ui.HorizontalLayout;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.horizontallayout.VDDHorizontalLayout;
+import fi.jasoft.dragdroplayouts.client.ui.horizontallayout.DDHorizontalLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
@@ -52,22 +52,6 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      * The drop handler which handles dropped components in the layout.
      */
     private DropHandler dropHandler;
-
-    /**
-     * Specifies if dragging components is allowed and if so how it should be
-     * visualized
-     */
-    private LayoutDragMode dragMode = LayoutDragMode.NONE;
-
-    private float horizontalDropRatio = VDDHorizontalLayout.DEFAULT_HORIZONTAL_DROP_RATIO;
-
-    // Are the iframes shimmed
-    private boolean iframeShims = true;
-
-    /**
-     * A filter for dragging components.
-     */
-    private DragFilter dragFilter = DragFilter.ALL;
 
     /**
      * Contains the component over which the drop was made and the index on
@@ -157,19 +141,20 @@ public class DDHorizontalLayout extends HorizontalLayout implements
 
         // Drop ratios
         target.addAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO,
-                horizontalDropRatio);
+                getState().getCellLeftRightDropRatio());
 
         // Drag mode
         if (isEnabled()) {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
-                    dragMode.ordinal());
+            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, getState()
+                    .getDragMode().ordinal());
         } else {
             target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
                     LayoutDragMode.NONE.ordinal());
         }
 
         // Shims
-        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
+        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, getState()
+                .isIframeShims());
 
         // Paint the dragfilter into the paint target
         new DragFilterPaintable(this).paint(target);
@@ -223,7 +208,7 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      * @return
      */
     public LayoutDragMode getDragMode() {
-        return dragMode;
+        return getState().getDragMode();
     }
 
     /**
@@ -233,10 +218,7 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      *            The mode of which how the dragging should be visualized.
      */
     public void setDragMode(LayoutDragMode mode) {
-        if (dragMode != mode) {
-            dragMode = mode;
-            requestRepaint();
-        }
+        getState().setDragMode(mode);
     }
 
     /**
@@ -250,10 +232,9 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentHorizontalDropRatio(float ratio) {
-        if (horizontalDropRatio != ratio) {
+        if (getState().getCellLeftRightDropRatio() != ratio) {
             if (ratio >= 0 && ratio <= 0.5) {
-                horizontalDropRatio = ratio;
-                requestRepaint();
+                getState().setCellLeftRightDropRatio(ratio);
             } else {
                 throw new IllegalArgumentException(
                         "Ratio must be between 0 and 0.5");
@@ -265,33 +246,32 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        if (iframeShims != shim) {
-            iframeShims = shim;
-            requestRepaint();
-        }
+        getState().setIframeShims(shim);
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-        return iframeShims;
+        return getState().isIframeShims();
     }
 
     /**
      * {@inheritDoc}
      */
     public DragFilter getDragFilter() {
-        return dragFilter;
+        return getState().getDragFilter();
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragFilter(DragFilter dragFilter) {
-        if (this.dragFilter != dragFilter) {
-            this.dragFilter = dragFilter;
-            requestRepaint();
-        }
+        getState().setDragFilter(dragFilter);
+    }
+
+    @Override
+    public DDHorizontalLayoutState getState() {
+        return (DDHorizontalLayoutState) super.getState();
     }
 }

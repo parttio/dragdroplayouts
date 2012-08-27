@@ -50,26 +50,9 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
         DropTarget, ShimSupport {
 
     /**
-     * Specifies if dragging components is allowed and if so how it should be
-     * visualized
-     */
-    private LayoutDragMode dragMode = LayoutDragMode.NONE;
-
-    /**
      * The drop handler which handles dropped components in the layout.
      */
     private DropHandler dropHandler;
-
-    // The ratio how drop c
-    private float verticalDropRatio = DDAccordionState.DEFAULT_VERTICAL_RATIO;
-
-    // Are the iframes shimmed
-    private boolean iframeShims = true;
-
-    /**
-     * A filter for dragging components.
-     */
-    private DragFilter dragFilter = DragFilter.ALL;
 
     public class AccordionTargetDetails extends TargetDetailsImpl {
 
@@ -210,17 +193,14 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      * {@inheritDoc}
      */
     public LayoutDragMode getDragMode() {
-        return dragMode;
+        return getState().getDragMode();
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragMode(LayoutDragMode mode) {
-        if (dragMode != mode) {
-            dragMode = mode;
-            requestRepaint();
-        }
+        getState().setDragMode(mode);
     }
 
     /**
@@ -237,18 +217,19 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
 
         // Adds the drag mode (the default is none)
         if (isEnabled()) {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
-                    dragMode.ordinal());
+            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, getState()
+                    .getDragMode().ordinal());
         } else {
             target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
                     LayoutDragMode.NONE.ordinal());
         }
 
         // Set the drop ratio
-        target.addAttribute("vDropRatio", verticalDropRatio);
+        target.addAttribute("vDropRatio", getState().getTabTopBottomDropRatio());
 
         // Should shims be used
-        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, iframeShims);
+        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, getState()
+                .isIframeShims());
 
         // Paint the dragfilter into the paint target
         new DragFilterPaintable(this).paint(target);
@@ -265,10 +246,9 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentVerticalDropRatio(float ratio) {
-        if (ratio != verticalDropRatio) {
+        if (ratio != getState().getTabTopBottomDropRatio()) {
             if (ratio >= 0 && ratio <= 0.5) {
-                verticalDropRatio = ratio;
-                requestRepaint();
+                getState().setTabTopBottomDropRatio(ratio);
             } else {
                 throw new IllegalArgumentException(
                         "Ratio must be between 0 and 0.5");
@@ -280,33 +260,32 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        if (iframeShims != shim) {
-            iframeShims = shim;
-            requestRepaint();
-        }
+        getState().setIframeShims(shim);
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-        return iframeShims;
+        return getState().isIframeShims();
     }
 
     /**
      * {@inheritDoc}
      */
     public DragFilter getDragFilter() {
-        return dragFilter;
+        return getState().getDragFilter();
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragFilter(DragFilter dragFilter) {
-        if (this.dragFilter != dragFilter) {
-            this.dragFilter = dragFilter;
-            requestRepaint();
-        }
+        getState().setDragFilter(dragFilter);
+    }
+
+    @Override
+    public DDAccordionState getState() {
+        return (DDAccordionState) super.getState();
     }
 }
