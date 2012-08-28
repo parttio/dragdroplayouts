@@ -6,12 +6,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 
-import org.vaadin.codelabel.CodeLabel;
-
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
@@ -24,7 +23,7 @@ public class DragDropUI extends UI {
 
     private TabSheet tabs;
 
-    private CodeLabel code;
+    private Label code;
 
     @Override
     protected void init(WrappedRequest request) {
@@ -65,7 +64,7 @@ public class DragDropUI extends UI {
 
         content.addComponent(tabs);
 
-        code = new CodeLabel("");
+        code = new Label("");
         try {
             tabChanged(tabs.getSelectedTab());
         } catch (IOException e) {

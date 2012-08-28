@@ -12,7 +12,7 @@
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<description>Vaadin application root</description>
-			<param-name>ui</param-name>
+			<param-name>UI</param-name>
 			<param-value>fi.jasoft.dragdroplayouts.demo.DragDropUI</param-value>
 		</init-param>
 	</servlet>
