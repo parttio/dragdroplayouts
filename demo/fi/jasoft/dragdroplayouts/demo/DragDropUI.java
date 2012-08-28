@@ -9,16 +9,18 @@ import java.util.regex.Pattern;
 import org.vaadin.codelabel.CodeLabel;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalSplitPanel;
 
 @Theme("dragdrop")
-public class DragDropRoot extends Root {
+@Widgetset("fi.jasoft.dragdroplayouts.demo.DemoWidgetSet")
+public class DragDropUI extends UI {
 
     private TabSheet tabs;
 

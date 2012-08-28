@@ -1,6 +1,6 @@
 package fi.jasoft.dragdroplayouts.client.ui.absolutelayout;
 
-import com.vaadin.terminal.gwt.client.ui.absolutelayout.AbsoluteLayoutState;
+import com.vaadin.shared.ui.absolutelayout.AbsoluteLayoutState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;

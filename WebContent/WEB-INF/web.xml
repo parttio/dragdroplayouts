@@ -12,13 +12,8 @@
 		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
 		<init-param>
 			<description>Vaadin application root</description>
-			<param-name>root</param-name>
-			<param-value>fi.jasoft.dragdroplayouts.demo.DragDropRoot</param-value>
-		</init-param>
-		<init-param>
-			<description>Application widgetset</description>
-			<param-name>widgetset</param-name>
-			<param-value>fi.jasoft.dragdroplayouts.demo.DemoWidgetSet</param-value>
+			<param-name>ui</param-name>
+			<param-value>fi.jasoft.dragdroplayouts.demo.DragDropUI</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

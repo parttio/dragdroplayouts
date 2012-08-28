@@ -2,10 +2,10 @@ package fi.jasoft.dragdroplayouts.client.ui.accordion;
 
 import java.util.Iterator;
 
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.accordion.AccordionConnector;
 
 import fi.jasoft.dragdroplayouts.DDAccordion;

@@ -1,6 +1,5 @@
 package fi.jasoft.dragdroplayouts.demo;
 
-import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;

@@ -1,6 +1,6 @@
 package fi.jasoft.dragdroplayouts.client.ui.csslayout;
 
-import com.vaadin.terminal.gwt.client.ui.csslayout.CssLayoutState;
+import com.vaadin.shared.ui.csslayout.CssLayoutState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;

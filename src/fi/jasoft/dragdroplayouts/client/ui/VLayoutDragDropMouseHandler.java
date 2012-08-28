@@ -45,7 +45,6 @@ import com.vaadin.terminal.gwt.client.ui.slider.VSlider;
 import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
 
 import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
-import fi.jasoft.dragdroplayouts.client.ui.formlayout.VDDFormLayout;
 
 /**
  * Mouse handler for starting component drag operations

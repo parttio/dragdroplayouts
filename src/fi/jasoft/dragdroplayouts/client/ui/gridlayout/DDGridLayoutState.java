@@ -1,6 +1,6 @@
 package fi.jasoft.dragdroplayouts.client.ui.gridlayout;
 
-import com.vaadin.terminal.gwt.client.ui.gridlayout.GridLayoutState;
+import com.vaadin.shared.ui.gridlayout.GridLayoutState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;

@@ -1,6 +1,6 @@
 package fi.jasoft.dragdroplayouts.client.ui.verticalsplitpanel;
 
-import com.vaadin.terminal.gwt.client.ui.splitpanel.AbstractSplitPanelState;
+import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;

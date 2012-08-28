@@ -67,6 +67,12 @@ dependencies{
     	testCompile 	group: 'junit',             	name: 'junit',		version: '4.8.+'
 }
 
+eclipse {
+    classpath {
+       downloadSources=true
+    }
+}
+
 /*
  *  Widgetset compilation needed by the war task
  */

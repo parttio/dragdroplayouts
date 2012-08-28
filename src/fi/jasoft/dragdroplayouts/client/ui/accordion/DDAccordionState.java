@@ -1,6 +1,6 @@
 package fi.jasoft.dragdroplayouts.client.ui.accordion;
 
-import com.vaadin.terminal.gwt.client.ComponentState;
+import com.vaadin.shared.ComponentState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;

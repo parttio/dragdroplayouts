@@ -22,9 +22,9 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.ui.AbsoluteLayout;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
@@ -220,20 +220,14 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
      * {@inheritDoc}
      */
     public void setDragMode(LayoutDragMode mode) {
-        if (getState().getDragMode() != mode) {
-            getState().setDragMode(mode);
-            requestRepaint();
-        }
+        getState().setDragMode(mode);
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        if (getState().isIframeShims() != shim) {
-            getState().setIframeShims(shim);
-            requestRepaint();
-        }
+        getState().setIframeShims(shim);
     }
 
     /**
@@ -254,10 +248,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
      * {@inheritDoc}
      */
     public void setDragFilter(DragFilter dragFilter) {
-        if (getState().getDragFilter() != dragFilter) {
-            getState().setDragFilter(dragFilter);
-            requestRepaint();
-        }
+        getState().setDragFilter(dragFilter);
     }
 
     /**

@@ -2,10 +2,10 @@ package fi.jasoft.dragdroplayouts.client.ui.gridlayout;
 
 import java.util.Iterator;
 
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.gridlayout.GridLayoutConnector;
 
 import fi.jasoft.dragdroplayouts.DDGridLayout;

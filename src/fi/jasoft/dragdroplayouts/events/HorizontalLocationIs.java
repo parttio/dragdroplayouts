@@ -16,7 +16,7 @@
 package fi.jasoft.dragdroplayouts.events;
 
 import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
-import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
+import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 

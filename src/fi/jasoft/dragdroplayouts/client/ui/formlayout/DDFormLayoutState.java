@@ -1,6 +1,6 @@
 package fi.jasoft.dragdroplayouts.client.ui.formlayout;
 
-import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutState;
+import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;

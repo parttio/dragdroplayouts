@@ -2,10 +2,10 @@ package fi.jasoft.dragdroplayouts.client.ui.absolutelayout;
 
 import java.util.Iterator;
 
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.absolutelayout.AbsoluteLayoutConnector;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;

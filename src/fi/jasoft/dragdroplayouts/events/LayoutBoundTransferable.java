@@ -18,7 +18,7 @@ package fi.jasoft.dragdroplayouts.events;
 import java.util.Map;
 
 import com.vaadin.event.TransferableImpl;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.Component;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
