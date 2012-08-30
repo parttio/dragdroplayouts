@@ -22,18 +22,14 @@ import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
-import com.vaadin.event.dd.TargetDetailsImpl;
-import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
 
-import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.accordion.DDAccordionState;
-import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
+import fi.jasoft.dragdroplayouts.details.AccordionTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
@@ -53,85 +49,6 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      * The drop handler which handles dropped components in the layout.
      */
     private DropHandler dropHandler;
-
-    public class AccordionTargetDetails extends TargetDetailsImpl {
-
-        private Component over;
-
-        private int index = -1;
-
-        protected AccordionTargetDetails(Map<String, Object> rawDropData) {
-            super(rawDropData, DDAccordion.this);
-
-            // Get over which component (if any) the drop was made and the
-            // index of it
-            Object to = rawDropData.get("to");
-            if (to != null) {
-                index = Integer.valueOf(to.toString());
-
-                if (index < getComponentCount()) {
-                    Iterator<Component> iter = getComponentIterator();
-                    int counter = 0;
-                    while (iter.hasNext()) {
-                        over = iter.next();
-                        if (counter == index) {
-                            break;
-                        }
-                        counter++;
-                    }
-                } else {
-                    over = DDAccordion.this;
-                }
-            } else {
-                over = DDAccordion.this;
-            }
-        }
-
-        /**
-         * The component over which the drop was made.
-         * 
-         * @return Null if the drop was not over a component, else the component
-         */
-        public Component getOverComponent() {
-            return over;
-        }
-
-        /**
-         * The index over which the drop was made. If the drop was not made over
-         * any component then it returns -1.
-         * 
-         * @return The index of the component or -1 if over no component.
-         */
-        public int getOverIndex() {
-            return index;
-        }
-
-        /**
-         * Some details about the mouse event
-         * 
-         * @return details about the actual event that caused the event details.
-         *         Practically mouse move or mouse up.
-         */
-        public MouseEventDetails getMouseEvent() {
-            return MouseEventDetails
-                    .deSerialize((String) getData("mouseEvent"));
-        }
-
-        /**
-         * Get the horizontal position of the dropped component within the
-         * underlying cell.
-         * 
-         * @return The drop location
-         */
-        public VerticalDropLocation getDropLocation() {
-            if (getData("vdetail") != null) {
-                return VerticalDropLocation
-                        .valueOf((String) getData("vdetail"));
-            } else {
-                return null;
-            }
-        }
-    }
 
     /**
      * {@inheritDoc}
@@ -186,7 +103,7 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      */
     public TargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
-        return new AccordionTargetDetails(clientVariables);
+        return new AccordionTargetDetails(this, clientVariables);
     }
 
     /**
@@ -214,22 +131,6 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
         if (dropHandler != null && isEnabled()) {
             dropHandler.getAcceptCriterion().paint(target);
         }
-
-        // Adds the drag mode (the default is none)
-        if (isEnabled()) {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, getState()
-                    .getDragMode().ordinal());
-        } else {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
-                    LayoutDragMode.NONE.ordinal());
-        }
-
-        // Set the drop ratio
-        target.addAttribute("vDropRatio", getState().getTabTopBottomDropRatio());
-
-        // Should shims be used
-        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, getState()
-                .isIframeShims());
 
         // Paint the dragfilter into the paint target
         new DragFilterPaintable(this).paint(target);

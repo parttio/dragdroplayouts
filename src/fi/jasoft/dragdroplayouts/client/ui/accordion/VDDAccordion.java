@@ -25,17 +25,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.ui.accordion.VAccordion;
-import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
-import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
-import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 
 import fi.jasoft.dragdroplayouts.DDAccordion;
@@ -63,7 +57,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     public static final String CLASSNAME_OVER = "dd-over";
     public static final String CLASSNAME_SPACER = "spacer";
 
-    private VAbstractDropHandler dropHandler;
+    private VDDAccordionDropHandler dropHandler;
 
     private StackItem currentlyEmphasised;
 
@@ -107,8 +101,12 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
      * @see
      * com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler#getDropHandler()
      */
-    public VDropHandler getDropHandler() {
+    public VDDAccordionDropHandler getDropHandler() {
         return dropHandler;
+    }
+
+    public void setDropHandler(VDDAccordionDropHandler dropHandler) {
+        this.dropHandler = dropHandler;
     }
 
     /*
@@ -164,122 +162,6 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     }
 
     /**
-     * Creates a drop handler if one does not already exist and updates it from
-     * the details received from the server.
-     * 
-     * @param childUidl
-     *            The UIDL
-     */
-    protected void updateDropHandler(UIDL childUidl) {
-        if (dropHandler == null) {
-            dropHandler = new VAbstractDropHandler() {
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
-                 * getApplicationConnection()
-                 */
-                public ApplicationConnection getApplicationConnection() {
-                    return client;
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragAccepted
-                 * (com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                protected void dragAccepted(VDragEvent drag) {
-                    dragOver(drag);
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #drop(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public boolean drop(VDragEvent drag) {
-                    deEmphasis();
-                    Widget w = (Widget) drag.getTransferable().getData(
-                            Constants.TRANSFERABLE_DETAIL_COMPONENT);
-                    if (w instanceof VCaption) {
-                        // Convert dragged caption into the real component
-                        StackItem item = (StackItem) w.getParent();
-                        drag.getTransferable().setData(
-                                Constants.TRANSFERABLE_DETAIL_COMPONENT,
-                                item.getComponent());
-                    }
-
-                    // Update the details
-                    updateDropDetails(drag);
-
-                    return postDropHook(drag) && super.drop(drag);
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragOver(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragOver(VDragEvent drag) {
-
-                    deEmphasis();
-
-                    updateDropDetails(drag);
-
-                    postOverHook(drag);
-
-                    Widget w = (Widget) drag.getTransferable().getData(
-                            Constants.TRANSFERABLE_DETAIL_COMPONENT);
-                    if (VDDAccordion.this.equals(w)) {
-                        return;
-                    }
-
-                    // Validate the drop
-                    validate(new VAcceptCallback() {
-                        public void accepted(VDragEvent event) {
-                            emphasis(event.getElementOver(), event);
-                        }
-                    }, drag);
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragLeave(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragLeave(VDragEvent drag) {
-                    deEmphasis();
-                    updateDropDetails(drag);
-                    postLeaveHook(drag);
-                }
-
-                @Override
-                public ComponentConnector getConnector() {
-                    return ConnectorMap.get(client).getConnector(
-                            VDDAccordion.this);
-                };
-            };
-        }
-
-        // Update the rules
-        dropHandler.updateAcceptRules(childUidl);
-    }
-
-    /**
      * Updates the drop details while dragging. This is needed to ensure client
      * side criterias can validate the drop location.
      * 
@@ -288,7 +170,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
      * @param event
      *            The drag event
      */
-    protected void updateDropDetails(VDragEvent event) {
+    public void updateDropDetails(VDragEvent event) {
         StackItem tab = getTabByElement(event.getElementOver());
         if (tab != null) {
             // Add index
@@ -439,13 +321,6 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
         return 0;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter#getDragFilter
-     * ()
-     */
     public VDragFilter getDragFilter() {
         return dragFilter;
     }

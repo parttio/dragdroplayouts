@@ -1,11 +1,14 @@
 package fi.jasoft.dragdroplayouts.client.ui.verticallayout;
 
+import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 
-public class DDVerticalLayoutState extends AbstractOrderedLayoutState {
+public class DDVerticalLayoutState extends AbstractOrderedLayoutState implements
+        DDLayoutState {
 
     public static final float DEFAULT_VERTICAL_DROP_RATIO = 0.2f;
 
@@ -48,6 +51,7 @@ public class DDVerticalLayoutState extends AbstractOrderedLayoutState {
         return cellTopBottomDropRatio;
     }
 
+    @DelegateToWidget
     public void setCellTopBottomDropRatio(float cellTopBottomDropRatio) {
         this.cellTopBottomDropRatio = cellTopBottomDropRatio;
     }

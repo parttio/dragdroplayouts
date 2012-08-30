@@ -3,9 +3,11 @@ package fi.jasoft.dragdroplayouts.client.ui.absolutelayout;
 import com.vaadin.shared.ui.absolutelayout.AbsoluteLayoutState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 
-public class DDAbsoluteLayoutState extends AbsoluteLayoutState {
+public class DDAbsoluteLayoutState extends AbsoluteLayoutState implements
+        DDLayoutState {
 
     // The current drag mode, default is dragging is not supported
     private LayoutDragMode dragMode = LayoutDragMode.NONE;

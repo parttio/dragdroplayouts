@@ -15,25 +15,14 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.verticallayout;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.WidgetCollection;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
-import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
-import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.orderedlayout.VVerticalLayout;
 
@@ -63,11 +52,17 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
 
     public static final String OVER_SPACED = OVER + "-spaced";
 
-    private VAbstractDropHandler dropHandler;
+    private VDDVerticalLayoutDropHandler dropHandler;
 
     private final VDragFilter dragFilter = new VDragFilter();
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
+
+    private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
+            this, LayoutDragMode.NONE);
+
+    // Value delegated from the state
+    private double cellTopBottomDropRatio = DDVerticalLayoutState.DEFAULT_VERTICAL_DROP_RATIO;
 
     public VDDVerticalLayout() {
         super();
@@ -81,10 +76,6 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
         iframeCoverUtility.setIframeCoversEnabled(false, this.getElement(),
                 LayoutDragMode.NONE);
     }
-
-    // The drag mouse handler which handles the creation of the transferable
-    private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
-            this, LayoutDragMode.NONE);
 
     /**
      * Removes any applies drag and drop style applied by emphasis()
@@ -158,27 +149,6 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
         event.getDropDetails().put(Constants.DROP_DETAIL_TO,
                 widgets.indexOf(widget));
 
-        /*
-         * Add Classname of component over the drag. This can be used by a a
-         * client side criteria to verify that a drag is over a specific class
-         * of component.
-         */
-        if (widget instanceof ChildComponentContainer) {
-            Widget w = ((ChildComponentContainer) widget).getWidget();
-            if (w != null) {
-                String className = w.getClass().getName();
-                event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
-                        className);
-            } else {
-                event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
-                        this.getClass().getName());
-            }
-
-        } else {
-            event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
-                    this.getClass().getName());
-        }
-
         // Add mouse event details
         MouseEventDetails details = MouseEventDetailsBuilder
                 .buildMouseEventDetails(event.getCurrentGwtEvent(),
@@ -209,12 +179,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
 
         currentlyEmphasised = container;
 
-        // Assign the container the drag and drop over style
-        if (spacingEnabled) {
-            UIObject.setStyleName(container.getElement(), OVER_SPACED, true);
-        } else {
-            UIObject.setStyleName(container.getElement(), OVER, true);
-        }
+        UIObject.setStyleName(container.getElement(), OVER, true);
 
         // Add drop location specific style
         if (container != this) {
@@ -233,7 +198,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      * Returns the current drag mode which determines how the drag is visualized
      */
     public LayoutDragMode getDragMode() {
-        return dragMode;
+        return ddMouseHandler.getDragMode();
     }
 
     /**
@@ -275,166 +240,19 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      * to commence. Return false to interrupt the drag:
      */
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return dragMode != LayoutDragMode.NONE
+        return ddMouseHandler.getDragMode() != LayoutDragMode.NONE
                 && dragFilter.isDraggable(widget);
-    }
-
-    /**
-     * Creates a drop handler if one does not already exist and updates it from
-     * the details received from the server.
-     * 
-     * @param childUidl
-     *            The UIDL
-     */
-    protected void updateDropHandler(UIDL childUidl) {
-        if (dropHandler == null) {
-            dropHandler = new VAbstractDropHandler() {
-
-                private Map<Element, ChildComponentContainer> elementContainerMap;
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
-                 * getApplicationConnection()
-                 */
-                public ApplicationConnection getApplicationConnection() {
-                    return client;
-                }
-
-                @Override
-                public ComponentConnector getConnector() {
-                    // TODO Auto-generated method stub
-                    return null;
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragAccepted
-                 * (com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                protected void dragAccepted(VDragEvent drag) {
-                    dragOver(drag);
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #drop(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public boolean drop(VDragEvent drag) {
-
-                    // Un-emphasis any selections
-                    emphasis(null, null);
-
-                    // Update the details
-                    updateDropDetails(getContainerFromDragEvent(drag), drag);
-                    return postDropHook(drag) && super.drop(drag);
-                };
-
-                /**
-                 * Finds the container (or widget) that the drag event was over
-                 * 
-                 * @param event
-                 *            The drag event
-                 * @return
-                 */
-                private ChildComponentContainer getContainerFromDragEvent(
-                        VDragEvent event) {
-                    if (elementContainerMap == null) {
-                        elementContainerMap = new HashMap<Element, ChildComponentContainer>();
-                    }
-
-                    ChildComponentContainer cont = null;
-
-                    // Check if we have a reference stored
-                    cont = elementContainerMap.get(event.getElementOver());
-
-                    if (cont == null) {
-                        // Else search for the element
-                        for (ChildComponentContainer c : widgetToComponentContainer
-                                .values()) {
-                            if (DOM.isOrHasChild(c.getElement(),
-                                    event.getElementOver())) {
-                                cont = c;
-                                elementContainerMap.put(event.getElementOver(),
-                                        cont);
-                                break;
-                            }
-                        }
-                    }
-
-                    return cont;
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragOver(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragOver(VDragEvent drag) {
-
-                    // Remove any emphasis
-                    emphasis(null, null);
-
-                    // Update the dropdetails so we can validate the drop
-                    ChildComponentContainer c = getContainerFromDragEvent(drag);
-                    if (c != null) {
-                        updateDropDetails(c, drag);
-                    } else {
-                        updateDropDetails(VDDVerticalLayout.this, drag);
-                    }
-
-                    postOverHook(drag);
-
-                    // Validate the drop
-                    validate(new VAcceptCallback() {
-                        public void accepted(VDragEvent event) {
-                            ChildComponentContainer c = getContainerFromDragEvent(event);
-                            if (c != null) {
-                                emphasis(c, event);
-                            } else {
-                                emphasis(VDDVerticalLayout.this, event);
-                            }
-                        }
-                    }, drag);
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragLeave(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragLeave(VDragEvent drag) {
-                    emphasis(null, drag);
-                    elementContainerMap = null;
-                    postLeaveHook(drag);
-                };
-            };
-        }
-
-        // Update the rules
-        dropHandler.updateAcceptRules(childUidl);
     }
 
     /**
      * Get the drop handler attached to the Layout
      */
-    public VDropHandler getDropHandler() {
+    public VDDVerticalLayoutDropHandler getDropHandler() {
         return dropHandler;
+    }
+
+    public void setDropHandler(VDDVerticalLayoutDropHandler dropHandler) {
+        this.dropHandler = dropHandler;
     }
 
     /*

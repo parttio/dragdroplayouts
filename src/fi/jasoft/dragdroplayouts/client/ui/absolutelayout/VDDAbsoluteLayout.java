@@ -17,16 +17,10 @@ package fi.jasoft.dragdroplayouts.client.ui.absolutelayout;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.absolutelayout.VAbsoluteLayout;
-import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
-import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
@@ -50,7 +44,7 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
 
     public static final String CLASSNAME = "v-ddabsolutelayout";
 
-    private VAbstractDropHandler dropHandler;
+    private VDDAbsoluteLayoutDropHandler dropHandler;
 
     private final VLayoutDragDropMouseHandler ddHandler = new VLayoutDragDropMouseHandler(
             this, LayoutDragMode.NONE);
@@ -82,11 +76,75 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     // }
 
     /**
-     * Updates the drag details while a component is dragged
-     * 
-     * @param drag
-     *            The drag event to update the details from
+     * A hook for extended components to post process the the drop before it is
+     * sent to the server. Useful if you don't want to override the whole drop
+     * handler.
      */
+    protected boolean postDropHook(VDragEvent drag) {
+        // Extended classes can add content here...
+        return true;
+    }
+
+    /**
+     * A hook for extended components to post process the the enter event.
+     * Useful if you don't want to override the whole drophandler.
+     */
+    protected void postEnterHook(VDragEvent drag) {
+        // Extended classes can add content here...
+    }
+
+    /**
+     * A hook for extended components to post process the the leave event.
+     * Useful if you don't want to override the whole drophandler.
+     */
+    protected void postLeaveHook(VDragEvent drag) {
+        // Extended classes can add content here...
+    }
+
+    /**
+     * A hook for extended components to post process the the over event. Useful
+     * if you don't want to override the whole drophandler.
+     */
+    protected void postOverHook(VDragEvent drag) {
+        // Extended classes can add content here...
+    }
+
+    /**
+     * Can be used to listen to drag start events, must return true for the drag
+     * to commence. Return false to interrupt the drag:
+     */
+    public boolean dragStart(Widget widget, LayoutDragMode mode) {
+        return ddHandler.getDragMode() != LayoutDragMode.NONE
+                && dragFilter.isDraggable(widget);
+    }
+
+    /**
+     * Returns the drop handler which handles the drop events
+     */
+    public VDDAbsoluteLayoutDropHandler getDropHandler() {
+        return dropHandler;
+    }
+
+    public void setDropHandler(VDDAbsoluteLayoutDropHandler dropHandler) {
+        this.dropHandler = dropHandler;
+    }
+
+    public VDragFilter getDragFilter() {
+        return dragFilter;
+    }
+
+    IframeCoverUtility getIframeCoverUtility() {
+        return iframeCoverUtility;
+    }
+
+    VLayoutDragDropMouseHandler getMouseHandler() {
+        return ddHandler;
+    }
+
+    public LayoutDragMode getDragMode() {
+        return ddHandler.getDragMode();
+    }
+
     protected void updateDragDetails(VDragEvent drag) {
         // Get absolute coordinates
         int absoluteLeft = getAbsoluteLeft();
@@ -138,185 +196,4 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
                 details.serialize());
     }
 
-    /**
-     * A hook for extended components to post process the the drop before it is
-     * sent to the server. Useful if you don't want to override the whole drop
-     * handler.
-     */
-    protected boolean postDropHook(VDragEvent drag) {
-        // Extended classes can add content here...
-        return true;
-    }
-
-    /**
-     * A hook for extended components to post process the the enter event.
-     * Useful if you don't want to override the whole drophandler.
-     */
-    protected void postEnterHook(VDragEvent drag) {
-        // Extended classes can add content here...
-    }
-
-    /**
-     * A hook for extended components to post process the the leave event.
-     * Useful if you don't want to override the whole drophandler.
-     */
-    protected void postLeaveHook(VDragEvent drag) {
-        // Extended classes can add content here...
-    }
-
-    /**
-     * A hook for extended components to post process the the over event. Useful
-     * if you don't want to override the whole drophandler.
-     */
-    protected void postOverHook(VDragEvent drag) {
-        // Extended classes can add content here...
-    }
-
-    /**
-     * Can be used to listen to drag start events, must return true for the drag
-     * to commence. Return false to interrupt the drag:
-     */
-    public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return ddHandler.getDragMode() != LayoutDragMode.NONE
-                && dragFilter.isDraggable(widget);
-    }
-
-    /**
-     * Updates the drop handler. Creates a drop handler if it does not exist.
-     * 
-     * @param childUidl
-     *            The child UIDL containing the rules
-     */
-    void updateDropHandler(UIDL childUidl) {
-        if (dropHandler == null) {
-            dropHandler = new VAbstractDropHandler() {
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragAccepted
-                 * (com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                protected void dragAccepted(VDragEvent drag) {
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #drop(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public boolean drop(VDragEvent drag) {
-                    if (super.drop(drag)) {
-                        updateDragDetails(drag);
-                        return postDropHook(drag);
-                    }
-                    return false;
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragEnter(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragEnter(VDragEvent drag) {
-                    super.dragEnter(drag);
-                    Object w = drag.getTransferable().getData(
-                            Constants.TRANSFERABLE_DETAIL_COMPONENT);
-                    // FIXME
-                    // if (w instanceof Container) {
-                    // drag.getDragImage().addClassName(
-                    // CLASSNAME + "-drag-shadow");
-                    // }
-                    postEnterHook(drag);
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragLeave(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragLeave(VDragEvent drag) {
-                    super.dragLeave(drag);
-                    Object w = drag.getTransferable().getData(
-                            Constants.TRANSFERABLE_DETAIL_COMPONENT);
-                    // FIXME
-                    // if (w instanceof Container) {
-                    // drag.getDragImage().removeClassName(
-                    // CLASSNAME + "-drag-shadow");
-                    // }
-                    postLeaveHook(drag);
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragOver(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragOver(VDragEvent drag) {
-                    drag.getDragImage().getStyle().setProperty("display", "");
-
-                    // Update drop details with the location so we can
-                    // validate it
-                    updateDragDetails(drag);
-                    postOverHook(drag);
-                }
-
-                public ApplicationConnection getApplicationConnection() {
-                    return client;
-                }
-
-                @Override
-                public ComponentConnector getConnector() {
-                    return ConnectorMap.get(client).getConnector(
-                            VDDAbsoluteLayout.this);
-                }
-            };
-        }
-        dropHandler.updateAcceptRules(childUidl);
-    }
-
-    /**
-     * Returns the drop handler which handles the drop events
-     */
-    public VDropHandler getDropHandler() {
-        return dropHandler;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter#getDragFilter
-     * ()
-     */
-    public VDragFilter getDragFilter() {
-        return dragFilter;
-    }
-
-    IframeCoverUtility getIframeCoverUtility() {
-        return iframeCoverUtility;
-    }
-
-    VLayoutDragDropMouseHandler getMouseHandler() {
-        return ddHandler;
-    }
-
-    public LayoutDragMode getDragMode() {
-        return ddHandler.getDragMode();
-    }
 }

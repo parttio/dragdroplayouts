@@ -1,7 +1,5 @@
 package fi.jasoft.dragdroplayouts.client.ui.absolutelayout;
 
-import java.util.Iterator;
-
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -9,10 +7,9 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.absolutelayout.AbsoluteLayoutConnector;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
-import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 @Connect(DDAbsoluteLayout.class)
 public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
@@ -37,49 +34,40 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
     /**
      * {@inheritDoc}
      */
+    @Override
+    protected void init() {
+        super.init();
+        VDragDropUtil.listenToStateChangeEvents(this, getWidget()
+                .getMouseHandler(), getWidget().getIframeCoverUtility(),
+                getWidget());
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * TODO Remove this when drag & drop is done properly in core
+     */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
-        // Drag mode
-        handleDragModeUpdate(uidl);
-
         // Drop handlers
-        UIDL c = null;
-        for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
-            c = (UIDL) it.next();
-            if (c.getTag().equals("-ac")) {
-                getWidget().updateDropHandler(c);
-                break;
+        UIDL ac = uidl.getChildByTagName("-ac");
+        if (ac == null) {
+            if (getWidget().getDropHandler() != null) {
+                // remove dropHandler if not present anymore
+                getWidget().setDropHandler(null);
             }
-        }
-
-        /*
-         * Always check for iframe covers so new added/removed components get
-         * covered
-         */
-        IframeCoverUtility iframes = getWidget().getIframeCoverUtility();
-        iframes.setIframeCoversEnabled(iframes.isIframeCoversEnabled(),
-                getWidget().getElement(), getState().getDragMode());
-
-        // Drag filters
-        getWidget().getDragFilter().update(uidl, client);
-    }
-
-    private void handleDragModeUpdate(UIDL uidl) {
-        if (uidl.hasAttribute(Constants.DRAGMODE_ATTRIBUTE)) {
-            LayoutDragMode[] modes = LayoutDragMode.values();
-            getState().setDragMode(
-                    modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)]);
-
-            getWidget().getMouseHandler().updateDragMode(
-                    getState().getDragMode());
-
-            IframeCoverUtility iframes = getWidget().getIframeCoverUtility();
-            iframes.setIframeCoversEnabled(
-                    uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
-                    getWidget().getElement(), getState().getDragMode());
+        } else {
+            if (getWidget().getDropHandler() == null) {
+                getWidget().setDropHandler(
+                        new VDDAbsoluteLayoutDropHandler(getWidget(), this));
+            }
+            getWidget().getDropHandler().updateAcceptRules(ac);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public LayoutDragMode getDragMode() {
         return getState().getDragMode();
     }

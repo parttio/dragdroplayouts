@@ -33,6 +33,9 @@ import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
+import com.vaadin.terminal.gwt.client.ui.AbstractConnector;
 import com.vaadin.terminal.gwt.client.ui.button.VButton;
 import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
 import com.vaadin.terminal.gwt.client.ui.formlayout.VFormLayout;
@@ -43,9 +46,11 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Link;
 
 import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.tabsheet.VDDTabSheet;
+import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 /**
  * Utility class for Drag and Drop operations
@@ -405,4 +410,42 @@ public final class VDragDropUtil {
 
         return null;
     }
+
+    public static void listenToStateChangeEvents(
+            final AbstractConnector connector,
+            final VLayoutDragDropMouseHandler mouseHandler,
+            final IframeCoverUtility iframeUtility, final Widget widget) {
+        /*
+         * Listen to drag mode updates
+         */
+        connector.addStateChangeHandler("dragMode", new StateChangeHandler() {
+            public void onStateChanged(StateChangeEvent stateChangeEvent) {
+
+                DDLayoutState state = (DDLayoutState) connector.getState();
+
+                mouseHandler.updateDragMode(state.getDragMode());
+
+                iframeUtility.setIframeCoversEnabled(state.isIframeShims(),
+                        widget.getElement(), state.getDragMode());
+            }
+        });
+
+        /*
+         * Listen to iframe shim updates
+         */
+        connector.addStateChangeHandler("iframeShims",
+                new StateChangeHandler() {
+                    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+
+                        DDLayoutState state = (DDLayoutState) connector
+                                .getState();
+
+                        iframeUtility.setIframeCoversEnabled(
+                                state.isIframeShims(), widget.getElement(),
+                                state.getDragMode());
+                    }
+                });
+
+    }
+
 }

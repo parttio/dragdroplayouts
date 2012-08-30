@@ -3,9 +3,10 @@ package fi.jasoft.dragdroplayouts.client.ui.accordion;
 import com.vaadin.shared.ComponentState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 
-public class DDAccordionState extends ComponentState {
+public class DDAccordionState extends ComponentState implements DDLayoutState {
 
     public static final float DEFAULT_VERTICAL_RATIO = 0.2f;
 

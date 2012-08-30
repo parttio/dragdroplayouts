@@ -24,7 +24,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.TabSheet.Tab;
 
 import fi.jasoft.dragdroplayouts.DDAccordion;
-import fi.jasoft.dragdroplayouts.DDAccordion.AccordionTargetDetails;
+import fi.jasoft.dragdroplayouts.details.AccordionTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.events.VerticalLocationIs;
 

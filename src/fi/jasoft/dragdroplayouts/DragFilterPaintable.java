@@ -34,7 +34,7 @@ import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
  * @author John Ahlroos
  * @since 0.6.3
  */
-class DragFilterPaintable {
+public class DragFilterPaintable {
 
     private final LayoutDragSource source;
 

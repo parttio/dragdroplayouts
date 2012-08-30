@@ -22,7 +22,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
-import fi.jasoft.dragdroplayouts.DDAbsoluteLayout.AbsoluteLayoutTargetDetails;
+import fi.jasoft.dragdroplayouts.details.AbsoluteLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
 /**

@@ -21,16 +21,13 @@ import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
-import com.vaadin.event.dd.TargetDetailsImpl;
-import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbsoluteLayout;
 
-import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.absolutelayout.DDAbsoluteLayoutState;
-import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
+import fi.jasoft.dragdroplayouts.details.AbsoluteLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
@@ -49,98 +46,6 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
     private DropHandler dropHandler;
 
     /**
-     * Target details for dropping on a absolute layout. Contains the absolute
-     * and relative coordinates for the drop.
-     */
-    public class AbsoluteLayoutTargetDetails extends TargetDetailsImpl {
-
-        /**
-         * Constructor
-         * 
-         * @param rawDropData
-         *            Drop data
-         */
-        protected AbsoluteLayoutTargetDetails(Map<String, Object> rawDropData) {
-            super(rawDropData, DDAbsoluteLayout.this);
-        }
-
-        /**
-         * The absolute left coordinate in pixels measured from the windows left
-         * edge
-         * 
-         * @return The amount of pixels from the left edge
-         */
-        public int getAbsoluteLeft() {
-            return Integer.valueOf(getData(Constants.DROP_DETAIL_ABSOLUTE_LEFT)
-                    .toString());
-        }
-
-        /**
-         * The absolute top coordinate in pixels measured from the windows top
-         * edge
-         * 
-         * @return The amount of pixels from the top edge
-         */
-        public int getAbsoluteTop() {
-            return Integer.valueOf(getData(Constants.DROP_DETAIL_ABSOLUTE_TOP)
-                    .toString());
-        }
-
-        /**
-         * The relative left coordinate in pixels measured from the containers
-         * left edge
-         * 
-         * @return The amount of pixels from the left edge
-         */
-        public int getRelativeLeft() {
-            return Integer.valueOf(getData(Constants.DROP_DETAIL_RELATIVE_LEFT)
-                    .toString());
-        }
-
-        /**
-         * The relative top coordinate in pixels measured from the containers
-         * top edge
-         * 
-         * @return The amount of pixels from the top edge
-         */
-        public int getRelativeTop() {
-            return Integer.valueOf(getData(Constants.DROP_DETAIL_RELATIVE_TOP)
-                    .toString());
-        }
-
-        /**
-         * The width of the dragged component measured in pixels
-         * 
-         * @return The width in pixels
-         */
-        public int getComponentHeight() {
-            return Integer.valueOf(getData(
-                    Constants.DROP_DETAIL_COMPONENT_HEIGHT).toString());
-        }
-
-        /**
-         * The height of the dragged component measured in pixels
-         * 
-         * @return The height in pixels
-         */
-        public int getComponentWidth() {
-            return Integer.valueOf(getData(
-                    Constants.DROP_DETAIL_COMPONENT_WIDTH).toString());
-        }
-
-        /**
-         * Some details about the mouse event
-         * 
-         * @return details about the actual event that caused the event details.
-         *         Practically mouse move or mouse up.
-         */
-        public MouseEventDetails getMouseEvent() {
-            return MouseEventDetails
-                    .deSerialize((String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
-        }
-    }
-
-    /**
      * Creates an AbsoluteLayout with full size.
      */
     public DDAbsoluteLayout() {
@@ -156,19 +61,6 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
         if (dropHandler != null && isEnabled()) {
             dropHandler.getAcceptCriterion().paint(target);
         }
-
-        // Adds the drag mode (the default is none)
-        if (isEnabled()) {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, getState()
-                    .getDragMode().ordinal());
-        } else {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
-                    LayoutDragMode.NONE.ordinal());
-        }
-
-        // Should shims be used
-        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, getState()
-                .isIframeShims());
 
         // Paint the dragfilter into the paint target
         new DragFilterPaintable(this).paint(target);
@@ -199,7 +91,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
      */
     public TargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
-        return new AbsoluteLayoutTargetDetails(clientVariables);
+        return new AbsoluteLayoutTargetDetails(this, clientVariables);
     }
 
     /**
