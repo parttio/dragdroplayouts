@@ -24,8 +24,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.accordion.VAccordion;
@@ -61,8 +59,6 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
 
     private StackItem currentlyEmphasised;
 
-    private ApplicationConnection client;
-
     private final Map<Element, StackItem> elementTabMap = new HashMap<Element, StackItem>();
 
     private final Widget spacer;
@@ -74,6 +70,8 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     private final VDragFilter dragFilter = new VTabDragFilter(this);
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
+
+    private float tabTopBottomDropRatio = DDAccordionState.DEFAULT_VERTICAL_RATIO;
 
     public VDDAccordion() {
         spacer = GWT.create(HTML.class);
@@ -219,16 +217,14 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     protected VerticalDropLocation getDropLocation(StackItem tab,
             VDragEvent event) {
         VerticalDropLocation location;
-        float ratio = ((DDAccordionState) ConnectorMap.get(client)
-                .getConnector(this).getState()).getTabTopBottomDropRatio();
         if (tab.isOpen()) {
             location = VDragDropUtil.getVerticalDropLocation(tab.getElement(),
                     Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),
-                    ratio);
+                    tabTopBottomDropRatio);
         } else {
             location = VDragDropUtil.getVerticalDropLocation(tab.getWidget(0)
                     .getElement(), Util.getTouchOrMouseClientY(event
-                    .getCurrentGwtEvent()), ratio);
+                    .getCurrentGwtEvent()), tabTopBottomDropRatio);
         }
         return location;
     }
@@ -331,5 +327,13 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
 
     VLayoutDragDropMouseHandler getMouseHandler() {
         return ddMouseHandler;
+    }
+
+    public float getTabTopBottomDropRatio() {
+        return tabTopBottomDropRatio;
+    }
+
+    public void setTabTopBottomDropRatio(float tabTopBottomDropRatio) {
+        this.tabTopBottomDropRatio = tabTopBottomDropRatio;
     }
 }

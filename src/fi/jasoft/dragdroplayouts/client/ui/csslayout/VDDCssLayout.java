@@ -22,17 +22,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.csslayout.VCssLayout;
-import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
-import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
-import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 
 import fi.jasoft.dragdroplayouts.DDCssLayout;
@@ -58,16 +51,18 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 
     public static final String DRAG_SHADOW_STYLE_NAME = "v-ddcsslayout-drag-shadow";
 
-    private VAbstractDropHandler dropHandler;
+    private VDDCssLayoutDropHandler dropHandler;
 
     private final VLayoutDragDropMouseHandler ddHandler = new VLayoutDragDropMouseHandler(
             this, LayoutDragMode.NONE);
 
-    protected ApplicationConnection client;
-
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     private final VDragFilter dragFilter = new VDragFilter();
+
+    private double horizontalDropRatio = DDCssLayoutState.DEFAULT_HORIZONTAL_DROP_RATIO;
+
+    private double verticalDropRatio = DDCssLayoutState.DEFAULT_VERTICAL_DROP_RATIO;
 
     /**
      * Default constructor
@@ -89,8 +84,12 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
     /**
      * Returns the drop handler which handles the drop events
      */
-    public VDropHandler getDropHandler() {
+    public VDDCssLayoutDropHandler getDropHandler() {
         return dropHandler;
+    }
+
+    public void setDropHandler(VDDCssLayoutDropHandler dropHandler) {
+        this.dropHandler = dropHandler;
     }
 
     /**
@@ -100,113 +99,6 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      */
     public LayoutDragMode getDragMode() {
         return ddHandler.getDragMode();
-    }
-
-    /**
-     * Updates the drop handler. Creates a drop handler if it does not exist.
-     * 
-     * @param childUidl
-     *            The child UIDL containing the rules
-     */
-    protected void updateDropHandler(UIDL childUidl) {
-        if (dropHandler == null) {
-            dropHandler = new VAbstractDropHandler() {
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
-                 * getApplicationConnection()
-                 */
-                public ApplicationConnection getApplicationConnection() {
-                    return client;
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragAccepted
-                 * (com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                protected void dragAccepted(VDragEvent drag) {
-                    // Intentionally left empty
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #drop(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public boolean drop(VDragEvent drag) {
-                    updateDragDetails(drag);
-                    detachDragImageFromLayout(drag);
-                    return postDropHook(drag) && super.drop(drag);
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragEnter(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragEnter(VDragEvent drag) {
-                    super.dragEnter(drag);
-                    attachDragImageToLayout(drag);
-                    updateDragDetails(drag);
-                    postEnterHook(drag);
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragLeave(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragLeave(VDragEvent drag) {
-                    super.dragLeave(drag);
-                    detachDragImageFromLayout(drag);
-                    postLeaveHook(drag);
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragOver(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragOver(VDragEvent drag) {
-                    updateDragDetails(drag);
-                    postOverHook(drag);
-
-                    // Validate the drop
-                    validate(new VAcceptCallback() {
-                        public void accepted(VDragEvent event) {
-                            moveDragImageInLayout(event);
-                        }
-                    }, drag);
-                }
-
-                @Override
-                public ComponentConnector getConnector() {
-                    return ConnectorMap.get(client).getConnector(
-                            VDDCssLayout.this);
-                };
-
-            };
-        }
-        dropHandler.updateAcceptRules(childUidl);
     }
 
     /*
@@ -258,7 +150,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 
     private Element placeHolderElement;
 
-    private void attachDragImageToLayout(VDragEvent drag) {
+    public void attachDragImageToLayout(VDragEvent drag) {
         if (placeHolderElement == null) {
             placeHolderElement = DOM.createDiv();
             placeHolderElement.setInnerHTML("&nbsp;");
@@ -285,7 +177,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
         }
     }
 
-    private void detachDragImageFromLayout(VDragEvent drag) {
+    public void detachDragImageFromLayout(VDragEvent drag) {
         if (placeHolderElement != null) {
             if (placeHolderElement.hasParentElement()) {
                 placeHolderElement.removeFromParent();
@@ -350,7 +242,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
                 details.serialize());
     }
 
-    private void moveDragImageInLayout(VDragEvent drag) {
+    public void updateDrag(VDragEvent drag) {
 
         if (placeHolderElement == null) {
             /*
@@ -437,10 +329,9 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      */
     protected HorizontalDropLocation getHorizontalDropLocation(
             Widget container, VDragEvent event) {
-        float ratio = ((DDCssLayoutState) ConnectorMap.get(client)
-                .getConnector(this).getState()).getHorizontalDropRatio();
         return VDragDropUtil.getHorizontalDropLocation(container.getElement(),
-                Util.getTouchOrMouseClientX(event.getCurrentGwtEvent()), ratio);
+                Util.getTouchOrMouseClientX(event.getCurrentGwtEvent()),
+                horizontalDropRatio);
     }
 
     /**
@@ -456,10 +347,9 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      */
     protected VerticalDropLocation getVerticalDropLocation(Widget container,
             VDragEvent event) {
-        float ratio = ((DDCssLayoutState) ConnectorMap.get(client)
-                .getConnector(this).getState()).getVerticalDropRatio();
         return VDragDropUtil.getVerticalDropLocation(container.getElement(),
-                Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()), ratio);
+                Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),
+                verticalDropRatio);
     }
 
     /*
@@ -479,6 +369,22 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 
     VLayoutDragDropMouseHandler getMouseHandler() {
         return ddHandler;
+    }
+
+    public double getHorizontalDropRatio() {
+        return horizontalDropRatio;
+    }
+
+    public void setHorizontalDropRatio(double horizontalDropRatio) {
+        this.horizontalDropRatio = horizontalDropRatio;
+    }
+
+    public double getVerticalDropRatio() {
+        return verticalDropRatio;
+    }
+
+    public void setVerticalDropRatio(double verticalDropRatio) {
+        this.verticalDropRatio = verticalDropRatio;
     }
 
 }

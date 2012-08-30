@@ -1,11 +1,13 @@
 package fi.jasoft.dragdroplayouts.client.ui.csslayout;
 
+import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.ui.csslayout.CssLayoutState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 
-public class DDCssLayoutState extends CssLayoutState {
+public class DDCssLayoutState extends CssLayoutState implements DDLayoutState {
 
     public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
 
@@ -52,6 +54,7 @@ public class DDCssLayoutState extends CssLayoutState {
         return horizontalDropRatio;
     }
 
+    @DelegateToWidget
     public void setHorizontalDropRatio(float horizontalDropRatio) {
         this.horizontalDropRatio = horizontalDropRatio;
     }
@@ -60,6 +63,7 @@ public class DDCssLayoutState extends CssLayoutState {
         return verticalDropRatio;
     }
 
+    @DelegateToWidget
     public void setVerticalDropRatio(float verticalDropRatio) {
         this.verticalDropRatio = verticalDropRatio;
     }
