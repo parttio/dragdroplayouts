@@ -19,14 +19,14 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.Util;
+import com.vaadin.client.ui.csslayout.VCssLayout;
+import com.vaadin.client.ui.dd.VDragEvent;
+import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
-import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
-import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.ui.csslayout.VCssLayout;
-import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
-import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 
 import fi.jasoft.dragdroplayouts.DDCssLayout;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
@@ -209,8 +209,8 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 
         int offset = 0;
         int index = -1;
-        for (int i = 0; i < getWidget().getElement().getChildCount(); i++) {
-            Element child = getWidget().getElement().getChild(i).cast();
+        for (int i = 0; i < getElement().getChildCount(); i++) {
+            Element child = getElement().getChild(i).cast();
             if (child.isOrHasChild(placeHolderElement)) {
                 offset--;
             } else if (child.isOrHasChild(widget.getElement())) {
@@ -310,7 +310,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
             /*
              * First child or hoovering outside of current components
              */
-            getWidget().getElement().appendChild(placeHolderElement);
+            getElement().appendChild(placeHolderElement);
         }
 
         updatePlaceHolderStyleProperties(drag);

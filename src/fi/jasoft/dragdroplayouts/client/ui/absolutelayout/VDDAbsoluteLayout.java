@@ -16,12 +16,12 @@
 package fi.jasoft.dragdroplayouts.client.ui.absolutelayout;
 
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.Util;
+import com.vaadin.client.ui.absolutelayout.VAbsoluteLayout;
+import com.vaadin.client.ui.dd.VDragEvent;
+import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
-import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.ui.absolutelayout.VAbsoluteLayout;
-import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
-import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;

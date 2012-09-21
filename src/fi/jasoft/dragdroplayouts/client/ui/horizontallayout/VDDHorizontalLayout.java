@@ -18,13 +18,13 @@ package fi.jasoft.dragdroplayouts.client.ui.horizontallayout;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.WidgetCollection;
+import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.Util;
+import com.vaadin.client.ui.dd.VDragEvent;
+import com.vaadin.client.ui.dd.VHasDropHandler;
+import com.vaadin.client.ui.orderedlayout.VHorizontalLayout;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
-import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
-import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
-import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
-import com.vaadin.terminal.gwt.client.ui.orderedlayout.VHorizontalLayout;
 
 import fi.jasoft.dragdroplayouts.DDHorizontalLayout;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;

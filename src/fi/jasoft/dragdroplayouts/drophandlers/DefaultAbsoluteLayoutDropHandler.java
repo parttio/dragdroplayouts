@@ -16,7 +16,7 @@
 package fi.jasoft.dragdroplayouts.drophandlers;
 
 import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.terminal.Sizeable;
+import com.vaadin.server.Sizeable;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;

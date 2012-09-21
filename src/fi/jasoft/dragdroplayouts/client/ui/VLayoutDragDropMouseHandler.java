@@ -32,17 +32,17 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.ui.csslayout.VCssLayout;
-import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
-import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
-import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
-import com.vaadin.terminal.gwt.client.ui.formlayout.VFormLayout;
-import com.vaadin.terminal.gwt.client.ui.panel.VPanel;
-import com.vaadin.terminal.gwt.client.ui.slider.VSlider;
-import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
+import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.Util;
+import com.vaadin.client.VConsole;
+import com.vaadin.client.ui.csslayout.VCssLayout;
+import com.vaadin.client.ui.dd.VDragAndDropManager;
+import com.vaadin.client.ui.dd.VDragEvent;
+import com.vaadin.client.ui.dd.VTransferable;
+import com.vaadin.client.ui.formlayout.VFormLayout;
+import com.vaadin.client.ui.panel.VPanel;
+import com.vaadin.client.ui.slider.VSlider;
+import com.vaadin.client.ui.textfield.VTextField;
 
 import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
 
@@ -257,14 +257,14 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
              * Dragging a component in a form layout should include the caption
              * and error indicator as well
              */
-//            Element rowElement = (Element) VDDFormLayout
-//                    .getRowFromChildElement(
-//                            (com.google.gwt.dom.client.Element) w.getElement()
-//                                    .cast(),
-//                            (com.google.gwt.dom.client.Element) root
-//                                    .getElement().cast()).cast();
-//
-//            currentDragEvent.createDragImage(rowElement, true);
+            // Element rowElement = (Element) VDDFormLayout
+            // .getRowFromChildElement(
+            // (com.google.gwt.dom.client.Element) w.getElement()
+            // .cast(),
+            // (com.google.gwt.dom.client.Element) root
+            // .getElement().cast()).cast();
+            //
+            // currentDragEvent.createDragImage(rowElement, true);
 
         } else {
             /*

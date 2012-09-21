@@ -20,9 +20,9 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ValueMap;
+import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.UIDL;
+import com.vaadin.client.ValueMap;
 
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer;
 

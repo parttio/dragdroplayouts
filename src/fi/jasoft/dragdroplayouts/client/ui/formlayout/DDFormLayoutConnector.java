@@ -1,10 +1,10 @@
 package fi.jasoft.dragdroplayouts.client.ui.formlayout;
 
+import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.Paintable;
+import com.vaadin.client.UIDL;
+import com.vaadin.client.ui.formlayout.FormLayoutConnector;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Paintable;
-import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.formlayout.FormLayoutConnector;
 
 import fi.jasoft.dragdroplayouts.DDFormLayout;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;

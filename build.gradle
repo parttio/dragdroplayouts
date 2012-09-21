@@ -55,16 +55,17 @@ sourceSets{
 // Repositories
 repositories{
     mavenCentral()
-    mavenRepo url: 'http://oss.sonatype.org/content/repositories/vaadin-snapshots'
 }
 
 // Dependencies
 dependencies{
-    	compile     	group:'com.vaadin',         	name:'vaadin',      	version:'7.0-SNAPSHOT'
-		compile			group:'de.sven-jacobs',			name:'loremipsum',		version:'1.0'
-    	compile     	group:'javax.validation',   	name:'validation-api',  version:'1.0.0.GA'
-    	compile     	group:'javax.validation',   	name:'validation-api',  version:'1.0.0.GA',     classifier:'sources'
-    	testCompile 	group:'junit',             		name:'junit',			version: '4.8.+'
+    	compile     	group:'com.vaadin',         	name:'vaadin-server',      	version:'7.0.0.beta1'
+	compile		group:'com.vaadin',		name:'vaadin-client',		version:'7.0.0.beta1'
+	compile		group:'com.vaadin',		name:'vaadin-themes',		version:'7.0.0.beta1'
+	compile		group:'com.vaadin',		name:'vaadin-client-compiler',	version:'7.0.0.beta1'
+
+	compile		group:'de.sven-jacobs',		name:'loremipsum',	version:'1.0'
+    	testCompile 	group:'junit',             	name:'junit',		version: '4.8.+'
 }
 
 eclipse {

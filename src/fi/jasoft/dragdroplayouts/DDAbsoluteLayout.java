@@ -21,8 +21,8 @@ import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
 import com.vaadin.ui.AbsoluteLayout;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;

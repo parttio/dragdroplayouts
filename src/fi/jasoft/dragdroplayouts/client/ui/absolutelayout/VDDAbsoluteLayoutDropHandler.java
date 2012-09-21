@@ -1,9 +1,9 @@
 package fi.jasoft.dragdroplayouts.client.ui.absolutelayout;
 
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
-import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
+import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ui.dd.VAbstractDropHandler;
+import com.vaadin.client.ui.dd.VDragEvent;
 
 public class VDDAbsoluteLayoutDropHandler extends VAbstractDropHandler {
 

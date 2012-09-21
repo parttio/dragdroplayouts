@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;

@@ -20,10 +20,10 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ValueMap;
+import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.UIDL;
+import com.vaadin.client.ValueMap;
 
 /**
  * A drag filter which uses PIDs to check the components draggability

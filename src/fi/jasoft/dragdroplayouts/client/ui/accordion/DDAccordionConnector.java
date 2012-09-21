@@ -1,10 +1,10 @@
 package fi.jasoft.dragdroplayouts.client.ui.accordion;
 
+import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.Paintable;
+import com.vaadin.client.UIDL;
+import com.vaadin.client.ui.accordion.AccordionConnector;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Paintable;
-import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.accordion.AccordionConnector;
 
 import fi.jasoft.dragdroplayouts.DDAccordion;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;

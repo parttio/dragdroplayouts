@@ -9,7 +9,7 @@
 	</context-param>
 	<servlet>
 		<servlet-name>Dragdrop Application</servlet-name>
-		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
 		<init-param>
 			<description>Vaadin application root</description>
 			<param-name>UI</param-name>

@@ -2,11 +2,11 @@ package fi.jasoft.dragdroplayouts.client.ui.verticalsplitpanel;
 
 import java.util.Iterator;
 
+import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.Paintable;
+import com.vaadin.client.UIDL;
+import com.vaadin.client.ui.splitpanel.VerticalSplitPanelConnector;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Paintable;
-import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.splitpanel.VerticalSplitPanelConnector;
 
 import fi.jasoft.dragdroplayouts.DDVerticalSplitPanel;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
