@@ -26,19 +26,17 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Paintable;
-import com.vaadin.client.ServerConnector;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractConnector;
-import com.vaadin.client.ui.button.VButton;
+import com.vaadin.client.ui.VButton;
+import com.vaadin.client.ui.VFormLayout;
+import com.vaadin.client.ui.VLink;
+import com.vaadin.client.ui.VScrollTable;
 import com.vaadin.client.ui.dd.VTransferable;
-import com.vaadin.client.ui.formlayout.VFormLayout;
-import com.vaadin.client.ui.link.VLink;
-import com.vaadin.client.ui.table.VScrollTable;
-import com.vaadin.client.ui.twincolselect.VTwinColSelect;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
@@ -244,10 +242,11 @@ public final class VDragDropUtil {
         }
 
         // Ensure we have the right widget
-        target = getTransferableWidget(target);
+        // FIXME
+        // target = getTransferableWidget(target);
 
         // Find the containing layout of the component
-        ServerConnector layoutConnector = VDragDropUtil
+        ComponentConnector layoutConnector = (ComponentConnector) VDragDropUtil
                 .findConnectorFor(target).getParent();
 
         // Consistency check
@@ -264,10 +263,10 @@ public final class VDragDropUtil {
         return createTransferable(layoutConnector, target, event);
     }
 
-    private static VTransferable createTransferable(Connector layout,
+    private static VTransferable createTransferable(ComponentConnector layout,
             Widget widget, NativeEvent event) {
         VTransferable transferable = new VTransferable();
-        // transferable.setDragSource(layout);
+        transferable.setDragSource(layout);
         transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, widget);
         transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
                 MouseEventDetailsBuilder.buildMouseEventDetails(event)
@@ -324,10 +323,12 @@ public final class VDragDropUtil {
             while (!(w instanceof Paintable)) {
                 w = w.getParent();
             }
-        } else if (w.getParent().getParent().getParent() instanceof VTwinColSelect) {
-            // TwinColSelect has paintable buttons..
-            w = w.getParent().getParent().getParent();
         }
+        // else if (w.getParent().getParent().getParent() instanceof
+        // VTwinColSelect) {
+        // // TwinColSelect has paintable buttons..
+        // w = w.getParent().getParent().getParent();
+        // }
 
         return w;
     }

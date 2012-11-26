@@ -26,13 +26,13 @@ import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
+import com.vaadin.client.ui.VTabsheet;
+import com.vaadin.client.ui.VTabsheetPanel;
 import com.vaadin.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VDropHandler;
 import com.vaadin.client.ui.dd.VHasDropHandler;
-import com.vaadin.client.ui.tabsheet.VTabsheet;
-import com.vaadin.client.ui.tabsheet.VTabsheetPanel;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 

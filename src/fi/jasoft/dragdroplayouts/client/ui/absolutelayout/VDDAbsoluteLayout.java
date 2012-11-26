@@ -18,7 +18,7 @@ package fi.jasoft.dragdroplayouts.client.ui.absolutelayout;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
-import com.vaadin.client.ui.absolutelayout.VAbsoluteLayout;
+import com.vaadin.client.ui.VAbsoluteLayout;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.shared.MouseEventDetails;
@@ -56,6 +56,7 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     public VDDAbsoluteLayout() {
         super();
         ddHandler.addDragStartListener(this);
+        addStyleName(CLASSNAME);
     }
 
     @Override

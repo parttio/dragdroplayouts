@@ -35,14 +35,14 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
-import com.vaadin.client.ui.csslayout.VCssLayout;
+import com.vaadin.client.ui.VCssLayout;
+import com.vaadin.client.ui.VFormLayout;
+import com.vaadin.client.ui.VPanel;
+import com.vaadin.client.ui.VSlider;
+import com.vaadin.client.ui.VTextField;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VTransferable;
-import com.vaadin.client.ui.formlayout.VFormLayout;
-import com.vaadin.client.ui.panel.VPanel;
-import com.vaadin.client.ui.slider.VSlider;
-import com.vaadin.client.ui.textfield.VTextField;
 
 import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
 

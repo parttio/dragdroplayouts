@@ -1,5 +1,6 @@
 package fi.jasoft.dragdroplayouts.client.ui.absolutelayout;
 
+import com.google.gwt.core.shared.GWT;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
@@ -13,7 +14,7 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 
 @Connect(DDAbsoluteLayout.class)
 public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
-        implements Paintable, VHasDragMode {
+        implements VHasDragMode, Paintable {
 
     /**
      * {@inheritDoc}
@@ -21,6 +22,14 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
     @Override
     public VDDAbsoluteLayout getWidget() {
         return (VDDAbsoluteLayout) super.getWidget();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected VDDAbsoluteLayout createWidget() {
+        return GWT.create(VDDAbsoluteLayout.class);
     }
 
     /**
@@ -69,6 +78,6 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
      * {@inheritDoc}
      */
     public LayoutDragMode getDragMode() {
-        return getState().getDragMode();
+        return getState().dragMode;
     }
 }

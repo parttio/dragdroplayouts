@@ -1,11 +1,11 @@
 package fi.jasoft.dragdroplayouts.client.ui.tabsheet;
 
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.ui.tabsheet.TabsheetState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 
-public class DDTabSheetState extends ComponentState {
+public class DDTabSheetState extends TabsheetState {
 
     public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
 

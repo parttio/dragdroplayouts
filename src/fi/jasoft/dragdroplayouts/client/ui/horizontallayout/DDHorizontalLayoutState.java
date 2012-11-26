@@ -1,14 +1,14 @@
 package fi.jasoft.dragdroplayouts.client.ui.horizontallayout;
 
 import com.vaadin.shared.annotations.DelegateToWidget;
-import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
+import com.vaadin.shared.ui.orderedlayout.HorizontalLayoutState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 
-public class DDHorizontalLayoutState extends AbstractOrderedLayoutState
-        implements DDLayoutState {
+public class DDHorizontalLayoutState extends HorizontalLayoutState implements
+        DDLayoutState {
 
     public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
 

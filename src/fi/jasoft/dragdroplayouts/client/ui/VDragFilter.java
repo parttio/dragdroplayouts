@@ -71,6 +71,7 @@ public class VDragFilter {
         if (dragmap.containsKey(connector.getConnectorId())) {
             return dragmap.get(connector.getConnectorId());
         }
-        return false;
+        // FIXME Should be false
+        return true;
     }
 }

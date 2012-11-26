@@ -45,6 +45,9 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
     // Drop handler which handles dd drop events
     private DropHandler dropHandler;
 
+    // A filter for dragging components.
+    public DragFilter dragFilter = DragFilter.ALL;
+
     /**
      * Creates an AbsoluteLayout with full size.
      */
@@ -105,42 +108,42 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
      * {@inheritDoc}
      */
     public LayoutDragMode getDragMode() {
-        return getState().getDragMode();
+        return getState().dragMode;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragMode(LayoutDragMode mode) {
-        getState().setDragMode(mode);
+        getState().dragMode = mode;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        getState().setIframeShims(shim);
+        getState().iframeShims = shim;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-        return getState().isIframeShims();
+        return getState().iframeShims;
     }
 
     /**
      * {@inheritDoc}
      */
     public DragFilter getDragFilter() {
-        return getState().getDragFilter();
+        return dragFilter;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragFilter(DragFilter dragFilter) {
-        getState().setDragFilter(dragFilter);
+        this.dragFilter = dragFilter;
     }
 
     /**

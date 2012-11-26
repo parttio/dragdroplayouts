@@ -20,9 +20,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.WidgetCollection;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
+import com.vaadin.client.ui.VVerticalLayout;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VHasDropHandler;
-import com.vaadin.client.ui.orderedlayout.VVerticalLayout;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 

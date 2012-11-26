@@ -1,11 +1,11 @@
 package fi.jasoft.dragdroplayouts.client.ui.verticalsplitpanel;
 
-import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
+import com.vaadin.shared.ui.splitpanel.VerticalSplitPanelState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 
-public class DDVerticalSplitPanelState extends AbstractSplitPanelState {
+public class DDVerticalSplitPanelState extends VerticalSplitPanelState {
 
     // The current drag mode, default is dragging is not supported
     private LayoutDragMode dragMode = LayoutDragMode.NONE;

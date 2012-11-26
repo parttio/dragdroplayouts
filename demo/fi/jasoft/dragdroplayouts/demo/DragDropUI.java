@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
@@ -26,7 +26,7 @@ public class DragDropUI extends UI {
     private Label code;
 
     @Override
-    protected void init(WrappedRequest request) {
+    protected void init(VaadinRequest request) {
 
         VerticalSplitPanel content = new VerticalSplitPanel();
         content.setSizeFull();
@@ -74,7 +74,7 @@ public class DragDropUI extends UI {
 
         Panel codePanel = new Panel();
         codePanel.setSizeFull();
-        codePanel.addComponent(code);
+        codePanel.setContent(code);
         content.addComponent(codePanel);
 
         setContent(content);

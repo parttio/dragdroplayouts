@@ -37,7 +37,7 @@ public class DragdropCaptionModeDemo extends CustomComponent {
         Label chapter1Content = new Label(new LoremIpsum().getParagraphs(1),
                 Label.CONTENT_TEXT);
         chapter1Content.setCaption("===== Chapter 1 - The beginning ======");
-        chapter1.addComponent(chapter1Content);
+        chapter1.setContent(chapter1Content);
         layout.addComponent(chapter1, "top:50px;left:10px");
 
         Panel chapter2 = new Panel("<< Move >>");
@@ -45,7 +45,7 @@ public class DragdropCaptionModeDemo extends CustomComponent {
         Label chapter2Content = new Label(new LoremIpsum().getParagraphs(1),
                 Label.CONTENT_TEXT);
         chapter2Content.setCaption("===== Chapter 2 - The finale ======");
-        chapter2.addComponent(chapter2Content);
+        chapter2.setContent(chapter2Content);
         layout.addComponent(chapter2, "top:50px; left:320px");
     }
 }
