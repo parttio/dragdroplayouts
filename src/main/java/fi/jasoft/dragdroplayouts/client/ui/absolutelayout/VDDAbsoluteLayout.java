@@ -28,9 +28,9 @@ import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.shared.MouseEventDetails;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
+import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
@@ -53,7 +53,7 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     private final VLayoutDragDropMouseHandler ddHandler = new VLayoutDragDropMouseHandler(
             this, LayoutDragMode.NONE);
 
-    private final VDragFilter dragFilter = new VDragFilter();
+    private VDragFilter dragFilter;
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
@@ -249,6 +249,11 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
                 .buildMouseEventDetails(drag.getCurrentGwtEvent(), getElement());
         drag.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
                 details.serialize());
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        this.dragFilter = filter;
     }
 
 }

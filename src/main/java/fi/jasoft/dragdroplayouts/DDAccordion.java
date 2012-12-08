@@ -15,6 +15,7 @@
  */
 package fi.jasoft.dragdroplayouts;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
+import com.vaadin.shared.Connector;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
 
@@ -49,6 +51,9 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      * The drop handler which handles dropped components in the layout.
      */
     private DropHandler dropHandler;
+
+    // A filter for dragging components.
+    private DragFilter dragFilter = DragFilter.ALL;
 
     /**
      * {@inheritDoc}
@@ -131,9 +136,6 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
         if (dropHandler != null && isEnabled()) {
             dropHandler.getAcceptCriterion().paint(target);
         }
-
-        // Paint the dragfilter into the paint target
-        new DragFilterPaintable(this).paint(target);
     }
 
     /**
@@ -175,18 +177,33 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      * {@inheritDoc}
      */
     public DragFilter getDragFilter() {
-        return getState().getDragFilter();
+        return dragFilter;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragFilter(DragFilter dragFilter) {
-        getState().setDragFilter(dragFilter);
+        this.dragFilter = dragFilter;
     }
 
     @Override
     public DDAccordionState getState() {
         return (DDAccordionState) super.getState();
+    }
+
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
+
+        // Update draggable filter
+        Iterator<Component> componentIterator = getComponentIterator();
+        getState().draggable = new ArrayList<Connector>();
+        while (componentIterator.hasNext()) {
+            Component c = componentIterator.next();
+            if (dragFilter.isDraggable(c)) {
+                getState().draggable.add(c);
+            }
+        }
     }
 }

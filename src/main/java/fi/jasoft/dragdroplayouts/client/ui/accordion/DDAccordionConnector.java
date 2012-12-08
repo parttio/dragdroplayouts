@@ -3,10 +3,12 @@ package fi.jasoft.dragdroplayouts.client.ui.accordion;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.accordion.AccordionConnector;
 import com.vaadin.shared.ui.Connect;
 
 import fi.jasoft.dragdroplayouts.DDAccordion;
+import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
@@ -70,6 +72,12 @@ public class DDAccordionConnector extends AccordionConnector implements
             }
             getWidget().getDropHandler().updateAcceptRules(ac);
         }
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        getWidget().setDragFilter(new VDragFilter(getState()));
     }
 
 }

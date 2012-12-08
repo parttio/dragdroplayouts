@@ -27,10 +27,10 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 
 import fi.jasoft.dragdroplayouts.DDVerticalLayout;
+import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
-import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
@@ -54,7 +54,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
 
     private VDDVerticalLayoutDropHandler dropHandler;
 
-    private final VDragFilter dragFilter = new VDragFilter();
+    private VDragFilter dragFilter;
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
@@ -272,5 +272,10 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
 
     VLayoutDragDropMouseHandler getMouseHandler() {
         return ddMouseHandler;
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        this.dragFilter = filter;
     }
 }

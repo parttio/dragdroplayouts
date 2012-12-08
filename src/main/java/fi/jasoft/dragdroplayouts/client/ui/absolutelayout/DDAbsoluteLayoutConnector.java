@@ -4,10 +4,12 @@ import com.google.gwt.core.shared.GWT;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.absolutelayout.AbsoluteLayoutConnector;
 import com.vaadin.shared.ui.Connect;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
+import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
@@ -78,5 +80,11 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
      */
     public LayoutDragMode getDragMode() {
         return getState().dragMode;
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        getWidget().setDragFilter(new VDragFilter(getState()));
     }
 }

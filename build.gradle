@@ -25,6 +25,12 @@ targetCompatibility = 1.6
 vaadin {
 	version = '7.0.0.beta10'
 	widgetset = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
+	manageWidgetset = false
+	
+	gwt.style = 'PRETTY'
+	gwt.logLevel = 'TRACE'
+	gwt.draftCompile = true
+	gwt.strict = true
 }
 
 // Extra dependencies

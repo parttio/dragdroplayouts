@@ -37,13 +37,12 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 
 import fi.jasoft.dragdroplayouts.DDTabSheet;
+import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
-import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
-import fi.jasoft.dragdroplayouts.client.ui.VTabDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
@@ -76,7 +75,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
 
     private final Element newTab = DOM.createDiv();
 
-    private final VDragFilter dragFilter = new VTabDragFilter(this);
+    private VDragFilter dragFilter;
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
@@ -470,5 +469,10 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
 
     VLayoutDragDropMouseHandler getMouseHandler() {
         return ddMouseHandler;
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        this.dragFilter = filter;
     }
 }

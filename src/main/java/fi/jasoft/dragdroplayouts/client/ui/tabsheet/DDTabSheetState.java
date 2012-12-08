@@ -1,11 +1,14 @@
 package fi.jasoft.dragdroplayouts.client.ui.tabsheet;
 
+import java.util.List;
+
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.tabsheet.TabsheetState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 
-public class DDTabSheetState extends TabsheetState {
+public class DDTabSheetState extends TabsheetState implements DDLayoutState {
 
     public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
 
@@ -15,10 +18,9 @@ public class DDTabSheetState extends TabsheetState {
     // Are the iframes shimmed
     private boolean iframeShims = true;
 
-    // A filter for dragging components.
-    private DragFilter dragFilter = DragFilter.ALL;
-
     private float tabLeftRightDropRatio = DEFAULT_HORIZONTAL_DROP_RATIO;
+
+    public List<Connector> draggable;
 
     public LayoutDragMode getDragMode() {
         return dragMode;
@@ -36,20 +38,17 @@ public class DDTabSheetState extends TabsheetState {
         this.iframeShims = iframeShims;
     }
 
-    public DragFilter getDragFilter() {
-        return dragFilter;
-    }
-
-    public void setDragFilter(DragFilter dragFilter) {
-        this.dragFilter = dragFilter;
-    }
-
     public float getTabLeftRightDropRatio() {
         return tabLeftRightDropRatio;
     }
 
     public void setTabLeftRightDropRatio(float tabLeftRightDropRatio) {
         this.tabLeftRightDropRatio = tabLeftRightDropRatio;
+    }
+
+    @Override
+    public List<Connector> getDraggableComponents() {
+        return draggable;
     }
 
 }

@@ -27,10 +27,10 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 
 import fi.jasoft.dragdroplayouts.DDHorizontalLayout;
+import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
-import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
@@ -53,7 +53,7 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
 
     private VDDHorizontalLayoutDropHandler dropHandler;
 
-    private final VDragFilter dragFilter = new VDragFilter();
+    private VDragFilter dragFilter;
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
@@ -287,5 +287,10 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
 
     public void setCellLeftRightDropRatio(double cellLeftRightDropRatio) {
         this.cellLeftRightDropRatio = cellLeftRightDropRatio;
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        this.dragFilter = filter;
     }
 }

@@ -3,10 +3,12 @@ package fi.jasoft.dragdroplayouts.client.ui.csslayout;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.csslayout.CssLayoutConnector;
 import com.vaadin.shared.ui.Connect;
 
 import fi.jasoft.dragdroplayouts.DDCssLayout;
+import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
@@ -65,5 +67,11 @@ public class DDCssLayoutConnector extends CssLayoutConnector implements
      */
     public LayoutDragMode getDragMode() {
         return getState().getDragMode();
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        getWidget().setDragFilter(new VDragFilter(getState()));
     }
 }

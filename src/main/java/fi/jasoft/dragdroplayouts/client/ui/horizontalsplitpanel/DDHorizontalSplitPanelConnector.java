@@ -5,8 +5,10 @@ import java.util.Iterator;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.splitpanel.HorizontalSplitPanelConnector;
 
+import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
@@ -54,10 +56,6 @@ public class DDHorizontalSplitPanelConnector extends
         IframeCoverUtility iframes = getWidget().getIframeCoverUtility();
         iframes.setIframeCoversEnabled(iframes.isIframeCoversEnabled(),
                 getWidget().getElement(), getState().getDragMode());
-
-        // Drag filters
-        getWidget().getDragFilter().update(uidl, client);
-
     }
 
     /**
@@ -79,6 +77,12 @@ public class DDHorizontalSplitPanelConnector extends
                             uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
                             getWidget().getElement(), getState().getDragMode());
         }
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        getWidget().setDragFilter(new VDragFilter(getState()));
     }
 
 }

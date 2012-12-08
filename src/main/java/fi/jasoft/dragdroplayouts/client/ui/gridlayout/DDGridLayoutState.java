@@ -1,11 +1,14 @@
 package fi.jasoft.dragdroplayouts.client.ui.gridlayout;
 
+import java.util.List;
+
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.gridlayout.GridLayoutState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 
-public class DDGridLayoutState extends GridLayoutState {
+public class DDGridLayoutState extends GridLayoutState implements DDLayoutState {
 
     public static final float DEFAULT_HORIZONTAL_RATIO = 0.2f;
     public static final float DEFAULT_VERTICAL_RATIO = 0.2f;
@@ -16,12 +19,11 @@ public class DDGridLayoutState extends GridLayoutState {
     // Are the iframes shimmed
     private boolean iframeShims = true;
 
-    // A filter for dragging components.
-    private DragFilter dragFilter = DragFilter.ALL;
-
     private float cellLeftRightDropRatio = DEFAULT_HORIZONTAL_RATIO;
 
     private float cellTopBottomDropRatio = DEFAULT_VERTICAL_RATIO;
+
+    public List<Connector> draggable;
 
     public LayoutDragMode getDragMode() {
         return dragMode;
@@ -39,14 +41,6 @@ public class DDGridLayoutState extends GridLayoutState {
         this.iframeShims = iframeShims;
     }
 
-    public DragFilter getDragFilter() {
-        return dragFilter;
-    }
-
-    public void setDragFilter(DragFilter dragFilter) {
-        this.dragFilter = dragFilter;
-    }
-
     public float getCellLeftRightDropRatio() {
         return cellLeftRightDropRatio;
     }
@@ -61,5 +55,10 @@ public class DDGridLayoutState extends GridLayoutState {
 
     public void setCellTopBottomDropRatio(float cellTopBottomDropRatio) {
         this.cellTopBottomDropRatio = cellTopBottomDropRatio;
+    }
+
+    @Override
+    public List<Connector> getDraggableComponents() {
+        return draggable;
     }
 }

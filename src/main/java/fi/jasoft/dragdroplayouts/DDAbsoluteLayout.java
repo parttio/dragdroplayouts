@@ -15,6 +15,8 @@
  */
 package fi.jasoft.dragdroplayouts;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.vaadin.event.Transferable;
@@ -23,7 +25,9 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
+import com.vaadin.shared.Connector;
 import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyComponent;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
@@ -47,7 +51,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
     private DropHandler dropHandler;
 
     // A filter for dragging components.
-    public DragFilter dragFilter = DragFilter.ALL;
+    private DragFilter dragFilter = DragFilter.ALL;
 
     /**
      * Creates an AbsoluteLayout with full size.
@@ -65,9 +69,6 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
         if (dropHandler != null && isEnabled()) {
             dropHandler.getAcceptCriterion().paint(target);
         }
-
-        // Paint the dragfilter into the paint target
-        new DragFilterPaintable(this).paint(target);
     }
 
     /**
@@ -162,5 +163,20 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
     public void changeVariables(Object source, Map<String, Object> variables) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
+
+        // Update draggable filter
+        Iterator<Component> componentIterator = getComponentIterator();
+        getState().draggable = new ArrayList<Connector>();
+        while (componentIterator.hasNext()) {
+            Component c = componentIterator.next();
+            if (dragFilter.isDraggable(c)) {
+                getState().draggable.add(c);
+            }
+        }
     }
 }

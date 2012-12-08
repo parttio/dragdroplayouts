@@ -29,10 +29,10 @@ import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 
 import fi.jasoft.dragdroplayouts.DDCssLayout;
+import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
-import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
@@ -58,7 +58,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
-    private final VDragFilter dragFilter = new VDragFilter();
+    private VDragFilter dragFilter;
 
     private double horizontalDropRatio = DDCssLayoutState.DEFAULT_HORIZONTAL_DROP_RATIO;
 
@@ -385,6 +385,11 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 
     public void setVerticalDropRatio(double verticalDropRatio) {
         this.verticalDropRatio = verticalDropRatio;
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        this.dragFilter = filter;
     }
 
 }

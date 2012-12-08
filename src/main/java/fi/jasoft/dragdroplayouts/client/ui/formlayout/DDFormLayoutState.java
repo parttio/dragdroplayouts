@@ -1,11 +1,15 @@
 package fi.jasoft.dragdroplayouts.client.ui.formlayout;
 
+import java.util.List;
+
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 
-public class DDFormLayoutState extends AbstractOrderedLayoutState {
+public class DDFormLayoutState extends AbstractOrderedLayoutState implements
+        DDLayoutState {
 
     public static final float DEFAULT_VERTICAL_DROP_RATIO = 0.3333f;
 
@@ -15,10 +19,9 @@ public class DDFormLayoutState extends AbstractOrderedLayoutState {
     // Are the iframes shimmed
     private boolean iframeShims = true;
 
-    // A filter for dragging components.
-    private DragFilter dragFilter = DragFilter.ALL;
-
     private float cellTopBottomDropRatio = DEFAULT_VERTICAL_DROP_RATIO;
+
+    public List<Connector> draggable;
 
     public LayoutDragMode getDragMode() {
         return dragMode;
@@ -36,19 +39,16 @@ public class DDFormLayoutState extends AbstractOrderedLayoutState {
         this.iframeShims = iframeShims;
     }
 
-    public DragFilter getDragFilter() {
-        return dragFilter;
-    }
-
-    public void setDragFilter(DragFilter dragFilter) {
-        this.dragFilter = dragFilter;
-    }
-
     public float getCellTopBottomDropRatio() {
         return cellTopBottomDropRatio;
     }
 
     public void setCellTopBottomDropRatio(float cellTopBottomDropRatio) {
         this.cellTopBottomDropRatio = cellTopBottomDropRatio;
+    }
+
+    @Override
+    public List<Connector> getDraggableComponents() {
+        return draggable;
     }
 }

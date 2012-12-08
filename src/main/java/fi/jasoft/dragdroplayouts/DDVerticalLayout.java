@@ -15,6 +15,8 @@
  */
 package fi.jasoft.dragdroplayouts;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.vaadin.event.Transferable;
@@ -24,6 +26,7 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
@@ -51,6 +54,9 @@ public class DDVerticalLayout extends VerticalLayout implements
      * The drop handler which handles dropped components in the layout.
      */
     private DropHandler dropHandler;
+
+    // A filter for dragging components.
+    private DragFilter dragFilter = DragFilter.ALL;
 
     /**
      * Contains the component over which the drop was made and the index on
@@ -149,9 +155,6 @@ public class DDVerticalLayout extends VerticalLayout implements
         // Shims
         target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, getState()
                 .isIframeShims());
-
-        // Paint the dragfilter into the paint target
-        new DragFilterPaintable(this).paint(target);
     }
 
     public TargetDetails translateDropTargetDetails(
@@ -248,18 +251,33 @@ public class DDVerticalLayout extends VerticalLayout implements
      * {@inheritDoc}
      */
     public DragFilter getDragFilter() {
-        return getState().getDragFilter();
+        return dragFilter;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragFilter(DragFilter dragFilter) {
-        getState().setDragFilter(dragFilter);
+        this.dragFilter = dragFilter;
     }
 
     @Override
     public DDVerticalLayoutState getState() {
         return (DDVerticalLayoutState) super.getState();
+    }
+
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
+
+        // Update draggable filter
+        Iterator<Component> componentIterator = getComponentIterator();
+        getState().draggable = new ArrayList<Connector>();
+        while (componentIterator.hasNext()) {
+            Component c = componentIterator.next();
+            if (dragFilter.isDraggable(c)) {
+                getState().draggable.add(c);
+            }
+        }
     }
 }

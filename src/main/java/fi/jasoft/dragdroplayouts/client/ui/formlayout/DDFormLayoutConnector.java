@@ -3,10 +3,12 @@ package fi.jasoft.dragdroplayouts.client.ui.formlayout;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.formlayout.FormLayoutConnector;
 import com.vaadin.shared.ui.Connect;
 
 import fi.jasoft.dragdroplayouts.DDFormLayout;
+import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
@@ -57,10 +59,6 @@ public class DDFormLayoutConnector extends FormLayoutConnector implements
         IframeCoverUtility iframes = getWidget().getIframeCoverUtility();
         iframes.setIframeCoversEnabled(iframes.isIframeCoversEnabled(),
                 getWidget().getElement(), getState().getDragMode());
-
-        // Drag filters
-        getWidget().getDragFilter().update(uidl, client);
-
     }
 
     /**
@@ -97,6 +95,12 @@ public class DDFormLayoutConnector extends FormLayoutConnector implements
                     .setCellTopBottomDropRatio(
                             uidl.getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO));
         }
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        getWidget().setDragFilter(new VDragFilter(getState()));
     }
 
 }

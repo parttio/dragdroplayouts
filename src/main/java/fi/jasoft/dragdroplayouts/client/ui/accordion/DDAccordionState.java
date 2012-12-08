@@ -1,6 +1,9 @@
 package fi.jasoft.dragdroplayouts.client.ui.accordion;
 
+import java.util.List;
+
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.annotations.DelegateToWidget;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
@@ -18,8 +21,7 @@ public class DDAccordionState extends AbstractComponentState implements
     // Are the iframes shimmed
     private boolean iframeShims = true;
 
-    // A filter for dragging components.
-    private DragFilter dragFilter = DragFilter.ALL;
+    public List<Connector> draggable;
 
     private float tabTopBottomDropRatio = DEFAULT_VERTICAL_RATIO;
 
@@ -39,14 +41,6 @@ public class DDAccordionState extends AbstractComponentState implements
         this.iframeShims = iframeShims;
     }
 
-    public DragFilter getDragFilter() {
-        return dragFilter;
-    }
-
-    public void setDragFilter(DragFilter dragFilter) {
-        this.dragFilter = dragFilter;
-    }
-
     public float getTabTopBottomDropRatio() {
         return tabTopBottomDropRatio;
     }
@@ -54,5 +48,10 @@ public class DDAccordionState extends AbstractComponentState implements
     @DelegateToWidget
     public void setTabTopBottomDropRatio(float tabTopBottomDropRatio) {
         this.tabTopBottomDropRatio = tabTopBottomDropRatio;
+    }
+
+    @Override
+    public List<Connector> getDraggableComponents() {
+        return draggable;
     }
 }

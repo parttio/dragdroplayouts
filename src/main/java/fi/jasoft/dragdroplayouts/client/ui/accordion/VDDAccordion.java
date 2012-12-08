@@ -31,13 +31,12 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 
 import fi.jasoft.dragdroplayouts.DDAccordion;
+import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
-import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
-import fi.jasoft.dragdroplayouts.client.ui.VTabDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
@@ -67,7 +66,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
             this, LayoutDragMode.NONE);
 
-    private final VDragFilter dragFilter = new VTabDragFilter(this);
+    private VDragFilter dragFilter;
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
@@ -335,5 +334,10 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
 
     public void setTabTopBottomDropRatio(float tabTopBottomDropRatio) {
         this.tabTopBottomDropRatio = tabTopBottomDropRatio;
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        dragFilter = filter;
     }
 }

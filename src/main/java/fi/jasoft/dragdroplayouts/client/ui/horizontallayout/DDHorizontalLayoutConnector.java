@@ -3,10 +3,12 @@ package fi.jasoft.dragdroplayouts.client.ui.horizontallayout;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.orderedlayout.HorizontalLayoutConnector;
 import com.vaadin.shared.ui.Connect;
 
 import fi.jasoft.dragdroplayouts.DDHorizontalLayout;
+import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
@@ -65,5 +67,11 @@ public class DDHorizontalLayoutConnector extends HorizontalLayoutConnector
             }
             getWidget().getDropHandler().updateAcceptRules(ac);
         }
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        getWidget().setDragFilter(new VDragFilter(getState()));
     }
 }

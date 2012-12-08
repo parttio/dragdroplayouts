@@ -5,8 +5,10 @@ import java.util.Iterator;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.tabsheet.TabsheetConnector;
 
+import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
@@ -53,9 +55,6 @@ public class DDTabsheetConnector extends TabsheetConnector implements Paintable 
         iframes.setIframeCoversEnabled(iframes.isIframeCoversEnabled(),
                 getWidget().getElement(), getState().getDragMode());
 
-        // Drag filters
-        getWidget().getDragFilter().update(uidl, client);
-
     }
 
     /**
@@ -92,5 +91,11 @@ public class DDTabsheetConnector extends TabsheetConnector implements Paintable 
                             uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
                             getWidget().getElement(), getState().getDragMode());
         }
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        getWidget().setDragFilter(new VDragFilter(getState()));
     }
 }

@@ -15,7 +15,7 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.interfaces;
 
-import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
+import fi.jasoft.dragdroplayouts.client.VDragFilter;
 
 /**
  * Layouts which supports drag filters should implement this
@@ -31,4 +31,6 @@ public interface VHasDragFilter {
      * @return
      */
     VDragFilter getDragFilter();
+
+    void setDragFilter(VDragFilter filter);
 }

@@ -1,11 +1,13 @@
 package fi.jasoft.dragdroplayouts.client.ui.csslayout;
 
+import java.util.List;
+
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.ui.csslayout.CssLayoutState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
-import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 
 public class DDCssLayoutState extends CssLayoutState implements DDLayoutState {
 
@@ -19,12 +21,11 @@ public class DDCssLayoutState extends CssLayoutState implements DDLayoutState {
     // Are the iframes shimmed
     private boolean iframeShims = true;
 
-    // A filter for dragging components.
-    private DragFilter dragFilter = DragFilter.ALL;
-
     private float horizontalDropRatio = DEFAULT_HORIZONTAL_DROP_RATIO;
 
     private float verticalDropRatio = DEFAULT_VERTICAL_DROP_RATIO;
+
+    public List<Connector> draggable;
 
     public LayoutDragMode getDragMode() {
         return dragMode;
@@ -40,14 +41,6 @@ public class DDCssLayoutState extends CssLayoutState implements DDLayoutState {
 
     public void setIframeShims(boolean iframeShims) {
         this.iframeShims = iframeShims;
-    }
-
-    public DragFilter getDragFilter() {
-        return dragFilter;
-    }
-
-    public void setDragFilter(DragFilter dragFilter) {
-        this.dragFilter = dragFilter;
     }
 
     public float getHorizontalDropRatio() {
@@ -66,5 +59,10 @@ public class DDCssLayoutState extends CssLayoutState implements DDLayoutState {
     @DelegateToWidget
     public void setVerticalDropRatio(float verticalDropRatio) {
         this.verticalDropRatio = verticalDropRatio;
+    }
+
+    @Override
+    public List<Connector> getDraggableComponents() {
+        return draggable;
     }
 }

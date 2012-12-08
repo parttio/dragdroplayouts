@@ -33,9 +33,9 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 
 import fi.jasoft.dragdroplayouts.DDVerticalSplitPanel;
+import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
@@ -69,7 +69,7 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
 
     private Element currentEmphasis;
 
-    private final VDragFilter dragFilter = new VDragFilter();
+    private VDragFilter dragFilter;
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
@@ -392,5 +392,10 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
 
     VLayoutDragDropMouseHandler getMouseHandler() {
         return ddMouseHandler;
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        this.dragFilter = filter;
     }
 }
