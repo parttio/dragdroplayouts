@@ -31,6 +31,13 @@ public class DragDropUI extends UI {
         VerticalSplitPanel content = new VerticalSplitPanel();
         content.setSizeFull();
 
+        content.addComponent(new DragdropAbsoluteLayoutDemo());
+
+        setContent(content);
+
+        if (true)
+            return;
+
         tabs = new TabSheet();
         tabs.setSizeFull();
         tabs.setImmediate(true);

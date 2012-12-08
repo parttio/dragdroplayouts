@@ -24,6 +24,7 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.LegacyComponent;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.absolutelayout.DDAbsoluteLayoutState;
@@ -40,7 +41,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDAbsoluteLayout extends AbsoluteLayout implements
-        LayoutDragSource, DropTarget, ShimSupport {
+        LayoutDragSource, DropTarget, ShimSupport, LegacyComponent {
 
     // Drop handler which handles dd drop events
     private DropHandler dropHandler;
@@ -85,7 +86,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
     public void setDropHandler(DropHandler dropHandler) {
         if (this.dropHandler != dropHandler) {
             this.dropHandler = dropHandler;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -152,5 +153,14 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
     @Override
     public DDAbsoluteLayoutState getState() {
         return (DDAbsoluteLayoutState) super.getState();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        // TODO Auto-generated method stub
+
     }
 }

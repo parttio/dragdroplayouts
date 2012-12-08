@@ -21,8 +21,8 @@ apply plugin: 'jetty'
 task wrapper(type: Wrapper) { gradleVersion = '1.2' }
 
 // Global settings
-sourceCompatibility = 1.5
-targetCompatibility = 1.5
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
 group = 'fi.jasoft'
 version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : 'development';
 webAppDirName = 'WebContent'
@@ -57,7 +57,7 @@ repositories{
     mavenCentral()
 }
 
-def vaadinVersion = '7.0.0.beta9'
+def vaadinVersion = '7.0.0.beta10'
 
 // Dependencies
 dependencies{
