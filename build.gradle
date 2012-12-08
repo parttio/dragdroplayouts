@@ -13,167 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'war'
-apply plugin: 'eclipse-wtp'
-apply plugin: 'jetty'
+apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
+apply plugin: 'eclipse' 
 
-// Use wrapper
-task wrapper(type: Wrapper) { gradleVersion = '1.2' }
-
-// Global settings
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
 group = 'fi.jasoft'
 version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : 'development';
-webAppDirName = 'WebContent'
-archivesBaseName = 'dragdroplayouts'
 
-// Demo settings
-def demoWidgetsetClass = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
-
-// Addon settings
-def widgetsetClass = 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
-def addonName = 'DragDropLayouts'
-def addonAuthor = 'John Ahlroos'
-def addonLicence = 'Apache 2.0'
-
-// Using custom source folders
-sourceSets{
-    main{
-        java{
-            srcDir 'src'
-            srcDir 'demo'
-        }
-    }
-    test{
-        java{
-            srcDir 'test'
-        }
-    }
+// Vaadin plugin
+vaadin {
+	version = '7.0.0.beta10'
+	widgetset = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
 }
 
-// Repositories
-repositories{
-    mavenCentral()
+// War plugin
+war {
+	webAppDirName = 'WebContent'
 }
 
-def vaadinVersion = '7.0.0.beta10'
-
-// Dependencies
+// Extra dependencies
 dependencies{
-    	compile     	group:'com.vaadin',     	name:'vaadin-server',      		version:vaadinVersion
-	compile		group:'com.vaadin',		name:'vaadin-themes',			version:vaadinVersion
-	compile		group:'com.vaadin',		name:'vaadin-client-compiler',		version:vaadinVersion
-
-	compile		group:'de.sven-jacobs',		name:'loremipsum',	version:'1.0'
-    	testCompile 	group:'junit',             	name:'junit',		version: '4.8.+'
+	compile			group:'de.sven-jacobs',		name:'loremipsum',	version:'1.0'
+    testCompile 	group:'junit',             	name:'junit',		version: '4.8.+'
 }
 
-eclipse {
-    classpath {
-       downloadSources=true
-    }
-}
-
-/*
- *  Widgetset compilation needed by the war task
- */
-task widgetset {
-
-    // Monitor changes in widgetset to rebuild widgetset
-    def widgetsetFile = new File('demo/'+demoWidgetsetClass.replaceAll(/\./,'/')+".gwt.xml")
-    inputs.file widgetsetFile
-
-    // Monitor changes in client side classes 
-    sourceSets.main.java.srcDirs.each{
-        inputs.files fileTree(it.absolutePath).include('**/*/client/**/*.java')
-    } 
-    
-    /* Monitor changes in dependencies since upgrading a 
-     * dependency should also trigger a recompile of the widgetset
-     */
-    inputs.files configurations.compile
-    
-    // Target directory as the output
-    def targetDir = new File('WebContent/VAADIN/widgetsets')
-    outputs.dir targetDir
-
-    doLast{
-        // Compile
-        ant.java(classname:'com.google.gwt.dev.Compiler',failOnError: 'yes', fork: 'true', maxmemory: '512m')
-        {
-            classpath {
-                pathElement(path: configurations.compile.asPath)
-                pathElement(path: sourceSets.main.runtimeClasspath.asPath)
-                sourceSets.main.java.srcDirs.each{
-                    pathelement(location:it.absolutePath)
-                }
-            }
-
-            jvmarg(value: '-Xmx1024M')
-            jvmarg(value: '-Xms512M')
-
-			if(version == 'development'){
-            	arg(line: '-draftCompile')
-            	arg(line: '-style PRETTY')
-            }
-            
-            arg(line: '-logLevel INFO')
-            arg(line: '-localWorkers 2')
-            arg(line: '-war '+targetDir)
-            arg(line: demoWidgetsetClass)
-        }
-    }
-}
-
-/*
- * Builds the deployable demo application
- */
-war{
-  
-    // WAR filename
-    archiveName = addonName + '.war'
-        
-    // Include widgetset
-    dependsOn test, widgetset
-       
-    // Exclude unneccessery GWT Compiler artifacts 
-    exclude "VAADIN/widgetsets/**/WEB-INF/**"
-    
-    // Add sources
-    webInf{
-        into('classes'){
-            from sourceSets.main.allJava
-        }
-    }
-    
-}
-
-/*
- * Builds the Vaadin addon package
- */
-jar{
-    
-    // Do not build if tests do not pass
-    dependsOn test
-    
-    // Include sources
-    sourceSets.main.java.srcDirs.each{ 
-        from it
-    }
-        
-    // Exclude demo sources
-    exclude 'fi/jasoft/dragdroplayouts/**/demo/**/*'
-    
-    // Create manifest
-    manifest{
-        attributes(
-            'Vaadin-Package-Version': 1,
-            'Vaadin-Widgetsets': widgetsetClass,
-            'Vaadin-License-Title': addonLicence,
-            'Implementation-Title': addonName,
-            'Implementation-Version': version,
-            'Implementation-Vendor': addonAuthor,
-        )
-    }
-}
