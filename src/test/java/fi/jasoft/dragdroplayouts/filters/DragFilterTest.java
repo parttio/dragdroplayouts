@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.junit.Test;
-
 import junit.framework.TestCase;
+
+import org.junit.Test;
 
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 
@@ -24,10 +24,8 @@ public class DragFilterTest extends TestCase {
     public void testLiteralFilters() {
         assertTrue(DragFilter.ALL.isDraggable(null));
         assertFalse(DragFilter.NONE.isDraggable(null));
-        assertTrue(fi.jasoft.dragdroplayouts.interfaces.DragFilter.ALL
-                .isDraggable(null));
-        assertFalse(fi.jasoft.dragdroplayouts.interfaces.DragFilter.NONE
-                .isDraggable(null));
+        assertTrue(DragFilter.ALL.isDraggable(null));
+        assertFalse(DragFilter.NONE.isDraggable(null));
         assertSame(DragFilter.ALL, reserialize(DragFilter.ALL));
         assertSame(DragFilter.NONE, reserialize(DragFilter.NONE));
     }
