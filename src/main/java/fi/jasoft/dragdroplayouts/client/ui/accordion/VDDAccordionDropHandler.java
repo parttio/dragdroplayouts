@@ -1,6 +1,5 @@
 package fi.jasoft.dragdroplayouts.client.ui.accordion;
 
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ui.dd.VAbstractDropHandler;
@@ -53,9 +52,11 @@ public class VDDAccordionDropHandler extends VAbstractDropHandler {
 
         layout.postOverHook(drag);
 
-        Widget w = (Widget) drag.getTransferable().getData(
-                Constants.TRANSFERABLE_DETAIL_COMPONENT);
-        if (layout.equals(w)) {
+        ComponentConnector widgetConnector = (ComponentConnector) drag
+                .getTransferable().getData(
+                        Constants.TRANSFERABLE_DETAIL_COMPONENT);
+
+        if (layout.equals(widgetConnector.getWidget())) {
             return;
         }
 

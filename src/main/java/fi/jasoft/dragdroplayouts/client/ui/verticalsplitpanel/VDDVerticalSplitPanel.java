@@ -219,9 +219,12 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
 
                     postOverHook(drag);
 
-                    Widget w = (Widget) drag.getTransferable().getData(
-                            Constants.TRANSFERABLE_DETAIL_COMPONENT);
-                    if (VDDVerticalSplitPanel.this.equals(w)) {
+                    ComponentConnector widgetConnector = (ComponentConnector) drag
+                            .getTransferable().getData(
+                                    Constants.TRANSFERABLE_DETAIL_COMPONENT);
+
+                    if (VDDVerticalSplitPanel.this.equals(widgetConnector
+                            .getWidget())) {
                         return;
                     }
 

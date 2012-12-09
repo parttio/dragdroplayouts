@@ -230,13 +230,14 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
                 relativeTop);
 
         // Get component size
-        Widget w = (Widget) drag.getTransferable().getData(
-                Constants.TRANSFERABLE_DETAIL_COMPONENT);
-        if (w != null) {
+        ComponentConnector widgetConnector = (ComponentConnector) drag
+                .getTransferable().getData(
+                        Constants.TRANSFERABLE_DETAIL_COMPONENT);
+        if (widgetConnector != null) {
             drag.getDropDetails().put(Constants.DROP_DETAIL_COMPONENT_WIDTH,
-                    w.getOffsetWidth());
+                    widgetConnector.getWidget().getOffsetWidth());
             drag.getDropDetails().put(Constants.DROP_DETAIL_COMPONENT_HEIGHT,
-                    w.getOffsetHeight());
+                    widgetConnector.getWidget().getOffsetHeight());
         } else {
             drag.getDropDetails()
                     .put(Constants.DROP_DETAIL_COMPONENT_WIDTH, -1);

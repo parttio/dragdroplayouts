@@ -225,9 +225,12 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
 
                     postOverHook(drag);
 
-                    Widget w = (Widget) drag.getTransferable().getData(
-                            Constants.TRANSFERABLE_DETAIL_COMPONENT);
-                    if (VDDHorizontalSplitPanel.this.equals(w)) {
+                    ComponentConnector widgetConnector = (ComponentConnector) drag
+                            .getTransferable().getData(
+                                    Constants.TRANSFERABLE_DETAIL_COMPONENT);
+
+                    if (VDDHorizontalSplitPanel.this.equals(widgetConnector
+                            .getWidget())) {
                         return;
                     }
 

@@ -33,6 +33,7 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VCssLayout;
@@ -200,8 +201,9 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
                     .getData(Constants.TRANSFERABLE_DETAIL_CAPTION);
         } else if (transferable
                 .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT) != null) {
-            w = (Widget) transferable
+            ComponentConnector connector = (ComponentConnector) transferable
                     .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
+            w = connector.getWidget();
         } else {
             // Failsafe if no widget was found
             w = root;

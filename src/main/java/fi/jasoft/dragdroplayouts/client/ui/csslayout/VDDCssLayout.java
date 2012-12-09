@@ -19,6 +19,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.VCssLayout;
@@ -158,12 +159,14 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
     }
 
     private void updatePlaceHolderStyleProperties(VDragEvent drag) {
-        Widget dragged = (Widget) drag.getTransferable().getData(
-                Constants.TRANSFERABLE_DETAIL_COMPONENT);
-        if (dragged != null) {
-            int height = Util.getRequiredHeight(dragged);
-            int width = Util.getRequiredWidth(dragged);
-            String className = dragged.getElement().getClassName();
+        ComponentConnector draggedConnector = (ComponentConnector) drag
+                .getTransferable().getData(
+                        Constants.TRANSFERABLE_DETAIL_COMPONENT);
+        if (draggedConnector != null) {
+            int height = Util.getRequiredHeight(draggedConnector.getWidget());
+            int width = Util.getRequiredWidth(draggedConnector.getWidget());
+            String className = draggedConnector.getWidget().getElement()
+                    .getClassName();
 
             className = className.replaceAll(
                     VLayoutDragDropMouseHandler.ACTIVE_DRAG_SOURCE_STYLENAME,
@@ -266,9 +269,11 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
         }
 
         Widget w = Util.findWidget(drag.getElementOver(), null);
-        Widget dragged = (Widget) drag.getTransferable().getData(
-                Constants.TRANSFERABLE_DETAIL_COMPONENT);
-        if (w == dragged) {
+        ComponentConnector draggedConnector = (ComponentConnector) drag
+                .getTransferable().getData(
+                        Constants.TRANSFERABLE_DETAIL_COMPONENT);
+
+        if (w == draggedConnector.getWidget()) {
             /*
              * Dragging drag image over the placeholder should not have any
              * effect (except placeholder should be removed)
@@ -284,7 +289,9 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
             if (hl == HorizontalDropLocation.LEFT
                     || vl == VerticalDropLocation.TOP) {
                 Element prev = w.getElement().getPreviousSibling().cast();
-                if (prev == null || !dragged.getElement().isOrHasChild(prev)) {
+                if (prev == null
+                        || !draggedConnector.getWidget().getElement()
+                                .isOrHasChild(prev)) {
 
                     w.getElement().getParentElement()
                             .insertBefore(placeHolderElement, w.getElement());
@@ -293,14 +300,18 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
             } else if (hl == HorizontalDropLocation.RIGHT
                     || vl == VerticalDropLocation.BOTTOM) {
                 Element next = w.getElement().getNextSibling().cast();
-                if (next == null || !dragged.getElement().isOrHasChild(next)) {
+                if (next == null
+                        || !draggedConnector.getWidget().getElement()
+                                .isOrHasChild(next)) {
                     w.getElement().getParentElement()
                             .insertAfter(placeHolderElement, w.getElement());
                 }
 
             } else {
                 Element prev = w.getElement().getPreviousSibling().cast();
-                if (prev == null || !dragged.getElement().isOrHasChild(prev)) {
+                if (prev == null
+                        || !draggedConnector.getWidget().getElement()
+                                .isOrHasChild(prev)) {
                     w.getElement().getParentElement()
                             .insertBefore(placeHolderElement, w.getElement());
                 }

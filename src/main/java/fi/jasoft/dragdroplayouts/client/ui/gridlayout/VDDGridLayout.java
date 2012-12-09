@@ -232,9 +232,11 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
         deEmphasis();
 
         // Ensure we are not dragging ourself into ourself
-        Widget draggedComponent = (Widget) event.getTransferable().getData(
-                Constants.TRANSFERABLE_DETAIL_COMPONENT);
-        if (draggedComponent == VDDGridLayout.this) {
+        ComponentConnector draggedConnector = (ComponentConnector) event
+                .getTransferable().getData(
+                        Constants.TRANSFERABLE_DETAIL_COMPONENT);
+
+        if (draggedConnector.getWidget() == VDDGridLayout.this) {
             return;
         }
 

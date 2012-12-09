@@ -35,9 +35,6 @@ public class DragDropUI extends UI {
 
         setContent(content);
 
-        if (true)
-            return;
-
         tabs = new TabSheet();
         tabs.setSizeFull();
         tabs.setImmediate(true);
@@ -69,7 +66,7 @@ public class DragDropUI extends UI {
             }
         });
 
-        content.addComponent(tabs);
+        content.setFirstComponent(tabs);
 
         code = new Label("");
         try {
@@ -82,9 +79,7 @@ public class DragDropUI extends UI {
         Panel codePanel = new Panel();
         codePanel.setSizeFull();
         codePanel.setContent(code);
-        content.addComponent(codePanel);
-
-        setContent(content);
+        content.setSecondComponent(codePanel);
     }
 
     private void tabChanged(Component tab) throws IOException {

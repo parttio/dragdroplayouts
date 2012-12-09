@@ -157,7 +157,8 @@ public final class VDragDropUtil {
         VTransferable transferable = new VTransferable();
         transferable.setDragSource(VDragDropUtil.findConnectorFor(tabsheet));
         if (tabsheet != tab) {
-            transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, tab);
+            transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
+                    VDragDropUtil.findConnectorFor(tab));
             transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
                     tabsheet.getTabPosition(tab));
         }
@@ -189,7 +190,7 @@ public final class VDragDropUtil {
         transferable.setDragSource(VDragDropUtil.findConnectorFor(accordion));
         transferable.setData(Constants.TRANSFERABLE_DETAIL_CAPTION, tabCaption);
         transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
-                tabCaption.getParent());
+                VDragDropUtil.findConnectorFor(tabCaption.getParent()));
         transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
                 accordion.getWidgetIndex(tabCaption.getParent()));
         transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
@@ -246,8 +247,10 @@ public final class VDragDropUtil {
         // target = getTransferableWidget(target);
 
         // Find the containing layout of the component
-        ComponentConnector layoutConnector = (ComponentConnector) VDragDropUtil
-                .findConnectorFor(target).getParent();
+        ComponentConnector widgetConnector = (ComponentConnector) VDragDropUtil
+                .findConnectorFor(target);
+        ComponentConnector layoutConnector = (ComponentConnector) widgetConnector
+                .getParent();
 
         // Consistency check
         if (target == null || root == target || layoutConnector == null) {
@@ -260,14 +263,15 @@ public final class VDragDropUtil {
             return null;
         }
 
-        return createTransferable(layoutConnector, target, event);
+        return createTransferable(layoutConnector, widgetConnector, event);
     }
 
     private static VTransferable createTransferable(ComponentConnector layout,
-            Widget widget, NativeEvent event) {
+            ComponentConnector widgetConnector, NativeEvent event) {
         VTransferable transferable = new VTransferable();
         transferable.setDragSource(layout);
-        transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, widget);
+        transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
+                widgetConnector);
         transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
                 MouseEventDetailsBuilder.buildMouseEventDetails(event)
                         .serialize());

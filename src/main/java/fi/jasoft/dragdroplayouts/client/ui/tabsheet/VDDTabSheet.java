@@ -256,9 +256,12 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
 
                     postOverHook(drag);
 
+                    ComponentConnector widgetConnector = (ComponentConnector) drag
+                            .getTransferable().getData(
+                                    Constants.TRANSFERABLE_DETAIL_COMPONENT);
+
                     // Check if we are dropping on our self
-                    if (VDDTabSheet.this.equals(drag.getTransferable().getData(
-                            Constants.TRANSFERABLE_DETAIL_COMPONENT))) {
+                    if (VDDTabSheet.this.equals(widgetConnector.getWidget())) {
                         return;
                     }
 
