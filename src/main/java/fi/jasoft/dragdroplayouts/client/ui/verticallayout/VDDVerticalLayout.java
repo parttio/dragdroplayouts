@@ -62,7 +62,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
             this, LayoutDragMode.NONE);
 
     // Value delegated from the state
-    private double cellTopBottomDropRatio = DDVerticalLayoutState.DEFAULT_VERTICAL_DROP_RATIO;
+    private float cellTopBottomDropRatio = DDVerticalLayoutState.DEFAULT_VERTICAL_DROP_RATIO;
 
     public VDDVerticalLayout() {
         super();
@@ -277,5 +277,13 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
     @Override
     public void setDragFilter(VDragFilter filter) {
         this.dragFilter = filter;
+    }
+
+    public void setCellTopBottomDropRatio(float cellTopBottomDropRatio) {
+        this.cellTopBottomDropRatio = cellTopBottomDropRatio;
+    }
+
+    public float getCellTopBottomDropRatio() {
+        return cellTopBottomDropRatio;
     }
 }

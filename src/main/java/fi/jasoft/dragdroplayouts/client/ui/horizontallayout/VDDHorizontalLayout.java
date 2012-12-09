@@ -285,7 +285,7 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
         return cellLeftRightDropRatio;
     }
 
-    public void setCellLeftRightDropRatio(double cellLeftRightDropRatio) {
+    public void setCellLeftRightDropRatio(float cellLeftRightDropRatio) {
         this.cellLeftRightDropRatio = cellLeftRightDropRatio;
     }
 

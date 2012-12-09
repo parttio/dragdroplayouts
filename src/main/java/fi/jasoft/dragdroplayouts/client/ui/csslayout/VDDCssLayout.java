@@ -375,7 +375,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
         return horizontalDropRatio;
     }
 
-    public void setHorizontalDropRatio(double horizontalDropRatio) {
+    public void setHorizontalDropRatio(float horizontalDropRatio) {
         this.horizontalDropRatio = horizontalDropRatio;
     }
 
@@ -383,7 +383,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
         return verticalDropRatio;
     }
 
-    public void setVerticalDropRatio(double verticalDropRatio) {
+    public void setVerticalDropRatio(float verticalDropRatio) {
         this.verticalDropRatio = verticalDropRatio;
     }
 
