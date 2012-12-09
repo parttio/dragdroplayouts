@@ -2,4 +2,13 @@
 
 .dragdrop {
 	@include reindeer;
+	
+	.v-select-select{
+		border: none;
+	}
+	
+	.v-select-select option{
+		padding-top:3px;
+		padding-bottom:3px
+	}
 }

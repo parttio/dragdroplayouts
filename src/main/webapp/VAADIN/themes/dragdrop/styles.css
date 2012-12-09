@@ -5982,3 +5982,12 @@ body .dragdrop.v-app-loading {
 	background: transparent repeat-x;
 	background-image: url(../reindeer/window/img/black/content-bg.png);/** sprite-ref: black-verticals; sprite-alignment: repeat */
 }
+
+.dragdrop .v-select-select {
+	border: none;
+}
+
+.dragdrop .v-select-select option {
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
