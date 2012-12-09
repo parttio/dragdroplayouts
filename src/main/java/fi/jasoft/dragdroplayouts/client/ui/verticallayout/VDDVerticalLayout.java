@@ -102,8 +102,8 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
     }
 
     /**
-     * Returns the horizontal location within the cell when hoovering over the
-     * cell. By default the cell is devided into three parts: left,center,right
+     * Returns the horizontal location within the cell when hovering over the
+     * cell. By default the cell is divided into three parts: left,center,right
      * with the ratios 10%,80%,10%;
      * 
      * @param container
@@ -134,7 +134,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
         }
 
         /*
-         * The horizontal position within the cell
+         * The horizontal position within the cell{
          */
         event.getDropDetails().put(
                 Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION,
@@ -144,9 +144,22 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
          * The index over which the drag is. Can be used by a client side
          * criteria to verify that a drag is over a certain index.
          */
-        WidgetCollection widgets = getChildren();
-        event.getDropDetails().put(Constants.DROP_DETAIL_TO,
-                widgets.indexOf(widget));
+        int index = -1;
+        if (widget instanceof Slot) {
+            WidgetCollection captionsAndSlots = getChildren();
+            int realIndex = 0;
+            for (int i = 0; i < captionsAndSlots.size(); i++) {
+                Widget w = captionsAndSlots.get(i);
+                if (w == widget) {
+                    index = realIndex;
+                    break;
+                } else if (w instanceof Slot) {
+                    realIndex++;
+                }
+            }
+        }
+
+        event.getDropDetails().put(Constants.DROP_DETAIL_TO, index);
 
         // Add mouse event details
         MouseEventDetails details = MouseEventDetailsBuilder

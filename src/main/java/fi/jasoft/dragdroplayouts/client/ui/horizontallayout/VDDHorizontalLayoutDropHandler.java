@@ -1,6 +1,7 @@
 package fi.jasoft.dragdroplayouts.client.ui.horizontallayout;
 
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Util;
@@ -42,7 +43,8 @@ public class VDDHorizontalLayoutDropHandler extends VAbstractDropHandler {
         layout.emphasis(null, null);
 
         // Update the details
-        layout.updateDropDetails(null, drag);
+        Widget slot = getSlot(drag.getElementOver());
+        layout.updateDropDetails(slot, drag);
 
         return layout.postDropHook(drag) && super.drop(drag);
     };

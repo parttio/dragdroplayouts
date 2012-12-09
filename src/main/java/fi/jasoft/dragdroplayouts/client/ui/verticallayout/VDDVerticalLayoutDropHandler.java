@@ -43,7 +43,7 @@ public class VDDVerticalLayoutDropHandler extends VAbstractDropHandler {
         layout.emphasis(null, null);
 
         // Update the details
-        Widget slot = Util.findWidget(drag.getElementOver(), null);
+        Widget slot = getSlot(drag.getElementOver());
         layout.updateDropDetails(slot, drag);
 
         return layout.postDropHook(drag) && super.drop(drag);

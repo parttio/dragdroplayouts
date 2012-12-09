@@ -39,6 +39,13 @@ public class DefaultHorizontalLayoutDropHandler extends
 
     /**
      * Constructor
+     */
+    public DefaultHorizontalLayoutDropHandler() {
+
+    }
+
+    /**
+     * Constructor
      * 
      * @param dropCellAlignment
      *            The cell alignment of the component after it has been dropped

@@ -188,9 +188,22 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
          * The index over which the drag is. Can be used by a client side
          * criteria to verify that a drag is over a certain index.
          */
-        WidgetCollection widgets = getChildren();
-        event.getDropDetails().put(Constants.DROP_DETAIL_TO,
-                widgets.indexOf(widget));
+        int index = -1;
+        if (widget instanceof Slot) {
+            WidgetCollection captionsAndSlots = getChildren();
+            int realIndex = 0;
+            for (int i = 0; i < captionsAndSlots.size(); i++) {
+                Widget w = captionsAndSlots.get(i);
+                if (w == widget) {
+                    index = realIndex;
+                    break;
+                } else if (w instanceof Slot) {
+                    realIndex++;
+                }
+            }
+        }
+
+        event.getDropDetails().put(Constants.DROP_DETAIL_TO, index);
 
         // Add mouse event details
         MouseEventDetails details = MouseEventDetailsBuilder

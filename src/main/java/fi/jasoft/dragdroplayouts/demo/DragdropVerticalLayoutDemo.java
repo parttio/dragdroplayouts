@@ -1,26 +1,18 @@
 package fi.jasoft.dragdroplayouts.demo;
 
-import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropHandler;
-import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.event.dd.acceptcriteria.Not;
-import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 
 import fi.jasoft.dragdroplayouts.DDVerticalLayout;
-import fi.jasoft.dragdroplayouts.DDVerticalLayout.VerticalLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
-import fi.jasoft.dragdroplayouts.events.VerticalLocationIs;
+import fi.jasoft.dragdroplayouts.drophandlers.DefaultVerticalLayoutDropHandler;
 
 @SuppressWarnings("serial")
 public class DragdropVerticalLayoutDemo extends CustomComponent {
 
-	private static final float EQUAL_VERTICAL_RATIO = 0.3f;
-	
+    private static final float EQUAL_VERTICAL_RATIO = 0.3f;
+
     public DragdropVerticalLayoutDemo() {
         setCaption("Vertical layout");
         setSizeFull();
@@ -29,34 +21,7 @@ public class DragdropVerticalLayoutDemo extends CustomComponent {
         setCompositionRoot(layout);
         layout.setComponentVerticalDropRatio(EQUAL_VERTICAL_RATIO);
         layout.setDragMode(LayoutDragMode.CLONE);
-        layout.setDropHandler(new DropHandler() {
-
-            public AcceptCriterion getAcceptCriterion() {
-                return new Not(VerticalLocationIs.MIDDLE);
-            }
-
-            public void drop(DragAndDropEvent event) {
-                LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-                        .getTransferable();
-
-                VerticalLayoutTargetDetails details = (VerticalLayoutTargetDetails) event
-                        .getTargetDetails();
-
-                Component comp = transferable.getComponent();
-
-                int currentIndex = layout.getComponentIndex(comp);
-                int newIndex = details.getOverIndex();
-
-                layout.removeComponent(comp);
-
-                if (currentIndex > newIndex
-                        && details.getDropLocation() == VerticalDropLocation.BOTTOM) {
-                    newIndex++;
-                }
-
-                layout.addComponent(comp, newIndex);
-            }
-        });
+        layout.setDropHandler(new DefaultVerticalLayoutDropHandler());
 
         layout.addComponent(new Label(
                 "These components are stacked vertically, try reordering them"));
