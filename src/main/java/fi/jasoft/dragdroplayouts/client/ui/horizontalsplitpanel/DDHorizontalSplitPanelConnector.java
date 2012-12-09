@@ -11,10 +11,13 @@ import com.vaadin.client.ui.splitpanel.HorizontalSplitPanelConnector;
 import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 public class DDHorizontalSplitPanelConnector extends
-        HorizontalSplitPanelConnector implements Paintable {
+        HorizontalSplitPanelConnector implements Paintable, VHasDragMode,
+        VHasDragFilter {
 
     /**
      * {@inheritDoc}
@@ -83,6 +86,21 @@ public class DDHorizontalSplitPanelConnector extends
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
         getWidget().setDragFilter(new VDragFilter(getState()));
+    }
+
+    @Override
+    public VDragFilter getDragFilter() {
+        return getWidget().getDragFilter();
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        getWidget().setDragFilter(filter);
+    }
+
+    @Override
+    public LayoutDragMode getDragMode() {
+        return getWidget().getDragMode();
     }
 
 }

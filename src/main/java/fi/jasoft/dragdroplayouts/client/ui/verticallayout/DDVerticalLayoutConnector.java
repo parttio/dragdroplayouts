@@ -9,11 +9,14 @@ import com.vaadin.shared.ui.Connect;
 
 import fi.jasoft.dragdroplayouts.DDVerticalLayout;
 import fi.jasoft.dragdroplayouts.client.VDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 
 @Connect(DDVerticalLayout.class)
 public class DDVerticalLayoutConnector extends VerticalLayoutConnector
-        implements Paintable {
+        implements Paintable, VHasDragMode, VHasDragFilter {
 
     /**
      * {@inheritDoc}
@@ -61,5 +64,20 @@ public class DDVerticalLayoutConnector extends VerticalLayoutConnector
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
         getWidget().setDragFilter(new VDragFilter(getState()));
+    }
+
+    @Override
+    public VDragFilter getDragFilter() {
+        return getWidget().getDragFilter();
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        getWidget().setDragFilter(filter);
+    }
+
+    @Override
+    public LayoutDragMode getDragMode() {
+        return getWidget().getDragMode();
     }
 }

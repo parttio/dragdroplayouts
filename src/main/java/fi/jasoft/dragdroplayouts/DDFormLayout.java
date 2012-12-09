@@ -31,6 +31,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.LegacyComponent;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
@@ -49,7 +50,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  * 
  */
 public class DDFormLayout extends FormLayout implements LayoutDragSource,
-        DropTarget, ShimSupport {
+        DropTarget, ShimSupport, LegacyComponent {
     /**
      * The drop handler which handles dropped components in the layout.
      */
@@ -288,5 +289,11 @@ public class DDFormLayout extends FormLayout implements LayoutDragSource,
                 getState().draggable.add(c);
             }
         }
+    }
+
+    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        // TODO Auto-generated method stub
+
     }
 }

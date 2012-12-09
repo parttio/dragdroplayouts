@@ -11,11 +11,12 @@ import fi.jasoft.dragdroplayouts.DDAccordion;
 import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 
 @Connect(DDAccordion.class)
 public class DDAccordionConnector extends AccordionConnector implements
-        Paintable, VHasDragMode {
+        Paintable, VHasDragMode, VHasDragFilter {
 
     /**
      * {@inheritDoc}
@@ -78,6 +79,16 @@ public class DDAccordionConnector extends AccordionConnector implements
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
         getWidget().setDragFilter(new VDragFilter(getState()));
+    }
+
+    @Override
+    public VDragFilter getDragFilter() {
+        return getWidget().getDragFilter();
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        getWidget().setDragFilter(filter);
     }
 
 }

@@ -32,6 +32,7 @@ import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.LegacyComponent;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
@@ -51,7 +52,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDCssLayout extends CssLayout implements LayoutDragSource,
-        DropTarget, ShimSupport {
+        DropTarget, ShimSupport, LegacyComponent {
 
     // Drop handler which handles dd drop events
     private DropHandler dropHandler;
@@ -268,5 +269,11 @@ public class DDCssLayout extends CssLayout implements LayoutDragSource,
                 getState().draggable.add(c);
             }
         }
+    }
+
+    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        // TODO Auto-generated method stub
+
     }
 }

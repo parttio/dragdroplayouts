@@ -32,6 +32,7 @@ import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.LegacyComponent;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
@@ -50,7 +51,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDGridLayout extends GridLayout implements LayoutDragSource,
-        DropTarget, ShimSupport {
+        DropTarget, ShimSupport, LegacyComponent {
 
     private DropHandler dropHandler;
 

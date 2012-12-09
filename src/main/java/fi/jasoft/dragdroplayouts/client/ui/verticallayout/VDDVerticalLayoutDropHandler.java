@@ -1,7 +1,11 @@
 package fi.jasoft.dragdroplayouts.client.ui.verticallayout;
 
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.Util;
+import com.vaadin.client.ui.VOrderedLayout.Slot;
 import com.vaadin.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
@@ -39,10 +43,15 @@ public class VDDVerticalLayoutDropHandler extends VAbstractDropHandler {
         layout.emphasis(null, null);
 
         // Update the details
-        layout.updateDropDetails(null, drag);
+        Widget slot = Util.findWidget(drag.getElementOver(), null);
+        layout.updateDropDetails(slot, drag);
 
         return layout.postDropHook(drag) && super.drop(drag);
     };
+
+    private Slot getSlot(Element e) {
+        return Util.findWidget(e, Slot.class);
+    }
 
     @Override
     public void dragOver(VDragEvent drag) {
@@ -51,26 +60,25 @@ public class VDDVerticalLayoutDropHandler extends VAbstractDropHandler {
         layout.emphasis(null, null);
 
         // Update the dropdetails so we can validate the drop
-        // FIXME
-        // ChildComponentContainer c = getContainerFromDragEvent(drag);
-        // if (c != null) {
-        // updateDropDetails(c, drag);
-        // } else {
-        // updateDropDetails(VDDVerticalLayout.this, drag);
-        // }
+        Slot slot = getSlot(drag.getElementOver());
+
+        if (slot != null) {
+            layout.updateDropDetails(slot, drag);
+        } else {
+            layout.updateDropDetails(layout, drag);
+        }
 
         layout.postOverHook(drag);
 
         // Validate the drop
         validate(new VAcceptCallback() {
             public void accepted(VDragEvent event) {
-                // FIXME
-                // ChildComponentContainer c = getContainerFromDragEvent(event);
-                // if (c != null) {
-                // emphasis(c, event);
-                // } else {
-                // emphasis(VDDVerticalLayout.this, event);
-                // }
+                Slot slot = getSlot(event.getElementOver());
+                if (slot != null) {
+                    layout.emphasis(slot.getWidget(), event);
+                } else {
+                    layout.emphasis(layout, event);
+                }
             }
         }, drag);
     };

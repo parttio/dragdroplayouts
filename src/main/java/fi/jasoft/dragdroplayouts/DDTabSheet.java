@@ -30,6 +30,7 @@ import com.vaadin.shared.Connector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.TabSheet;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
@@ -49,7 +50,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDTabSheet extends TabSheet implements LayoutDragSource,
-        DropTarget, ShimSupport {
+        DropTarget, ShimSupport, LegacyComponent {
 
     /**
      * The drop handler which handles dropped components in the layout.

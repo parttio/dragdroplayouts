@@ -28,6 +28,7 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.Connector;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.LegacyComponent;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.accordion.DDAccordionState;
@@ -45,7 +46,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDAccordion extends Accordion implements LayoutDragSource,
-        DropTarget, ShimSupport {
+        DropTarget, ShimSupport, LegacyComponent {
 
     /**
      * The drop handler which handles dropped components in the layout.

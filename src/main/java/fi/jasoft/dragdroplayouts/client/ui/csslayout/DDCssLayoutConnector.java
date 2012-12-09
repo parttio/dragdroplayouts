@@ -11,11 +11,12 @@ import fi.jasoft.dragdroplayouts.DDCssLayout;
 import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 
 @Connect(DDCssLayout.class)
 public class DDCssLayoutConnector extends CssLayoutConnector implements
-        Paintable, VHasDragMode {
+        Paintable, VHasDragMode, VHasDragFilter {
 
     /**
      * {@inheritDoc}
@@ -73,5 +74,15 @@ public class DDCssLayoutConnector extends CssLayoutConnector implements
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
         getWidget().setDragFilter(new VDragFilter(getState()));
+    }
+
+    @Override
+    public VDragFilter getDragFilter() {
+        return getWidget().getDragFilter();
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        getWidget().setDragFilter(filter);
     }
 }

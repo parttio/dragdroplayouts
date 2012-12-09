@@ -11,9 +11,12 @@ import com.vaadin.client.ui.tabsheet.TabsheetConnector;
 import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
-public class DDTabsheetConnector extends TabsheetConnector implements Paintable {
+public class DDTabsheetConnector extends TabsheetConnector implements
+        Paintable, VHasDragMode, VHasDragFilter {
 
     @Override
     public VDDTabSheet getWidget() {
@@ -97,5 +100,20 @@ public class DDTabsheetConnector extends TabsheetConnector implements Paintable 
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
         getWidget().setDragFilter(new VDragFilter(getState()));
+    }
+
+    @Override
+    public VDragFilter getDragFilter() {
+        return getWidget().getDragFilter();
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        getWidget().setDragFilter(filter);
+    }
+
+    @Override
+    public LayoutDragMode getDragMode() {
+        return getWidget().getDragMode();
     }
 }

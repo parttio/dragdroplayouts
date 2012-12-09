@@ -136,7 +136,6 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
         /*
          * The horizontal position within the cell
          */
-
         event.getDropDetails().put(
                 Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION,
                 getVerticalDropLocation(widget, event));
