@@ -1,7 +1,5 @@
 package fi.jasoft.dragdroplayouts.client.ui.gridlayout;
 
-import java.util.Iterator;
-
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
@@ -53,12 +51,16 @@ public class DDGridLayoutConnector extends GridLayoutConnector implements
         super.updateFromUIDL(uidl, client);
 
         // Update drop handler if necessary
-        UIDL c = null;
-        for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
-            c = (UIDL) it.next();
-            if (c.getTag().equals("-ac")) {
-                getWidget().updateDropHandler(c);
-                break;
+        if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
+            UIDL acceptCrit = uidl.getChildByTagName("-ac");
+            if (acceptCrit == null) {
+                getWidget().setDropHandler(null);
+            } else {
+                if (getWidget().getDropHandler() == null) {
+                    getWidget().setDropHandler(
+                            new VDDGridLayoutDropHandler(getWidget(), client));
+                }
+                getWidget().getDropHandler().updateAcceptRules(acceptCrit);
             }
         }
 

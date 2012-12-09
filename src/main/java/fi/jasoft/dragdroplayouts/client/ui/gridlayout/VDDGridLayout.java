@@ -15,20 +15,18 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.gridlayout;
 
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.VGridLayout;
-import com.vaadin.client.ui.dd.VAbstractDropHandler;
-import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
-import com.vaadin.client.ui.dd.VDropHandler;
 import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
@@ -56,15 +54,19 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
     public static final String CLASSNAME = "v-ddgridlayout";
     public static final String OVER = CLASSNAME + "-over";
 
-    private VAbstractDropHandler dropHandler;
+    private VDDGridLayoutDropHandler dropHandler;
 
-    private final HTML dragShadow = new HTML("");
+    final HTML dragShadow = new HTML("");
 
     protected ApplicationConnection client;
 
     private VDragFilter dragFilter;
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
+
+    private float cellLeftRightDropRatio;
+
+    private float cellTopBottomDropRatio;
 
     // The drag mouse handler which handles the creation of the transferable
     private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
@@ -92,11 +94,15 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      * Returns the drop handler used when the user drops a component over the
      * Grid Layout
      */
-    public VDropHandler getDropHandler() {
+    public VDDGridLayoutDropHandler getDropHandler() {
         return dropHandler;
     }
 
-    private void updateDropDetails(VDragEvent event) {
+    public void setDropHandler(VDDGridLayoutDropHandler handler) {
+        dropHandler = handler;
+    }
+
+    void updateDropDetails(VDragEvent event) {
         CellDetails cd = getCellDetails(event);
         if (cd != null) {
             // Add row
@@ -174,11 +180,9 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
 
         assert (x >= 0 && x <= cell.width);
 
-        float ratio = ((DDGridLayoutState) ConnectorMap.get(client)
-                .getConnector(this).getState()).getCellLeftRightDropRatio();
-        if (x < cell.width * ratio) {
+        if (x < cell.width * cellLeftRightDropRatio) {
             hdetail = HorizontalDropLocation.LEFT;
-        } else if (x < cell.width * (1.0 - ratio)) {
+        } else if (x < cell.width * (1.0 - cellLeftRightDropRatio)) {
             hdetail = HorizontalDropLocation.CENTER;
         } else {
             hdetail = HorizontalDropLocation.RIGHT;
@@ -205,12 +209,9 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
 
         assert (y >= 0 && y <= cell.height);
 
-        float ratio = ((DDGridLayoutState) ConnectorMap.get(client)
-                .getConnector(this).getState()).getCellTopBottomDropRatio();
-
-        if (y < cell.height * ratio) {
+        if (y < cell.height * cellTopBottomDropRatio) {
             vdetail = VerticalDropLocation.TOP;
-        } else if (y < cell.height * (1.0 - ratio)) {
+        } else if (y < cell.height * (1.0 - cellTopBottomDropRatio)) {
             vdetail = VerticalDropLocation.MIDDLE;
         } else {
             vdetail = VerticalDropLocation.BOTTOM;
@@ -227,6 +228,13 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      * @param event
      */
     protected void emphasis(CellDetails cell, VDragEvent event) {
+
+        Style shadowStyle = dragShadow.getElement().getStyle();
+        shadowStyle.setPosition(Position.ABSOLUTE);
+        shadowStyle.setWidth(cell.width, Unit.PX);
+        shadowStyle.setHeight(cell.height, Unit.PX);
+        shadowStyle.setLeft(cell.x, Unit.PX);
+        shadowStyle.setTop(cell.y, Unit.PX);
 
         // Remove any existing empasis
         deEmphasis();
@@ -253,6 +261,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
         // Add horizontal location dependent style
         UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
                 + hl.toString().toLowerCase(), true);
+
     }
 
     /**
@@ -291,6 +300,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      */
     protected boolean postDropHook(VDragEvent drag) {
         // Extended classes can add content here...
+        remove(dragShadow);
         return true;
     }
 
@@ -300,6 +310,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      */
     protected void postEnterHook(VDragEvent drag) {
         // Extended classes can add content here...
+        insert(dragShadow, getElement(), 0, true);
     }
 
     /**
@@ -308,6 +319,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      */
     protected void postLeaveHook(VDragEvent drag) {
         // Extended classes can add content here...
+        remove(dragShadow);
     }
 
     /**
@@ -328,131 +340,6 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
     }
 
     /**
-     * Creates a drop handler if one has not alread been created and updates it
-     * with the details recieved from the server.
-     * 
-     * @param childUidl
-     *            The UIDL
-     */
-    protected void updateDropHandler(UIDL childUidl) {
-        if (dropHandler == null) {
-            dropHandler = new VAbstractDropHandler() {
-
-                public ApplicationConnection getApplicationConnection() {
-                    return client;
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragAccepted
-                 * (com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                protected void dragAccepted(VDragEvent drag) {
-                    // Nop
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragEnter(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragEnter(VDragEvent drag) {
-                    // Add the marker that shows the drop location while
-                    // dragging
-
-                    insert(dragShadow, getElement(), 0, true);
-                    postEnterHook(drag);
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #drop(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public boolean drop(VDragEvent drag) {
-
-                    // Update the detail of the drop
-                    updateDropDetails(drag);
-
-                    // Remove emphasis
-                    deEmphasis();
-
-                    // Remove the drag shadow
-                    remove(dragShadow);
-
-                    return postDropHook(drag);
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragOver(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragOver(VDragEvent drag) {
-
-                    // Remove emphasis from previous selection
-                    deEmphasis();
-
-                    // Update the drop details so we can then validate them
-                    updateDropDetails(drag);
-
-                    postOverHook(drag);
-
-                    // Emphasis drop location
-                    validate(new VAcceptCallback() {
-                        public void accepted(VDragEvent event) {
-                            CellDetails cd = getCellDetails(event);
-                            if (cd != null) {
-                                dragShadow.setWidth(cd.width + "px");
-                                dragShadow.setHeight(cd.height + "px");
-                                // setWidgetPosition(dragShadow, cd.x, cd.y);
-                                emphasis(cd, event);
-                            }
-                        }
-                    }, drag);
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragLeave(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragLeave(VDragEvent drag) {
-                    deEmphasis();
-                    remove(dragShadow);
-                    postLeaveHook(drag);
-                    super.dragLeave(drag);
-                }
-
-                @Override
-                public ComponentConnector getConnector() {
-                    return ConnectorMap.get(client).getConnector(
-                            VDDGridLayout.this);
-                };
-            };
-        }
-
-        // Update the rules
-        dropHandler.updateAcceptRules(childUidl);
-    }
-
-    /**
      * A helper class returned by getCellDetailsByCoordinates() which contains
      * positional and size data of the cell.
      */
@@ -465,7 +352,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
         public int height = -1;
     }
 
-    private CellDetails getCellDetails(VDragEvent event) {
+    CellDetails getCellDetails(VDragEvent event) {
         int x = Util.getTouchOrMouseClientX(event.getCurrentGwtEvent())
                 - getAbsoluteLeft();
         int y = Util.getTouchOrMouseClientY(event.getCurrentGwtEvent())
@@ -545,4 +432,19 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
         this.dragFilter = filter;
     }
 
+    public float getCellLeftRightDropRatio() {
+        return cellLeftRightDropRatio;
+    }
+
+    public void setCellLeftRightDropRatio(float cellLeftRightDropRatio) {
+        this.cellLeftRightDropRatio = cellLeftRightDropRatio;
+    }
+
+    public float getCellTopBottomDropRatio() {
+        return cellTopBottomDropRatio;
+    }
+
+    public void setCellTopBottomDropRatio(float cellTopBottomDropRatio) {
+        this.cellTopBottomDropRatio = cellTopBottomDropRatio;
+    }
 }

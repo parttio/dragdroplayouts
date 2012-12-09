@@ -61,7 +61,6 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
      */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidget().client = client;
         if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
             UIDL acceptCrit = uidl.getChildByTagName("-ac");
             if (acceptCrit == null) {
@@ -69,7 +68,8 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
             } else {
                 if (getWidget().getDropHandler() == null) {
                     getWidget().setDropHandler(
-                            getWidget().new VDDAbsoluteLayoutDropHandler());
+                            new VDDAbsoluteLayoutDropHandler(getWidget(),
+                                    client));
                 }
                 getWidget().getDropHandler().updateAcceptRules(acceptCrit);
             }

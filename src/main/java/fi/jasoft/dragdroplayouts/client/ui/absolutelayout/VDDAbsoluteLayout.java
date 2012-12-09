@@ -16,13 +16,10 @@
 package fi.jasoft.dragdroplayouts.client.ui.absolutelayout;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.VAbsoluteLayout;
-import com.vaadin.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.shared.MouseEventDetails;
@@ -56,55 +53,6 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     private VDragFilter dragFilter;
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
-
-    // FIXME UUUUGLY, Set by connector
-    ApplicationConnection client;
-
-    public class VDDAbsoluteLayoutDropHandler extends VAbstractDropHandler {
-
-        public ApplicationConnection getApplicationConnection() {
-            return client;
-        }
-
-        @Override
-        protected void dragAccepted(VDragEvent drag) {
-            // NOP
-        }
-
-        @Override
-        public ComponentConnector getConnector() {
-            return ConnectorMap.get(client)
-                    .getConnector(VDDAbsoluteLayout.this);
-        }
-
-        @Override
-        public boolean drop(VDragEvent drag) {
-            if (super.drop(drag)) {
-                updateDragDetails(drag);
-                return postDropHook(drag);
-            }
-            return false;
-        };
-
-        @Override
-        public void dragEnter(VDragEvent drag) {
-            super.dragEnter(drag);
-            postEnterHook(drag);
-        };
-
-        @Override
-        public void dragLeave(VDragEvent drag) {
-            super.dragLeave(drag);
-            postLeaveHook(drag);
-        };
-
-        @Override
-        public void dragOver(VDragEvent drag) {
-            drag.getDragImage().getStyle().setProperty("display", "");
-            updateDragDetails(drag);
-            postOverHook(drag);
-        }
-    }
 
     public VDDAbsoluteLayout() {
         super();

@@ -3,6 +3,7 @@ package fi.jasoft.dragdroplayouts.client.ui.gridlayout;
 import java.util.List;
 
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.ui.gridlayout.GridLayoutState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
@@ -45,6 +46,7 @@ public class DDGridLayoutState extends GridLayoutState implements DDLayoutState 
         return cellLeftRightDropRatio;
     }
 
+    @DelegateToWidget
     public void setCellLeftRightDropRatio(float cellLeftRightDropRatio) {
         this.cellLeftRightDropRatio = cellLeftRightDropRatio;
     }
@@ -53,6 +55,7 @@ public class DDGridLayoutState extends GridLayoutState implements DDLayoutState 
         return cellTopBottomDropRatio;
     }
 
+    @DelegateToWidget
     public void setCellTopBottomDropRatio(float cellTopBottomDropRatio) {
         this.cellTopBottomDropRatio = cellTopBottomDropRatio;
     }
