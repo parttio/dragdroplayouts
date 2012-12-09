@@ -70,11 +70,16 @@ public class DefaultHorizontalLayoutDropHandler extends
         AbstractOrderedLayout layout = (AbstractOrderedLayout) details
                 .getTarget();
         Component comp = transferable.getComponent();
-        int idx = (details).getOverIndex();
+        int idx = details.getOverIndex();
+        int oldIndex = layout.getComponentIndex(comp);
 
         // Detach
         layout.removeComponent(comp);
-        idx--;
+
+        // Account for detachment if new index is bigger then old index
+        if (idx > oldIndex) {
+            idx--;
+        }
 
         // Increase index if component is dropped after or above a previous
         // component

@@ -83,6 +83,7 @@ public class DragDropUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
         VerticalLayout root = new VerticalLayout();
+        root.setStyleName(Reindeer.LAYOUT_BLUE);
         root.setSizeFull();
         root.setSpacing(true);
         root.setMargin(true);
