@@ -39,3 +39,23 @@ dependencies{
     testCompile 	group:'junit',             	name:'junit',		version: '4.8.+'
 }
 
+// War plugin
+war {
+	// WAR filename
+	archiveName = 'DragDropLayouts7.war'
+
+	// Include widgetset
+	dependsOn test, widgetset
+
+	// Exclude unneccessery GWT Compiler artifacts
+	exclude "VAADIN/widgetsets/**/WEB-INF/**"
+	exclude "VAADIN/gwt-unitCache/**"
+
+	// Add sources
+	webInf{
+		into('classes'){
+			from sourceSets.main.allJava
+		}
+	}
+}
+

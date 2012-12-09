@@ -12,6 +12,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
@@ -28,7 +29,8 @@ import com.vaadin.ui.themes.Reindeer;
 @Widgetset("fi.jasoft.dragdroplayouts.demo.DemoWidgetSet")
 public class DragDropUI extends UI {
 
-    private final Label code = new Label("No source code available.");
+    private final Label code = new Label("No source code available.",
+            ContentMode.PREFORMATTED);
 
     private final ListSelect componentList = new ListSelect();
 
