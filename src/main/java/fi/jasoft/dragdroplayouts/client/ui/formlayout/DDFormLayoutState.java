@@ -3,6 +3,7 @@ package fi.jasoft.dragdroplayouts.client.ui.formlayout;
 import java.util.List;
 
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
@@ -43,6 +44,7 @@ public class DDFormLayoutState extends AbstractOrderedLayoutState implements
         return cellTopBottomDropRatio;
     }
 
+    @DelegateToWidget
     public void setCellTopBottomDropRatio(float cellTopBottomDropRatio) {
         this.cellTopBottomDropRatio = cellTopBottomDropRatio;
     }

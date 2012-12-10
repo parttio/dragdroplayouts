@@ -46,20 +46,17 @@ public class DDCssLayoutConnector extends CssLayoutConnector implements
      * {@inheritDoc}
      */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-
-        // Drop handlers
-        UIDL ac = uidl.getChildByTagName("-ac");
-        if (ac == null) {
-            if (getWidget().getDropHandler() != null) {
-                // remove dropHandler if not present anymore
+        if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
+            UIDL acceptCrit = uidl.getChildByTagName("-ac");
+            if (acceptCrit == null) {
                 getWidget().setDropHandler(null);
+            } else {
+                if (getWidget().getDropHandler() == null) {
+                    getWidget().setDropHandler(
+                            new VDDCssLayoutDropHandler(getWidget(), this));
+                }
+                getWidget().getDropHandler().updateAcceptRules(acceptCrit);
             }
-        } else {
-            if (getWidget().getDropHandler() == null) {
-                getWidget().setDropHandler(
-                        new VDDCssLayoutDropHandler(getWidget(), this));
-            }
-            getWidget().getDropHandler().updateAcceptRules(ac);
         }
     }
 

@@ -20,7 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
@@ -172,16 +171,21 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             return;
         }
 
-        // FIXME
-        // if (dragMode == LayoutDragMode.CAPTION
-        // && Util.getLayout(target) != root) {
-        //
-        // /*
-        // * Ensure that captions in nested layouts don't get accepted if in
-        // * caption mode
-        // */
-        // return;
-        // }
+        if (dragMode == LayoutDragMode.CAPTION && isCaption) {
+
+            /*
+             * Ensure that captions in nested layouts don't get accepted if in
+             * caption mode
+             */
+
+            Widget w = VDragDropUtil.getTransferableWidget(target);
+            ComponentConnector c = Util.findConnectorFor(w);
+            ComponentConnector parent = (ComponentConnector) c.getParent();
+            if (parent.getWidget() != root) {
+                return;
+            }
+
+        }
 
         // Create the transfarable
         VTransferable transferable = VDragDropUtil
@@ -277,11 +281,12 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
         }
 
         Element clone = currentDragEvent.getDragImage();
-        Style cloneStyle = clone.getStyle();
+        assert (clone != null);
+
         if (BrowserInfo.get().isIE()) {
             // Fix IE not aligning the drag image correctly when dragging
             // layouts
-            cloneStyle.setPosition(Position.ABSOLUTE);
+            clone.getStyle().setPosition(Position.ABSOLUTE);
         }
 
         currentDraggedWidget.addStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);

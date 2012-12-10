@@ -109,8 +109,8 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      */
     @Override
     protected void onUnload() {
-        super.onUnload();
         ddHandler.updateDragMode(LayoutDragMode.NONE);
+        super.onUnload();
         iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
                 LayoutDragMode.NONE);
     }
@@ -172,8 +172,8 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
                     VLayoutDragDropMouseHandler.ACTIVE_DRAG_SOURCE_STYLENAME,
                     "");
 
-            placeHolderElement.setClassName(className + " "
-                    + DRAG_SHADOW_STYLE_NAME);
+            placeHolderElement.setClassName(DRAG_SHADOW_STYLE_NAME);
+            placeHolderElement.addClassName(className);
 
             placeHolderElement.getStyle().setWidth(width, Unit.PX);
             placeHolderElement.getStyle().setHeight(height, Unit.PX);

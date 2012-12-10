@@ -27,6 +27,7 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -243,12 +244,16 @@ public final class VDragDropUtil {
         }
 
         // Ensure we have the right widget
-        // FIXME
-        // target = getTransferableWidget(target);
+        target = getTransferableWidget(target);
 
         // Find the containing layout of the component
         ComponentConnector widgetConnector = (ComponentConnector) VDragDropUtil
                 .findConnectorFor(target);
+        if (widgetConnector == null) {
+            VConsole.error("No connector found for " + target);
+            return null;
+        }
+
         ComponentConnector layoutConnector = (ComponentConnector) widgetConnector
                 .getParent();
 
@@ -302,20 +307,23 @@ public final class VDragDropUtil {
         return isCaption(w) || w instanceof VButton || w instanceof VLink;
     }
 
-    private static Widget getTransferableWidget(Widget w) {
-        // Ensure w is Paintable
-        while (!(w instanceof Paintable) && !isCaption(w)
-                && w.getParent() != null) {
-            w = w.getParent();
+    public static Widget getTransferableWidget(Widget w) {
+        // Ensure we are dealing with a Vaadin component
+        ComponentConnector connector = Util.findConnectorFor(w);
+        if (connector != null) {
+            w = connector.getWidget();
         }
 
         if (isCaption(w)) {
             // Dragging caption means dragging component the caption belongs to
             Widget owner = null;
             if (w instanceof VCaption) {
-                owner = (Widget) ((VCaption) w).getOwner();
+                ComponentConnector ownerConnector = ((VCaption) w).getOwner();
+                owner = ownerConnector.getWidget();
             } else if (w instanceof VFormLayout.Caption) {
-                owner = (Widget) ((VFormLayout.Caption) w).getOwner();
+                ComponentConnector ownerConnector = ((VFormLayout.Caption) w)
+                        .getOwner();
+                owner = ownerConnector.getWidget();
             }
             if (owner != null) {
                 w = owner;

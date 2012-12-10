@@ -19,18 +19,13 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.VFormLayout;
-import com.vaadin.client.ui.dd.VAbstractDropHandler;
-import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
-import com.vaadin.client.ui.dd.VDropHandler;
 import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 
 import fi.jasoft.dragdroplayouts.DDFormLayout;
@@ -55,21 +50,21 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
 
     private Element currentlyEmphasised;
 
-    private static final int COLUMN_CAPTION = 0;
-    private static final int COLUMN_ERRORFLAG = 1;
-    private static final int COLUMN_WIDGET = 2;
+    private float cellTopBottomDropRatio;
+
+    static final int COLUMN_CAPTION = 0;
+    static final int COLUMN_ERRORFLAG = 1;
+    static final int COLUMN_WIDGET = 2;
 
     public static final String OVER = "v-ddformlayout-over";
 
     public static final String OVER_SPACED = OVER + "-spaced";
 
-    private VAbstractDropHandler dropHandler;
+    private VDDFormLayoutDropHandler dropHandler;
 
     private VDragFilter dragFilter;
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
-
-    private final VFormLayoutTable table;
 
     protected ApplicationConnection client;
 
@@ -127,11 +122,10 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
      */
     protected VerticalDropLocation getVerticalDropLocation(Element rowElement,
             VDragEvent event) {
-        float ratio = ((DDFormLayoutConnector) ConnectorMap.get(client)
-                .getConnector(this)).getState().getCellTopBottomDropRatio();
         return VDragDropUtil.getVerticalDropLocation(
                 (com.google.gwt.user.client.Element) rowElement,
-                Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()), ratio);
+                Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),
+                cellTopBottomDropRatio);
     }
 
     private static boolean elementIsRow(Element e) {
@@ -285,197 +279,14 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
     }
 
     /**
-     * Creates a drop handler if one does not already exist and updates it from
-     * the details received from the server.
-     * 
-     * @param childUidl
-     *            The UIDL
-     */
-    protected void updateDropHandler(UIDL childUidl) {
-        if (dropHandler == null) {
-            dropHandler = new VAbstractDropHandler() {
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
-                 * getApplicationConnection()
-                 */
-                public ApplicationConnection getApplicationConnection() {
-                    return client;
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragAccepted
-                 * (com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                protected void dragAccepted(VDragEvent drag) {
-                    dragOver(drag);
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #drop(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public boolean drop(VDragEvent drag) {
-
-                    // Un-emphasis any selections
-                    emphasis(null, null);
-
-                    // Update the details
-                    updateDropDetails(getTableRowWidgetFromDragEvent(drag),
-                            drag);
-                    return postDropHook(drag) && super.drop(drag);
-                };
-
-                private Widget getTableRowWidgetFromDragEvent(VDragEvent event) {
-
-                    /**
-                     * Find the widget of the row
-                     */
-                    Element e = event.getElementOver();
-
-                    if (table.getRowCount() == 0) {
-                        /*
-                         * Empty layout
-                         */
-                        return VDDFormLayout.this;
-                    }
-
-                    /**
-                     * Check if element is inside one of the table widgets
-                     */
-                    for (int i = 0; i < table.getRowCount(); i++) {
-                        Element caption = table.getWidget(i, COLUMN_CAPTION)
-                                .getElement();
-                        Element error = table.getWidget(i, COLUMN_ERRORFLAG)
-                                .getElement();
-                        Element widget = table.getWidget(i, COLUMN_WIDGET)
-                                .getElement();
-                        if (caption.isOrHasChild(e) || error.isOrHasChild(e)
-                                || widget.isOrHasChild(e)) {
-                            return table.getWidget(i, COLUMN_WIDGET);
-                        }
-                    }
-
-                    /*
-                     * Is the element a element outside the row structure but
-                     * inside the layout
-                     */
-                    Element rowElement = getRowFromChildElement(e,
-                            VDDFormLayout.this.getElement());
-                    if (rowElement != null) {
-                        Element tableElement = rowElement.getParentElement();
-                        for (int i = 0; i < tableElement.getChildCount(); i++) {
-                            Element r = tableElement.getChild(i).cast();
-                            if (r.equals(rowElement)) {
-                                return table.getWidget(i, COLUMN_WIDGET);
-                            }
-                        }
-                    }
-
-                    /*
-                     * Element was not found in rows so defaulting to the form
-                     * layout instead
-                     */
-                    return VDDFormLayout.this;
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragOver(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragOver(VDragEvent drag) {
-
-                    // Remove any emphasis
-                    emphasis(null, null);
-
-                    // Update the drop details so we can validate the drop
-                    Widget c = getTableRowWidgetFromDragEvent(drag);
-                    if (c != null) {
-                        updateDropDetails(c, drag);
-                    } else {
-                        updateDropDetails(VDDFormLayout.this, drag);
-                    }
-
-                    postOverHook(drag);
-
-                    // Validate the drop
-                    validate(new VAcceptCallback() {
-                        public void accepted(VDragEvent event) {
-                            Widget c = getTableRowWidgetFromDragEvent(event);
-                            if (c != null) {
-                                emphasis(c, event);
-                            } else {
-                                emphasis(VDDFormLayout.this, event);
-                            }
-                        }
-                    }, drag);
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragEnter(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragEnter(VDragEvent drag) {
-                    emphasis(null, null);
-
-                    Widget c = getTableRowWidgetFromDragEvent(drag);
-                    if (c != null) {
-                        updateDropDetails(c, drag);
-                    } else {
-                        updateDropDetails(VDDFormLayout.this, drag);
-                    }
-                    super.dragEnter(drag);
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragLeave(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragLeave(VDragEvent drag) {
-                    emphasis(null, drag);
-                    postLeaveHook(drag);
-                }
-
-                @Override
-                public ComponentConnector getConnector() {
-                    return ConnectorMap.get(client).getConnector(
-                            VDDFormLayout.this);
-                };
-            };
-        }
-
-        // Update the rules
-        dropHandler.updateAcceptRules(childUidl);
-    }
-
-    /**
      * Get the drop handler attached to the Layout
      */
-    public VDropHandler getDropHandler() {
+    public VDDFormLayoutDropHandler getDropHandler() {
         return dropHandler;
+    }
+
+    public void setDropHandler(VDDFormLayoutDropHandler handler) {
+        dropHandler = handler;
     }
 
     /*
@@ -501,4 +312,14 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
     public void setDragFilter(VDragFilter filter) {
         this.dragFilter = filter;
     }
+
+    public float getCellTopBottomDropRatio() {
+        return cellTopBottomDropRatio;
+    }
+
+    @DelegateToWidget
+    public void setCellTopBottomDropRatio(float cellTopBottomDropRatio) {
+        this.cellTopBottomDropRatio = cellTopBottomDropRatio;
+    }
+
 }
