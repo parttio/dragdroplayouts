@@ -18,16 +18,10 @@ package fi.jasoft.dragdroplayouts.client.ui.horizontalsplitpanel;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.VSplitPanelHorizontal;
-import com.vaadin.client.ui.dd.VAbstractDropHandler;
-import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
-import com.vaadin.client.ui.dd.VDropHandler;
 import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
@@ -54,7 +48,7 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
     public static final String OVER = "v-ddsplitpanel-over";
     public static final String OVER_SPLITTER = OVER + "-splitter";
 
-    private VAbstractDropHandler dropHandler;
+    private VDDHorizontalSplitPanelDropHandler dropHandler;
 
     private ApplicationConnection client;
 
@@ -151,115 +145,8 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
                 && dragFilter.isDraggable(widget);
     }
 
-    /**
-     * Creates a drop handler if one does not already exist and updates it from
-     * the details received from the server.
-     * 
-     * @param childUidl
-     *            The UIDL
-     */
-    protected void updateDropHandler(UIDL childUidl) {
-        if (dropHandler == null) {
-            dropHandler = new VAbstractDropHandler() {
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
-                 * getApplicationConnection()
-                 */
-                public ApplicationConnection getApplicationConnection() {
-                    return client;
-                }
-
-                @Override
-                public ComponentConnector getConnector() {
-                    return ConnectorMap.get(client).getConnector(
-                            VDDHorizontalSplitPanel.this);
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragAccepted
-                 * (com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                protected void dragAccepted(VDragEvent drag) {
-                    dragOver(drag);
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #drop(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public boolean drop(VDragEvent drag) {
-
-                    // Un-emphasis any selections
-                    deEmphasis();
-
-                    // Update the details
-                    updateDropDetails(drag);
-                    return postDropHook(drag) && super.drop(drag);
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragOver(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragOver(VDragEvent drag) {
-
-                    deEmphasis();
-
-                    updateDropDetails(drag);
-
-                    postOverHook(drag);
-
-                    ComponentConnector widgetConnector = (ComponentConnector) drag
-                            .getTransferable().getData(
-                                    Constants.TRANSFERABLE_DETAIL_COMPONENT);
-
-                    if (VDDHorizontalSplitPanel.this.equals(widgetConnector
-                            .getWidget())) {
-                        return;
-                    }
-
-                    // Validate the drop
-                    validate(new VAcceptCallback() {
-                        public void accepted(VDragEvent event) {
-                            emphasis(event.getElementOver());
-                        }
-                    }, drag);
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragLeave(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragLeave(VDragEvent drag) {
-                    deEmphasis();
-                    updateDropDetails(drag);
-                    postLeaveHook(drag);
-                };
-            };
-        }
-
-        // Update the rules
-        dropHandler.updateAcceptRules(childUidl);
+    public void setDropHandler(VDDHorizontalSplitPanelDropHandler handler) {
+        dropHandler = handler;
     }
 
     /*
@@ -268,18 +155,8 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      * @see
      * com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler#getDropHandler()
      */
-    public VDropHandler getDropHandler() {
+    public VDDHorizontalSplitPanelDropHandler getDropHandler() {
         return dropHandler;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
-     */
-    public LayoutDragMode getDragMode() {
-        return ((DDHorizontalSplitPanelState) ConnectorMap.get(client)
-                .getConnector(this).getState()).getDragMode();
     }
 
     /**
@@ -356,15 +233,13 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
         Widget content = null;
         if (firstContainer.isOrHasChild(over)) {
             location = HorizontalDropLocation.LEFT;
-            content = Util.findWidget((Element) firstContainer.getChild(0),
-                    null);
+            content = Util.findWidget(firstContainer, null);
         } else if (splitter.isOrHasChild(over)) {
             location = HorizontalDropLocation.CENTER;
             content = this;
         } else if (secondContainer.isOrHasChild(over)) {
             location = HorizontalDropLocation.RIGHT;
-            content = Util.findWidget((Element) secondContainer.getChild(0),
-                    null);
+            content = Util.findWidget(secondContainer, null);
         }
 
         event.getDropDetails().put(
@@ -408,5 +283,12 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
     @Override
     public void setDragFilter(VDragFilter filter) {
         this.dragFilter = filter;
+    }
+
+    /**
+     * Returns the current drag mode which determines how the drag is visualized
+     */
+    public LayoutDragMode getDragMode() {
+        return ddMouseHandler.getDragMode();
     }
 }

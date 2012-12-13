@@ -4,6 +4,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.VOrderedLayout.Slot;
 import com.vaadin.client.ui.dd.VAbstractDropHandler;
@@ -14,16 +15,16 @@ public class VDDHorizontalLayoutDropHandler extends VAbstractDropHandler {
 
     private final VDDHorizontalLayout layout;
 
-    private final ComponentConnector connector;
+    private final ApplicationConnection client;
 
     public VDDHorizontalLayoutDropHandler(VDDHorizontalLayout layout,
-            ComponentConnector connector) {
+            ApplicationConnection client) {
         this.layout = layout;
-        this.connector = connector;
+        this.client = client;
     }
 
     public ApplicationConnection getApplicationConnection() {
-        return connector.getConnection();
+        return client;
     }
 
     @Override
@@ -33,7 +34,7 @@ public class VDDHorizontalLayoutDropHandler extends VAbstractDropHandler {
 
     @Override
     public ComponentConnector getConnector() {
-        return connector;
+        return ConnectorMap.get(client).getConnector(layout);
     }
 
     @Override
