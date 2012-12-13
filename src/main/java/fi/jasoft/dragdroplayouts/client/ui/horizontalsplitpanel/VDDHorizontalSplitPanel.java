@@ -17,7 +17,6 @@ package fi.jasoft.dragdroplayouts.client.ui.horizontalsplitpanel;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.VSplitPanelHorizontal;
@@ -49,8 +48,6 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
     public static final String OVER_SPLITTER = OVER + "-splitter";
 
     private VDDHorizontalSplitPanelDropHandler dropHandler;
-
-    private ApplicationConnection client;
 
     private Element firstContainer;
 
