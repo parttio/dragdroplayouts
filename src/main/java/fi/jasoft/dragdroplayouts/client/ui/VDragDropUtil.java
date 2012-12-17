@@ -37,6 +37,7 @@ import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VFormLayout;
 import com.vaadin.client.ui.VLink;
 import com.vaadin.client.ui.VScrollTable;
+import com.vaadin.client.ui.VTabsheet.TabCaption;
 import com.vaadin.client.ui.dd.VTransferable;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
@@ -159,7 +160,7 @@ public final class VDragDropUtil {
         transferable.setDragSource(VDragDropUtil.findConnectorFor(tabsheet));
         if (tabsheet != tab) {
             transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
-                    VDragDropUtil.findConnectorFor(tab));
+                    VDragDropUtil.findConnectorFor(tabsheet));
             transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
                     tabsheet.getTabPosition(tab));
         }
@@ -317,6 +318,11 @@ public final class VDragDropUtil {
         if (isCaption(w)) {
             // Dragging caption means dragging component the caption belongs to
             Widget owner = null;
+            if (w instanceof TabCaption) {
+                // Tabsheet cannot find content connector since unrendered tabs
+                // do not have an owner
+                return w;
+            }
             if (w instanceof VCaption) {
                 ComponentConnector ownerConnector = ((VCaption) w).getOwner();
                 owner = ownerConnector.getWidget();
@@ -449,10 +455,8 @@ public final class VDragDropUtil {
         connector.addStateChangeHandler("iframeShims",
                 new StateChangeHandler() {
                     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-
                         DDLayoutState state = (DDLayoutState) connector
                                 .getState();
-
                         iframeUtility.setIframeCoversEnabled(
                                 state.isIframeShims(), widget.getElement(),
                                 state.getDragMode());

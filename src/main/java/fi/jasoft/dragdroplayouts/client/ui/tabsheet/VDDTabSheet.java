@@ -20,18 +20,12 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.ui.VTabsheet;
 import com.vaadin.client.ui.VTabsheetPanel;
-import com.vaadin.client.ui.dd.VAbstractDropHandler;
-import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
-import com.vaadin.client.ui.dd.VDropHandler;
 import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
@@ -62,7 +56,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
     public static final String CLASSNAME_NEW_TAB_RIGHT = "new-tab-right";
     public static final String CLASSNAME_NEW_TAB_CENTER = "new-tab-center";
 
-    private VAbstractDropHandler dropHandler;
+    private VDDTabsheetDropHandler dropHandler;
 
     private ApplicationConnection client;
 
@@ -81,6 +75,8 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
 
     private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
             this, LayoutDragMode.NONE);
+
+    private double tabLeftRightDropRatio = DDTabSheetState.DEFAULT_HORIZONTAL_DROP_RATIO;
 
     public VDDTabSheet() {
         super();
@@ -121,8 +117,12 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * @see
      * com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler#getDropHandler()
      */
-    public VDropHandler getDropHandler() {
+    public VDDTabsheetDropHandler getDropHandler() {
         return dropHandler;
+    }
+
+    public void setDropHandler(VDDTabsheetDropHandler handler) {
+        this.dropHandler = handler;
     }
 
     /*
@@ -131,8 +131,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * @see fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
      */
     public LayoutDragMode getDragMode() {
-        return ((DDTabSheetState) ConnectorMap.get(client).getConnector(this)
-                .getState()).getDragMode();
+        return ddMouseHandler.getDragMode();
     }
 
     /**
@@ -174,123 +173,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * to commence. Return false to interrupt the drag:
      */
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        Widget w = tabPanel.getWidget(getTabPosition(widget));
-        return getDragMode() != LayoutDragMode.NONE
-                && dragFilter.isDraggable(w);
-    }
-
-    /**
-     * Creates a drop handler if one does not already exist and updates it from
-     * the details received from the server.
-     * 
-     * @param childUidl
-     *            The UIDL
-     */
-    public void updateDropHandler(UIDL childUidl) {
-        if (dropHandler == null) {
-            dropHandler = new VAbstractDropHandler() {
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
-                 * getApplicationConnection()
-                 */
-                public ApplicationConnection getApplicationConnection() {
-                    return client;
-                }
-
-                @Override
-                public ComponentConnector getConnector() {
-                    return ConnectorMap.get(client).getConnector(
-                            VDDTabSheet.this);
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragAccepted
-                 * (com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                protected void dragAccepted(VDragEvent drag) {
-                    dragOver(drag);
-                }
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #drop(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public boolean drop(VDragEvent drag) {
-
-                    deEmphasis();
-
-                    // Update the details
-                    updateDropDetails(drag);
-                    return postDropHook(drag) && super.drop(drag);
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragOver(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragOver(VDragEvent drag) {
-
-                    if (drag.getElementOver() == newTab) {
-                        return;
-                    }
-
-                    deEmphasis();
-
-                    updateDropDetails(drag);
-
-                    postOverHook(drag);
-
-                    ComponentConnector widgetConnector = (ComponentConnector) drag
-                            .getTransferable().getData(
-                                    Constants.TRANSFERABLE_DETAIL_COMPONENT);
-
-                    // Check if we are dropping on our self
-                    if (VDDTabSheet.this.equals(widgetConnector.getWidget())) {
-                        return;
-                    }
-
-                    // Validate the drop
-                    validate(new VAcceptCallback() {
-                        public void accepted(VDragEvent event) {
-                            emphasis(event.getElementOver(), event);
-                        }
-                    }, drag);
-                };
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see
-                 * com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-                 * #dragLeave(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-                 */
-                @Override
-                public void dragLeave(VDragEvent drag) {
-                    deEmphasis();
-                    updateDropDetails(drag);
-                    postLeaveHook(drag);
-                };
-            };
-        }
-
-        // Update the rules
-        dropHandler.updateAcceptRules(childUidl);
+        return getDragMode() != LayoutDragMode.NONE;
     }
 
     /**
@@ -327,13 +210,11 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
                         getTabPosition(w));
 
                 // Add drop location
-                float ratio = ((DDTabSheetState) ConnectorMap.get(client)
-                        .getConnector(VDDTabSheet.this).getState())
-                        .getTabLeftRightDropRatio();
                 HorizontalDropLocation location = VDragDropUtil
                         .getHorizontalDropLocation(element, Util
                                 .getTouchOrMouseClientX(event
-                                        .getCurrentGwtEvent()), ratio);
+                                        .getCurrentGwtEvent()),
+                                tabLeftRightDropRatio);
                 event.getDropDetails().put(
                         Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
                         location);
@@ -368,21 +249,17 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
 
             } else if (w instanceof VCaption) {
                 // Over a tab
-                VCaption tab = (VCaption) w;
-                float ratio = ((DDTabSheetState) ConnectorMap.get(client)
-                        .getConnector(VDDTabSheet.this).getState())
-                        .getTabLeftRightDropRatio();
                 HorizontalDropLocation location = VDragDropUtil
                         .getHorizontalDropLocation(element, Util
                                 .getTouchOrMouseClientX(event
-                                        .getCurrentGwtEvent()), ratio);
+                                        .getCurrentGwtEvent()),
+                                tabLeftRightDropRatio);
 
                 if (location == HorizontalDropLocation.LEFT) {
 
                     int index = getTabPosition(w);
-
                     if (index == 0) {
-                        currentlyEmphasised = tab.getElement();
+                        currentlyEmphasised = tabBar.getWidget(0).getElement();
                         currentlyEmphasised
                                 .addClassName(CLASSNAME_NEW_TAB_LEFT);
                     } else {
@@ -393,11 +270,13 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
                     }
 
                 } else if (location == HorizontalDropLocation.RIGHT) {
-                    tab.getElement().addClassName(CLASSNAME_NEW_TAB_RIGHT);
-                    currentlyEmphasised = tab.getElement();
+                    int index = getTabPosition(w);
+                    currentlyEmphasised = tabBar.getWidget(index).getElement();
+                    currentlyEmphasised.addClassName(CLASSNAME_NEW_TAB_RIGHT);
                 } else {
-                    tab.getElement().addClassName(CLASSNAME_NEW_TAB_CENTER);
-                    currentlyEmphasised = tab.getElement();
+                    int index = getTabPosition(w);
+                    currentlyEmphasised = tabBar.getWidget(index).getElement();
+                    currentlyEmphasised.addClassName(CLASSNAME_NEW_TAB_CENTER);
                 }
 
             }
@@ -434,15 +313,10 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * (com.google.gwt.user.client.ui.Widget)
      */
     public int getTabPosition(Widget tab) {
-        int idx = -1;
-        for (int i = 0; i < tabBar.getWidgetCount(); i++) {
-            Widget w = tabBar.getWidget(i);
-            if (w.getElement().isOrHasChild(tab.getElement())) {
-                idx = i;
-                break;
-            }
+        if (tab instanceof TabCaption) {
+            tab = tab.getParent();
         }
-        return idx;
+        return tabBar.getWidgetIndex(tab);
     }
 
     /*
@@ -477,5 +351,13 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
     @Override
     public void setDragFilter(VDragFilter filter) {
         this.dragFilter = filter;
+    }
+
+    public double getTabLeftRightDropRatio() {
+        return tabLeftRightDropRatio;
+    }
+
+    public void setTabLeftRightDropRatio(double tabLeftRightDropRatio) {
+        this.tabLeftRightDropRatio = tabLeftRightDropRatio;
     }
 }

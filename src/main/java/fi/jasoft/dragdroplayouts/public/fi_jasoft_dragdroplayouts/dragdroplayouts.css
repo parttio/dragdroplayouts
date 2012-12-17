@@ -156,6 +156,10 @@
 	margin-bottom: -2px;
 }
 
+.v-tabsheet.v-dd-active-drag-source{
+	opacity:1;
+}
+
 /* Accordion styles */
 .v-accordion-item.dd-over,
 .v-accordion-item-caption .v-caption.dd-over{

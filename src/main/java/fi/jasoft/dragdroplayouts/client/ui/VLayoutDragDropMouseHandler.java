@@ -39,6 +39,7 @@ import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VFormLayout;
 import com.vaadin.client.ui.VPanel;
 import com.vaadin.client.ui.VSlider;
+import com.vaadin.client.ui.VTabsheet;
 import com.vaadin.client.ui.VTextField;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
@@ -199,7 +200,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
         // Resolve the component
         final Widget w;
-        if (root instanceof VDDAccordion
+        if ((root instanceof VDDAccordion)
                 && transferable.getData(Constants.TRANSFERABLE_DETAIL_CAPTION) != null) {
             w = (Widget) transferable
                     .getData(Constants.TRANSFERABLE_DETAIL_CAPTION);
@@ -257,6 +258,12 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
              */
             currentDragEvent.createDragImage((Element) w.getElement().cast(),
                     true);
+
+        } else if (root instanceof VTabsheet) {
+            /*
+             * Tabsheet should use the dragged tab as a drag image
+             */
+            currentDragEvent.createDragImage(targetElement, true);
 
         } else if (root instanceof VFormLayout) {
             /*
