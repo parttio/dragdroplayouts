@@ -6,8 +6,6 @@ import com.vaadin.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
 
-import fi.jasoft.dragdroplayouts.client.ui.Constants;
-
 public class VDDAccordionDropHandler extends VAbstractDropHandler {
 
     private final VDDAccordion layout;
@@ -51,14 +49,6 @@ public class VDDAccordionDropHandler extends VAbstractDropHandler {
         layout.updateDropDetails(drag);
 
         layout.postOverHook(drag);
-
-        ComponentConnector widgetConnector = (ComponentConnector) drag
-                .getTransferable().getData(
-                        Constants.TRANSFERABLE_DETAIL_COMPONENT);
-
-        if (layout.equals(widgetConnector.getWidget())) {
-            return;
-        }
 
         // Validate the drop
         validate(new VAcceptCallback() {

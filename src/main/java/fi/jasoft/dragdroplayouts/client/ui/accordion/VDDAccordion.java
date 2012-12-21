@@ -154,8 +154,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
      * to commence. Return false to interrupt the drag:
      */
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return ddMouseHandler.getDragMode() != LayoutDragMode.NONE
-                && dragFilter.isDraggable(widget);
+        return ddMouseHandler.getDragMode() != LayoutDragMode.NONE;
     }
 
     /**
@@ -190,6 +189,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     }
 
     private StackItem getTabByElement(Element element) {
+        assert (element != null);
         StackItem item = elementTabMap.get(element);
         if (item == null) {
             for (int i = 0; i < getTabCount(); i++) {

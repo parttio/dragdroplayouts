@@ -23,7 +23,7 @@ targetCompatibility = 1.6
 
 // Vaadin plugin
 vaadin {
-	version = '7.0.0.beta10'
+	version = '7.0.0.beta11'
 	widgetset = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
 	manageWidgetset = false
 	

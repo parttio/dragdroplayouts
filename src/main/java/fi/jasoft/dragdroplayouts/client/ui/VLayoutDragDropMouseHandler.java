@@ -45,8 +45,6 @@ import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VTransferable;
 
-import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
-
 /**
  * Mouse handler for starting component drag operations
  * 
@@ -200,12 +198,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
         // Resolve the component
         final Widget w;
-        if ((root instanceof VDDAccordion)
-                && transferable.getData(Constants.TRANSFERABLE_DETAIL_CAPTION) != null) {
-            w = (Widget) transferable
-                    .getData(Constants.TRANSFERABLE_DETAIL_CAPTION);
-        } else if (transferable
-                .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT) != null) {
+        if (transferable.getData(Constants.TRANSFERABLE_DETAIL_COMPONENT) != null) {
             ComponentConnector connector = (ComponentConnector) transferable
                     .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
             w = connector.getWidget();

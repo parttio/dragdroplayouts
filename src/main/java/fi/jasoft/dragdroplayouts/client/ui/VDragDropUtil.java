@@ -190,7 +190,6 @@ public final class VDragDropUtil {
         // Create transferable
         VTransferable transferable = new VTransferable();
         transferable.setDragSource(VDragDropUtil.findConnectorFor(accordion));
-        transferable.setData(Constants.TRANSFERABLE_DETAIL_CAPTION, tabCaption);
         transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
                 VDragDropUtil.findConnectorFor(tabCaption.getParent()));
         transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,

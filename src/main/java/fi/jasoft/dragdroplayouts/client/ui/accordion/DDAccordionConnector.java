@@ -58,6 +58,7 @@ public class DDAccordionConnector extends AccordionConnector implements
      * TODO Remove this when drag & drop is done properly in core
      */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        super.updateFromUIDL(uidl, client);
 
         // Drop handlers
         UIDL ac = uidl.getChildByTagName("-ac");

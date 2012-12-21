@@ -6,10 +6,10 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Util;
-import com.vaadin.client.ui.VOrderedLayout.Slot;
 import com.vaadin.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
+import com.vaadin.client.ui.orderedlayout.Slot;
 
 public class VDDHorizontalLayoutDropHandler extends VAbstractDropHandler {
 

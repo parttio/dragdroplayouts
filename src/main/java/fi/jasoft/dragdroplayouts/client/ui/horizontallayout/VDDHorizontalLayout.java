@@ -23,6 +23,7 @@ import com.vaadin.client.Util;
 import com.vaadin.client.ui.VHorizontalLayout;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VHasDropHandler;
+import com.vaadin.client.ui.orderedlayout.Slot;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 
