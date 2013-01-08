@@ -40,6 +40,8 @@ dependencies{
 
 // War plugin
 war {
+	// WAR filename
+	archiveName = 'DragDropLayouts7.war'
 
 	// Include widgetset
 	dependsOn test, widgetset
