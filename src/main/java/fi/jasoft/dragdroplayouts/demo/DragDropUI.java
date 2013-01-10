@@ -103,6 +103,7 @@ public class DragDropUI extends UI {
 
         split.setSizeFull();
         split.setSplitPosition(30, Unit.PERCENTAGE, true);
+        split.setStyleName(Reindeer.SPLITPANEL_SMALL);
         ((HorizontalLayout) subroot.getContent()).addComponent(split);
         ((HorizontalLayout) subroot.getContent()).setExpandRatio(split, 1);
 

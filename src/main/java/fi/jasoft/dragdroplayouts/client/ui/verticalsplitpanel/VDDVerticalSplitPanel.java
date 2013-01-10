@@ -85,9 +85,9 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
 
         // Save references
         Element wrapper = getElement().getChild(0).cast();
-        secondContainer = wrapper.getChild(0).cast();
-        firstContainer = wrapper.getChild(1).cast();
-        splitter = wrapper.getChild(2).cast();
+        firstContainer = wrapper.getChild(0).cast();
+        splitter = wrapper.getChild(1).cast();
+        secondContainer = wrapper.getChild(2).cast();
     }
 
     /**
