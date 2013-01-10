@@ -248,6 +248,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
                 currentlyEmphasised = element;
 
             } else if (w instanceof VCaption) {
+
                 // Over a tab
                 HorizontalDropLocation location = VDragDropUtil
                         .getHorizontalDropLocation(element, Util
@@ -258,8 +259,11 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
                 if (location == HorizontalDropLocation.LEFT) {
 
                     int index = getTabPosition(w);
+
                     if (index == 0) {
-                        currentlyEmphasised = tabBar.getWidget(0).getElement();
+
+                        currentlyEmphasised = tabBar.getWidget(0).getElement()
+                                .getFirstChildElement().cast();
                         currentlyEmphasised
                                 .addClassName(CLASSNAME_NEW_TAB_LEFT);
                     } else {

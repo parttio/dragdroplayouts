@@ -7,8 +7,6 @@ import com.vaadin.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
 
-import fi.jasoft.dragdroplayouts.client.ui.Constants;
-
 public class VDDTabsheetDropHandler extends VAbstractDropHandler {
 
     private final VDDTabSheet layout;
@@ -77,15 +75,6 @@ public class VDDTabsheetDropHandler extends VAbstractDropHandler {
         layout.updateDropDetails(drag);
 
         layout.postOverHook(drag);
-
-        ComponentConnector widgetConnector = (ComponentConnector) drag
-                .getTransferable().getData(
-                        Constants.TRANSFERABLE_DETAIL_COMPONENT);
-
-        // Check if we are dropping on our self
-        if (layout.equals(widgetConnector.getWidget())) {
-            return;
-        }
 
         // Validate the drop
         validate(new VAcceptCallback() {

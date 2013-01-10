@@ -307,6 +307,11 @@ public final class VDragDropUtil {
         return isCaption(w) || w instanceof VButton || w instanceof VLink;
     }
 
+    private static final native Widget getTabsheetTabOwner(TabCaption tab)
+    /*-{
+        return tab.@com.vaadin.client.ui.VTabsheet.TabCaption::getTab().getTabsheet();
+    }-*/;
+
     public static Widget getTransferableWidget(Widget w) {
         // Ensure we are dealing with a Vaadin component
         ComponentConnector connector = Util.findConnectorFor(w);
@@ -318,9 +323,8 @@ public final class VDragDropUtil {
             // Dragging caption means dragging component the caption belongs to
             Widget owner = null;
             if (w instanceof TabCaption) {
-                // Tabsheet cannot find content connector since unrendered tabs
-                // do not have an owner
-                return w;
+                TabCaption caption = (TabCaption) w;
+                owner = getTabsheetTabOwner(caption);
             }
             if (w instanceof VCaption) {
                 ComponentConnector ownerConnector = ((VCaption) w).getOwner();

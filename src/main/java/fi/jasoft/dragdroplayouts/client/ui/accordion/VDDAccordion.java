@@ -188,7 +188,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
         }
     }
 
-    private StackItem getTabByElement(Element element) {
+    public StackItem getTabByElement(Element element) {
         assert (element != null);
         StackItem item = elementTabMap.get(element);
         if (item == null) {

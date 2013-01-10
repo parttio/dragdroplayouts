@@ -35,15 +35,19 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.ui.VAccordion;
 import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VFormLayout;
 import com.vaadin.client.ui.VPanel;
 import com.vaadin.client.ui.VSlider;
 import com.vaadin.client.ui.VTabsheet;
+import com.vaadin.client.ui.VTabsheet.TabCaption;
 import com.vaadin.client.ui.VTextField;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VTransferable;
+
+import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
 
 /**
  * Mouse handler for starting component drag operations
@@ -198,10 +202,18 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
         // Resolve the component
         final Widget w;
-        if (transferable.getData(Constants.TRANSFERABLE_DETAIL_COMPONENT) != null) {
+
+        if (target instanceof TabCaption) {
+            w = target;
+        } else if (root instanceof VDDAccordion) {
+            w = ((VDDAccordion) root).getTabByElement(targetElement);
+
+        } else if (transferable
+                .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT) != null) {
             ComponentConnector connector = (ComponentConnector) transferable
                     .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
             w = connector.getWidget();
+
         } else {
             // Failsafe if no widget was found
             w = root;
@@ -256,6 +268,9 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             /*
              * Tabsheet should use the dragged tab as a drag image
              */
+            currentDragEvent.createDragImage(targetElement, true);
+
+        } else if (root instanceof VAccordion) {
             currentDragEvent.createDragImage(targetElement, true);
 
         } else if (root instanceof VFormLayout) {
