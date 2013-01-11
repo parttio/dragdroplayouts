@@ -39,22 +39,22 @@ public class DragDropUI extends UI {
     public DragDropUI() {
         componentList.setNullSelectionAllowed(false);
         componentList.addContainerProperty("caption", String.class, "");
-        componentList.setWidth("200px");
+        componentList.setWidth("250px");
         componentList.setHeight("100%");
         componentList.setImmediate(true);
         componentList
-                .addValueChangeListener(new Property.ValueChangeListener() {
+        .addValueChangeListener(new Property.ValueChangeListener() {
 
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        try {
-                            tabChanged((Component) event.getProperty()
-                                    .getValue());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                try {
+                    tabChanged((Component) event.getProperty()
+                            .getValue());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         componentList.setItemCaptionPropertyId("caption");
         componentList.setItemCaptionMode(ItemCaptionMode.PROPERTY);
 
@@ -73,6 +73,8 @@ public class DragDropUI extends UI {
 
         addDemo(new DragdropDragFilterDemo());
         addDemo(new DragdropCaptionModeDemo());
+
+        addDemo(new DragdropIframeDragging());
     }
 
     private void addDemo(CustomComponent view) {
@@ -151,7 +153,7 @@ public class DragDropUI extends UI {
         code = Pattern
                 .compile("public String getCodePath.*?}",
                         Pattern.MULTILINE | Pattern.DOTALL).matcher(code)
-                .replaceAll("");
+                        .replaceAll("");
 
         this.code.setValue(code.trim());
     }

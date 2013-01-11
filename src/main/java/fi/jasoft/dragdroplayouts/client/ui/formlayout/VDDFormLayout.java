@@ -46,7 +46,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * @since 0.4.0
  */
 public class VDDFormLayout extends VFormLayout implements VHasDragMode,
-        VHasDropHandler, DragStartListener, VHasDragFilter {
+VHasDropHandler, DragStartListener, VHasDragFilter {
 
     private Element currentlyEmphasised;
 
@@ -136,7 +136,7 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
         return false;
     }
 
-    static Element getRowFromChildElement(Element e, Element root) {
+    public static Element getRowFromChildElement(Element e, Element root) {
         while (!elementIsRow(e) && e != root && e.getParentElement() != null) {
             e = e.getParentElement().cast();
         }
@@ -231,6 +231,7 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
     /**
      * Returns the current drag mode which determines how the drag is visualized
      */
+    @Override
     public LayoutDragMode getDragMode() {
         return ddMouseHandler.getDragMode();
     }
@@ -273,6 +274,7 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
      * Can be used to listen to drag start events, must return true for the drag
      * to commence. Return false to interrupt the drag:
      */
+    @Override
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
         return ddMouseHandler.getDragMode() != LayoutDragMode.NONE
                 && dragFilter.isDraggable(widget);
@@ -281,6 +283,7 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
     /**
      * Get the drop handler attached to the Layout
      */
+    @Override
     public VDDFormLayoutDropHandler getDropHandler() {
         return dropHandler;
     }
@@ -296,6 +299,7 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
      * fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter#getDragFilter
      * ()
      */
+    @Override
     public VDragFilter getDragFilter() {
         return dragFilter;
     }

@@ -48,6 +48,7 @@ import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VTransferable;
 
 import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
+import fi.jasoft.dragdroplayouts.client.ui.formlayout.VDDFormLayout;
 
 /**
  * Mouse handler for starting component drag operations
@@ -56,7 +57,7 @@ import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
  * @since 0.4.0
  */
 public class VLayoutDragDropMouseHandler implements MouseDownHandler,
-        TouchStartHandler {
+TouchStartHandler {
 
     public static final String ACTIVE_DRAG_SOURCE_STYLENAME = "v-dd-active-drag-source";
 
@@ -165,7 +166,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
         // Abort if drag mode is caption mode and widget is not a caption
         boolean isPanelCaption = target instanceof VPanel
                 && targetElement.getParentElement().getClassName()
-                        .equals("v-panel-caption");
+                .equals("v-panel-caption");
         boolean isCaption = isPanelCaption
                 || VDragDropUtil.isCaptionOrCaptionless(target);
 
@@ -280,14 +281,14 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
              * Dragging a component in a form layout should include the caption
              * and error indicator as well
              */
-            // Element rowElement = (Element) VDDFormLayout
-            // .getRowFromChildElement(
-            // (com.google.gwt.dom.client.Element) w.getElement()
-            // .cast(),
-            // (com.google.gwt.dom.client.Element) root
-            // .getElement().cast()).cast();
-            //
-            // currentDragEvent.createDragImage(rowElement, true);
+            Element rowElement = (Element) VDDFormLayout
+                    .getRowFromChildElement(
+                            (com.google.gwt.dom.client.Element) w.getElement()
+                                    .cast(),
+                            (com.google.gwt.dom.client.Element) root
+                                    .getElement().cast()).cast();
+
+            currentDragEvent.createDragImage(rowElement, true);
 
         } else {
             /*
@@ -320,7 +321,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
                                 mouseUpHandlerReg.removeHandler();
                                 if (currentDraggedWidget != null) {
                                     currentDraggedWidget
-                                            .removeStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);
+                                    .removeStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);
                                     currentDraggedWidget = null;
                                 }
                             }
