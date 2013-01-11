@@ -44,11 +44,10 @@ public class DragdropIframeDragging extends CustomComponent {
 
         layout.addComponent(new Label(
                 "Adding iframe components to an layout where shimming is"
-                        + " turned on makes dragging possible. "
-                        + "But you will NOT be able to access the webpage in the Iframe."));
+                        + " turned on makes dragging possible but accessing the iframed component not possible. "
+                        + "For instance the tweet button below can be dragged around but not clicked"));
 
-        addComponentsToLayout(layout,
-                "BrowserFrame which is draggable but not accessible.");
+        addComponentsToLayout(layout, null);
 
         return layout;
     }
@@ -70,10 +69,9 @@ public class DragdropIframeDragging extends CustomComponent {
         layout.addComponent(new Label(
                 "Adding iframe components to an layout where shimming is"
                         + " turned off makes dragging those components impossible. "
-                        + "But you will be able to access the webpage in the Iframe."));
+                        + "For instance the tweet button below can be normally used but not dragged"));
 
-        addComponentsToLayout(layout,
-                "BrowserFrame which is accessible but not draggable.");
+        addComponentsToLayout(layout, null);
 
         return layout;
     }
@@ -81,7 +79,7 @@ public class DragdropIframeDragging extends CustomComponent {
     private void addComponentsToLayout(DDAbsoluteLayout layout, String caption) {
 
         BrowserFrame frame = new BrowserFrame(caption, new ExternalResource(
-                "http://www.vaadin.com"));
+                "https://platform.twitter.com/widgets/tweet_button.html"));
         frame.setWidth("300px");
         frame.setHeight("300px");
 

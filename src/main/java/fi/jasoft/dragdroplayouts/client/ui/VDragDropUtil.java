@@ -250,33 +250,32 @@ public final class VDragDropUtil {
             return null;
         }
 
-        ComponentConnector layoutConnector = (ComponentConnector) widgetConnector
-                .getParent();
+
 
         // Iterate until parent either is the root or a layout with drag and
         // drop enabled
+        ComponentConnector layoutConnector = (ComponentConnector) widgetConnector
+                .getParent();
         Widget layout = layoutConnector.getWidget();
-
         while (layout != root && layout != null && layoutConnector != null) {
-            if (layout instanceof VHasDragMode
-                    && ((VHasDragMode) layout).getDragMode() != LayoutDragMode.NONE) {
+            if (isDraggingEnabled(layoutConnector, target)) {
                 // Found parent layout with support for drag and drop
                 break;
             }
             target = layout;
             widgetConnector = layoutConnector;
+
             layoutConnector = (ComponentConnector) layoutConnector.getParent();
+            if (layoutConnector == null) {
+                break;
+            }
+
             layout = layoutConnector.getWidget();
         }
 
         // Consistency check
         if (target == null || root == target || layoutConnector == null) {
-            VConsole.error("Consistency check failed");
-            return null;
-        }
-
-        // Ensure layout allows dragging
-        if (!isDraggingEnabled(layoutConnector, target)) {
+            // No draggable layouts found, abort
             return null;
         }
 

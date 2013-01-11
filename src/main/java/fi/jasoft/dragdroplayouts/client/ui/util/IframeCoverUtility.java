@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
@@ -108,7 +109,7 @@ public class IframeCoverUtility {
         if (coverContainer != null) {
             Element parent = coverContainer.getParentElement().cast();
             parent.replaceChild(iframe, coverContainer);
-            iframe.getStyle().setPosition(null);
+            iframe.getStyle().clearPosition();
             iframeCoverMap.remove(iframe);
         }
     }
@@ -157,14 +158,19 @@ public class IframeCoverUtility {
      * @param root
      *            The root element where to put the IFrame covers
      */
-    public void setIframeCoversEnabled(boolean enabled, Element root,
-            LayoutDragMode mode) {
-        if (enabled && mode != LayoutDragMode.NONE) {
-            coveredIframes = addIframeCovers(root);
-        } else if (coveredIframes != null) {
-            removeIframeCovers(coveredIframes);
-            coveredIframes = null;
-        }
+    public void setIframeCoversEnabled(final boolean enabled,
+            final Element root, final LayoutDragMode mode) {
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                if (enabled && mode != LayoutDragMode.NONE) {
+                    coveredIframes = addIframeCovers(root);
+                } else if (coveredIframes != null) {
+                    removeIframeCovers(coveredIframes);
+                    coveredIframes = null;
+                }
+            }
+        });
     }
 
     public boolean isIframeCoversEnabled() {
