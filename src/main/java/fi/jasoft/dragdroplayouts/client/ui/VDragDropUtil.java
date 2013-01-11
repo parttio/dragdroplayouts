@@ -166,7 +166,7 @@ public final class VDragDropUtil {
         }
         transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
                 MouseEventDetailsBuilder.buildMouseEventDetails(event)
-                        .serialize());
+                .serialize());
 
         return transferable;
     }
@@ -196,7 +196,7 @@ public final class VDragDropUtil {
                 accordion.getWidgetIndex(tabCaption.getParent()));
         transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
                 MouseEventDetailsBuilder.buildMouseEventDetails(event)
-                        .serialize());
+                .serialize());
 
         return transferable;
     }
@@ -247,7 +247,7 @@ public final class VDragDropUtil {
         target = getTransferableWidget(target);
 
         // Find the containing layout of the component
-        ComponentConnector widgetConnector = (ComponentConnector) VDragDropUtil
+        ComponentConnector widgetConnector = VDragDropUtil
                 .findConnectorFor(target);
         if (widgetConnector == null) {
             VConsole.error("No connector found for " + target);
@@ -256,6 +256,22 @@ public final class VDragDropUtil {
 
         ComponentConnector layoutConnector = (ComponentConnector) widgetConnector
                 .getParent();
+
+        // Iterate until parent either is the root or a layout with drag and
+        // drop enabled
+        Widget layout = layoutConnector.getWidget();
+
+        while (layout != root && layout != null && layoutConnector != null) {
+            if (layout instanceof VHasDragMode
+                    && ((VHasDragMode) layout).getDragMode() != LayoutDragMode.NONE) {
+                // Found parent layout with support for drag and drop
+                break;
+            }
+            target = layout;
+            widgetConnector = layoutConnector;
+            layoutConnector = (ComponentConnector) layoutConnector.getParent();
+            layout = layoutConnector.getWidget();
+        }
 
         // Consistency check
         if (target == null || root == target || layoutConnector == null) {
@@ -279,7 +295,7 @@ public final class VDragDropUtil {
                 widgetConnector);
         transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
                 MouseEventDetailsBuilder.buildMouseEventDetails(event)
-                        .serialize());
+                .serialize());
         return transferable;
     }
 
@@ -361,7 +377,7 @@ public final class VDragDropUtil {
      *            The component container to check
      * @return
      */
-    private static boolean isDraggingEnabled(Connector layout, Widget w) {
+    public static boolean isDraggingEnabled(Connector layout, Widget w) {
         boolean draggingEnabled = false;
         if (layout instanceof VHasDragMode) {
             LayoutDragMode dm = ((VHasDragMode) layout).getDragMode();
@@ -441,6 +457,7 @@ public final class VDragDropUtil {
          * Listen to drag mode updates
          */
         connector.addStateChangeHandler("dragMode", new StateChangeHandler() {
+            @Override
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
 
                 DDLayoutState state = (DDLayoutState) connector.getState();
@@ -457,14 +474,15 @@ public final class VDragDropUtil {
          */
         connector.addStateChangeHandler("iframeShims",
                 new StateChangeHandler() {
-                    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-                        DDLayoutState state = (DDLayoutState) connector
-                                .getState();
-                        iframeUtility.setIframeCoversEnabled(
-                                state.isIframeShims(), widget.getElement(),
-                                state.getDragMode());
-                    }
-                });
+            @Override
+            public void onStateChanged(StateChangeEvent stateChangeEvent) {
+                DDLayoutState state = (DDLayoutState) connector
+                        .getState();
+                iframeUtility.setIframeCoversEnabled(
+                        state.isIframeShims(), widget.getElement(),
+                        state.getDragMode());
+            }
+        });
 
     }
 
