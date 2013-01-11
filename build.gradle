@@ -65,6 +65,9 @@ war {
 */
 jar{
 
+    // JAR filename
+    baseName = 'dragdroplayouts'
+
     // Do not build if tests do not pass
     dependsOn test
     
