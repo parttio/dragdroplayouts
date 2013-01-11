@@ -15,15 +15,10 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui;
 
-import java.util.List;
-
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConfiguration;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
@@ -38,6 +33,7 @@ import com.vaadin.client.ui.VFormLayout;
 import com.vaadin.client.ui.VLink;
 import com.vaadin.client.ui.VScrollTable;
 import com.vaadin.client.ui.VTabsheet.TabCaption;
+import com.vaadin.client.ui.VTwinColSelect;
 import com.vaadin.client.ui.dd.VTransferable;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
@@ -157,10 +153,10 @@ public final class VDragDropUtil {
 
         // Create transferable
         VTransferable transferable = new VTransferable();
-        transferable.setDragSource(VDragDropUtil.findConnectorFor(tabsheet));
+        transferable.setDragSource(Util.findConnectorFor(tabsheet));
         if (tabsheet != tab) {
             transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
-                    VDragDropUtil.findConnectorFor(tabsheet));
+                    Util.findConnectorFor(tabsheet));
             transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
                     tabsheet.getTabPosition(tab));
         }
@@ -189,9 +185,9 @@ public final class VDragDropUtil {
 
         // Create transferable
         VTransferable transferable = new VTransferable();
-        transferable.setDragSource(VDragDropUtil.findConnectorFor(accordion));
+        transferable.setDragSource(Util.findConnectorFor(accordion));
         transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
-                VDragDropUtil.findConnectorFor(tabCaption.getParent()));
+                Util.findConnectorFor(tabCaption.getParent()));
         transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
                 accordion.getWidgetIndex(tabCaption.getParent()));
         transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
@@ -247,7 +243,7 @@ public final class VDragDropUtil {
         target = getTransferableWidget(target);
 
         // Find the containing layout of the component
-        ComponentConnector widgetConnector = VDragDropUtil
+        ComponentConnector widgetConnector = Util
                 .findConnectorFor(target);
         if (widgetConnector == null) {
             VConsole.error("No connector found for " + target);
@@ -360,12 +356,10 @@ public final class VDragDropUtil {
             while (!(w instanceof Paintable)) {
                 w = w.getParent();
             }
+        } else if (w.getParent().getParent().getParent() instanceof VTwinColSelect) {
+            // TwinColSelect has paintable buttons..
+            w = w.getParent().getParent().getParent();
         }
-        // else if (w.getParent().getParent().getParent() instanceof
-        // VTwinColSelect) {
-        // // TwinColSelect has paintable buttons..
-        // w = w.getParent().getParent().getParent();
-        // }
 
         return w;
     }
@@ -430,23 +424,6 @@ public final class VDragDropUtil {
     public static int measureMarginTop(Element element) {
         return element.getAbsoluteTop()
                 - element.getParentElement().getAbsoluteTop();
-    }
-
-    public static ComponentConnector findConnectorFor(Widget widget) {
-        List<ApplicationConnection> runningApplications = ApplicationConfiguration
-                .getRunningApplications();
-        for (ApplicationConnection applicationConnection : runningApplications) {
-            ConnectorMap connectorMap = ConnectorMap.get(applicationConnection);
-            ComponentConnector connector = connectorMap.getConnector(widget);
-            if (connector == null) {
-                continue;
-            }
-            if (connector.getConnection() == applicationConnection) {
-                return connector;
-            }
-        }
-
-        return null;
     }
 
     public static void listenToStateChangeEvents(
