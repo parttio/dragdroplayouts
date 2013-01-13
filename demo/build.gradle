@@ -1,0 +1,27 @@
+dependencies{
+	compile 	project(':addon')
+	compile		group:'de.sven-jacobs',		name:'loremipsum',			version:'1.0'
+}
+
+vaadin {
+	 widgetset = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
+}
+
+war {
+	// WAR filename
+	archiveName = 'DragDropLayouts7.war'
+
+	// Include widgetset
+	dependsOn test, widgetset
+
+	// Exclude unneccessery GWT Compiler artifacts
+	exclude "VAADIN/gwt-unitCache/**"
+
+	// Add sources
+	webInf{
+		into('classes'){
+			from sourceSets.main.allJava
+		}
+	}
+}
+
