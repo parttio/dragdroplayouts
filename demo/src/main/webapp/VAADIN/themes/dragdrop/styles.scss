@@ -11,4 +11,14 @@
 		padding-top:3px;
 		padding-bottom:3px
 	}
+	
+	.shimmed-layout {
+		border-right: 1px solid #eee;
+		padding:10px;
+	}
+	
+	.unshimmed-layout {
+		border-left: 1px solid #eee;
+		padding:10px;
+	}
 }

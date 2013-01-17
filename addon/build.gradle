@@ -1,3 +1,5 @@
+apply plugin: 'maven'
+
 dependencies{
  	testCompile     group:'junit',	name:'junit',	version: '4.8.+'
 }
@@ -8,7 +10,6 @@ vaadin {
 }
 
 jar{
-
     // JAR filename
     baseName = 'dragdroplayouts'
 
@@ -31,5 +32,11 @@ jar{
             'Implementation-Vendor': 'John Ahlroos',
         )
     }
+}
+
+task createAddonPom {
+	pom{
+		artifactId = 'dragdroplayouts'
+	}.writeTo("META-INF/maven/fi.jasoft/dragdroplayouts/pom.xml")
 }
 

@@ -5,6 +5,7 @@ import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.themes.Reindeer;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
@@ -18,6 +19,7 @@ public class DragdropIframeDragging extends CustomComponent {
 
         HorizontalLayout root = new HorizontalLayout();
         root.setSizeFull();
+        root.setSpacing(true);
         setCompositionRoot(root);
 
         // Add a layout where shimming is turned on
@@ -30,6 +32,7 @@ public class DragdropIframeDragging extends CustomComponent {
 
     private DDAbsoluteLayout createShimmedLayout() {
         DDAbsoluteLayout layout = new DDAbsoluteLayout();
+        layout.setStyleName("shimmed-layout");
         layout.setSizeFull();
         layout.setDragMode(LayoutDragMode.CLONE);
         layout.setDropHandler(new DefaultAbsoluteLayoutDropHandler());
@@ -54,6 +57,7 @@ public class DragdropIframeDragging extends CustomComponent {
 
     private DDAbsoluteLayout createUnShimmedLayout() {
         DDAbsoluteLayout layout = new DDAbsoluteLayout();
+        layout.setStyleName("unshimmed-layout");
         layout.setSizeFull();
         layout.setDragMode(LayoutDragMode.CLONE);
         layout.setDropHandler(new DefaultAbsoluteLayoutDropHandler());
