@@ -375,7 +375,7 @@ public final class VDragDropUtil {
     public static boolean isDraggingEnabled(ComponentConnector layout, Widget w) {
         boolean draggingEnabled = false;
         if (layout.getWidget() instanceof VHasDragMode) {
-            LayoutDragMode dm = ((VHasDragMode) layout).getDragMode();
+            LayoutDragMode dm = ((VHasDragMode) layout.getWidget()).getDragMode();
             draggingEnabled = dm != LayoutDragMode.NONE;
         }
         if (layout instanceof VHasDragFilter) {

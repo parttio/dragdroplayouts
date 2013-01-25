@@ -190,7 +190,6 @@ TouchStartHandler {
             if (parent.getWidget() != root) {
                 return;
             }
-
         }
 
         // Create the transfarable
@@ -202,6 +201,17 @@ TouchStartHandler {
             VConsole.error("Creating transferable on mouse down returned null");
             return;
         }
+        
+        ComponentConnector c = Util.findConnectorFor(target);
+        ComponentConnector parent = (ComponentConnector) c.getParent();
+        
+        // Ensure component is draggable
+        if(!VDragDropUtil.isDraggingEnabled(parent, target)){
+        	VConsole.log("Dragging disabled for "+target.getClass().getName() + " in "+parent.getWidget().getClass().getName());
+        	VDragAndDropManager.get().interruptDrag();
+        	return;
+        }
+        
 
         // Resolve the component
         final Widget w;
