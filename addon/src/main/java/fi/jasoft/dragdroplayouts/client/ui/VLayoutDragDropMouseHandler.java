@@ -341,6 +341,10 @@ TouchStartHandler {
      *            The drag mode to use
      */
     public void updateDragMode(LayoutDragMode dragMode) {
+    	if(dragMode == this.dragMode){
+    		return;
+    	}
+    	
         this.dragMode = dragMode;
         if (dragMode == LayoutDragMode.NONE) {
             detach();
