@@ -40,6 +40,7 @@ import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStart
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 /**
@@ -49,7 +50,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * @since 0.4.0
  */
 public class VDDTabSheet extends VTabsheet implements VHasDragMode,
-        VHasDropHandler, DragStartListener, VDDTabContainer, VHasDragFilter {
+        VHasDropHandler, DragStartListener, VDDTabContainer, VHasDragFilter,VHasIframeShims {
 
     public static final String CLASSNAME_NEW_TAB = "new-tab";
     public static final String CLASSNAME_NEW_TAB_LEFT = "new-tab-left";
@@ -78,6 +79,10 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
 
     private double tabLeftRightDropRatio = DDTabSheetState.DEFAULT_HORIZONTAL_DROP_RATIO;
 
+    private LayoutDragMode mode = LayoutDragMode.NONE;
+
+    private boolean iframeCovers = false;
+    
     public VDDTabSheet() {
         super();
 
@@ -93,22 +98,23 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
         Element tBody = tabBar.getElement();
         spacer = tBody.getChild(tBody.getChildCount() - 1).getChild(0)
                 .getChild(0).cast();
-
-        ddMouseHandler.addDragStartListener(this);
-        ddMouseHandler.setAttachTarget(tabBar);
+    }
+    
+    @Override
+    protected void onLoad() {
+    	super.onLoad();
+    	ddMouseHandler.addDragStartListener(this);
+    	ddMouseHandler.setAttachTarget(tabBar);
+    	setDragMode(mode);
+    	iframeShimsEnabled(iframeCovers);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.user.client.ui.Widget#onUnload()
-     */
     @Override
     protected void onUnload() {
         super.onUnload();
+        ddMouseHandler.removeDragStartListener(this);
         ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
-        iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
-                LayoutDragMode.NONE);
+    	iframeCoverUtility.setIframeCoversEnabled(false, getElement(), LayoutDragMode.NONE);
     }
 
     /*
@@ -364,4 +370,22 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
     public void setTabLeftRightDropRatio(double tabLeftRightDropRatio) {
         this.tabLeftRightDropRatio = tabLeftRightDropRatio;
     }
+
+    @Override
+	public void iframeShimsEnabled(boolean enabled) {
+		iframeCovers = enabled;
+		iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
+	}
+
+	@Override
+	public boolean isIframeShimsEnabled() {
+		return iframeCovers;
+	}
+
+	@Override
+	public void setDragMode(LayoutDragMode mode) {
+		this.mode = mode;
+		ddMouseHandler.updateDragMode(mode);
+		iframeShimsEnabled(iframeCovers);
+	}
 }

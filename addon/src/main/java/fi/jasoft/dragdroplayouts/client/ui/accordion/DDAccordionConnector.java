@@ -16,7 +16,7 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 
 @Connect(DDAccordion.class)
 public class DDAccordionConnector extends AccordionConnector implements
-        Paintable, VHasDragMode, VHasDragFilter {
+        Paintable, VHasDragFilter {
 
     /**
      * {@inheritDoc}

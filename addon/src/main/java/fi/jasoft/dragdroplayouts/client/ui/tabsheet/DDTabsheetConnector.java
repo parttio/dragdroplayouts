@@ -16,7 +16,7 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 
 @Connect(DDTabSheet.class)
 public class DDTabsheetConnector extends TabsheetConnector implements
-        Paintable, VHasDragMode, VHasDragFilter {
+        Paintable, VHasDragFilter {
 
     /**
      * {@inheritDoc}
@@ -70,10 +70,5 @@ public class DDTabsheetConnector extends TabsheetConnector implements
     @Override
     public void setDragFilter(VDragFilter filter) {
         getWidget().setDragFilter(filter);
-    }
-
-    @Override
-    public LayoutDragMode getDragMode() {
-        return getState().getDragMode();
     }
 }

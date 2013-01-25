@@ -40,6 +40,7 @@ import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStart
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 /**
@@ -49,7 +50,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * @since 0.4.0
  */
 public class VDDAccordion extends VAccordion implements VHasDragMode,
-        VHasDropHandler, DragStartListener, VDDTabContainer, VHasDragFilter {
+        VHasDropHandler, DragStartListener, VDDTabContainer, VHasDragFilter, VHasIframeShims {
 
     public static final String CLASSNAME_OVER = "dd-over";
     public static final String CLASSNAME_SPACER = "spacer";
@@ -72,24 +73,30 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
 
     private float tabTopBottomDropRatio = DDAccordionState.DEFAULT_VERTICAL_RATIO;
 
+    private LayoutDragMode mode = LayoutDragMode.NONE;
+
+    private boolean iframeCovers = false;
+
     public VDDAccordion() {
         spacer = GWT.create(HTML.class);
         spacer.setWidth("100%");
         spacer.setStyleName(CLASSNAME_SPACER);
-        ddMouseHandler.addDragStartListener(this);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.user.client.ui.Widget#onUnload()
-     */
+    @Override
+    protected void onLoad() {
+    	super.onLoad();
+    	ddMouseHandler.addDragStartListener(this);
+    	setDragMode(mode);
+    	iframeShimsEnabled(iframeCovers);
+    }
+
     @Override
     protected void onUnload() {
         super.onUnload();
+        ddMouseHandler.removeDragStartListener(this);
         ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
-        iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
-                LayoutDragMode.NONE);
+    	iframeCoverUtility.setIframeCoversEnabled(false, getElement(), LayoutDragMode.NONE);
     }
 
     /*
@@ -340,4 +347,22 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     public void setDragFilter(VDragFilter filter) {
         dragFilter = filter;
     }
+
+    @Override
+	public void iframeShimsEnabled(boolean enabled) {
+		iframeCovers = enabled;
+		iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
+	}
+
+	@Override
+	public boolean isIframeShimsEnabled() {
+		return iframeCovers;
+	}
+
+	@Override
+	public void setDragMode(LayoutDragMode mode) {
+		this.mode = mode;
+		ddMouseHandler.updateDragMode(mode);
+		iframeShimsEnabled(isIframeShimsEnabled());
+	}
 }

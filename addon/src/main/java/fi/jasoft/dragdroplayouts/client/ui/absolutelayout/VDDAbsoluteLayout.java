@@ -30,8 +30,10 @@ import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 /**
@@ -41,7 +43,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * @since 0.4.0
  */
 public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
-        VHasDropHandler, DragStartListener, VHasDragFilter {
+        VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
 
     public static final String CLASSNAME = "v-ddabsolutelayout";
 
@@ -53,29 +55,31 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     private VDragFilter dragFilter;
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
+    
+    private LayoutDragMode mode = LayoutDragMode.NONE;
+    
+    private boolean iframeCovers = false;
 
     public VDDAbsoluteLayout() {
         super();
-        ddHandler.addDragStartListener(this);
         addStyleName(CLASSNAME);
+    }
+    
+    @Override
+    protected void onLoad() {
+    	super.onLoad();
+    	ddHandler.addDragStartListener(this);
+    	setDragMode(mode);
+    	iframeShimsEnabled(iframeCovers);
     }
 
     @Override
     protected void onUnload() {
         super.onUnload();
+        ddHandler.removeDragStartListener(this);
         ddHandler.updateDragMode(LayoutDragMode.NONE);
-        iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
-                LayoutDragMode.NONE);
+    	iframeCoverUtility.setIframeCoversEnabled(false, getElement(), LayoutDragMode.NONE);
     }
-
-    // FIXME
-    // @Override
-    // public boolean requestLayout(Set<Paintable> children) {
-    // iframeCoverUtility.setIframeCoversEnabled(
-    // iframeCoverUtility.isIframeCoversEnabled(), getElement(),
-    // dragMode);
-    // return super.requestLayout(children);
-    // }
 
     /**
      * A hook for extended components to post process the the drop before it is
@@ -204,5 +208,23 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     public void setDragFilter(VDragFilter filter) {
         this.dragFilter = filter;
     }
+
+	@Override
+	public void iframeShimsEnabled(boolean enabled) {
+		iframeCovers = enabled;
+		iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
+	}
+
+	@Override
+	public boolean isIframeShimsEnabled() {
+		return iframeCovers;
+	}
+
+	@Override
+	public void setDragMode(LayoutDragMode mode) {
+		this.mode = mode;
+		ddHandler.updateDragMode(mode);
+		iframeShimsEnabled(iframeCovers);
+	}
 
 }

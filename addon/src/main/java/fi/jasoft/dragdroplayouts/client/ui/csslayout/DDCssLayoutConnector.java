@@ -16,7 +16,7 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 
 @Connect(DDCssLayout.class)
 public class DDCssLayoutConnector extends CssLayoutConnector implements
-        Paintable, VHasDragMode, VHasDragFilter {
+        Paintable, VHasDragFilter {
 
     /**
      * {@inheritDoc}
@@ -58,13 +58,6 @@ public class DDCssLayoutConnector extends CssLayoutConnector implements
                 getWidget().getDropHandler().updateAcceptRules(acceptCrit);
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public LayoutDragMode getDragMode() {
-        return getState().getDragMode();
     }
 
     @Override

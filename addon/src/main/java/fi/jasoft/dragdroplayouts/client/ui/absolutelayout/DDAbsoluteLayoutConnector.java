@@ -16,8 +16,8 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 
 @Connect(DDAbsoluteLayout.class)
-public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
-        implements VHasDragMode, Paintable, VHasDragFilter {
+public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector 
+	implements Paintable, VHasDragFilter {
 
     /**
      * {@inheritDoc}

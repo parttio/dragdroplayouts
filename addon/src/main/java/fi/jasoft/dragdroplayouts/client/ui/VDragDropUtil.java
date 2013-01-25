@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Paintable;
+import com.vaadin.client.ServerConnector;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
@@ -45,6 +46,7 @@ import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
 import fi.jasoft.dragdroplayouts.client.ui.tabsheet.VDDTabSheet;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
@@ -370,9 +372,9 @@ public final class VDragDropUtil {
      *            The component container to check
      * @return
      */
-    public static boolean isDraggingEnabled(Connector layout, Widget w) {
+    public static boolean isDraggingEnabled(ComponentConnector layout, Widget w) {
         boolean draggingEnabled = false;
-        if (layout instanceof VHasDragMode) {
+        if (layout.getWidget() instanceof VHasDragMode) {
             LayoutDragMode dm = ((VHasDragMode) layout).getDragMode();
             draggingEnabled = dm != LayoutDragMode.NONE;
         }
@@ -437,11 +439,16 @@ public final class VDragDropUtil {
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
 
                 DDLayoutState state = (DDLayoutState) connector.getState();
-
-                mouseHandler.updateDragMode(state.getDragMode());
-
-                iframeUtility.setIframeCoversEnabled(state.isIframeShims(),
-                        widget.getElement(), state.getDragMode());
+            	
+            	if(widget instanceof VHasDragMode){
+            		((VHasDragMode)widget).setDragMode(state.getDragMode());
+            	}
+//            	
+//
+//                mouseHandler.updateDragMode(state.getDragMode());
+//
+//                iframeUtility.setIframeCoversEnabled(state.isIframeShims(),
+//                        widget.getElement(), state.getDragMode());
             }
         });
 
@@ -454,9 +461,14 @@ public final class VDragDropUtil {
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
                 DDLayoutState state = (DDLayoutState) connector
                         .getState();
-                iframeUtility.setIframeCoversEnabled(
-                        state.isIframeShims(), widget.getElement(),
-                        state.getDragMode());
+                
+                if(widget instanceof VHasIframeShims) {
+                	((VHasIframeShims)widget).iframeShimsEnabled(state.isIframeShims());
+                }
+//                
+//                iframeUtility.setIframeCoversEnabled(
+//                        state.isIframeShims(), widget.getElement(),
+//                        state.getDragMode());
             }
         });
 

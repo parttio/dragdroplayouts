@@ -38,6 +38,7 @@ import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 /**
@@ -48,7 +49,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * 
  */
 public class VDDCssLayout extends VCssLayout implements VHasDragMode,
-        VHasDropHandler, DragStartListener, VHasDragFilter {
+        VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
 
     public static final String DRAG_SHADOW_STYLE_NAME = "v-ddcsslayout-drag-shadow";
 
@@ -64,13 +65,16 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
     private double horizontalDropRatio = DDCssLayoutState.DEFAULT_HORIZONTAL_DROP_RATIO;
 
     private double verticalDropRatio = DDCssLayoutState.DEFAULT_VERTICAL_DROP_RATIO;
+    
+    private LayoutDragMode mode = LayoutDragMode.NONE;
 
+    private boolean iframeCovers = false;
+    
     /**
      * Default constructor
      */
     public VDDCssLayout() {
         super();
-        ddHandler.addDragStartListener(this);
     }
 
     /**
@@ -102,17 +106,20 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
         return ddHandler.getDragMode();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.user.client.ui.Widget#onUnload()
-     */
+    @Override
+    protected void onLoad() {
+    	super.onLoad();
+    	ddHandler.addDragStartListener(this);
+    	setDragMode(mode);
+    	iframeShimsEnabled(iframeCovers);
+    }
+
     @Override
     protected void onUnload() {
-        ddHandler.updateDragMode(LayoutDragMode.NONE);
         super.onUnload();
-        iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
-                LayoutDragMode.NONE);
+        ddHandler.removeDragStartListener(this);
+        ddHandler.updateDragMode(LayoutDragMode.NONE);
+    	iframeCoverUtility.setIframeCoversEnabled(false, getElement(), LayoutDragMode.NONE);
     }
 
     /**
@@ -403,4 +410,21 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
         this.dragFilter = filter;
     }
 
+    @Override
+	public void iframeShimsEnabled(boolean enabled) {
+		iframeCovers = enabled;
+		iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
+	}
+
+	@Override
+	public boolean isIframeShimsEnabled() {
+		return iframeCovers;
+	}
+
+	@Override
+	public void setDragMode(LayoutDragMode mode) {
+		this.mode = mode;
+		ddHandler.updateDragMode(mode);
+		iframeShimsEnabled(isIframeShimsEnabled());
+	}
 }

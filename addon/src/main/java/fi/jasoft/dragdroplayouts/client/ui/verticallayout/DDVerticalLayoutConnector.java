@@ -16,7 +16,7 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 
 @Connect(DDVerticalLayout.class)
 public class DDVerticalLayoutConnector extends VerticalLayoutConnector
-        implements Paintable, VHasDragMode, VHasDragFilter {
+        implements Paintable, VHasDragFilter {
 
     /**
      * {@inheritDoc}
@@ -74,10 +74,5 @@ public class DDVerticalLayoutConnector extends VerticalLayoutConnector
     @Override
     public void setDragFilter(VDragFilter filter) {
         getWidget().setDragFilter(filter);
-    }
-
-    @Override
-    public LayoutDragMode getDragMode() {
-        return getWidget().getDragMode();
     }
 }

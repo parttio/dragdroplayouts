@@ -37,6 +37,7 @@ import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 /**
@@ -46,7 +47,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * @since 0.4.0
  */
 public class VDDFormLayout extends VFormLayout implements VHasDragMode,
-VHasDropHandler, DragStartListener, VHasDragFilter {
+VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
 
     private Element currentlyEmphasised;
 
@@ -67,19 +68,30 @@ VHasDropHandler, DragStartListener, VHasDragFilter {
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     protected ApplicationConnection client;
+    
+    private LayoutDragMode mode = LayoutDragMode.NONE;
+
+    private boolean iframeCovers = false;
 
     public VDDFormLayout() {
         super();
-        ddMouseHandler.addDragStartListener(this);
         table = (VFormLayoutTable) getWidget();
+    }
+    
+    @Override
+    protected void onLoad() {
+    	super.onLoad();
+    	ddMouseHandler.addDragStartListener(this);
+    	setDragMode(mode);
+    	iframeShimsEnabled(iframeCovers);
     }
 
     @Override
     protected void onUnload() {
         super.onUnload();
+        ddMouseHandler.removeDragStartListener(this);
         ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
-        iframeCoverUtility.setIframeCoversEnabled(false, this.getElement(),
-                LayoutDragMode.NONE);
+    	iframeCoverUtility.setIframeCoversEnabled(false, getElement(), LayoutDragMode.NONE);
     }
 
     // The drag mouse handler which handles the creation of the transferable
@@ -325,5 +337,23 @@ VHasDropHandler, DragStartListener, VHasDragFilter {
     public void setCellTopBottomDropRatio(float cellTopBottomDropRatio) {
         this.cellTopBottomDropRatio = cellTopBottomDropRatio;
     }
+
+	@Override
+	public void iframeShimsEnabled(boolean enabled) {
+		iframeCovers = enabled;
+		iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
+	}
+
+	@Override
+	public boolean isIframeShimsEnabled() {
+		return iframeCovers;
+	}
+
+	@Override
+	public void setDragMode(LayoutDragMode mode) {
+		this.mode = mode;
+		ddMouseHandler.updateDragMode(mode);
+		iframeShimsEnabled(iframeCovers);
+	}
 
 }

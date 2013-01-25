@@ -16,7 +16,7 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 
 @Connect(DDHorizontalLayout.class)
 public class DDHorizontalLayoutConnector extends HorizontalLayoutConnector
-        implements Paintable, VHasDragMode, VHasDragFilter {
+        implements Paintable, VHasDragFilter {
 
     /**
      * {@inheritDoc}
@@ -41,14 +41,7 @@ public class DDHorizontalLayoutConnector extends HorizontalLayoutConnector
                 .getMouseHandler(), getWidget().getIframeCoverUtility(),
                 getWidget());
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public LayoutDragMode getDragMode() {
-        return getState().getDragMode();
-    }
-
+    
     /**
      * {@inheritDoc}
      */

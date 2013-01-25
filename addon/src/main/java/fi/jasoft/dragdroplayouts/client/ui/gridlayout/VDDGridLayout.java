@@ -40,6 +40,7 @@ import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 /**
@@ -49,7 +50,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * @since 0.4.0
  */
 public class VDDGridLayout extends VGridLayout implements VHasDragMode,
-        VHasDropHandler, DragStartListener, VHasDragFilter {
+        VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
 
     public static final String CLASSNAME = "v-ddgridlayout";
     public static final String OVER = CLASSNAME + "-over";
@@ -71,23 +72,29 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
     // The drag mouse handler which handles the creation of the transferable
     private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
             this, LayoutDragMode.NONE);
+    
+    private LayoutDragMode mode = LayoutDragMode.NONE;
+
+    private boolean iframeCovers = false;
 
     public VDDGridLayout() {
         super();
-        ddMouseHandler.addDragStartListener(this);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.user.client.ui.Widget#onUnload()
-     */
+    @Override
+    protected void onLoad() {
+    	super.onLoad();
+    	ddMouseHandler.addDragStartListener(this);
+    	setDragMode(mode);
+    	iframeShimsEnabled(iframeCovers);
+    }
+
     @Override
     protected void onUnload() {
         super.onUnload();
+        ddMouseHandler.removeDragStartListener(this);
         ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
-        iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
-                LayoutDragMode.NONE);
+    	iframeCoverUtility.setIframeCoversEnabled(false, getElement(), LayoutDragMode.NONE);
     }
 
     /**
@@ -447,4 +454,22 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
     public void setCellTopBottomDropRatio(float cellTopBottomDropRatio) {
         this.cellTopBottomDropRatio = cellTopBottomDropRatio;
     }
+
+    @Override
+	public void iframeShimsEnabled(boolean enabled) {
+		iframeCovers = enabled;
+		iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
+	}
+
+	@Override
+	public boolean isIframeShimsEnabled() {
+		return iframeCovers;
+	}
+
+	@Override
+	public void setDragMode(LayoutDragMode mode) {
+		this.mode = mode;
+		ddMouseHandler.updateDragMode(mode);
+		iframeShimsEnabled(iframeCovers);
+	}
 }

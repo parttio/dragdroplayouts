@@ -31,4 +31,6 @@ public interface VHasDragMode {
      * @return
      */
     LayoutDragMode getDragMode();
+    
+    void setDragMode(LayoutDragMode mode);
 }

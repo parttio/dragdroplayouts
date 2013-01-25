@@ -16,7 +16,7 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 
 @Connect(DDVerticalSplitPanel.class)
 public class DDVerticalSplitPanelConnector extends VerticalSplitPanelConnector
-        implements Paintable, VHasDragMode, VHasDragFilter {
+        implements Paintable, VHasDragFilter {
 
     @Override
     protected void init() {
@@ -78,12 +78,5 @@ public class DDVerticalSplitPanelConnector extends VerticalSplitPanelConnector
     @Override
     public void setDragFilter(VDragFilter filter) {
         getWidget().setDragFilter(filter);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public LayoutDragMode getDragMode() {
-        return getState().getDragMode();
     }
 }

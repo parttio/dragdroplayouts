@@ -17,7 +17,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 @Connect(DDGridLayout.class)
 public class DDGridLayoutConnector extends GridLayoutConnector implements
-        Paintable, VHasDragMode, VHasDragFilter {
+        Paintable, VHasDragFilter {
 
     /**
      * {@inheritDoc}
@@ -33,14 +33,6 @@ public class DDGridLayoutConnector extends GridLayoutConnector implements
     @Override
     public DDGridLayoutState getState() {
         return (DDGridLayoutState) super.getState();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public LayoutDragMode getDragMode() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     /**

@@ -33,6 +33,7 @@ import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 /**
@@ -42,7 +43,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * @since 0.4.0
  */
 public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
-        VHasDragMode, VHasDropHandler, DragStartListener, VHasDragFilter {
+        VHasDragMode, VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
 
     public static final String OVER = "v-ddsplitpanel-over";
     public static final String OVER_SPLITTER = OVER + "-splitter";
@@ -64,23 +65,29 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
     // The drag mouse handler which handles the creation of the transferable
     private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
             this, LayoutDragMode.NONE);
-
+    
+    private LayoutDragMode mode = LayoutDragMode.NONE;
+   
+    private boolean iframeCovers = false;
+    
     public VDDHorizontalSplitPanel() {
         super();
-        ddMouseHandler.addDragStartListener(this);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.user.client.ui.Widget#onUnload()
-     */
+    @Override
+    protected void onLoad() {
+    	super.onLoad();
+    	ddMouseHandler.addDragStartListener(this);
+    	setDragMode(mode);
+    	iframeShimsEnabled(iframeCovers);
+    }
+
     @Override
     protected void onUnload() {
         super.onUnload();
+        ddMouseHandler.removeDragStartListener(this);
         ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
-        iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
-                LayoutDragMode.NONE);
+    	iframeCoverUtility.setIframeCoversEnabled(false, getElement(), LayoutDragMode.NONE);
     }
 
     /*
@@ -288,4 +295,22 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
     public LayoutDragMode getDragMode() {
         return ddMouseHandler.getDragMode();
     }
+
+    @Override
+	public void iframeShimsEnabled(boolean enabled) {
+		iframeCovers = enabled;
+		iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
+	}
+
+	@Override
+	public boolean isIframeShimsEnabled() {
+		return iframeCovers;
+	}
+
+	@Override
+	public void setDragMode(LayoutDragMode mode) {
+		this.mode = mode;
+		ddMouseHandler.updateDragMode(mode);
+		iframeShimsEnabled(iframeCovers);
+	}
 }
