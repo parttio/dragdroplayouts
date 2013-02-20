@@ -108,7 +108,7 @@ public class IframeCoverUtility {
         if (coverContainer != null) {
             Element parent = coverContainer.getParentElement().cast();
             parent.replaceChild(iframe, coverContainer);
-            iframe.getStyle().setPosition(null);
+            iframe.getStyle().clearPosition();
             iframeCoverMap.remove(iframe);
         }
     }
