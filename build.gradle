@@ -6,10 +6,6 @@ allprojects{
 subprojects {
 	apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
 	apply plugin: 'eclipse'
-
-	vaadin {
-        	version = '7.0.0.rc1'
-        	widgetset = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
-	}	
-
+	vaadin.version = "7.0.+"
 }
+

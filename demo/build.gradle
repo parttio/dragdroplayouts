@@ -1,6 +1,6 @@
 dependencies{
 	compile 	project(':addon')
-	compile		group:'de.sven-jacobs',		name:'loremipsum',			version:'1.0'
+	compile		group:'de.sven-jacobs',	name:'loremipsum', version:'1.0'
 }
 
 vaadin {
