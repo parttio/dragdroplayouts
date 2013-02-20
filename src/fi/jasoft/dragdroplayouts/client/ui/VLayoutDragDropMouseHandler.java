@@ -157,8 +157,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
         // Abort if drag mode is caption mode and widget is not a caption
         boolean isPanelCaption = target instanceof VPanel
-                && targetElement.getParentElement().getClassName()
-                        .equals("v-panel-caption");
+                && targetElement.getParentElement().getClassName().contains("v-panel-caption");
         boolean isCaption = isPanelCaption
                 || VDragDropUtil.isCaptionOrCaptionless(target);
 
