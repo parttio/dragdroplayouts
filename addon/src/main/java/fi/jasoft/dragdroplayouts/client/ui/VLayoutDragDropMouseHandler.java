@@ -29,18 +29,22 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VAccordion;
+import com.vaadin.client.ui.VAccordion.StackItem;
 import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VFormLayout;
 import com.vaadin.client.ui.VPanel;
 import com.vaadin.client.ui.VSlider;
 import com.vaadin.client.ui.VTabsheet;
+import com.vaadin.client.ui.VTabsheet.Tab;
 import com.vaadin.client.ui.VTabsheet.TabCaption;
 import com.vaadin.client.ui.VTextField;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
@@ -49,6 +53,7 @@ import com.vaadin.client.ui.dd.VTransferable;
 
 import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
 import fi.jasoft.dragdroplayouts.client.ui.formlayout.VDDFormLayout;
+import fi.jasoft.dragdroplayouts.client.ui.tabsheet.VDDTabSheet;
 
 /**
  * Mouse handler for starting component drag operations
@@ -201,9 +206,45 @@ TouchStartHandler {
             VConsole.error("Creating transferable on mouse down returned null");
             return;
         }
+                       
+        // Resolve the component
+        final Widget w;
+        ComponentConnector c = null, parent = null;
         
-        ComponentConnector c = Util.findConnectorFor(target);
-        ComponentConnector parent = (ComponentConnector) c.getParent();
+        if (target instanceof TabCaption) {        	
+        	TabCaption tabCaption = (TabCaption) target;
+        	Tab tab = tabCaption.getTab();
+        	int tabIndex = ((ComplexPanel)tab.getParent()).getWidgetIndex(tab);
+        	VTabsheet tabsheet = tab.getTabsheet();
+        	        	
+            w = tab;
+        	c = tabsheet.getTab(tabIndex);
+        	parent = Util.findConnectorFor(tabsheet);
+                        
+        } else if (root instanceof VDDAccordion) {
+            StackItem item = ((VDDAccordion) root).getTabByElement(targetElement);        	
+            w = target;            
+            parent = Util.findConnectorFor(root);
+            if(item.getComponent() != null){
+            	c = Util.findConnectorFor(item.getComponent());            	
+            }            
+            
+        } else if (transferable
+                .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT) != null) {
+            
+        	ComponentConnector connector = (ComponentConnector) transferable
+                    .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
+            w = connector.getWidget();
+            c = Util.findConnectorFor(target);
+            parent = (ComponentConnector) c.getParent();
+
+        } else {
+            // Failsafe if no widget was found
+            w = root;
+            c = Util.findConnectorFor(w);
+            parent = c;
+            VConsole.log("Could not resolve component, using root as component");
+        }
         
         // Ensure component is draggable
         if(!VDragDropUtil.isDraggingEnabled(parent, target)){
@@ -212,27 +253,6 @@ TouchStartHandler {
         	return;
         }
         
-
-        // Resolve the component
-        final Widget w;
-
-        if (target instanceof TabCaption) {
-            w = target;
-        } else if (root instanceof VDDAccordion) {
-            w = ((VDDAccordion) root).getTabByElement(targetElement);
-
-        } else if (transferable
-                .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT) != null) {
-            ComponentConnector connector = (ComponentConnector) transferable
-                    .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
-            w = connector.getWidget();
-
-        } else {
-            // Failsafe if no widget was found
-            w = root;
-            VConsole.log("Could not resolve component, using root as component");
-        }
-
         event.preventDefault();
         event.stopPropagation();
 
