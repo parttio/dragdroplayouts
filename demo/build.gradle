@@ -1,6 +1,7 @@
 dependencies{
-	compile 	project(':addon')
-	compile		group:'de.sven-jacobs',	name:'loremipsum', version:'1.0'
+    compile project(':addon')
+    compile group:'de.sven-jacobs', name:'loremipsum', version:'1.0'
+	compile group:'de.java2html',   name:'java2html',  version:'5.0'
 }
 
 vaadin {

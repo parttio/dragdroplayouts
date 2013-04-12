@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.regex.Pattern;
 
 import com.vaadin.annotations.Theme;
@@ -25,12 +27,23 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.themes.Reindeer;
 
+import de.java2html.Java2Html;
+import de.java2html.converter.JavaSource2HTMLConverter;
+import de.java2html.converter.demo.Java2HtmlConversionDemo;
+import de.java2html.javasource.JavaSource;
+import de.java2html.javasource.JavaSourceParser;
+import de.java2html.javasource.JavaSourceType;
+import de.java2html.javasource.test.JavaSourceTypeTest;
+import de.java2html.options.JavaSourceConversionOptions;
+import de.java2html.options.test.JavaSourceConversionOptionsTest;
+import de.java2html.util.IllegalConfigurationException;
+
 @Theme("dragdrop")
 @Widgetset("fi.jasoft.dragdroplayouts.demo.DemoWidgetSet")
 public class DragDropUI extends UI {
 
     private final Label code = new Label("No source code available.",
-            ContentMode.PREFORMATTED);
+            ContentMode.HTML);
 
     private final ListSelect componentList = new ListSelect();
 
@@ -134,7 +147,7 @@ public class DragDropUI extends UI {
         StringBuilder codelines = new StringBuilder();
         String line = reader.readLine();
         while (line != null) {
-            if (line.startsWith("import")) {
+        	if (line.startsWith("import")) {
                 // Remove imports
             } else if (line.startsWith("package")) {
                 // Remove package declaration
@@ -148,13 +161,35 @@ public class DragDropUI extends UI {
 
         reader.close();
 
-        String code = codelines.toString();
-
+        String code = codelines.toString().trim();
+        
         code = Pattern
                 .compile("public String getCodePath.*?}",
                         Pattern.MULTILINE | Pattern.DOTALL).matcher(code)
                         .replaceAll("");
 
-        this.code.setValue(code.trim());
+             
+        this.code.setValue(getFormattedSourceCode(code));
+       
+    }
+    
+    public String getFormattedSourceCode(String sourceCode) {
+        try {
+            JavaSource source = new JavaSourceParser().parse(new StringReader(sourceCode));
+            JavaSource2HTMLConverter converter = new JavaSource2HTMLConverter();
+            StringWriter writer = new StringWriter();
+            JavaSourceConversionOptions options = JavaSourceConversionOptions.getDefault();
+            options.setShowLineNumbers(true);
+            options.setAddLineAnchors(false);
+            converter.convert(source, options, writer);
+
+            return writer.toString();
+        }
+        catch (IllegalConfigurationException exception) {
+            return sourceCode;
+        }
+        catch (IOException exception) {
+            return sourceCode;
+        }
     }
 }
