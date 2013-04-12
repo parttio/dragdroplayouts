@@ -15,6 +15,7 @@ import com.vaadin.ui.VerticalLayout;
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.details.AbsoluteLayoutTargetDetails;
+import fi.jasoft.dragdroplayouts.drophandlers.DefaultAbsoluteLayoutDropHandler;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
 public class DragdropLayoutDraggingDemo extends CustomComponent {
@@ -30,28 +31,7 @@ public class DragdropLayoutDraggingDemo extends CustomComponent {
         layout.setDragMode(LayoutDragMode.CLONE);
 
         // Enable dropping components
-        layout.setDropHandler(new DropHandler() {
-
-            public AcceptCriterion getAcceptCriterion() {
-                return AcceptAll.get();
-            }
-
-            public void drop(DragAndDropEvent event) {
-                AbsoluteLayoutTargetDetails details = (AbsoluteLayoutTargetDetails) event
-                        .getTargetDetails();
-                int left = details.getRelativeLeft();
-                int top = details.getRelativeTop();
-
-                LayoutBoundTransferable trans = (LayoutBoundTransferable) event
-                        .getTransferable();
-
-                Component c = trans.getComponent();
-                ComponentPosition p = layout.getPosition(c);
-
-                p.setLeft((float) left, Sizeable.UNITS_PIXELS);
-                p.setTop((float) top, Sizeable.UNITS_PIXELS);
-            }
-        });
+        layout.setDropHandler(new DefaultAbsoluteLayoutDropHandler());
 
         // Add some components
         layout.addComponent(

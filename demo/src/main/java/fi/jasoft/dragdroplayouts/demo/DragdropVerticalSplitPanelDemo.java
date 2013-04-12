@@ -22,6 +22,8 @@ import fi.jasoft.dragdroplayouts.DDHorizontalLayout.HorizontalLayoutTargetDetail
 import fi.jasoft.dragdroplayouts.DDVerticalSplitPanel;
 import fi.jasoft.dragdroplayouts.DDVerticalSplitPanel.VerticalSplitPanelTargetDetails;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.drophandlers.DefaultVerticalLayoutDropHandler;
+import fi.jasoft.dragdroplayouts.drophandlers.DefaultVerticalSplitPanelDropHandler;
 import fi.jasoft.dragdroplayouts.events.HorizontalLocationIs;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
@@ -59,82 +61,14 @@ public class DragdropVerticalSplitPanelDemo extends CustomComponent {
         // Create a drag & drop horizontal split panel
         final DDVerticalSplitPanel panel = new DDVerticalSplitPanel();
         panel.setSizeFull();
+        
+        root.addComponent(panel);
+        root.setExpandRatio(panel, 1);
 
         // Enable dragging
         panel.setDragMode(LayoutDragMode.CLONE);
 
         // Enable dropping
-        panel.setDropHandler(new DropHandler() {
-
-            public AcceptCriterion getAcceptCriterion() {
-                // Only accept drags from the vertical button layout or self
-                // and
-                // do not allow dropping on the spacer
-                return new And(new Or(new SourceIs(btns), SourceIsTarget
-                        .get()), new Not(HorizontalLocationIs.CENTER));
-            }
-
-            public void drop(DragAndDropEvent event) {
-                // Casting to a layout bound transferable since we know it
-                // comes from the vertical layout
-                LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-                        .getTransferable();
-
-                Component component = transferable.getComponent();
-
-                ComponentContainer source = (ComponentContainer) transferable
-                        .getSourceComponent();
-
-                // Get the drop details
-                VerticalSplitPanelTargetDetails details = (VerticalSplitPanelTargetDetails) event
-                        .getTargetDetails();
-
-                // Remove component from vertical layout
-                source.removeComponent(component);
-
-                // Add a new button to the vertical layout
-                source.addComponent(new Button("Button " + buttonCount++));
-
-                if (details.getDropLocation() == VerticalDropLocation.TOP) {
-                    // Dropped in the left area
-                    panel.setFirstComponent(component);
-
-                } else if (details.getDropLocation() == VerticalDropLocation.BOTTOM) {
-                    // Dropped in the right area
-                    panel.setSecondComponent(component);
-                }
-            }
-        });
-        root.addComponent(panel);
-        root.setExpandRatio(panel, 1);
-
-        // Add drophandler to button layout
-        btns.setDropHandler(new DropHandler() {
-            public AcceptCriterion getAcceptCriterion() {
-                return new And(new SourceIs(panel), new Not(
-                        HorizontalLocationIs.CENTER));
-            }
-
-            public void drop(DragAndDropEvent event) {
-                LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-                        .getTransferable();
-                HorizontalLayoutTargetDetails details = (HorizontalLayoutTargetDetails) event
-                        .getTargetDetails();
-                Component comp = transferable.getComponent();
-                int newIndex = details.getOverIndex();
-
-                btns.removeComponent(comp);
-
-                if (details.getDropLocation() == HorizontalDropLocation.RIGHT) {
-                    newIndex++;
-                }
-
-                if (btns.getComponentCount() == 0) {
-                    btns.addComponent(comp);
-                } else {
-                    btns.addComponent(comp, newIndex);
-                }
-            }
-        });
+        panel.setDropHandler(new DefaultVerticalSplitPanelDropHandler());
     }
 }

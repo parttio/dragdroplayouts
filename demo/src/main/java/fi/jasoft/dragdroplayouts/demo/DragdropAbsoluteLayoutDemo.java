@@ -1,8 +1,11 @@
 package fi.jasoft.dragdroplayouts.demo;
 
+import java.util.Arrays;
+
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
@@ -21,7 +24,7 @@ public class DragdropAbsoluteLayoutDemo extends CustomComponent {
         final DDAbsoluteLayout layout = new DDAbsoluteLayout();
         layout.setSizeFull();
         setCompositionRoot(layout);
-
+        
         // Enable dragging components
         layout.setDragMode(LayoutDragMode.CLONE);
 
