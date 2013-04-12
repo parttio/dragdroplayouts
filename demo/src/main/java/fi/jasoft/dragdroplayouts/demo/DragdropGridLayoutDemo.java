@@ -1,5 +1,7 @@
 package fi.jasoft.dragdroplayouts.demo;
 
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -42,5 +44,15 @@ public class DragdropGridLayoutDemo extends CustomComponent {
 
         // Enable dropping components
         layout.setDropHandler(new DefaultGridLayoutDropHandler());
+        
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLUMNS; col++) {
+                if (row == 0 || row == ROWS-1 || col == 0 || col == COLUMNS-1) {
+                    Button btn = new Button("Button");
+                    layout.addComponent(btn, col, row);
+                    layout.setComponentAlignment(btn, Alignment.MIDDLE_CENTER);
+                }
+            }
+        }
     }
 }
