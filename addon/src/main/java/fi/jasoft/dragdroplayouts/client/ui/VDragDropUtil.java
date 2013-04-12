@@ -17,6 +17,7 @@ package fi.jasoft.dragdroplayouts.client.ui;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
@@ -30,6 +31,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.VButton;
+import com.vaadin.client.ui.VFilterSelect;
 import com.vaadin.client.ui.VFormLayout;
 import com.vaadin.client.ui.VLink;
 import com.vaadin.client.ui.VScrollTable;
@@ -326,12 +328,10 @@ public final class VDragDropUtil {
     }-*/;
 
     public static Widget getTransferableWidget(Widget w) {
-        // Ensure we are dealing with a Vaadin component
-        ComponentConnector connector = Util.findConnectorFor(w);
-        if (connector != null) {
-            w = connector.getWidget();
-        }
-
+    	
+       
+    	
+    	
         if (isCaption(w)) {
             // Dragging caption means dragging component the caption belongs to
             Widget owner = null;
@@ -360,8 +360,17 @@ public final class VDragDropUtil {
         } else if (w.getParent().getParent().getParent() instanceof VTwinColSelect) {
             // TwinColSelect has paintable buttons..
             w = w.getParent().getParent().getParent();
+        } else if(w.getParent() instanceof VFilterSelect) {        	
+        	w = w.getParent();
+        } else {
+        	 // Ensure we are dealing with a Vaadin component
+            ComponentConnector connector = Util.findConnectorFor(w);
+            while(connector == null){
+            	w = w.getParent();
+            	connector = Util.findConnectorFor(w);
+            }  
         }
-
+        
         return w;
     }
 

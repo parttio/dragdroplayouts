@@ -235,7 +235,7 @@ TouchStartHandler {
         	ComponentConnector connector = (ComponentConnector) transferable
                     .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
             w = connector.getWidget();
-            c = Util.findConnectorFor(target);
+            c = Util.findConnectorFor(w);
             parent = (ComponentConnector) c.getParent();
 
         } else {
@@ -247,8 +247,8 @@ TouchStartHandler {
         }
         
         // Ensure component is draggable
-        if(!VDragDropUtil.isDraggingEnabled(parent, target)){
-        	VConsole.log("Dragging disabled for "+target.getClass().getName() + " in "+parent.getWidget().getClass().getName());
+        if(!VDragDropUtil.isDraggingEnabled(parent, w)){
+        	VConsole.log("Dragging disabled for "+w.getClass().getName() + " in "+parent.getWidget().getClass().getName());
         	VDragAndDropManager.get().interruptDrag();
         	return;
         }
