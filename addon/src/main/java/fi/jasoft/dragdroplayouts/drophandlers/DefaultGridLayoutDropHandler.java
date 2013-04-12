@@ -41,6 +41,13 @@ public class DefaultGridLayoutDropHandler extends
     private final Alignment dropAlignment;
 
     /**
+     * Default constructor
+     */
+    public DefaultGridLayoutDropHandler(){
+    	dropAlignment = Alignment.MIDDLE_CENTER;
+    }
+    
+    /**
      * Constructor
      * 
      * @param dropCellAlignment
