@@ -72,12 +72,13 @@ public class DefaultGridLayoutDropHandler extends
         LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
                 .getTransferable();
         Component comp = transferable.getComponent();
-        layout.removeComponent(comp);
 
         int row = details.getOverRow();
         int column = details.getOverColumn();
-
-        addComponent(event, comp, column, row);
+        if (layout.getComponent(column, row) == null) {
+            layout.removeComponent(comp);
+            addComponent(event, comp, column, row);
+        }
     }
 
     /*
@@ -160,8 +161,8 @@ public class DefaultGridLayoutDropHandler extends
         }
 
         // Add the component
-        layout.addComponent(component, column, row);
 
+        layout.addComponent(component, column, row);
         // Add component alignment if given
         if (dropAlignment != null) {
             layout.setComponentAlignment(component, dropAlignment);
