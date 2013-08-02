@@ -13,6 +13,10 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.server.Page;
+import com.vaadin.server.Page.UriFragmentChangedEvent;
+import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
@@ -40,6 +44,9 @@ public class DragDropUI extends UI {
     private final Label code = new Label("No source code available.",
             ContentMode.HTML);
 
+    private final ObjectProperty<Component> currentView = new ObjectProperty<Component>(
+            null, Component.class);
+        
     private final ListSelect componentList = new ListSelect();
 
     private final VerticalSplitPanel split = new VerticalSplitPanel();
@@ -50,17 +57,16 @@ public class DragDropUI extends UI {
         componentList.setWidth("250px");
         componentList.setHeight("100%");
         componentList.setImmediate(true);
+        componentList.setPropertyDataSource(currentView);
         componentList
         .addValueChangeListener(new Property.ValueChangeListener() {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                try {
-                    tabChanged((Component) event.getProperty()
-                            .getValue());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                        Component view = (Component) event.getProperty()
+                                .getValue();
+                        Page.getCurrent().setUriFragment(
+                                view.getCaption().replaceAll(" ", ""));
             }
         });
         componentList.setItemCaptionPropertyId("caption");
@@ -83,6 +89,7 @@ public class DragDropUI extends UI {
         addDemo(new DragdropCaptionModeDemo());
 
         addDemo(new DragdropIframeDragging());
+
     }
 
     private void addDemo(CustomComponent view) {
@@ -123,6 +130,30 @@ public class DragDropUI extends UI {
         split.setSecondComponent(codePanel);
 
         componentList.select(componentList.getItemIds().iterator().next());
+
+        getPage().addUriFragmentChangedListener(
+                new UriFragmentChangedListener() {
+
+                    @Override
+                    public void uriFragmentChanged(UriFragmentChangedEvent event) {
+                        String viewCaption = event.getUriFragment();
+
+                        for (Object id : componentList.getItemIds()) {
+                            String caption = componentList.getItemCaption(id)
+                                    .replaceAll(" ", "");
+                            if (caption.equals(viewCaption)) {
+                                try {
+                                    tabChanged((Component) id);
+                                    currentView.setValue((Component) id);
+                                } catch (IOException e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                });
+
     }
 
     private void tabChanged(Component tab) throws IOException {
@@ -165,7 +196,6 @@ public class DragDropUI extends UI {
 
              
         this.code.setValue(getFormattedSourceCode(code));
-       
     }
     
     public String getFormattedSourceCode(String sourceCode) {
