@@ -1,13 +1,84 @@
-allprojects{
-	group='fi.jasoft'
-	version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : 'development';
+allprojects {
+    group='fi.jasoft'
+    version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : 'development';
 }
 
 subprojects {
-	apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
-	apply plugin: 'eclipse'
-	vaadin.version = "7.0.+"
+    apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
+    apply plugin: 'eclipse-wtp'
+	vaadin.version = "7.+"
 	sourceCompatibility = 1.6
 	targetCompatibility = 1.6
 }
 
+
+/**
+ * Vaadin addon project
+ */
+project(':addon'){
+    apply plugin: 'maven'
+
+    dependencies{
+        testCompile     group:'junit',  name:'junit',   version: '4.8.+'
+    }
+
+    vaadin {
+        widgetset = 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
+        manageWidgetset = false
+
+        addon {
+            author 'John Ahlroos'
+            license 'Apache 2.0'
+            title 'DragDropLayouts'
+        }
+    }
+
+    jar {
+        baseName = 'dragdroplayouts'
+        dependsOn test
+
+        sourceSets.main.java.srcDirs.each{
+            from it
+        }
+    }
+
+    task createAddonPom {
+        pom{
+            artifactId = 'dragdroplayouts'
+        }.writeTo("META-INF/maven/fi.jasoft/dragdroplayouts/pom.xml")
+    }
+}
+
+
+/*
+ * Demo application for demonstrating the addon
+ */
+project(':demo'){
+    dependencies {
+        compile project(':addon')
+        compile group:'de.sven-jacobs', name:'loremipsum', version:'1.0'
+        compile group:'de.java2html',   name:'java2html',  version:'5.0'
+    }
+
+    vaadin {
+         widgetset = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
+    }
+
+    war {
+        // WAR filename
+        archiveName = 'DragDropLayouts7.war'
+
+        // Include widgetset
+        dependsOn test, widgetset
+
+        // Exclude unneccessery GWT Compiler artifacts
+        exclude "VAADIN/gwt-unitCache/**"
+
+        // Add sources
+        webInf{
+            into('classes'){
+                from sourceSets.main.allJava
+            }
+        }
+    }
+}
