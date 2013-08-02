@@ -27,18 +27,13 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.themes.Reindeer;
 
-import de.java2html.Java2Html;
 import de.java2html.converter.JavaSource2HTMLConverter;
-import de.java2html.converter.demo.Java2HtmlConversionDemo;
 import de.java2html.javasource.JavaSource;
 import de.java2html.javasource.JavaSourceParser;
-import de.java2html.javasource.JavaSourceType;
-import de.java2html.javasource.test.JavaSourceTypeTest;
 import de.java2html.options.JavaSourceConversionOptions;
-import de.java2html.options.test.JavaSourceConversionOptionsTest;
 import de.java2html.util.IllegalConfigurationException;
 
-@Theme("dragdrop")
+@Theme("demo")
 @Widgetset("fi.jasoft.dragdroplayouts.demo.DemoWidgetSet")
 public class DragDropUI extends UI {
 
