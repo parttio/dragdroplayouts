@@ -142,7 +142,7 @@ public class DDVerticalLayout extends VerticalLayout implements
 
         // Drop ratio
         target.addAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO, getState()
-                .getCellTopBottomDropRatio());
+                .cellTopBottomDropRatio);
 
         // Drag mode
         if (isEnabled()) {
@@ -224,9 +224,9 @@ public class DDVerticalLayout extends VerticalLayout implements
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentVerticalDropRatio(float ratio) {
-        if (getState().getCellTopBottomDropRatio() != ratio) {
+        if (getState().cellTopBottomDropRatio != ratio) {
             if (ratio >= 0 && ratio <= 0.5) {
-                getState().setCellTopBottomDropRatio(ratio);
+                getState().cellTopBottomDropRatio = ratio;
             } else {
                 throw new IllegalArgumentException(
                         "Ratio must be between 0 and 0.5");

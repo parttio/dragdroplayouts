@@ -248,7 +248,7 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
 
         // Drop ratio
         target.addAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO,
-                getState().getTabLeftRightDropRatio());
+                getState().tabLeftRightDropRatio);
 
         // Shims
         target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, getState()
@@ -266,9 +266,9 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentHorizontalDropRatio(float ratio) {
-        if (getState().getTabLeftRightDropRatio() != ratio) {
+        if (getState().tabLeftRightDropRatio != ratio) {
             if (ratio >= 0 && ratio <= 0.5) {
-                getState().setTabLeftRightDropRatio(ratio);
+                getState().tabLeftRightDropRatio = ratio;
             } else {
                 throw new IllegalArgumentException(
                         "Ratio must be between 0 and 0.5");

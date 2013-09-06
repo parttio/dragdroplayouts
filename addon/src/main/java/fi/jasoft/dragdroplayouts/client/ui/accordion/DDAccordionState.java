@@ -11,18 +11,10 @@ public class DDAccordionState extends AbstractComponentState implements
 
     public static final float DEFAULT_VERTICAL_RATIO = 0.2f;
 
-    private float tabTopBottomDropRatio = DEFAULT_VERTICAL_RATIO;
+    @DelegateToWidget
+    public float tabTopBottomDropRatio = DEFAULT_VERTICAL_RATIO;
     
     public DDLayoutState dd = new DDLayoutState();
-
-    public float getTabTopBottomDropRatio() {
-        return tabTopBottomDropRatio;
-    }
-
-    @DelegateToWidget
-    public void setTabTopBottomDropRatio(float tabTopBottomDropRatio) {
-        this.tabTopBottomDropRatio = tabTopBottomDropRatio;
-    }
 
 	@Override
 	public DDLayoutState getDragAndDropState() {		

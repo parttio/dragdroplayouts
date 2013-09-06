@@ -150,9 +150,9 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentVerticalDropRatio(float ratio) {
-        if (ratio != getState().getTabTopBottomDropRatio()) {
+        if (ratio != getState().tabTopBottomDropRatio) {
             if (ratio >= 0 && ratio <= 0.5) {
-                getState().setTabTopBottomDropRatio(ratio);
+                getState().tabTopBottomDropRatio = ratio;
             } else {
                 throw new IllegalArgumentException(
                         "Ratio must be between 0 and 0.5");

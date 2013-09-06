@@ -11,18 +11,10 @@ public class DDVerticalLayoutState extends VerticalLayoutState implements
 
     public static final float DEFAULT_VERTICAL_DROP_RATIO = 0.2f;
 
-    private float cellTopBottomDropRatio = DEFAULT_VERTICAL_DROP_RATIO;
+    @DelegateToWidget
+    public float cellTopBottomDropRatio = DEFAULT_VERTICAL_DROP_RATIO;
     
     public DDLayoutState dd = new DDLayoutState();
-
-    public float getCellTopBottomDropRatio() {
-        return cellTopBottomDropRatio;
-    }
-
-    @DelegateToWidget
-    public void setCellTopBottomDropRatio(float cellTopBottomDropRatio) {
-        this.cellTopBottomDropRatio = cellTopBottomDropRatio;
-    }
 
 	@Override
 	public DDLayoutState getDragAndDropState() {	

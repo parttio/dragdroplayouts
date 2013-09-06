@@ -240,9 +240,9 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
 
         // Drop ratios
         target.addAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO,
-                getState().getCellLeftRightDropRatio());
+                getState().cellLeftRightDropRatio);
         target.addAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO, getState()
-                .getCellTopBottomDropRatio());
+                .cellTopBottomDropRatio);
 
         // Drag mode
         if (isEnabled()) {
@@ -315,9 +315,9 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentHorizontalDropRatio(float ratio) {
-        if (ratio != getState().getCellLeftRightDropRatio()) {
+        if (ratio != getState().cellLeftRightDropRatio) {
             if (ratio >= 0 && ratio <= 0.5) {
-                getState().setCellLeftRightDropRatio(ratio);
+                getState().cellLeftRightDropRatio = ratio;
             } else {
                 throw new IllegalArgumentException(
                         "Ratio must be between 0 and 0.5");
@@ -336,9 +336,9 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentVerticalDropRatio(float ratio) {
-        if (ratio != getState().getCellTopBottomDropRatio()) {
+        if (ratio != getState().cellTopBottomDropRatio) {
             if (ratio >= 0 && ratio <= 0.5) {
-                getState().setCellTopBottomDropRatio(ratio);
+                getState().cellTopBottomDropRatio = ratio;
             } else {
                 throw new IllegalArgumentException(
                         "Ratio must be between 0 and 0.5");

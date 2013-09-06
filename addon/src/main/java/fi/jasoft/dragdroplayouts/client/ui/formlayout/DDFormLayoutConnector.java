@@ -98,8 +98,8 @@ public class DDFormLayoutConnector extends FormLayoutConnector implements
     private void handleCellDropRatioUpdate(UIDL uidl) {
         if (uidl.hasAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO)) {
             getState()
-                    .setCellTopBottomDropRatio(
-                            uidl.getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO));
+                    .cellTopBottomDropRatio = 
+                            uidl.getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO);
         }
     }
 

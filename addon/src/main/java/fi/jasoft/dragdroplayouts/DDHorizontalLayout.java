@@ -148,7 +148,7 @@ public class DDHorizontalLayout extends HorizontalLayout implements
 
         // Drop ratios
         target.addAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO,
-                getState().getCellLeftRightDropRatio());
+                getState().cellLeftRightDropRatio);
 
         // Drag mode
         if (isEnabled()) {
@@ -236,9 +236,9 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentHorizontalDropRatio(float ratio) {
-        if (getState().getCellLeftRightDropRatio() != ratio) {
+        if (getState().cellLeftRightDropRatio != ratio) {
             if (ratio >= 0 && ratio <= 0.5) {
-                getState().setCellLeftRightDropRatio(ratio);
+                getState().cellLeftRightDropRatio = ratio;
             } else {
                 throw new IllegalArgumentException(
                         "Ratio must be between 0 and 0.5");

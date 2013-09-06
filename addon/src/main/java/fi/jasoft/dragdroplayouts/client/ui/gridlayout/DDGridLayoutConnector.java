@@ -99,13 +99,13 @@ public class DDGridLayoutConnector extends GridLayoutConnector implements
     private void handleCellDropRatioUpdate(UIDL uidl) {
         if (uidl.hasAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO)) {
             getState()
-                    .setCellLeftRightDropRatio(
-                            uidl.getFloatAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO));
+                    .cellLeftRightDropRatio = 
+                            uidl.getFloatAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO);
         }
         if (uidl.hasAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO)) {
             getState()
-                    .setCellTopBottomDropRatio(
-                            uidl.getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO));
+                    .cellTopBottomDropRatio = 
+                            uidl.getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO);
         }
     }
 

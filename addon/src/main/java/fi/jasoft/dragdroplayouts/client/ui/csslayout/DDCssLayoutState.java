@@ -16,29 +16,13 @@ public class DDCssLayoutState extends CssLayoutState implements DragAndDropAware
 
     public static final float DEFAULT_VERTICAL_DROP_RATIO = 0.2f;
 
-    private float horizontalDropRatio = DEFAULT_HORIZONTAL_DROP_RATIO;
+    @DelegateToWidget
+    public float horizontalDropRatio = DEFAULT_HORIZONTAL_DROP_RATIO;
 
+    @DelegateToWidget
     private float verticalDropRatio = DEFAULT_VERTICAL_DROP_RATIO;
     
     public DDLayoutState dd = new DDLayoutState();
-
-    public float getHorizontalDropRatio() {
-        return horizontalDropRatio;
-    }
-
-    @DelegateToWidget
-    public void setHorizontalDropRatio(float horizontalDropRatio) {
-        this.horizontalDropRatio = horizontalDropRatio;
-    }
-
-    public float getVerticalDropRatio() {
-        return verticalDropRatio;
-    }
-
-    @DelegateToWidget
-    public void setVerticalDropRatio(float verticalDropRatio) {
-        this.verticalDropRatio = verticalDropRatio;
-    }
 
 	@Override
 	public DDLayoutState getDragAndDropState() {		
