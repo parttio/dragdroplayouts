@@ -1,7 +1,9 @@
-package fi.jasoft.dragdroplayouts.demo;
+package fi.jasoft.dragdroplayouts.demo.views;
 
+import com.vaadin.navigator.Navigator;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.BrowserFrame;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -9,26 +11,16 @@ import com.vaadin.ui.themes.Reindeer;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.demo.DemoView;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultAbsoluteLayoutDropHandler;
 
-public class DragdropIframeDragging extends CustomComponent {
+public class DragdropIframeDragging extends DemoView {
 
-    public DragdropIframeDragging(){
-        setCaption("Dragging iframe based components");
-        setSizeFull();
-
-        HorizontalLayout root = new HorizontalLayout();
-        root.setSizeFull();
-        root.setSpacing(true);
-        setCompositionRoot(root);
-
-        // Add a layout where shimming is turned on
-        root.addComponent(createShimmedLayout());
-
-        // Add a layout where shimming is turned off
-        root.addComponent(createUnShimmedLayout());
-
-    }
+	public static final String NAME = "dd-iframes";
+	
+	public DragdropIframeDragging(Navigator navigator) {
+		super(navigator);		
+	}
 
     private DDAbsoluteLayout createShimmedLayout() {
         DDAbsoluteLayout layout = new DDAbsoluteLayout();
@@ -90,5 +82,26 @@ public class DragdropIframeDragging extends CustomComponent {
         layout.addComponent(frame, "top:100px;left:50px");
 
     }
+
+	@Override
+	public Component getLayout() {
+		HorizontalLayout root = new HorizontalLayout();
+        root.setSizeFull();
+        root.setSpacing(true);
+        setCompositionRoot(root);
+
+        // Add a layout where shimming is turned on
+        root.addComponent(createShimmedLayout());
+
+        // Add a layout where shimming is turned off
+        root.addComponent(createUnShimmedLayout());
+        
+        return root;
+	}
+
+	@Override
+	public String getCaption() {		
+		return "Dragging iframes";
+	}
 
 }

@@ -1,5 +1,6 @@
-package fi.jasoft.dragdroplayouts.demo;
+package fi.jasoft.dragdroplayouts.demo.views;
 
+import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
@@ -8,19 +9,24 @@ import com.vaadin.ui.TextField;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.demo.DemoView;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultAbsoluteLayoutDropHandler;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 
-public class DragdropDragFilterDemo extends CustomComponent {
+public class DragdropDragFilterDemo extends DemoView {
 	
-	public DragdropDragFilterDemo() {
-		 setCaption("DragFilters");
-	     setSizeFull();
-	     
-	     // Create an absolute layout
+	public static final String NAME = "dd-drag-filters";
+	
+	public DragdropDragFilterDemo(Navigator navigator) {
+		super(navigator);		
+	}
+	
+	@Override
+	public Component getLayout() {
+		//start-source
+		 // Create an absolute layout
 	     DDAbsoluteLayout layout = new DDAbsoluteLayout();
-	     layout.setSizeFull();
-	     setCompositionRoot(layout);
+	     layout.setSizeFull();	     
 	     
 	     // Enable dragging (of all) components
 	     layout.setDragMode(LayoutDragMode.CLONE);
@@ -42,6 +48,12 @@ public class DragdropDragFilterDemo extends CustomComponent {
 	     layout.addComponent(new Button("Drag Me!"), "left:50px;top:100px");
 	     layout.addComponent(new Button("Drag Me Too!"), "left:50px;top:150px");
 	     layout.addComponent(new TextField(null, "You cannot drag me!"), "left:50px;top:200px");
-	    
+	     //end-source
+	     return layout;
+	}
+
+	@Override
+	public String getCaption() {		
+		return "Drag filters";
 	}
 }

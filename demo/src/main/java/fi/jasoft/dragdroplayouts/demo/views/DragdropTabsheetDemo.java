@@ -1,6 +1,8 @@
-package fi.jasoft.dragdroplayouts.demo;
+package fi.jasoft.dragdroplayouts.demo.views;
 
+import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -8,19 +10,24 @@ import com.vaadin.ui.VerticalLayout;
 import fi.jasoft.dragdroplayouts.DDHorizontalLayout;
 import fi.jasoft.dragdroplayouts.DDTabSheet;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.demo.DemoView;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultTabSheetDropHandler;
 
-public class DragdropTabsheetDemo extends CustomComponent {
+public class DragdropTabsheetDemo extends DemoView {
 
-    public DragdropTabsheetDemo() {
-        setCaption("Tabsheet");
-        setSizeFull();
-
-        VerticalLayout v = new VerticalLayout();
+	public static final String NAME = "dd-tabsheet";
+	
+	public DragdropTabsheetDemo(Navigator navigator) {
+		super(navigator);		
+	}
+	
+	@Override
+	public Component getLayout() {
+		//start-source
+		VerticalLayout v = new VerticalLayout();
         v.setSizeFull();
         v.setSpacing(true);
-        setCompositionRoot(v);
-
+                
         Label lb = new Label(
                 "This demo shows you how you can drag components into a tabsheet and reorder the tabs. "
                         + "Try dragging some Buttons into the tab area to add them as tabs. You can then "
@@ -57,5 +64,12 @@ public class DragdropTabsheetDemo extends CustomComponent {
 
         v.addComponent(tabSheet);
         v.setExpandRatio(tabSheet, 1);
-    }
+        //end-source
+        return v;
+	}
+
+	@Override
+	public String getCaption() {	
+		return "Tabsheet";
+	}
 }

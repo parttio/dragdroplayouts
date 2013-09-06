@@ -1,24 +1,31 @@
-package fi.jasoft.dragdroplayouts.demo;
+package fi.jasoft.dragdroplayouts.demo.views;
 
+import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 
 import fi.jasoft.dragdroplayouts.DDHorizontalLayout;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.demo.DemoView;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultHorizontalLayoutDropHandler;
 
 @SuppressWarnings("serial")
-public class DragdropHorizontalLayoutDemo extends CustomComponent {
+public class DragdropHorizontalLayoutDemo extends DemoView {
 
+	public static final String NAME = "dd-horizontal-layout";
+	
     private static final float EQUAL_HORIZONTAL_RATIO = 0.3f;
 
-    public DragdropHorizontalLayoutDemo() {
-        setCaption("Horizontal layout");
-        setSizeFull();
-
-        final DDHorizontalLayout layout = new DDHorizontalLayout();
-        setCompositionRoot(layout);
+	public DragdropHorizontalLayoutDemo(Navigator navigator) {
+		super(navigator);		
+	}
+    
+	@Override
+	public Component getLayout() {
+		//start-source
+		final DDHorizontalLayout layout = new DDHorizontalLayout();      
         layout.setComponentHorizontalDropRatio(EQUAL_HORIZONTAL_RATIO);
         layout.setDragMode(LayoutDragMode.CLONE);
         layout.setDropHandler(new DefaultHorizontalLayoutDropHandler());
@@ -36,5 +43,12 @@ public class DragdropHorizontalLayoutDemo extends CustomComponent {
         Button btn3 = new Button("Button 3");
         btn3.setWidth("200px");
         layout.addComponent(btn3);
-    }
+        //end-source
+        return layout;
+	}
+
+	@Override
+	public String getCaption() {	
+		return "Horizontal layout";
+	}
 }

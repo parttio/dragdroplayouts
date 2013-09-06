@@ -1,5 +1,6 @@
-package fi.jasoft.dragdroplayouts.demo;
+package fi.jasoft.dragdroplayouts.demo.views;
 
+import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -10,19 +11,25 @@ import com.vaadin.ui.TextField;
 
 import fi.jasoft.dragdroplayouts.DDFormLayout;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.demo.DemoView;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultFormLayoutDropHandler;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 
-public class DragdropFormLayoutDemo extends CustomComponent {
+public class DragdropFormLayoutDemo extends DemoView {
 
-    public DragdropFormLayoutDemo() {
-        setCaption("FormLayout");
-
-        // Create a form layout
+	public static final String NAME = "dd-form-layout";
+	
+	public DragdropFormLayoutDemo(Navigator navigator) {
+		super(navigator);		
+	}
+	
+	@Override
+	public Component getLayout() {
+		//start-source
+		 // Create a form layout
         DDFormLayout layout = new DDFormLayout();
         layout.setSizeFull();
-        setCompositionRoot(layout);
-
+     
         // Allow dragging all components
         layout.setDragMode(LayoutDragMode.CLONE);
 
@@ -47,5 +54,12 @@ public class DragdropFormLayoutDemo extends CustomComponent {
                 Notification.show("Form submitted");
             }
         }));
-    }
+        //end-source
+        return layout;
+	}
+
+	@Override
+	public String getCaption() {
+		return "Form layout";
+	}
 }

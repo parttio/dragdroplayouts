@@ -1,6 +1,10 @@
-package fi.jasoft.dragdroplayouts.demo;
+package fi.jasoft.dragdroplayouts.demo.views;
 
+import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -8,21 +12,26 @@ import com.vaadin.ui.VerticalLayout;
 import fi.jasoft.dragdroplayouts.DDAccordion;
 import fi.jasoft.dragdroplayouts.DDHorizontalLayout;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.demo.DemoView;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultAccordionDropHandler;
 
 @SuppressWarnings("serial")
-public class DragdropAccordionDemo extends CustomComponent {
-
+public class DragdropAccordionDemo extends DemoView {
+	
+	public static final String NAME = "dd-accordion";
+	
 	private static final float EQUAL_DROP_RATIO = 0.5f;
 	
-    public DragdropAccordionDemo() {
-        setCaption("Accordion");
-        setSizeFull();
-
-        VerticalLayout v = new VerticalLayout();
+	public DragdropAccordionDemo(Navigator navigator) {
+		super(navigator);		
+	}
+		
+	@Override
+	public Component getLayout() {
+		 //start-source
+		VerticalLayout v = new VerticalLayout();
         v.setSizeFull();
-        v.setSpacing(true);
-        setCompositionRoot(v);
+        v.setSpacing(true);        
 
         Label lb = new Label(
                 "This demo shows you how you can drag components into a Accordion and reorder the tabs. "
@@ -72,5 +81,13 @@ public class DragdropAccordionDemo extends CustomComponent {
 
         v.addComponent(acc);
         v.setExpandRatio(acc, 1);
-    }
+        
+        //end-source
+        return v;
+	}
+
+	@Override
+	public String getCaption() {	
+		return "Accordion";
+	}
 }

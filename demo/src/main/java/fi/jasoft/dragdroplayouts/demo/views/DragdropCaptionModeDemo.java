@@ -1,5 +1,7 @@
-package fi.jasoft.dragdroplayouts.demo;
+package fi.jasoft.dragdroplayouts.demo.views;
 
+import com.vaadin.navigator.Navigator;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
@@ -7,18 +9,23 @@ import com.vaadin.ui.Panel;
 import de.svenjacobs.loremipsum.LoremIpsum;
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.demo.DemoView;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultAbsoluteLayoutDropHandler;
 
-public class DragdropCaptionModeDemo extends CustomComponent {
+public class DragdropCaptionModeDemo extends DemoView {
 
-    public DragdropCaptionModeDemo() {
-        setCaption("Caption Mode");
-        setSizeFull();
-
-        // Create layout
+	public static final String NAME = "dd-caption-mode";
+	
+	public DragdropCaptionModeDemo(Navigator navigator) {
+		super(navigator);		
+	}
+	
+	@Override
+	public Component getLayout() {
+		//start-source		
+		// Create layout
         DDAbsoluteLayout layout = new DDAbsoluteLayout();
-        setCompositionRoot(layout);
-
+      
         // Enable dragging components by their caption
         layout.setDragMode(LayoutDragMode.CAPTION);
 
@@ -47,5 +54,13 @@ public class DragdropCaptionModeDemo extends CustomComponent {
         chapter2Content.setCaption("===== Chapter 2 - The finale ======");
         chapter2.setContent(chapter2Content);
         layout.addComponent(chapter2, "top:50px; left:320px");
-    }
+        
+        //end-source
+        return layout;
+	}
+
+	@Override
+	public String getCaption() {		
+		return "Caption mode";
+	}
 }
