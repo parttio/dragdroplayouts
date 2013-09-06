@@ -64,7 +64,7 @@ public class DDHorizontalSplitPanelConnector extends
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-        getWidget().setDragFilter(new VDragFilter(getState()));
+        getWidget().setDragFilter(new VDragFilter(getState().dd));
     }
 
     @Override

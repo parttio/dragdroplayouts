@@ -63,7 +63,7 @@ public class DDVerticalLayoutConnector extends VerticalLayoutConnector
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-        getWidget().setDragFilter(new VDragFilter(getState()));
+        getWidget().setDragFilter(new VDragFilter(getState().dd));
     }
 
     @Override

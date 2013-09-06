@@ -208,7 +208,7 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
      * @see fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource#getDragMode ()
      */
     public LayoutDragMode getDragMode() {
-        return getState().getDragMode();
+        return getState().dd.dragMode;
     }
 
     /*
@@ -218,7 +218,7 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
      * (fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode)
      */
     public void setDragMode(LayoutDragMode mode) {
-        getState().setDragMode(mode);
+        getState().dd.dragMode = mode;
     }
 
     /*
@@ -240,7 +240,7 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
         // Adds the drag mode (the default is none)
         if (isEnabled()) {
             target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, getState()
-                    .getDragMode().ordinal());
+                    .dd.dragMode.ordinal());
         } else {
             target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
                     LayoutDragMode.NONE.ordinal());
@@ -252,7 +252,7 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
 
         // Shims
         target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, getState()
-                .isIframeShims());
+                .dd.iframeShims);
     }
 
     /**
@@ -280,14 +280,14 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        getState().setIframeShims(shim);
+        getState().dd.iframeShims = shim;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-        return getState().isIframeShims();
+        return getState().dd.iframeShims;
     }
 
     /**
@@ -315,11 +315,11 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
 
         // Update draggable filter
         Iterator<Component> componentIterator = getComponentIterator();
-        getState().draggable = new ArrayList<Connector>();
+        getState().dd.draggable = new ArrayList<Connector>();
         while (componentIterator.hasNext()) {
             Component c = componentIterator.next();
             if (dragFilter.isDraggable(c)) {
-                getState().draggable.add(c);
+                getState().dd.draggable.add(c);
             }
         }
     }

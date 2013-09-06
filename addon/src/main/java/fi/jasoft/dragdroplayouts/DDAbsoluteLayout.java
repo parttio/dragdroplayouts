@@ -110,28 +110,28 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
      * {@inheritDoc}
      */
     public LayoutDragMode getDragMode() {
-        return getState().dragMode;
+        return getState().dd.dragMode;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragMode(LayoutDragMode mode) {
-        getState().dragMode = mode;
+        getState().dd.dragMode = mode;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        getState().iframeShims = shim;
+        getState().dd.iframeShims = shim;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-        return getState().iframeShims;
+        return getState().dd.iframeShims;
     }
 
     /**
@@ -171,11 +171,11 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
 
         // Update draggable filter
         Iterator<Component> componentIterator = getComponentIterator();
-        getState().draggable = new ArrayList<Connector>();
+        getState().dd.draggable = new ArrayList<Connector>();
         while (componentIterator.hasNext()) {
             Component c = componentIterator.next();
             if (dragFilter.isDraggable(c)) {
-                getState().draggable.add(c);
+                getState().dd.draggable.add(c);
             }
         }
     }

@@ -46,6 +46,7 @@ import com.vaadin.ui.Link;
 
 import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
@@ -444,10 +445,10 @@ public final class VDragDropUtil {
             @Override
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
 
-                DDLayoutState state = (DDLayoutState) connector.getState();
+                DDLayoutState state = ((DragAndDropAwareState) connector.getState()).getDragAndDropState();
             	
             	if(widget instanceof VHasDragMode){
-            		((VHasDragMode)widget).setDragMode(state.getDragMode());
+            		((VHasDragMode)widget).setDragMode(state.dragMode);
             	}
 //            	
 //
@@ -465,11 +466,10 @@ public final class VDragDropUtil {
                 new StateChangeHandler() {
             @Override
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
-                DDLayoutState state = (DDLayoutState) connector
-                        .getState();
+                DDLayoutState state = ((DragAndDropAwareState) connector.getState()).getDragAndDropState();
                 
                 if(widget instanceof VHasIframeShims) {
-                	((VHasIframeShims)widget).iframeShimsEnabled(state.isIframeShims());
+                	((VHasIframeShims)widget).iframeShimsEnabled(state.iframeShims);
                 }
 //                
 //                iframeUtility.setIframeCoversEnabled(

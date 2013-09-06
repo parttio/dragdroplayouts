@@ -1,16 +1,21 @@
 package fi.jasoft.dragdroplayouts.client.ui.interfaces;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.vaadin.shared.Connector;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 
-public interface DDLayoutState {
+public class DDLayoutState implements Serializable {
 
-    boolean isIframeShims();
+    // The current drag mode, default is dragging is not supported
+    public LayoutDragMode dragMode = LayoutDragMode.NONE;
 
-    LayoutDragMode getDragMode();
+    // Are the iframes shimmed
+    public boolean iframeShims = true;
 
-    List<Connector> getDraggableComponents();
+    // Which connectors are draggable
+    public List<Connector> draggable;
+
 }

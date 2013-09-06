@@ -16,8 +16,8 @@ public class VDragFilter {
 
     public boolean isDraggable(Widget widget) {
         ComponentConnector component = Util.findConnectorFor(widget);
-        if (state.getDraggableComponents() != null) {
-            return state.getDraggableComponents().contains(component);
+        if (state.draggable != null) {
+            return state.draggable.contains(component);
         }
         return false;
     }

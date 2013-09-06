@@ -7,37 +7,16 @@ import com.vaadin.shared.ui.tabsheet.TabsheetState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
 
-public class DDTabSheetState extends TabsheetState implements DDLayoutState {
+public class DDTabSheetState extends TabsheetState implements DragAndDropAwareState {
 
     public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
 
-    // The current drag mode, default is dragging is not supported
-    private LayoutDragMode dragMode = LayoutDragMode.NONE;
-
-    // Are the iframes shimmed
-    private boolean iframeShims = true;
-
     private float tabLeftRightDropRatio = DEFAULT_HORIZONTAL_DROP_RATIO;
 
-    public List<Connector> draggable;
-
-    public LayoutDragMode getDragMode() {
-        return dragMode;
-    }
-
-    public void setDragMode(LayoutDragMode dragMode) {
-        this.dragMode = dragMode;
-    }
-
-    public boolean isIframeShims() {
-        return iframeShims;
-    }
-
-    public void setIframeShims(boolean iframeShims) {
-        this.iframeShims = iframeShims;
-    }
-
+	public DDLayoutState dd = new DDLayoutState();
+    
     public float getTabLeftRightDropRatio() {
         return tabLeftRightDropRatio;
     }
@@ -46,9 +25,9 @@ public class DDTabSheetState extends TabsheetState implements DDLayoutState {
         this.tabLeftRightDropRatio = tabLeftRightDropRatio;
     }
 
-    @Override
-    public List<Connector> getDraggableComponents() {
-        return draggable;
-    }
+	@Override
+	public DDLayoutState getDragAndDropState() {		
+		return dd;
+	}
 
 }

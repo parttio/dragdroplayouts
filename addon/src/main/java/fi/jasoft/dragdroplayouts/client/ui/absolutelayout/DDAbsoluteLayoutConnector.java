@@ -80,13 +80,13 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
      * {@inheritDoc}
      */
     public LayoutDragMode getDragMode() {
-        return getState().dragMode;
+        return getState().dd.dragMode;
     }
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-        getWidget().setDragFilter(new VDragFilter(getState()));
+        getWidget().setDragFilter(new VDragFilter(getState().dd));
     }
 
     @Override

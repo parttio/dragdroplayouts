@@ -49,7 +49,7 @@ public class DDAccordionConnector extends AccordionConnector implements
      * {@inheritDoc}
      */
     public LayoutDragMode getDragMode() {
-        return getState().getDragMode();
+        return getState().dd.dragMode;
     }
 
     /**
@@ -79,7 +79,7 @@ public class DDAccordionConnector extends AccordionConnector implements
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-        getWidget().setDragFilter(new VDragFilter(getState()));
+        getWidget().setDragFilter(new VDragFilter(getState().dd));
     }
 
     @Override

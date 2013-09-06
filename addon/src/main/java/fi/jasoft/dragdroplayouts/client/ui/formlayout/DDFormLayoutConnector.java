@@ -64,7 +64,7 @@ public class DDFormLayoutConnector extends FormLayoutConnector implements
          */
         IframeCoverUtility iframes = getWidget().getIframeCoverUtility();
         iframes.setIframeCoversEnabled(iframes.isIframeCoversEnabled(),
-                getWidget().getElement(), getState().getDragMode());
+                getWidget().getElement(), getState().dd.dragMode);
     }
 
     /**
@@ -76,15 +76,15 @@ public class DDFormLayoutConnector extends FormLayoutConnector implements
     private void handleDragModeUpdate(UIDL uidl) {
         if (uidl.hasAttribute(Constants.DRAGMODE_ATTRIBUTE)) {
             LayoutDragMode[] modes = LayoutDragMode.values();
-            getState().setDragMode(
-                    modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)]);
+            getState().dd.dragMode = 
+                    modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)];
             getWidget().getMouseHandler().updateDragMode(
-                    getState().getDragMode());
+                    getState().dd.dragMode);
             getWidget()
                     .getIframeCoverUtility()
                     .setIframeCoversEnabled(
                             uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
-                            getWidget().getElement(), getState().getDragMode());
+                            getWidget().getElement(), getState().dd.dragMode);
         }
     }
 
@@ -106,7 +106,7 @@ public class DDFormLayoutConnector extends FormLayoutConnector implements
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-        getWidget().setDragFilter(new VDragFilter(getState()));
+        getWidget().setDragFilter(new VDragFilter(getState().dd));
     }
 
     @Override

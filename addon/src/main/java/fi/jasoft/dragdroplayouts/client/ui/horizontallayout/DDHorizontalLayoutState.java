@@ -8,37 +8,16 @@ import com.vaadin.shared.ui.orderedlayout.HorizontalLayoutState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
 
 public class DDHorizontalLayoutState extends HorizontalLayoutState implements
-        DDLayoutState {
+        DragAndDropAwareState {
 
     public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
 
-    // The current drag mode, default is dragging is not supported
-    private LayoutDragMode dragMode = LayoutDragMode.NONE;
-
-    // Are the iframes shimmed
-    private boolean iframeShims = true;
-
     private float cellLeftRightDropRatio = DEFAULT_HORIZONTAL_DROP_RATIO;
-
-    public List<Connector> draggable;
-
-    public LayoutDragMode getDragMode() {
-        return dragMode;
-    }
-
-    public void setDragMode(LayoutDragMode dragMode) {
-        this.dragMode = dragMode;
-    }
-
-    public boolean isIframeShims() {
-        return iframeShims;
-    }
-
-    public void setIframeShims(boolean iframeShims) {
-        this.iframeShims = iframeShims;
-    }
+    
+    public DDLayoutState dd = new DDLayoutState();
 
     public float getCellLeftRightDropRatio() {
         return cellLeftRightDropRatio;
@@ -49,8 +28,8 @@ public class DDHorizontalLayoutState extends HorizontalLayoutState implements
         this.cellLeftRightDropRatio = cellLeftRightDropRatio;
     }
 
-    @Override
-    public List<Connector> getDraggableComponents() {
-        return draggable;
-    }
+	@Override
+	public DDLayoutState getDragAndDropState() {		
+		return dd;
+	}
 }

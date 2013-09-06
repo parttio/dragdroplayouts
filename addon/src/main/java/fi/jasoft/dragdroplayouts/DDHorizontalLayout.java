@@ -153,7 +153,7 @@ public class DDHorizontalLayout extends HorizontalLayout implements
         // Drag mode
         if (isEnabled()) {
             target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, getState()
-                    .getDragMode().ordinal());
+                    .dd.dragMode.ordinal());
         } else {
             target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
                     LayoutDragMode.NONE.ordinal());
@@ -161,7 +161,7 @@ public class DDHorizontalLayout extends HorizontalLayout implements
 
         // Shims
         target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, getState()
-                .isIframeShims());
+                .dd.iframeShims);
     }
 
     /*
@@ -212,7 +212,7 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      * @return
      */
     public LayoutDragMode getDragMode() {
-        return getState().getDragMode();
+        return getState().dd.dragMode;
     }
 
     /**
@@ -222,7 +222,7 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      *            The mode of which how the dragging should be visualized.
      */
     public void setDragMode(LayoutDragMode mode) {
-        getState().setDragMode(mode);
+        getState().dd.dragMode = mode;
     }
 
     /**
@@ -250,14 +250,14 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        getState().setIframeShims(shim);
+        getState().dd.iframeShims = shim;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-        return getState().isIframeShims();
+        return getState().dd.iframeShims;
     }
 
     /**
@@ -285,11 +285,11 @@ public class DDHorizontalLayout extends HorizontalLayout implements
 
         // Update draggable filter
         Iterator<Component> componentIterator = getComponentIterator();
-        getState().draggable = new ArrayList<Connector>();
+        getState().dd.draggable = new ArrayList<Connector>();
         while (componentIterator.hasNext()) {
             Component c = componentIterator.next();
             if (dragFilter.isDraggable(c)) {
-                getState().draggable.add(c);
+                getState().dd.draggable.add(c);
             }
         }
     }
