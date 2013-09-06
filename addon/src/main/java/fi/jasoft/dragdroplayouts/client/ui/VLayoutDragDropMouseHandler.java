@@ -36,6 +36,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Util;
+import com.vaadin.client.VCaption;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VAccordion;
 import com.vaadin.client.ui.VAccordion.StackItem;
@@ -150,6 +151,9 @@ TouchStartHandler {
     /**
      * Called when the dragging a component should be initiated by both a mouse
      * down event as well as a touch start event
+     * 
+     * FIXME This method is a BIG hack to circumvent Vaadin's very poor client
+     * side API's. This will break often. Refactor once Vaadin gets a grip.
      * 
      * @param event
      */
@@ -330,6 +334,16 @@ TouchStartHandler {
 
         Element clone = currentDragEvent.getDragImage();
         assert (clone != null);
+        
+        if( c!= null && c.delegateCaptionHandling() && !(root instanceof VTabsheet) && !(root instanceof VAccordion)){
+        	/*
+        	 * Captions are not being dragged with the widget since they are separate. Manually add 
+        	 * a clone of the caption to the drag image.
+        	 */
+        	if(target instanceof VCaption) {        		
+        		clone.insertFirst(targetElement.cloneNode(true));
+        	}        	        	
+        }
 
         if (BrowserInfo.get().isIE()) {
             // Fix IE not aligning the drag image correctly when dragging

@@ -327,10 +327,7 @@ public final class VDragDropUtil {
         return tab.@com.vaadin.client.ui.VTabsheet.TabCaption::getTab().getTabsheet();
     }-*/;
 
-    public static Widget getTransferableWidget(Widget w) {
-    	
-       
-    	
+    public static Widget getTransferableWidget(Widget w) {    	           	
     	
         if (isCaption(w)) {
             // Dragging caption means dragging component the caption belongs to
