@@ -17,6 +17,7 @@ package fi.jasoft.dragdroplayouts.demo;
 
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
+
 import com.vaadin.server.VaadinServlet;
 
 @WebServlet(

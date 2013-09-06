@@ -15,35 +15,18 @@
  */
 package fi.jasoft.dragdroplayouts.demo.views;
 
-import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropHandler;
-import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.event.dd.acceptcriteria.And;
-import com.vaadin.event.dd.acceptcriteria.Not;
-import com.vaadin.event.dd.acceptcriteria.Or;
-import com.vaadin.event.dd.acceptcriteria.SourceIs;
-import com.vaadin.event.dd.acceptcriteria.SourceIsTarget;
 import com.vaadin.navigator.Navigator;
-import com.vaadin.shared.ui.dd.HorizontalDropLocation;
-import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 
 import fi.jasoft.dragdroplayouts.DDHorizontalSplitPanel;
-import fi.jasoft.dragdroplayouts.DDHorizontalSplitPanel.HorizontalSplitPanelTargetDetails;
 import fi.jasoft.dragdroplayouts.DDVerticalLayout;
-import fi.jasoft.dragdroplayouts.DDVerticalLayout.VerticalLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.demo.DemoView;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultHorizontalSplitPanelDropHandler;
-import fi.jasoft.dragdroplayouts.events.HorizontalLocationIs;
-import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
-import fi.jasoft.dragdroplayouts.events.VerticalLocationIs;
 
 @SuppressWarnings("serial")
 public class DragdropHorizontalSplitPanelDemo extends DemoView {
