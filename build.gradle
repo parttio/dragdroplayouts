@@ -64,6 +64,11 @@ project(':demo'){
 	servletVersion '3.0'		
 
 	debug true
+
+	testbench {
+		enabled true
+	}
+
 	plugin {
 		logToConsole true
 	}	
