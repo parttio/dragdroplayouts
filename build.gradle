@@ -1,11 +1,11 @@
 allprojects {
-    group='fi.jasoft'
-    version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : 'development';
+	group='fi.jasoft'
+	version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : 'development';
 }
 
 subprojects {
-    apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
-    apply plugin: 'eclipse-wtp'
+	apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
+	apply plugin: 'eclipse-wtp'
 	vaadin.version = "7.+"
 	sourceCompatibility = 1.7
 	targetCompatibility = 1.7
@@ -24,7 +24,6 @@ project(':addon'){
 
     vaadin {
         widgetset = 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
-        manageWidgetset = false
 
         addon {
             author 'John Ahlroos'
@@ -77,9 +76,6 @@ project(':demo'){
 
         // Include widgetset
         dependsOn test, widgetset
-
-        // Exclude unneccessery GWT Compiler artifacts
-        exclude "VAADIN/gwt-unitCache/**"
 
         // Add sources
         webInf{
