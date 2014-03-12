@@ -7,7 +7,7 @@ subprojects {
 	apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
 	apply plugin: 'eclipse-wtp'
 	vaadin.version = "7.+"
-	sourceCompatibility = 1.7
+	sourceCompatibility = 1.6
 	targetCompatibility = 1.6
 }
 
