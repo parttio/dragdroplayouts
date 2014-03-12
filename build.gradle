@@ -89,4 +89,8 @@ project(':demo'){
             }
         }
     }
+
+   test {
+	systemProperties = System.properties
+   }
 }
