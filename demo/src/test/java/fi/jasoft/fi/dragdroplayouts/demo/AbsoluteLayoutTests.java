@@ -11,40 +11,12 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.TestBench;
 import com.vaadin.testbench.TestBenchTestCase;
 
-public class AbsoluteLayoutTests extends TestBenchTestCase {
-
-	private WebDriver driver;
-
-	private String baseUrl;
-
-	/*
-	 * Executed before the test is run
-	 */
-	@Before
-	public void setUp() throws Exception {
-		
-		// Using the Firefox driver (firefox need to be installed)
-		driver = TestBench.createDriver(new FirefoxDriver());
-		
-		// URL where the tested application can be accessed
-		baseUrl = "http://localhost:8080";
-	}
-
-	/*
-	 * Executed after the test has been run
-	 */
-	@After
-	public void tearDown() throws Exception {
-		
-		// Terminate the driver
-		driver.quit();
-	}
+public class AbsoluteLayoutTests extends LayoutTest {
 
 	@Test
 	public void testDraggingAndDroppingButton() throws Exception {
 			
-		// Open application page in the browser
-		driver.get(concatUrl(baseUrl, "/#!dd-absolute-layout"));
+		openUrl();
 		
 		WebElement buttonWrapper = driver.findElement(By.xpath("//div[@id='button']/.."));
 		
