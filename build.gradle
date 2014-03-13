@@ -91,6 +91,7 @@ project(':demo'){
     }
 
    test {
+	dependsOn widgetset
 	systemProperties = System.properties
    }
 }
