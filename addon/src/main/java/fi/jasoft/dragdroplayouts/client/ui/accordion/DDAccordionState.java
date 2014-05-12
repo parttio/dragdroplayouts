@@ -15,13 +15,13 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.accordion;
 
-import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.annotations.DelegateToWidget;
+import com.vaadin.shared.ui.accordion.AccordionState;
 
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
 
-public class DDAccordionState extends AbstractComponentState implements
+public class DDAccordionState extends AccordionState implements
         DragAndDropAwareState {
 
     public static final float DEFAULT_VERTICAL_RATIO = 0.2f;

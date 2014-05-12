@@ -230,7 +230,6 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
 
         // Add drop handler
         if (dropHandler != null && isEnabled()) {
@@ -322,5 +321,10 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
                 getState().dd.draggable.add(c);
             }
         }
+    }
+
+    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+	// FIXME Remove when drag&drop is no longer legacy
     }
 }
