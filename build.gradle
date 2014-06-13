@@ -64,6 +64,10 @@ project(':demo'){
 	serverPort 7676
 	debug true
 
+        devmode {
+            superDevMode true
+        }
+
 	testbench {
 		enabled true
 	}
