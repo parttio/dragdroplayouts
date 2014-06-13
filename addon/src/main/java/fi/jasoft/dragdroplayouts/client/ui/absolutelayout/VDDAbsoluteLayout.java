@@ -21,7 +21,6 @@ import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.VAbsoluteLayout;
 import com.vaadin.client.ui.dd.VDragEvent;
-import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.shared.MouseEventDetails;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
@@ -30,6 +29,7 @@ import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
@@ -42,7 +42,8 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * @since 0.4.0
  */
 public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
-	VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
+	VDDHasDropHandler<VDDAbsoluteLayoutDropHandler>, DragStartListener,
+	VHasDragFilter, VHasIframeShims {
 
     public static final String CLASSNAME = "v-ddabsolutelayout";
 
@@ -226,5 +227,4 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
 	ddHandler.updateDragMode(mode);
 	iframeShimsEnabled(iframeCovers);
     }
-
 }

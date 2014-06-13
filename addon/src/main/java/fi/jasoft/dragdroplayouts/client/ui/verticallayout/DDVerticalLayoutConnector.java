@@ -53,21 +53,8 @@ public class DDVerticalLayoutConnector extends VerticalLayoutConnector
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-
-	// Drop handlers
-	UIDL ac = uidl.getChildByTagName("-ac");
-	if (ac == null) {
-	    if (getWidget().getDropHandler() != null) {
-		// remove dropHandler if not present anymore
-		getWidget().setDropHandler(null);
-	    }
-	} else {
-	    if (getWidget().getDropHandler() == null) {
-		getWidget().setDropHandler(
-			new VDDVerticalLayoutDropHandler(this));
-	    }
-	    getWidget().getDropHandler().updateAcceptRules(ac);
-	}
+	VDragDropUtil.updateDropHandlerFromUIDL(uidl, this,
+		new VDDVerticalLayoutDropHandler(this));
     }
 
     @Override

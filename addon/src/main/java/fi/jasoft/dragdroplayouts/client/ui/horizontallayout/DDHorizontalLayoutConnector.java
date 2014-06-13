@@ -56,18 +56,8 @@ public class DDHorizontalLayoutConnector extends HorizontalLayoutConnector
      * {@inheritDoc}
      */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-	if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
-	    UIDL acceptCrit = uidl.getChildByTagName("-ac");
-	    if (acceptCrit == null) {
-		getWidget().setDropHandler(null);
-	    } else {
-		if (getWidget().getDropHandler() == null) {
-		    getWidget().setDropHandler(
-			    new VDDHorizontalLayoutDropHandler(this));
-		}
-		getWidget().getDropHandler().updateAcceptRules(acceptCrit);
-	    }
-	}
+	VDragDropUtil.updateDropHandlerFromUIDL(uidl, this,
+		new VDDHorizontalLayoutDropHandler(this));
     }
 
     @Override

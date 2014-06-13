@@ -61,18 +61,8 @@ public class DDGridLayoutConnector extends GridLayoutConnector implements
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 	super.updateFromUIDL(uidl, client);
-	if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
-	    UIDL acceptCrit = uidl.getChildByTagName("-ac");
-	    if (acceptCrit == null) {
-		getWidget().setDropHandler(null);
-	    } else {
-		if (getWidget().getDropHandler() == null) {
-		    getWidget().setDropHandler(
-			    new VDDGridLayoutDropHandler(this));
-		}
-		getWidget().getDropHandler().updateAcceptRules(acceptCrit);
-	    }
-	}
+	VDragDropUtil.updateDropHandlerFromUIDL(uidl, this,
+		new VDDGridLayoutDropHandler(this));
     }
 
     @Override

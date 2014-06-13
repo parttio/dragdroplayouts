@@ -22,7 +22,6 @@ import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.VVerticalLayout;
 import com.vaadin.client.ui.dd.VDragEvent;
-import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.client.ui.orderedlayout.Slot;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
@@ -34,6 +33,7 @@ import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
@@ -46,7 +46,8 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * @since 0.4.0
  */
 public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
-	VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
+	VDDHasDropHandler<VDDVerticalLayoutDropHandler>, DragStartListener,
+	VHasDragFilter, VHasIframeShims {
 
     private Widget currentlyEmphasised;
 

@@ -27,6 +27,7 @@ import com.vaadin.client.VCaption;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
+import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VFilterSelect;
@@ -45,6 +46,7 @@ import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
@@ -463,5 +465,22 @@ public final class VDragDropUtil {
 		}
 	    }
 	});
+    }
+
+    public static void updateDropHandlerFromUIDL(UIDL uidl,
+	    ComponentConnector connector, VDDAbstractDropHandler dropHandler) {
+	VDDHasDropHandler widget = (VDDHasDropHandler) connector.getWidget();
+	if (AbstractComponentConnector.isRealUpdate(uidl)
+		&& !uidl.hasAttribute("hidden")) {
+	    UIDL acceptCrit = uidl.getChildByTagName("-ac");
+	    if (acceptCrit == null) {
+		widget.setDropHandler(null);
+	    } else {
+		if (widget.getDropHandler() == null) {
+		    widget.setDropHandler(dropHandler);
+		}
+		widget.getDropHandler().updateAcceptRules(acceptCrit);
+	    }
+	}
     }
 }

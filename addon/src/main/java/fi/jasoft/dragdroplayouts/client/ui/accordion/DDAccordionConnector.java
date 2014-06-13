@@ -69,19 +69,8 @@ public class DDAccordionConnector extends AccordionConnector implements
      * TODO Remove this when drag & drop is done properly in core
      */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-	// Drop handlers
-	UIDL ac = uidl.getChildByTagName("-ac");
-	if (ac == null) {
-	    if (getWidget().getDropHandler() != null) {
-		// remove dropHandler if not present anymore
-		getWidget().setDropHandler(null);
-	    }
-	} else {
-	    if (getWidget().getDropHandler() == null) {
-		getWidget().setDropHandler(new VDDAccordionDropHandler(this));
-	    }
-	    getWidget().getDropHandler().updateAcceptRules(ac);
-	}
+	VDragDropUtil.updateDropHandlerFromUIDL(uidl, this,
+		new VDDAccordionDropHandler(this));
     }
 
     @Override

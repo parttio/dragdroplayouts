@@ -24,7 +24,6 @@ import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.dd.VDragEvent;
-import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
@@ -36,6 +35,7 @@ import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
@@ -49,7 +49,8 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * 
  */
 public class VDDCssLayout extends VCssLayout implements VHasDragMode,
-	VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
+	VDDHasDropHandler<VDDCssLayoutDropHandler>, DragStartListener,
+	VHasDragFilter, VHasIframeShims {
 
     public static final String DRAG_SHADOW_STYLE_NAME = "v-ddcsslayout-drag-shadow";
 
