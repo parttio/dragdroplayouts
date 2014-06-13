@@ -15,7 +15,6 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.absolutelayout;
 
-import com.google.gwt.core.shared.GWT;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
@@ -38,14 +37,6 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
     @Override
     public VDDAbsoluteLayout getWidget() {
 	return (VDDAbsoluteLayout) super.getWidget();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected VDDAbsoluteLayout createWidget() {
-	return GWT.create(VDDAbsoluteLayout.class);
     }
 
     /**
