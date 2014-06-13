@@ -429,6 +429,17 @@ public final class VDragDropUtil {
 		- element.getParentElement().getAbsoluteTop();
     }
 
+    /**
+     * Adds a listener for listening for changes to
+     * {@link DragAndDropAwareState}'s.
+     * <p>
+     * Preferrable add this to a layout connector's init() method.
+     * 
+     * @param connector
+     *            The connector to attach to.
+     * @param widget
+     *            The layout widget returned by Connector.getWidget()
+     */
     public static void listenToStateChangeEvents(
 	    final AbstractConnector connector, final Widget widget) {
 	connector.addStateChangeHandler("ddState", new StateChangeHandler() {
@@ -453,5 +464,4 @@ public final class VDragDropUtil {
 	    }
 	});
     }
-
 }

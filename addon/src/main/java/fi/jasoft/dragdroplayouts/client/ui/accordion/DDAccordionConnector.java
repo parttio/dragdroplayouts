@@ -78,8 +78,7 @@ public class DDAccordionConnector extends AccordionConnector implements
 	    }
 	} else {
 	    if (getWidget().getDropHandler() == null) {
-		getWidget().setDropHandler(
-			new VDDAccordionDropHandler(getWidget(), this));
+		getWidget().setDropHandler(new VDDAccordionDropHandler(this));
 	    }
 	    getWidget().getDropHandler().updateAcceptRules(ac);
 	}

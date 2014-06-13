@@ -63,8 +63,7 @@ public class DDHorizontalSplitPanelConnector extends
 	    } else {
 		if (getWidget().getDropHandler() == null) {
 		    getWidget().setDropHandler(
-			    new VDDHorizontalSplitPanelDropHandler(getWidget(),
-				    client));
+			    new VDDHorizontalSplitPanelDropHandler(this));
 		}
 		getWidget().getDropHandler().updateAcceptRules(acceptCrit);
 	    }

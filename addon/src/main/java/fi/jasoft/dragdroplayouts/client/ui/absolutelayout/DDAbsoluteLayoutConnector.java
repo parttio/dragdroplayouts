@@ -79,8 +79,7 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
 	    } else {
 		if (getWidget().getDropHandler() == null) {
 		    getWidget().setDropHandler(
-			    new VDDAbsoluteLayoutDropHandler(getWidget(),
-				    client));
+			    new VDDAbsoluteLayoutDropHandler(this));
 		}
 		getWidget().getDropHandler().updateAcceptRules(acceptCrit);
 	    }

@@ -63,8 +63,7 @@ public class DDHorizontalLayoutConnector extends HorizontalLayoutConnector
 	    } else {
 		if (getWidget().getDropHandler() == null) {
 		    getWidget().setDropHandler(
-			    new VDDHorizontalLayoutDropHandler(getWidget(),
-				    client));
+			    new VDDHorizontalLayoutDropHandler(this));
 		}
 		getWidget().getDropHandler().updateAcceptRules(acceptCrit);
 	    }

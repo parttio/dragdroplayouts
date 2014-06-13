@@ -68,7 +68,7 @@ public class DDGridLayoutConnector extends GridLayoutConnector implements
 	    } else {
 		if (getWidget().getDropHandler() == null) {
 		    getWidget().setDropHandler(
-			    new VDDGridLayoutDropHandler(getWidget(), client));
+			    new VDDGridLayoutDropHandler(this));
 		}
 		getWidget().getDropHandler().updateAcceptRules(acceptCrit);
 	    }

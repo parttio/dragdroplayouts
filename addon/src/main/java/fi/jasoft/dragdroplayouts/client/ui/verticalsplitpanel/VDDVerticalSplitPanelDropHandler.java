@@ -15,110 +15,64 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.verticalsplitpanel;
 
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
-import com.vaadin.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
+import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
 
-public class VDDVerticalSplitPanelDropHandler extends VAbstractDropHandler {
+public class VDDVerticalSplitPanelDropHandler extends
+	VDDAbstractDropHandler<VDDVerticalSplitPanel> {
 
-    private final VDDVerticalSplitPanel layout;
-
-    private final ApplicationConnection client;
-
-    public VDDVerticalSplitPanelDropHandler(VDDVerticalSplitPanel layout,
-	    ApplicationConnection client) {
-	this.layout = layout;
-	this.client = client;
+    public VDDVerticalSplitPanelDropHandler(ComponentConnector connector) {
+	super(connector);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
-     * getApplicationConnection()
-     */
-    public ApplicationConnection getApplicationConnection() {
-	return client;
-    }
-
-    @Override
-    public ComponentConnector getConnector() {
-	return ConnectorMap.get(client).getConnector(layout);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-     * #dragAccepted (com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-     */
     @Override
     protected void dragAccepted(VDragEvent drag) {
 	dragOver(drag);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-     * #drop(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-     */
     @Override
     public boolean drop(VDragEvent drag) {
 
 	// Un-emphasis any selections
-	layout.deEmphasis();
+	getLayout().deEmphasis();
 
 	// Update the details
-	layout.updateDropDetails(drag);
-	return layout.postDropHook(drag) && super.drop(drag);
+	getLayout().updateDropDetails(drag);
+	return getLayout().postDropHook(drag) && super.drop(drag);
     };
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-     * #dragOver(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-     */
     @Override
     public void dragOver(VDragEvent drag) {
 
-	layout.deEmphasis();
+	getLayout().deEmphasis();
 
-	layout.updateDropDetails(drag);
+	getLayout().updateDropDetails(drag);
 
-	layout.postOverHook(drag);
+	getLayout().postOverHook(drag);
 
 	ComponentConnector widgetConnector = (ComponentConnector) drag
 		.getTransferable().getData(
 			Constants.TRANSFERABLE_DETAIL_COMPONENT);
 
-	if (layout.equals(widgetConnector.getWidget())) {
+	if (getLayout().equals(widgetConnector.getWidget())) {
 	    return;
 	}
 
 	// Validate the drop
 	validate(new VAcceptCallback() {
 	    public void accepted(VDragEvent event) {
-		layout.emphasis(event.getElementOver());
+		getLayout().emphasis(event.getElementOver());
 	    }
 	}, drag);
     };
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-     * #dragLeave(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-     */
     @Override
     public void dragLeave(VDragEvent drag) {
-	layout.deEmphasis();
-	layout.postLeaveHook(drag);
+	getLayout().deEmphasis();
+	getLayout().postLeaveHook(drag);
     }
 }

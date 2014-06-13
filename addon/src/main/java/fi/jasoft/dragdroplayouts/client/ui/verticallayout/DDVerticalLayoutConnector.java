@@ -64,7 +64,7 @@ public class DDVerticalLayoutConnector extends VerticalLayoutConnector
 	} else {
 	    if (getWidget().getDropHandler() == null) {
 		getWidget().setDropHandler(
-			new VDDVerticalLayoutDropHandler(getWidget(), this));
+			new VDDVerticalLayoutDropHandler(this));
 	    }
 	    getWidget().getDropHandler().updateAcceptRules(ac);
 	}

@@ -66,7 +66,7 @@ public class DDFormLayoutConnector extends FormLayoutConnector implements
 	    } else {
 		if (getWidget().getDropHandler() == null) {
 		    getWidget().setDropHandler(
-			    new VDDFormLayoutDropHandler(getWidget(), client));
+			    new VDDFormLayoutDropHandler(this));
 		}
 		getWidget().getDropHandler().updateAcceptRules(acceptCrit);
 	    }

@@ -17,60 +17,34 @@ package fi.jasoft.dragdroplayouts.client.ui.formlayout;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
-import com.vaadin.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
 
-public class VDDFormLayoutDropHandler extends VAbstractDropHandler {
+import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
 
-    private final VDDFormLayout layout;
-    private final ApplicationConnection client;
+public class VDDFormLayoutDropHandler extends
+	VDDAbstractDropHandler<VDDFormLayout> {
 
-    public VDDFormLayoutDropHandler(VDDFormLayout layout,
-	    ApplicationConnection client) {
-	this.layout = layout;
-	this.client = client;
+    public VDDFormLayoutDropHandler(ComponentConnector connector) {
+	super(connector);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
-     * getApplicationConnection()
-     */
-    public ApplicationConnection getApplicationConnection() {
-	return client;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-     * #dragAccepted (com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-     */
     @Override
     protected void dragAccepted(VDragEvent drag) {
 	dragOver(drag);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-     * #drop(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-     */
     @Override
     public boolean drop(VDragEvent drag) {
 
 	// Un-emphasis any selections
-	layout.emphasis(null, null);
+	getLayout().emphasis(null, null);
 
 	// Update the details
-	layout.updateDropDetails(getTableRowWidgetFromDragEvent(drag), drag);
-	return layout.postDropHook(drag) && super.drop(drag);
+	getLayout().updateDropDetails(getTableRowWidgetFromDragEvent(drag),
+		drag);
+	return getLayout().postDropHook(drag) && super.drop(drag);
     };
 
     private Widget getTableRowWidgetFromDragEvent(VDragEvent event) {
@@ -80,26 +54,30 @@ public class VDDFormLayoutDropHandler extends VAbstractDropHandler {
 	 */
 	Element e = event.getElementOver();
 
-	if (layout.table.getRowCount() == 0) {
+	if (getLayout().table.getRowCount() == 0) {
 	    /*
 	     * Empty layout
 	     */
-	    return layout;
+	    return getLayout();
 	}
 
 	/**
 	 * Check if element is inside one of the table widgets
 	 */
-	for (int i = 0; i < layout.table.getRowCount(); i++) {
-	    Element caption = layout.table.getWidget(i, layout.COLUMN_CAPTION)
+	for (int i = 0; i < getLayout().table.getRowCount(); i++) {
+	    Element caption = getLayout().table.getWidget(i,
+		    getLayout().COLUMN_CAPTION)
 		    .getElement();
-	    Element error = layout.table.getWidget(i, layout.COLUMN_ERRORFLAG)
+	    Element error = getLayout().table.getWidget(i,
+		    getLayout().COLUMN_ERRORFLAG)
 		    .getElement();
-	    Element widget = layout.table.getWidget(i, layout.COLUMN_WIDGET)
+	    Element widget = getLayout().table.getWidget(i,
+		    getLayout().COLUMN_WIDGET)
 		    .getElement();
 	    if (caption.isOrHasChild(e) || error.isOrHasChild(e)
 		    || widget.isOrHasChild(e)) {
-		return layout.table.getWidget(i, layout.COLUMN_WIDGET);
+		return getLayout().table
+			.getWidget(i, getLayout().COLUMN_WIDGET);
 	    }
 	}
 
@@ -107,14 +85,15 @@ public class VDDFormLayoutDropHandler extends VAbstractDropHandler {
 	 * Is the element a element outside the row structure but inside the
 	 * layout
 	 */
-	Element rowElement = layout.getRowFromChildElement(e,
-		layout.getElement());
+	Element rowElement = getLayout().getRowFromChildElement(e,
+		getLayout().getElement());
 	if (rowElement != null) {
 	    Element tableElement = rowElement.getParentElement();
 	    for (int i = 0; i < tableElement.getChildCount(); i++) {
 		Element r = tableElement.getChild(i).cast();
 		if (r.equals(rowElement)) {
-		    return layout.table.getWidget(i, layout.COLUMN_WIDGET);
+		    return getLayout().table.getWidget(i,
+			    getLayout().COLUMN_WIDGET);
 		}
 	    }
 	}
@@ -123,77 +102,54 @@ public class VDDFormLayoutDropHandler extends VAbstractDropHandler {
 	 * Element was not found in rows so defaulting to the form layout
 	 * instead
 	 */
-	return layout;
+	return getLayout();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-     * #dragOver(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-     */
     @Override
     public void dragOver(VDragEvent drag) {
 
 	// Remove any emphasis
-	layout.emphasis(null, null);
+	getLayout().emphasis(null, null);
 
 	// Update the drop details so we can validate the drop
 	Widget c = getTableRowWidgetFromDragEvent(drag);
 	if (c != null) {
-	    layout.updateDropDetails(c, drag);
+	    getLayout().updateDropDetails(c, drag);
 	} else {
-	    layout.updateDropDetails(layout, drag);
+	    getLayout().updateDropDetails(getLayout(), drag);
 	}
 
-	layout.postOverHook(drag);
+	getLayout().postOverHook(drag);
 
 	// Validate the drop
 	validate(new VAcceptCallback() {
 	    public void accepted(VDragEvent event) {
 		Widget c = getTableRowWidgetFromDragEvent(event);
 		if (c != null) {
-		    layout.emphasis(c, event);
+		    getLayout().emphasis(c, event);
 		} else {
-		    layout.emphasis(layout, event);
+		    getLayout().emphasis(getLayout(), event);
 		}
 	    }
 	}, drag);
     };
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-     * #dragEnter(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-     */
     @Override
     public void dragEnter(VDragEvent drag) {
-	layout.emphasis(null, null);
+	getLayout().emphasis(null, null);
 
 	Widget c = getTableRowWidgetFromDragEvent(drag);
 	if (c != null) {
-	    layout.updateDropDetails(c, drag);
+	    getLayout().updateDropDetails(c, drag);
 	} else {
-	    layout.updateDropDetails(layout, drag);
+	    getLayout().updateDropDetails(getLayout(), drag);
 	}
 	super.dragEnter(drag);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-     * #dragLeave(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-     */
     @Override
     public void dragLeave(VDragEvent drag) {
-	layout.emphasis(null, drag);
-	layout.postLeaveHook(drag);
+	getLayout().emphasis(null, drag);
+	getLayout().postLeaveHook(drag);
     }
-
-    @Override
-    public ComponentConnector getConnector() {
-	return ConnectorMap.get(client).getConnector(layout);
-    };
 }

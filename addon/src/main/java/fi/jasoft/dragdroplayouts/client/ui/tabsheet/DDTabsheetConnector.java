@@ -57,8 +57,8 @@ public class DDTabsheetConnector extends TabsheetConnector implements
 		getWidget().setDropHandler(null);
 	    } else {
 		if (getWidget().getDropHandler() == null) {
-		    getWidget().setDropHandler(
-			    new VDDTabsheetDropHandler(getWidget(), client));
+		    getWidget()
+			    .setDropHandler(new VDDTabsheetDropHandler(this));
 		}
 		getWidget().getDropHandler().updateAcceptRules(acceptCrit);
 	    }

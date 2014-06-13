@@ -15,100 +15,54 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.tabsheet;
 
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
-import com.vaadin.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
 
-public class VDDTabsheetDropHandler extends VAbstractDropHandler {
+import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
 
-    private final VDDTabSheet layout;
+public class VDDTabsheetDropHandler extends VDDAbstractDropHandler<VDDTabSheet> {
 
-    private final ApplicationConnection client;
-
-    public VDDTabsheetDropHandler(VDDTabSheet layout,
-	    ApplicationConnection client) {
-	this.layout = layout;
-	this.client = client;
+    public VDDTabsheetDropHandler(ComponentConnector connector) {
+	super(connector);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.ui.dd.VDropHandler#
-     * getApplicationConnection()
-     */
-    public ApplicationConnection getApplicationConnection() {
-	return client;
-    }
-
-    @Override
-    public ComponentConnector getConnector() {
-	return ConnectorMap.get(client).getConnector(layout);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-     * #dragAccepted (com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-     */
     @Override
     protected void dragAccepted(VDragEvent drag) {
 	dragOver(drag);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-     * #drop(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-     */
     @Override
     public boolean drop(VDragEvent drag) {
 
-	layout.deEmphasis();
+	getLayout().deEmphasis();
 
 	// Update the details
-	layout.updateDropDetails(drag);
-	return layout.postDropHook(drag) && super.drop(drag);
+	getLayout().updateDropDetails(drag);
+	return getLayout().postDropHook(drag) && super.drop(drag);
     };
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-     * #dragOver(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-     */
     @Override
     public void dragOver(VDragEvent drag) {
 
-	layout.deEmphasis();
+	getLayout().deEmphasis();
 
-	layout.updateDropDetails(drag);
+	getLayout().updateDropDetails(drag);
 
-	layout.postOverHook(drag);
+	getLayout().postOverHook(drag);
 
 	// Validate the drop
 	validate(new VAcceptCallback() {
 	    public void accepted(VDragEvent event) {
-		layout.emphasis(event.getElementOver(), event);
+		getLayout().emphasis(event.getElementOver(), event);
 	    }
 	}, drag);
     };
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler
-     * #dragLeave(com.vaadin.terminal.gwt.client.ui.dd.VDragEvent)
-     */
     @Override
     public void dragLeave(VDragEvent drag) {
-	layout.deEmphasis();
-	layout.updateDropDetails(drag);
-	layout.postLeaveHook(drag);
+	getLayout().deEmphasis();
+	getLayout().updateDropDetails(drag);
+	getLayout().postLeaveHook(drag);
     };
 }

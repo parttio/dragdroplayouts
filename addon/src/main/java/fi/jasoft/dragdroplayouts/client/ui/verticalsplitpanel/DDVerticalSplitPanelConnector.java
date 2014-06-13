@@ -66,8 +66,7 @@ public class DDVerticalSplitPanelConnector extends VerticalSplitPanelConnector
 	    } else {
 		if (getWidget().getDropHandler() == null) {
 		    getWidget().setDropHandler(
-			    new VDDVerticalSplitPanelDropHandler(getWidget(),
-				    client));
+			    new VDDVerticalSplitPanelDropHandler(this));
 		}
 		getWidget().getDropHandler().updateAcceptRules(acceptCrit);
 	    }

@@ -63,7 +63,7 @@ public class DDCssLayoutConnector extends CssLayoutConnector implements
 	    } else {
 		if (getWidget().getDropHandler() == null) {
 		    getWidget().setDropHandler(
-			    new VDDCssLayoutDropHandler(getWidget(), this));
+			    new VDDCssLayoutDropHandler(this));
 		}
 		getWidget().getDropHandler().updateAcceptRules(acceptCrit);
 	    }
