@@ -37,6 +37,8 @@ import fi.jasoft.dragdroplayouts.client.ui.gridlayout.DDGridLayoutState;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilterSupport;
+import fi.jasoft.dragdroplayouts.interfaces.DragImageProvider;
+import fi.jasoft.dragdroplayouts.interfaces.DragImageReferenceSupport;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
 import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
@@ -48,12 +50,15 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDGridLayout extends GridLayout implements LayoutDragSource,
-	DropTarget, ShimSupport, LegacyComponent, DragFilterSupport {
+	DropTarget, ShimSupport, LegacyComponent, DragFilterSupport,
+	DragImageReferenceSupport {
 
     private DropHandler dropHandler;
 
     // A filter for dragging components.
     private DragFilter dragFilter = DragFilter.ALL;
+
+    private DragImageProvider dragImageProvider;
 
     /**
      * Target details for a drop event
@@ -360,5 +365,16 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
     public void beforeClientResponse(boolean initial) {
 	super.beforeClientResponse(initial);
 	DDUtil.onBeforeClientResponse(this, getState());
+    }
+
+    @Override
+    public void setDragImageProvider(DragImageProvider provider) {
+	this.dragImageProvider = provider;
+	markAsDirty();
+    }
+
+    @Override
+    public DragImageProvider getDragImageProvider() {
+	return this.dragImageProvider;
     }
 }

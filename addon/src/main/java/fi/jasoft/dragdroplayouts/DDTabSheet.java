@@ -37,6 +37,8 @@ import fi.jasoft.dragdroplayouts.client.ui.tabsheet.DDTabSheetState;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilterSupport;
+import fi.jasoft.dragdroplayouts.interfaces.DragImageProvider;
+import fi.jasoft.dragdroplayouts.interfaces.DragImageReferenceSupport;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
 import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
@@ -48,7 +50,8 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDTabSheet extends TabSheet implements LayoutDragSource,
-	DropTarget, ShimSupport, LegacyComponent, DragFilterSupport {
+	DropTarget, ShimSupport, LegacyComponent, DragFilterSupport,
+	DragImageReferenceSupport {
 
     /**
      * The drop handler which handles dropped components in the layout.
@@ -57,6 +60,8 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
 
     // A filter for dragging components.
     private DragFilter dragFilter = DragFilter.ALL;
+
+    private DragImageProvider dragImageProvider;
 
     public class TabSheetTargetDetails extends TargetDetailsImpl {
 
@@ -296,5 +301,16 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
 	// FIXME Remove when drag&drop is no longer legacy
+    }
+
+    @Override
+    public void setDragImageProvider(DragImageProvider provider) {
+	this.dragImageProvider = provider;
+	markAsDirty();
+    }
+
+    @Override
+    public DragImageProvider getDragImageProvider() {
+	return this.dragImageProvider;
     }
 }

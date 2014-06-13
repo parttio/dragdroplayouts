@@ -36,6 +36,8 @@ import fi.jasoft.dragdroplayouts.client.ui.verticallayout.DDVerticalLayoutState;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilterSupport;
+import fi.jasoft.dragdroplayouts.interfaces.DragImageProvider;
+import fi.jasoft.dragdroplayouts.interfaces.DragImageReferenceSupport;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
 import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
@@ -48,7 +50,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 @SuppressWarnings("serial")
 public class DDVerticalLayout extends VerticalLayout implements
 	LayoutDragSource, DropTarget, ShimSupport, LegacyComponent,
-	DragFilterSupport {
+	DragFilterSupport, DragImageReferenceSupport {
     /**
      * The drop handler which handles dropped components in the layout.
      */
@@ -56,6 +58,8 @@ public class DDVerticalLayout extends VerticalLayout implements
 
     // A filter for dragging components.
     private DragFilter dragFilter = DragFilter.ALL;
+
+    private DragImageProvider dragImageProvider;
 
     /**
      * Contains the component over which the drop was made and the index on
@@ -256,6 +260,16 @@ public class DDVerticalLayout extends VerticalLayout implements
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
 	// TODO Auto-generated method stub
+    }
 
+    @Override
+    public void setDragImageProvider(DragImageProvider provider) {
+	this.dragImageProvider = provider;
+	markAsDirty();
+    }
+
+    @Override
+    public DragImageProvider getDragImageProvider() {
+	return this.dragImageProvider;
     }
 }

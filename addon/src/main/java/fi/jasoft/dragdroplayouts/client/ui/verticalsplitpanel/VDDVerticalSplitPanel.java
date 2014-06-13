@@ -31,7 +31,9 @@ import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDragImageProvider;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragImageReferenceSupport;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
@@ -44,7 +46,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  */
 public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
 	VHasDragMode, VDDHasDropHandler<VDDVerticalSplitPanelDropHandler>,
-	DragStartListener, VHasDragFilter,
+	DragStartListener, VHasDragFilter, VHasDragImageReferenceSupport,
 	VHasIframeShims {
 
     public static final String OVER = "v-ddsplitpanel-over";
@@ -318,5 +320,10 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
 	this.mode = mode;
 	ddMouseHandler.updateDragMode(mode);
 	iframeShimsEnabled(iframeCovers);
+    }
+
+    @Override
+    public void setDragImageProvider(VDragImageProvider provider) {
+	ddMouseHandler.setDragImageProvider(provider);
     }
 }

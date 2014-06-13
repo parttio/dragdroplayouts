@@ -34,7 +34,9 @@ import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDragImageProvider;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragImageReferenceSupport;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
@@ -47,7 +49,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  */
 public class VDDHorizontalLayout extends VHorizontalLayout implements
 	VHasDragMode, VDDHasDropHandler<VDDHorizontalLayoutDropHandler>,
-	DragStartListener, VHasDragFilter,
+	DragStartListener, VHasDragFilter, VHasDragImageReferenceSupport,
 	VHasIframeShims {
 
     public static final String OVER = "v-ddorderedlayout-over";
@@ -332,5 +334,10 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
 	this.mode = mode;
 	ddMouseHandler.updateDragMode(mode);
 	iframeShimsEnabled(iframeCovers);
+    }
+
+    @Override
+    public void setDragImageProvider(VDragImageProvider provider) {
+	ddMouseHandler.setDragImageProvider(provider);
     }
 }

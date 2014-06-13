@@ -35,7 +35,9 @@ import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDragImageProvider;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragImageReferenceSupport;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
@@ -48,7 +50,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  */
 public class VDDFormLayout extends VFormLayout implements VHasDragMode,
 	VDDHasDropHandler<VDDFormLayoutDropHandler>, DragStartListener,
-	VHasDragFilter, VHasIframeShims {
+	VHasDragFilter, VHasIframeShims, VHasDragImageReferenceSupport {
 
     private Element currentlyEmphasised;
 
@@ -358,4 +360,8 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
 	iframeShimsEnabled(iframeCovers);
     }
 
+    @Override
+    public void setDragImageProvider(VDragImageProvider provider) {
+	ddMouseHandler.setDragImageProvider(provider);
+    }
 }

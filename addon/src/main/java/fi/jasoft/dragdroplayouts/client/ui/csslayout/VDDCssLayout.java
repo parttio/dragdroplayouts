@@ -36,7 +36,9 @@ import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDragImageProvider;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragImageReferenceSupport;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
@@ -50,7 +52,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  */
 public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 	VDDHasDropHandler<VDDCssLayoutDropHandler>, DragStartListener,
-	VHasDragFilter, VHasIframeShims {
+	VHasDragFilter, VHasIframeShims, VHasDragImageReferenceSupport {
 
     public static final String DRAG_SHADOW_STYLE_NAME = "v-ddcsslayout-drag-shadow";
 
@@ -428,5 +430,10 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 	this.mode = mode;
 	ddHandler.updateDragMode(mode);
 	iframeShimsEnabled(isIframeShimsEnabled());
+    }
+
+    @Override
+    public void setDragImageProvider(VDragImageProvider provider) {
+	ddHandler.setDragImageProvider(provider);
     }
 }
