@@ -27,11 +27,11 @@ public class DDTabSheetState extends TabsheetState implements
 
     public float tabLeftRightDropRatio = DEFAULT_HORIZONTAL_DROP_RATIO;
 
-    public DDLayoutState dd = new DDLayoutState();
+    public DDLayoutState ddState = new DDLayoutState();
 
     @Override
     public DDLayoutState getDragAndDropState() {
-	return dd;
+	return ddState;
     }
 
 }

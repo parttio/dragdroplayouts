@@ -35,7 +35,6 @@ import com.vaadin.ui.VerticalLayout;
 
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.client.ui.verticallayout.DDVerticalLayoutState;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
@@ -135,27 +134,9 @@ public class DDVerticalLayout extends VerticalLayout implements
      * 
      */
     public void paintContent(PaintTarget target) throws PaintException {
-
 	if (dropHandler != null && isEnabled()) {
 	    dropHandler.getAcceptCriterion().paint(target);
 	}
-
-	// Drop ratio
-	target.addAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO,
-		getState().cellTopBottomDropRatio);
-
-	// Drag mode
-	if (isEnabled()) {
-	    target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
-		    getState().dd.dragMode.ordinal());
-	} else {
-	    target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
-		    LayoutDragMode.NONE.ordinal());
-	}
-
-	// Shims
-	target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE,
-		getState().dd.iframeShims);
     }
 
     public TargetDetails translateDropTargetDetails(
@@ -200,7 +181,7 @@ public class DDVerticalLayout extends VerticalLayout implements
      * @return
      */
     public LayoutDragMode getDragMode() {
-	return getState().dd.dragMode;
+	return getState().ddState.dragMode;
     }
 
     /**
@@ -210,7 +191,7 @@ public class DDVerticalLayout extends VerticalLayout implements
      *            The mode of which how the dragging should be visualized.
      */
     public void setDragMode(LayoutDragMode mode) {
-	getState().dd.dragMode = mode;
+	getState().ddState.dragMode = mode;
     }
 
     /**
@@ -238,14 +219,14 @@ public class DDVerticalLayout extends VerticalLayout implements
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-	getState().dd.iframeShims = shim;
+	getState().ddState.iframeShims = shim;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-	return getState().dd.iframeShims;
+	return getState().ddState.iframeShims;
     }
 
     /**
@@ -273,11 +254,11 @@ public class DDVerticalLayout extends VerticalLayout implements
 
 	// Update draggable filter
 	Iterator<Component> componentIterator = getComponentIterator();
-	getState().dd.draggable = new ArrayList<Connector>();
+	getState().ddState.draggable = new ArrayList<Connector>();
 	while (componentIterator.hasNext()) {
 	    Component c = componentIterator.next();
 	    if (dragFilter.isDraggable(c)) {
-		getState().dd.draggable.add(c);
+		getState().ddState.draggable.add(c);
 	    }
 	}
     }

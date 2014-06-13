@@ -41,6 +41,7 @@ import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Link;
 
+import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
@@ -48,7 +49,6 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
 import fi.jasoft.dragdroplayouts.client.ui.tabsheet.VDDTabSheet;
-import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 /**
  * Utility class for Drag and Drop operations
@@ -430,52 +430,28 @@ public final class VDragDropUtil {
     }
 
     public static void listenToStateChangeEvents(
-	    final AbstractConnector connector,
-	    final VLayoutDragDropMouseHandler mouseHandler,
-	    final IframeCoverUtility iframeUtility, final Widget widget) {
-	/*
-	 * Listen to drag mode updates
-	 */
-	connector.addStateChangeHandler("dragMode", new StateChangeHandler() {
+	    final AbstractConnector connector, final Widget widget) {
+	connector.addStateChangeHandler("ddState", new StateChangeHandler() {
 	    @Override
 	    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-
 		DDLayoutState state = ((DragAndDropAwareState) connector
 			.getState()).getDragAndDropState();
 
 		if (widget instanceof VHasDragMode) {
 		    ((VHasDragMode) widget).setDragMode(state.dragMode);
 		}
-		//
-		//
-		// mouseHandler.updateDragMode(state.getDragMode());
-		//
-		// iframeUtility.setIframeCoversEnabled(state.isIframeShims(),
-		// widget.getElement(), state.getDragMode());
+
+		if (widget instanceof VHasIframeShims) {
+		    ((VHasIframeShims) widget)
+			    .iframeShimsEnabled(state.iframeShims);
+		}
+
+		if (widget instanceof VHasDragFilter) {
+		    ((VHasDragFilter) widget).setDragFilter(new VDragFilter(
+			    state));
+		}
 	    }
 	});
-
-	/*
-	 * Listen to iframe shim updates
-	 */
-	connector.addStateChangeHandler("iframeShims",
-		new StateChangeHandler() {
-		    @Override
-		    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-			DDLayoutState state = ((DragAndDropAwareState) connector
-				.getState()).getDragAndDropState();
-
-			if (widget instanceof VHasIframeShims) {
-			    ((VHasIframeShims) widget)
-				    .iframeShimsEnabled(state.iframeShims);
-			}
-			//
-			// iframeUtility.setIframeCoversEnabled(
-			// state.isIframeShims(), widget.getElement(),
-			// state.getDragMode());
-		    }
-		});
-
     }
 
 }

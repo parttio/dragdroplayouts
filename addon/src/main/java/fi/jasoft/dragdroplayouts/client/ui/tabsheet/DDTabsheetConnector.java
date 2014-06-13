@@ -18,7 +18,6 @@ package fi.jasoft.dragdroplayouts.client.ui.tabsheet;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.tabsheet.TabsheetConnector;
 import com.vaadin.shared.ui.Connect;
 
@@ -37,9 +36,7 @@ public class DDTabsheetConnector extends TabsheetConnector implements
     @Override
     protected void init() {
 	super.init();
-	VDragDropUtil.listenToStateChangeEvents(this, getWidget()
-		.getMouseHandler(), getWidget().getIframeCoverUtility(),
-		getWidget());
+	VDragDropUtil.listenToStateChangeEvents(this, getWidget());
     }
 
     @Override
@@ -66,12 +63,6 @@ public class DDTabsheetConnector extends TabsheetConnector implements
 		getWidget().getDropHandler().updateAcceptRules(acceptCrit);
 	    }
 	}
-    }
-
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-	super.onStateChanged(stateChangeEvent);
-	getWidget().setDragFilter(new VDragFilter(getState().dd));
     }
 
     @Override

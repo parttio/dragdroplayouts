@@ -15,14 +15,14 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.interfaces;
 
-import java.io.Serializable;
 import java.util.List;
 
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.communication.SharedState;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 
-public class DDLayoutState implements Serializable {
+public class DDLayoutState extends SharedState {
 
     // The current drag mode, default is dragging is not supported
     public LayoutDragMode dragMode = LayoutDragMode.NONE;
@@ -32,5 +32,4 @@ public class DDLayoutState implements Serializable {
 
     // Which connectors are draggable
     public List<Connector> draggable;
-
 }

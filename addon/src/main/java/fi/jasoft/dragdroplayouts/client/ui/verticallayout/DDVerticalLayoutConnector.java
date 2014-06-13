@@ -18,7 +18,6 @@ package fi.jasoft.dragdroplayouts.client.ui.verticallayout;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.orderedlayout.VerticalLayoutConnector;
 import com.vaadin.shared.ui.Connect;
 
@@ -50,9 +49,7 @@ public class DDVerticalLayoutConnector extends VerticalLayoutConnector
     @Override
     public void init() {
 	super.init();
-	VDragDropUtil.listenToStateChangeEvents(this, getWidget()
-		.getMouseHandler(), getWidget().getIframeCoverUtility(),
-		getWidget());
+	VDragDropUtil.listenToStateChangeEvents(this, getWidget());
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -71,12 +68,6 @@ public class DDVerticalLayoutConnector extends VerticalLayoutConnector
 	    }
 	    getWidget().getDropHandler().updateAcceptRules(ac);
 	}
-    }
-
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-	super.onStateChanged(stateChangeEvent);
-	getWidget().setDragFilter(new VDragFilter(getState().dd));
     }
 
     @Override

@@ -39,7 +39,7 @@ public class DragdropCssLayoutDemo extends DemoView {
 	@Override
 	public Component getLayout() {
 		//start-source
-		 DDCssLayout cssLayout = new DDCssLayout();
+	final DDCssLayout cssLayout = new DDCssLayout();
 	        cssLayout.setSizeFull();	        
 
 	        // Enable dragging
@@ -71,9 +71,13 @@ public class DragdropCssLayoutDemo extends DemoView {
 	            }
 	        });
 	        cssLayout.addComponent(btn);
-	        btn = new Button("Button 3", new Button.ClickListener() {
+	btn = new Button("Toggle", new Button.ClickListener() {
 	            public void buttonClick(ClickEvent event) {
-	                Notification.show("Click!");
+		if (cssLayout.getDragMode() == LayoutDragMode.CLONE) {
+		    cssLayout.setDragMode(LayoutDragMode.NONE);
+		} else {
+		    cssLayout.setDragMode(LayoutDragMode.CLONE);
+		}
 	            }
 	        });
 	        cssLayout.addComponent(btn);

@@ -188,12 +188,11 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
      */
     protected void updateDropDetails(Widget widget, VDragEvent event) {
 	if (widget == null) {
-	    // Null check
 	    return;
 	}
 
 	/*
-	 * The horizontal position within the cell
+	 * The horizontal position within the cell{
 	 */
 	event.getDropDetails().put(
 		Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
@@ -223,7 +222,7 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
 	// Add mouse event details
 	MouseEventDetails details = MouseEventDetailsBuilder
 		.buildMouseEventDetails(event.getCurrentGwtEvent(),
-			VDDHorizontalLayout.this.getElement());
+			getElement());
 	event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
 		details.serialize());
     }
@@ -291,13 +290,6 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
 	return dropHandler;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter#getDragFilter
-     * ()
-     */
     public VDragFilter getDragFilter() {
 	return dragFilter;
     }

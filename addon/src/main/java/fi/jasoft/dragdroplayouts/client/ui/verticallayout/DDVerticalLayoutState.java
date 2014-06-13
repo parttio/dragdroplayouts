@@ -29,10 +29,10 @@ public class DDVerticalLayoutState extends VerticalLayoutState implements
     @DelegateToWidget
     public float cellTopBottomDropRatio = DEFAULT_VERTICAL_DROP_RATIO;
 
-    public DDLayoutState dd = new DDLayoutState();
+    public DDLayoutState ddState = new DDLayoutState();
 
     @Override
     public DDLayoutState getDragAndDropState() {
-	return dd;
+	return ddState;
     }
 }

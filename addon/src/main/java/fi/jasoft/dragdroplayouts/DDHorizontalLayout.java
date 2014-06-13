@@ -153,7 +153,7 @@ public class DDHorizontalLayout extends HorizontalLayout implements
 	// Drag mode
 	if (isEnabled()) {
 	    target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
-		    getState().dd.dragMode.ordinal());
+		    getState().ddState.dragMode.ordinal());
 	} else {
 	    target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
 		    LayoutDragMode.NONE.ordinal());
@@ -161,7 +161,7 @@ public class DDHorizontalLayout extends HorizontalLayout implements
 
 	// Shims
 	target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE,
-		getState().dd.iframeShims);
+		getState().ddState.iframeShims);
     }
 
     /*
@@ -212,7 +212,7 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      * @return
      */
     public LayoutDragMode getDragMode() {
-	return getState().dd.dragMode;
+	return getState().ddState.dragMode;
     }
 
     /**
@@ -222,7 +222,7 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      *            The mode of which how the dragging should be visualized.
      */
     public void setDragMode(LayoutDragMode mode) {
-	getState().dd.dragMode = mode;
+	getState().ddState.dragMode = mode;
     }
 
     /**
@@ -250,14 +250,14 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-	getState().dd.iframeShims = shim;
+	getState().ddState.iframeShims = shim;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-	return getState().dd.iframeShims;
+	return getState().ddState.iframeShims;
     }
 
     /**
@@ -285,11 +285,11 @@ public class DDHorizontalLayout extends HorizontalLayout implements
 
 	// Update draggable filter
 	Iterator<Component> componentIterator = getComponentIterator();
-	getState().dd.draggable = new ArrayList<Connector>();
+	getState().ddState.draggable = new ArrayList<Connector>();
 	while (componentIterator.hasNext()) {
 	    Component c = componentIterator.next();
 	    if (dragFilter.isDraggable(c)) {
-		getState().dd.draggable.add(c);
+		getState().ddState.draggable.add(c);
 	    }
 	}
     }

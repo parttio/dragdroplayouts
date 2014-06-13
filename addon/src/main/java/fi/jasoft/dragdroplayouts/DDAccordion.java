@@ -116,14 +116,14 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      * {@inheritDoc}
      */
     public LayoutDragMode getDragMode() {
-	return getState().dd.dragMode;
+	return getState().ddState.dragMode;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragMode(LayoutDragMode mode) {
-	getState().dd.dragMode = mode;
+	getState().ddState.dragMode = mode;
     }
 
     /**
@@ -162,14 +162,14 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-	getState().dd.iframeShims = shim;
+	getState().ddState.iframeShims = shim;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-	return getState().dd.iframeShims;
+	return getState().ddState.iframeShims;
     }
 
     /**
@@ -197,11 +197,11 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
 
 	// Update draggable filter
 	Iterator<Component> componentIterator = getComponentIterator();
-	getState().dd.draggable = new ArrayList<Connector>();
+	getState().ddState.draggable = new ArrayList<Connector>();
 	while (componentIterator.hasNext()) {
 	    Component c = componentIterator.next();
 	    if (dragFilter.isDraggable(c)) {
-		getState().dd.draggable.add(c);
+		getState().ddState.draggable.add(c);
 	    }
 	}
     }

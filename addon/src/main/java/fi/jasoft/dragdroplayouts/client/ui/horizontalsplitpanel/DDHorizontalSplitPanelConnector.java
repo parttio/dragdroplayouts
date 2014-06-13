@@ -18,7 +18,6 @@ package fi.jasoft.dragdroplayouts.client.ui.horizontalsplitpanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.splitpanel.HorizontalSplitPanelConnector;
 import com.vaadin.shared.ui.Connect;
 
@@ -34,9 +33,7 @@ public class DDHorizontalSplitPanelConnector extends
     @Override
     protected void init() {
 	super.init();
-	VDragDropUtil.listenToStateChangeEvents(this, getWidget()
-		.getMouseHandler(), getWidget().getIframeCoverUtility(),
-		getWidget());
+	VDragDropUtil.listenToStateChangeEvents(this, getWidget());
     }
 
     /**
@@ -72,12 +69,6 @@ public class DDHorizontalSplitPanelConnector extends
 		getWidget().getDropHandler().updateAcceptRules(acceptCrit);
 	    }
 	}
-    }
-
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-	super.onStateChanged(stateChangeEvent);
-	getWidget().setDragFilter(new VDragFilter(getState().dd));
     }
 
     @Override

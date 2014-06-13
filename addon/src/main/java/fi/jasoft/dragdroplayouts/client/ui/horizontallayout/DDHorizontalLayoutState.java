@@ -29,10 +29,10 @@ public class DDHorizontalLayoutState extends HorizontalLayoutState implements
     @DelegateToWidget
     public float cellLeftRightDropRatio = DEFAULT_HORIZONTAL_DROP_RATIO;
 
-    public DDLayoutState dd = new DDLayoutState();
+    public DDLayoutState ddState = new DDLayoutState();
 
     @Override
     public DDLayoutState getDragAndDropState() {
-	return dd;
+	return ddState;
     }
 }

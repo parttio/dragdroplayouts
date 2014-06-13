@@ -29,11 +29,11 @@ public class DDAccordionState extends AccordionState implements
     @DelegateToWidget
     public float tabTopBottomDropRatio = DEFAULT_VERTICAL_RATIO;
 
-    public DDLayoutState dd = new DDLayoutState();
+    public DDLayoutState ddState = new DDLayoutState();
 
     @Override
     public DDLayoutState getDragAndDropState() {
-	return dd;
+	return ddState;
     }
 
 }
