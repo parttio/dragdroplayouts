@@ -28,59 +28,59 @@ import com.vaadin.ui.CustomComponent;
 
 public abstract class DemoView extends CustomComponent implements View {
 
-	private final Navigator navigator;
-	
-	public DemoView(Navigator navigator) {
-		this.navigator = navigator;
-		setSizeFull();
-		setCompositionRoot(getLayout());
+    private final Navigator navigator;
+
+    public DemoView(Navigator navigator) {
+	this.navigator = navigator;
+	setSizeFull();
+	setCompositionRoot(getLayout());
+    }
+
+    @Override
+    public void enter(ViewChangeEvent event) {
+    }
+
+    public String getSource() {
+	String path = getClass().getCanonicalName().replaceAll("\\.", "/")
+		+ ".java";
+
+	InputStream is = getClass().getClassLoader().getResourceAsStream(path);
+	if (is == null) {
+	    return "No source code available.";
 	}
-	
-	@Override
-	public void enter(ViewChangeEvent event) {		
+
+	BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+	try {
+
+	    boolean inCodeBlock = false;
+
+	    StringBuilder codelines = new StringBuilder();
+	    String line = reader.readLine();
+	    while (line != null) {
+		if (line.contains("//start-source")) {
+		    inCodeBlock = true;
+		} else if (line.contains("//end-source")) {
+		    inCodeBlock = false;
+		} else if (inCodeBlock) {
+		    codelines.append(line);
+		    codelines.append("\n");
+		}
+		line = reader.readLine();
+	    }
+
+	    reader.close();
+
+	    String code = codelines.toString();
+
+	    return code;
+	} catch (IOException e) {
+	    return "No source code available.";
 	}
-	
-	public String getSource(){
-		 String path = getClass().getCanonicalName().replaceAll("\\.", "/")
-	                + ".java";
+    }
 
-	        InputStream is = getClass().getClassLoader().getResourceAsStream(path);
-	        if (is == null) {	         
-	            return "No source code available.";
-	        }
+    public abstract Component getLayout();
 
-	        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+    public abstract String getCaption();
 
-	        try{
-	        
-	        	boolean inCodeBlock = false;
-	        	
-	        StringBuilder codelines = new StringBuilder();
-	        String line = reader.readLine();
-	        while (line != null) {	        
-	        	if(line.contains("//start-source")){
-	        		inCodeBlock = true;
-	        	} else if(line.contains("//end-source")){
-	        		inCodeBlock = false;
-	        	} else if(inCodeBlock){
-	        		codelines.append(line);
-	                codelines.append("\n");
-	        	}
-	            line = reader.readLine();
-	        }
-
-	        reader.close();
-
-	        String code = codelines.toString();
-	        
-	        return code;
-	        } catch (IOException e) {
-	        	 return "No source code available.";
-	        }
-	}
-	
-	public abstract Component getLayout();
-	
-	public abstract String getCaption();
-	
 }

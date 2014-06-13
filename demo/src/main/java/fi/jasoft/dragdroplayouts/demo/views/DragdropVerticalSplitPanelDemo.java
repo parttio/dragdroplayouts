@@ -29,57 +29,57 @@ import fi.jasoft.dragdroplayouts.drophandlers.DefaultVerticalSplitPanelDropHandl
 
 @SuppressWarnings("serial")
 public class DragdropVerticalSplitPanelDemo extends DemoView {
-	
-	public static final String NAME = "dd-vertical-splitpanel";
-	
-    private int buttonCount = 1;    
 
-	public DragdropVerticalSplitPanelDemo(Navigator navigator) {
-		super(navigator);		
-	}
+    public static final String NAME = "dd-vertical-splitpanel";
 
-	@Override
-	public Component getLayout() {
-		//start-source
-		  VerticalLayout root = new VerticalLayout();
-	        root.setSpacing(true);
-	        root.setSizeFull();
-	     
-	        Label lbl = new Label(
-	                "On top are some buttons, and below them is a vertical split panel. "
-	                        + "Try dragging the buttons on to the splitpanel. If a component already exists in the SplitPanel it is replaced with the dragged one.");
-	        root.addComponent(lbl);
+    private int buttonCount = 1;
 
-	        // Add some buttons to a vertical layout with dragging enabled
-	        final DDHorizontalLayout btns = new DDHorizontalLayout();
-	        btns.setSpacing(true);
-	        btns.setDragMode(LayoutDragMode.CLONE);
-	        String caption = "Button ";
-	        btns.addComponent(new Button(caption + buttonCount++));
-	        btns.addComponent(new Button(caption + buttonCount++));
-	        btns.addComponent(new Button(caption + buttonCount++));
-	        btns.addComponent(new Button(caption + buttonCount++));
-	        btns.addComponent(new Button(caption + buttonCount++));
-	        root.addComponent(btns);
+    public DragdropVerticalSplitPanelDemo(Navigator navigator) {
+	super(navigator);
+    }
 
-	        // Create a drag & drop horizontal split panel
-	        final DDVerticalSplitPanel panel = new DDVerticalSplitPanel();
-	        panel.setSizeFull();
-	        
-	        root.addComponent(panel);
-	        root.setExpandRatio(panel, 1);
+    @Override
+    public Component getLayout() {
+	// start-source
+	VerticalLayout root = new VerticalLayout();
+	root.setSpacing(true);
+	root.setSizeFull();
 
-	        // Enable dragging
-	        panel.setDragMode(LayoutDragMode.CLONE);
+	Label lbl = new Label(
+		"On top are some buttons, and below them is a vertical split panel. "
+			+ "Try dragging the buttons on to the splitpanel. If a component already exists in the SplitPanel it is replaced with the dragged one.");
+	root.addComponent(lbl);
 
-	        // Enable dropping
-	        panel.setDropHandler(new DefaultVerticalSplitPanelDropHandler());
-	        //end-source
-	        return root;
-	}
+	// Add some buttons to a vertical layout with dragging enabled
+	final DDHorizontalLayout btns = new DDHorizontalLayout();
+	btns.setSpacing(true);
+	btns.setDragMode(LayoutDragMode.CLONE);
+	String caption = "Button ";
+	btns.addComponent(new Button(caption + buttonCount++));
+	btns.addComponent(new Button(caption + buttonCount++));
+	btns.addComponent(new Button(caption + buttonCount++));
+	btns.addComponent(new Button(caption + buttonCount++));
+	btns.addComponent(new Button(caption + buttonCount++));
+	root.addComponent(btns);
 
-	@Override
-	public String getCaption() {	
-		return "Vertical split panel";
-	}
+	// Create a drag & drop horizontal split panel
+	final DDVerticalSplitPanel panel = new DDVerticalSplitPanel();
+	panel.setSizeFull();
+
+	root.addComponent(panel);
+	root.setExpandRatio(panel, 1);
+
+	// Enable dragging
+	panel.setDragMode(LayoutDragMode.CLONE);
+
+	// Enable dropping
+	panel.setDropHandler(new DefaultVerticalSplitPanelDropHandler());
+	// end-source
+	return root;
+    }
+
+    @Override
+    public String getCaption() {
+	return "Vertical split panel";
+    }
 }

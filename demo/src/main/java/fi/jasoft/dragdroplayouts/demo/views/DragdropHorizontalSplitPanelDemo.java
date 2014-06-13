@@ -31,64 +31,64 @@ import fi.jasoft.dragdroplayouts.drophandlers.DefaultHorizontalSplitPanelDropHan
 @SuppressWarnings("serial")
 public class DragdropHorizontalSplitPanelDemo extends DemoView {
 
-	public static final String NAME = "dd-horizontal-splitpanel";
-	
+    public static final String NAME = "dd-horizontal-splitpanel";
+
     private int buttonCount = 1;
-    
-	public DragdropHorizontalSplitPanelDemo(Navigator navigator) {
-		super(navigator);		
-	}
 
-	@Override
-	public Component getLayout() {
-		//start-source
-		 CssLayout root = new CssLayout();
-	        root.setSizeFull();
-	      
-	        Label lbl = new Label(
-	                "To the left are some buttons, and to the right is a horizontal split panel. "
-	                        + "Try dragging the buttons on to the splitpanel. If a component already exists in the SplitPanel it is replaced with the dragged one.");
-	        root.addComponent(lbl);
+    public DragdropHorizontalSplitPanelDemo(Navigator navigator) {
+	super(navigator);
+    }
 
-	        // Wrapping components in a horizontal layout
-	        HorizontalLayout inner = new HorizontalLayout();
-	        inner.setMargin(true);
-	        inner.setSizeFull();
-	        inner.setSpacing(true);
-	        root.addComponent(inner);
+    @Override
+    public Component getLayout() {
+	// start-source
+	CssLayout root = new CssLayout();
+	root.setSizeFull();
 
-	        // Add some buttons to a vertical layout with dragging enabled
-	        final DDVerticalLayout btns = new DDVerticalLayout();
-	        btns.setDragMode(LayoutDragMode.CLONE);
-	        btns.setSizeUndefined();
-	        btns.setSpacing(true);
-	        String caption = "Button ";
-	        btns.addComponent(new Button(caption + buttonCount++));
-	        btns.addComponent(new Button(caption + buttonCount++));
-	        btns.addComponent(new Button(caption + buttonCount++));
-	        btns.addComponent(new Button(caption + buttonCount++));
-	        btns.addComponent(new Button(caption + buttonCount++));
-	        inner.addComponent(btns);
+	Label lbl = new Label(
+		"To the left are some buttons, and to the right is a horizontal split panel. "
+			+ "Try dragging the buttons on to the splitpanel. If a component already exists in the SplitPanel it is replaced with the dragged one.");
+	root.addComponent(lbl);
 
-	        // Create a drag & drop horizontal split panel
-	        final DDHorizontalSplitPanel panel = new DDHorizontalSplitPanel();
-	        panel.setSizeFull();
-	        
-	        inner.addComponent(panel);
-	        inner.setExpandRatio(panel, 1);
+	// Wrapping components in a horizontal layout
+	HorizontalLayout inner = new HorizontalLayout();
+	inner.setMargin(true);
+	inner.setSizeFull();
+	inner.setSpacing(true);
+	root.addComponent(inner);
 
-	        // Enable dragging
-	        panel.setDragMode(LayoutDragMode.CLONE);
+	// Add some buttons to a vertical layout with dragging enabled
+	final DDVerticalLayout btns = new DDVerticalLayout();
+	btns.setDragMode(LayoutDragMode.CLONE);
+	btns.setSizeUndefined();
+	btns.setSpacing(true);
+	String caption = "Button ";
+	btns.addComponent(new Button(caption + buttonCount++));
+	btns.addComponent(new Button(caption + buttonCount++));
+	btns.addComponent(new Button(caption + buttonCount++));
+	btns.addComponent(new Button(caption + buttonCount++));
+	btns.addComponent(new Button(caption + buttonCount++));
+	inner.addComponent(btns);
 
-	        // Enable dropping
-	        panel.setDropHandler(new DefaultHorizontalSplitPanelDropHandler());
-	        
-	        //end-source
-	        return root;
-	}
+	// Create a drag & drop horizontal split panel
+	final DDHorizontalSplitPanel panel = new DDHorizontalSplitPanel();
+	panel.setSizeFull();
 
-	@Override
-	public String getCaption() {		
-		return "Horizontal split panel";
-	}
+	inner.addComponent(panel);
+	inner.setExpandRatio(panel, 1);
+
+	// Enable dragging
+	panel.setDragMode(LayoutDragMode.CLONE);
+
+	// Enable dropping
+	panel.setDropHandler(new DefaultHorizontalSplitPanelDropHandler());
+
+	// end-source
+	return root;
+    }
+
+    @Override
+    public String getCaption() {
+	return "Horizontal split panel";
+    }
 }

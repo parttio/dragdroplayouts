@@ -30,63 +30,59 @@ import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
 
 public class DragdropCssLayoutDemo extends DemoView {
 
-	public static final String NAME = "dd-css-layout";
-	
-	public DragdropCssLayoutDemo(Navigator navigator) {
-		super(navigator);		
-	}
-	
-	@Override
-	public Component getLayout() {
-		//start-source
+    public static final String NAME = "dd-css-layout";
+
+    public DragdropCssLayoutDemo(Navigator navigator) {
+	super(navigator);
+    }
+
+    @Override
+    public Component getLayout() {
+	// start-source
 	final DDCssLayout cssLayout = new DDCssLayout();
-	        cssLayout.setSizeFull();	        
+	cssLayout.setSizeFull();
 
-	        // Enable dragging
-	        cssLayout.setDragMode(LayoutDragMode.CLONE);
+	// Enable dragging
+	cssLayout.setDragMode(LayoutDragMode.CLONE);
 
-	        // Enable dropping
-	        cssLayout.setDropHandler(new DefaultCssLayoutDropHandler());
+	// Enable dropping
+	cssLayout.setDropHandler(new DefaultCssLayoutDropHandler());
 
-	        // Only allow draggin buttons
-	        cssLayout.setDragFilter(new DragFilter() {
-	            public boolean isDraggable(Component component) {
-	                return component instanceof Button;
-	            }
-	        });
+	// Only allow draggin buttons
+	cssLayout.setDragFilter(new DragFilter() {
+	    public boolean isDraggable(Component component) {
+		return component instanceof Button;
+	    }
+	});
 
-	        // Add some components
-	        Label lbl = new Label(
-	                "This is an CSS layout, the positions are defined by css rules. Try dragging the components around.");
-	        cssLayout.addComponent(lbl);
-	        Button btn = new Button("Button 1", new Button.ClickListener() {
-	            public void buttonClick(ClickEvent event) {
-	                Notification.show("Click!");
-	            }
-	        });
-	        cssLayout.addComponent(btn);
-	        btn = new Button("Button 2", new Button.ClickListener() {
-	            public void buttonClick(ClickEvent event) {
-	                Notification.show("Click!");
-	            }
-	        });
-	        cssLayout.addComponent(btn);
-	btn = new Button("Toggle", new Button.ClickListener() {
-	            public void buttonClick(ClickEvent event) {
-		if (cssLayout.getDragMode() == LayoutDragMode.CLONE) {
-		    cssLayout.setDragMode(LayoutDragMode.NONE);
-		} else {
-		    cssLayout.setDragMode(LayoutDragMode.CLONE);
-		}
-	            }
-	        });
-	        cssLayout.addComponent(btn);
-	        //end-source
-	        return cssLayout;
-	}
+	// Add some components
+	Label lbl = new Label(
+		"This is an CSS layout, the positions are defined by css rules. Try dragging the components around.");
+	cssLayout.addComponent(lbl);
+	Button btn = new Button("Button 1", new Button.ClickListener() {
+	    public void buttonClick(ClickEvent event) {
+		Notification.show("Click!");
+	    }
+	});
+	cssLayout.addComponent(btn);
+	btn = new Button("Button 2", new Button.ClickListener() {
+	    public void buttonClick(ClickEvent event) {
+		Notification.show("Click!");
+	    }
+	});
+	cssLayout.addComponent(btn);
+	btn = new Button("Button 3", new Button.ClickListener() {
+	    public void buttonClick(ClickEvent event) {
+		Notification.show("Click!");
+	    }
+	});
+	cssLayout.addComponent(btn);
+	// end-source
+	return cssLayout;
+    }
 
-	@Override
-	public String getCaption() {
-		return "CSSLayout";
-	}
+    @Override
+    public String getCaption() {
+	return "CSSLayout";
+    }
 }
