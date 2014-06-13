@@ -15,8 +15,6 @@
  */
 package fi.jasoft.dragdroplayouts;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.vaadin.event.Transferable;
@@ -26,7 +24,6 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.shared.Connector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
@@ -39,6 +36,7 @@ import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.gridlayout.DDGridLayoutState;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
+import fi.jasoft.dragdroplayouts.interfaces.DragFilterSupport;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
 import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
@@ -50,7 +48,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDGridLayout extends GridLayout implements LayoutDragSource,
-	DropTarget, ShimSupport, LegacyComponent {
+	DropTarget, ShimSupport, LegacyComponent, DragFilterSupport {
 
     private DropHandler dropHandler;
 
@@ -361,15 +359,6 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
     @Override
     public void beforeClientResponse(boolean initial) {
 	super.beforeClientResponse(initial);
-
-	// Update draggable filter
-	Iterator<Component> componentIterator = getComponentIterator();
-	getState().ddState.draggable = new ArrayList<Connector>();
-	while (componentIterator.hasNext()) {
-	    Component c = componentIterator.next();
-	    if (dragFilter.isDraggable(c)) {
-		getState().ddState.draggable.add(c);
-	    }
-	}
+	DDUtil.onBeforeClientResponse(this, getState());
     }
 }

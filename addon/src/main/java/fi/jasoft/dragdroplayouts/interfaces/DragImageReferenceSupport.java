@@ -15,4 +15,10 @@ public interface DragImageReferenceSupport {
      *            The reference component to show
      */
     void setDragImageProvider(DragImageProvider provider);
+
+    /**
+     * Returns the drag image provider
+     * 
+     */
+    DragImageProvider getDragImageProvider();
 }

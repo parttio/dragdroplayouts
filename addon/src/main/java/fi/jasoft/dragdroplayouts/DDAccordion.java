@@ -15,7 +15,6 @@
  */
 package fi.jasoft.dragdroplayouts;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -25,7 +24,6 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.shared.Connector;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyComponent;
@@ -35,6 +33,9 @@ import fi.jasoft.dragdroplayouts.client.ui.accordion.DDAccordionState;
 import fi.jasoft.dragdroplayouts.details.AccordionTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
+import fi.jasoft.dragdroplayouts.interfaces.DragFilterSupport;
+import fi.jasoft.dragdroplayouts.interfaces.DragImageProvider;
+import fi.jasoft.dragdroplayouts.interfaces.DragImageReferenceSupport;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
 import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
@@ -46,7 +47,8 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDAccordion extends Accordion implements LayoutDragSource,
-	DropTarget, ShimSupport, LegacyComponent {
+	DropTarget, ShimSupport, LegacyComponent, DragImageReferenceSupport,
+	DragFilterSupport {
 
     /**
      * The drop handler which handles dropped components in the layout.
@@ -55,6 +57,8 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
 
     // A filter for dragging components.
     private DragFilter dragFilter = DragFilter.ALL;
+
+    private DragImageProvider dragImageProvider;
 
     /**
      * {@inheritDoc}
@@ -194,20 +198,22 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
     @Override
     public void beforeClientResponse(boolean initial) {
 	super.beforeClientResponse(initial);
-
-	// Update draggable filter
-	Iterator<Component> componentIterator = getComponentIterator();
-	getState().ddState.draggable = new ArrayList<Connector>();
-	while (componentIterator.hasNext()) {
-	    Component c = componentIterator.next();
-	    if (dragFilter.isDraggable(c)) {
-		getState().ddState.draggable.add(c);
-	    }
-	}
+	DDUtil.onBeforeClientResponse(this, getState());
     }
 
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
 	// FIXME Remove when drag&drop no longer is legacy
+    }
+
+    @Override
+    public void setDragImageProvider(DragImageProvider provider) {
+	this.dragImageProvider = provider;
+	markAsDirty();
+    }
+
+    @Override
+    public DragImageProvider getDragImageProvider() {
+	return this.dragImageProvider;
     }
 }

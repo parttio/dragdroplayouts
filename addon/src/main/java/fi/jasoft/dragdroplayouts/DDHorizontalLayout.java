@@ -15,8 +15,6 @@
  */
 package fi.jasoft.dragdroplayouts;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.vaadin.event.Transferable;
@@ -26,7 +24,6 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.shared.Connector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.ui.Component;
@@ -39,6 +36,7 @@ import fi.jasoft.dragdroplayouts.client.ui.horizontallayout.DDHorizontalLayoutSt
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
+import fi.jasoft.dragdroplayouts.interfaces.DragFilterSupport;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
 import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
@@ -50,7 +48,8 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDHorizontalLayout extends HorizontalLayout implements
-	LayoutDragSource, DropTarget, ShimSupport, LegacyComponent {
+	LayoutDragSource, DropTarget, ShimSupport, LegacyComponent,
+	DragFilterSupport {
 
     /**
      * The drop handler which handles dropped components in the layout.
@@ -282,16 +281,7 @@ public class DDHorizontalLayout extends HorizontalLayout implements
     @Override
     public void beforeClientResponse(boolean initial) {
 	super.beforeClientResponse(initial);
-
-	// Update draggable filter
-	Iterator<Component> componentIterator = getComponentIterator();
-	getState().ddState.draggable = new ArrayList<Connector>();
-	while (componentIterator.hasNext()) {
-	    Component c = componentIterator.next();
-	    if (dragFilter.isDraggable(c)) {
-		getState().ddState.draggable.add(c);
-	    }
-	}
+	DDUtil.onBeforeClientResponse(this, getState());
     }
 
     @Override

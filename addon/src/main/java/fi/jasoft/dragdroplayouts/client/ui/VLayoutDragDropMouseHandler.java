@@ -299,8 +299,9 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 	/*
 	 * Create the drag image
 	 */
-	com.google.gwt.dom.client.Element dragImageElement = dragImageProvider
-		.getDragImageElement(w);
+	com.google.gwt.dom.client.Element dragImageElement = dragImageProvider == null ? null
+		: dragImageProvider.getDragImageElement(w);
+
 	if (dragImageElement != null) {
 
 	    // Set stylename to proxy component as well
