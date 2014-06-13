@@ -36,28 +36,16 @@ public class DDVerticalSplitPanelConnector extends VerticalSplitPanelConnector
 	VDragDropUtil.listenToStateChangeEvents(this, getWidget());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public VDDVerticalSplitPanel getWidget() {
 	return (VDDVerticalSplitPanel) super.getWidget();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public DDVerticalSplitPanelState getState() {
 	return (DDVerticalSplitPanelState) super.getState();
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @param uidl
-     * @param client
-     */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 	VDragDropUtil.updateDropHandlerFromUIDL(uidl, this,
 		new VDDVerticalSplitPanelDropHandler(this));

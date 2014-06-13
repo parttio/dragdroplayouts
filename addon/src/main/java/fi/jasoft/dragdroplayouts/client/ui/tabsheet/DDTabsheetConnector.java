@@ -30,9 +30,6 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 public class DDTabsheetConnector extends TabsheetConnector implements
 	Paintable, VHasDragFilter {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init() {
 	super.init();

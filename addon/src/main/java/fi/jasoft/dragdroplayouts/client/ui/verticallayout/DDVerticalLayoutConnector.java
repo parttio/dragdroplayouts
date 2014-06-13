@@ -30,17 +30,11 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 public class DDVerticalLayoutConnector extends VerticalLayoutConnector
 	implements Paintable, VHasDragFilter {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public VDDVerticalLayout getWidget() {
 	return (VDDVerticalLayout) super.getWidget();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public DDVerticalLayoutState getState() {
 	return (DDVerticalLayoutState) super.getState();

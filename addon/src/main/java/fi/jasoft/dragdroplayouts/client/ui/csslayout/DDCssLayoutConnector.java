@@ -30,17 +30,11 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 public class DDCssLayoutConnector extends CssLayoutConnector implements
 	Paintable, VHasDragFilter {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public VDDCssLayout getWidget() {
 	return (VDDCssLayout) super.getWidget();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public DDCssLayoutState getState() {
 	return (DDCssLayoutState) super.getState();
@@ -52,9 +46,6 @@ public class DDCssLayoutConnector extends CssLayoutConnector implements
 	VDragDropUtil.listenToStateChangeEvents(this, getWidget());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 	VDragDropUtil.updateDropHandlerFromUIDL(uidl, this,
 		new VDDCssLayoutDropHandler(this));

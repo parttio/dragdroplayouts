@@ -31,25 +31,16 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
 	implements Paintable, VHasDragFilter {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public VDDAbsoluteLayout getWidget() {
 	return (VDDAbsoluteLayout) super.getWidget();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public DDAbsoluteLayoutState getState() {
 	return (DDAbsoluteLayoutState) super.getState();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init() {
 	super.init();
@@ -57,7 +48,6 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
     }
 
     /**
-     * {@inheritDoc}
      * 
      * TODO Remove this when drag & drop is done properly in core
      */
@@ -67,9 +57,6 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
 		new VDDAbsoluteLayoutDropHandler(this));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public LayoutDragMode getDragMode() {
 	return getWidget().getDragMode();
     }

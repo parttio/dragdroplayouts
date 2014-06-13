@@ -31,40 +31,27 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 public class DDAccordionConnector extends AccordionConnector implements
 	Paintable, VHasDragFilter {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public VDDAccordion getWidget() {
 	return (VDDAccordion) super.getWidget();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public DDAccordionState getState() {
 	return (DDAccordionState) super.getState();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void init() {
 	super.init();
 	VDragDropUtil.listenToStateChangeEvents(this, getWidget());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public LayoutDragMode getDragMode() {
 	return getWidget().getDragMode();
     }
 
     /**
-     * {@inheritDoc}
      * 
      * TODO Remove this when drag & drop is done properly in core
      */
