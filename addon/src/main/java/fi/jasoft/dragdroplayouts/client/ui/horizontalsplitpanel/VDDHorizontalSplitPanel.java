@@ -172,6 +172,10 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
         // Remove previous emphasis
         deEmphasis();
 
+	if (element == null || !getElement().isOrHasChild(element)) {
+	    return;
+	}
+
         if (element == firstContainer || element == secondContainer) {
             element.addClassName(OVER);
             currentEmphasis = element;

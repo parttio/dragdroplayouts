@@ -15,12 +15,12 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.horizontallayout;
 
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.dom.client.Element;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Util;
+import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
@@ -36,6 +36,8 @@ public class VDDHorizontalLayoutDropHandler extends VAbstractDropHandler {
             ApplicationConnection client) {
         this.layout = layout;
         this.client = client;
+
+	VConsole.error("init:" + layout.getStyleName());
     }
 
     public ApplicationConnection getApplicationConnection() {
@@ -54,35 +56,30 @@ public class VDDHorizontalLayoutDropHandler extends VAbstractDropHandler {
 
     @Override
     public boolean drop(VDragEvent drag) {
-
-        // Un-emphasis any selections
         layout.emphasis(null, null);
-
-        // Update the details
-        Widget slot = getSlot(drag.getElementOver());
-        layout.updateDropDetails(slot, drag);
-
+	updateDropDetails(drag);
         return layout.postDropHook(drag) && super.drop(drag);
     };
 
     private Slot getSlot(Element e) {
-        return Util.findWidget(e, Slot.class);
+	Slot slot = Util.findWidget(e, Slot.class);
+	assert layout.getElement().isOrHasChild(e) : "Slot is not inside layout";
+	return slot;
+    }
+    
+    private void updateDropDetails(VDragEvent drag) {
+	Slot slot = getSlot(drag.getElementOver());
+	if (slot != null) {
+	    layout.updateDropDetails(slot.getWidget(), drag);
+	} else {
+	    layout.updateDropDetails(layout, drag);
+	}
     }
 
     @Override
     public void dragOver(VDragEvent drag) {
-
-        // Remove any emphasis
-        layout.emphasis(null, null);
-
-        // Update the dropdetails so we can validate the drop
-        Slot slot = getSlot(drag.getElementOver());
-        if (slot != null) {
-            layout.updateDropDetails(slot.getWidget(), drag);
-        } else {
-            layout.updateDropDetails(layout, drag);
-        }
-
+	layout.deEmphasis();
+	updateDropDetails(drag);
         layout.postOverHook(drag);
 
         // Validate the drop
@@ -100,8 +97,7 @@ public class VDDHorizontalLayoutDropHandler extends VAbstractDropHandler {
 
     @Override
     public void dragLeave(VDragEvent drag) {
-        layout.emphasis(null, drag);
-
+	layout.deEmphasis();
         layout.postLeaveHook(drag);
     }
 

@@ -218,10 +218,10 @@ VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
         // Remove emphasis from previous hovers
         deEmphasis();
 
-        // Null check..
-        if (widget == null) {
-            return;
-        }
+	// Validate
+	if (widget == null || !getElement().isOrHasChild(widget.getElement())) {
+	    return;
+	}
 
         /*
          * Get row for widget

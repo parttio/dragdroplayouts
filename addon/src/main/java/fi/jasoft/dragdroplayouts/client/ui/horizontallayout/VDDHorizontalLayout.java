@@ -241,8 +241,9 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
         // Remove emphasis from previous hovers
         deEmphasis();
 
-        // Null check..
-        if (container == null) {
+	// validate container
+	if (container == null
+		|| !getElement().isOrHasChild(container.getElement())) {
             return;
         }
 
@@ -250,16 +251,16 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements
 
         UIObject.setStyleName(container.getElement(), OVER, true);
 
-        if (container != this) {
-            // Add drop location specific style
-            UIObject.setStyleName(container.getElement(), OVER
-                    + "-"
-                    + getHorizontalDropLocation(container, event).toString()
-                            .toLowerCase(), true);
-        } else {
-            UIObject.setStyleName(container.getElement(), OVER + "-"
-                    + HorizontalDropLocation.CENTER.toString().toLowerCase(),
-                    true);
+	// Add drop location specific style
+	if (container.getElement().equals(this.getElement())) {
+	    UIObject.setStyleName(container.getElement(), OVER + "-"
+		    + HorizontalDropLocation.CENTER.toString().toLowerCase(),
+		    true);
+	} else {
+	    UIObject.setStyleName(container.getElement(), OVER
+		    + "-"
+		    + getHorizontalDropLocation(container, event).toString()
+			    .toLowerCase(), true);
         }
     }
 

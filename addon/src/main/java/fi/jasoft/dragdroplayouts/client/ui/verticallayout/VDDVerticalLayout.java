@@ -197,10 +197,11 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
         // Remove emphasis from previous hovers
         deEmphasis();
 
-        // Null check..
-        if (container == null) {
-            return;
-        }
+	// validate container
+	if (container == null
+		|| !getElement().isOrHasChild(container.getElement())) {
+	    return;
+	}
 
         currentlyEmphasised = container;
 

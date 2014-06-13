@@ -176,6 +176,11 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements
     protected void emphasis(Element element) {
         // Remove previous emphasis
         deEmphasis();
+        
+	// validate container
+	if (element == null || !getElement().isOrHasChild(element)) {
+	    return;
+	}
 
         if (element == firstContainer || element == secondContainer) {
             element.addClassName(OVER);
