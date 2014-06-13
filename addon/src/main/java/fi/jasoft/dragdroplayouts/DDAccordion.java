@@ -46,7 +46,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDAccordion extends Accordion implements LayoutDragSource,
-        DropTarget, ShimSupport, LegacyComponent {
+	DropTarget, ShimSupport, LegacyComponent {
 
     /**
      * The drop handler which handles dropped components in the layout.
@@ -60,25 +60,25 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      * {@inheritDoc}
      */
     public Transferable getTransferable(Map<String, Object> rawVariables) {
-        if (rawVariables.get("index") != null) {
-            int index = Integer.parseInt(rawVariables.get("index").toString());
-            Iterator<Component> iter = getComponentIterator();
-            int counter = 0;
-            Component c = null;
-            while (iter.hasNext()) {
-                c = iter.next();
-                if (counter == index) {
-                    break;
-                }
-                counter++;
-            }
+	if (rawVariables.get("index") != null) {
+	    int index = Integer.parseInt(rawVariables.get("index").toString());
+	    Iterator<Component> iter = getComponentIterator();
+	    int counter = 0;
+	    Component c = null;
+	    while (iter.hasNext()) {
+		c = iter.next();
+		if (counter == index) {
+		    break;
+		}
+		counter++;
+	    }
 
-            rawVariables.put("component", c);
-        } else if (rawVariables.get("component") == null) {
-            rawVariables.put("component", DDAccordion.this);
-        }
+	    rawVariables.put("component", c);
+	} else if (rawVariables.get("component") == null) {
+	    rawVariables.put("component", DDAccordion.this);
+	}
 
-        return new LayoutBoundTransferable(this, rawVariables);
+	return new LayoutBoundTransferable(this, rawVariables);
     }
 
     /**
@@ -91,39 +91,39 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      *            dropping
      */
     public void setDropHandler(DropHandler dropHandler) {
-        if (this.dropHandler != dropHandler) {
-            this.dropHandler = dropHandler;
-            requestRepaint();
-        }
+	if (this.dropHandler != dropHandler) {
+	    this.dropHandler = dropHandler;
+	    requestRepaint();
+	}
     }
 
     /**
      * {@inheritDoc}
      */
     public DropHandler getDropHandler() {
-        return dropHandler;
+	return dropHandler;
     }
 
     /**
      * {@inheritDoc}
      */
     public TargetDetails translateDropTargetDetails(
-            Map<String, Object> clientVariables) {
-        return new AccordionTargetDetails(this, clientVariables);
+	    Map<String, Object> clientVariables) {
+	return new AccordionTargetDetails(this, clientVariables);
     }
 
     /**
      * {@inheritDoc}
      */
     public LayoutDragMode getDragMode() {
-        return getState().dd.dragMode;
+	return getState().dd.dragMode;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragMode(LayoutDragMode mode) {
-        getState().dd.dragMode = mode;
+	getState().dd.dragMode = mode;
     }
 
     /**
@@ -131,10 +131,10 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        // Add drop handler
-        if (dropHandler != null && isEnabled()) {
-            dropHandler.getAcceptCriterion().paint(target);
-        }
+	// Add drop handler
+	if (dropHandler != null && isEnabled()) {
+	    dropHandler.getAcceptCriterion().paint(target);
+	}
     }
 
     /**
@@ -148,62 +148,62 @@ public class DDAccordion extends Accordion implements LayoutDragSource,
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentVerticalDropRatio(float ratio) {
-        if (ratio != getState().tabTopBottomDropRatio) {
-            if (ratio >= 0 && ratio <= 0.5) {
-                getState().tabTopBottomDropRatio = ratio;
-            } else {
-                throw new IllegalArgumentException(
-                        "Ratio must be between 0 and 0.5");
-            }
-        }
+	if (ratio != getState().tabTopBottomDropRatio) {
+	    if (ratio >= 0 && ratio <= 0.5) {
+		getState().tabTopBottomDropRatio = ratio;
+	    } else {
+		throw new IllegalArgumentException(
+			"Ratio must be between 0 and 0.5");
+	    }
+	}
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        getState().dd.iframeShims = shim;
+	getState().dd.iframeShims = shim;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-        return getState().dd.iframeShims;
+	return getState().dd.iframeShims;
     }
 
     /**
      * {@inheritDoc}
      */
     public DragFilter getDragFilter() {
-        return dragFilter;
+	return dragFilter;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragFilter(DragFilter dragFilter) {
-        this.dragFilter = dragFilter;
+	this.dragFilter = dragFilter;
     }
 
     @Override
     public DDAccordionState getState() {
-        return (DDAccordionState) super.getState();
+	return (DDAccordionState) super.getState();
     }
 
     @Override
     public void beforeClientResponse(boolean initial) {
-        super.beforeClientResponse(initial);
+	super.beforeClientResponse(initial);
 
-        // Update draggable filter
-        Iterator<Component> componentIterator = getComponentIterator();
-        getState().dd.draggable = new ArrayList<Connector>();
-        while (componentIterator.hasNext()) {
-            Component c = componentIterator.next();
-            if (dragFilter.isDraggable(c)) {
-                getState().dd.draggable.add(c);
-            }
-        }
+	// Update draggable filter
+	Iterator<Component> componentIterator = getComponentIterator();
+	getState().dd.draggable = new ArrayList<Connector>();
+	while (componentIterator.hasNext()) {
+	    Component c = componentIterator.next();
+	    if (dragFilter.isDraggable(c)) {
+		getState().dd.draggable.add(c);
+	    }
+	}
     }
 
     @Override

@@ -32,8 +32,8 @@ public class AbsoluteLayoutTargetDetails extends TargetDetailsImpl {
      *            Drop data
      */
     public AbsoluteLayoutTargetDetails(DDAbsoluteLayout layout,
-            Map<String, Object> rawDropData) {
-        super(rawDropData, layout);
+	    Map<String, Object> rawDropData) {
+	super(rawDropData, layout);
     }
 
     /**
@@ -43,8 +43,8 @@ public class AbsoluteLayoutTargetDetails extends TargetDetailsImpl {
      * @return The amount of pixels from the left edge
      */
     public int getAbsoluteLeft() {
-        return Integer.valueOf(getData(Constants.DROP_DETAIL_ABSOLUTE_LEFT)
-                .toString());
+	return Integer.valueOf(getData(Constants.DROP_DETAIL_ABSOLUTE_LEFT)
+		.toString());
     }
 
     /**
@@ -53,8 +53,8 @@ public class AbsoluteLayoutTargetDetails extends TargetDetailsImpl {
      * @return The amount of pixels from the top edge
      */
     public int getAbsoluteTop() {
-        return Integer.valueOf(getData(Constants.DROP_DETAIL_ABSOLUTE_TOP)
-                .toString());
+	return Integer.valueOf(getData(Constants.DROP_DETAIL_ABSOLUTE_TOP)
+		.toString());
     }
 
     /**
@@ -64,8 +64,8 @@ public class AbsoluteLayoutTargetDetails extends TargetDetailsImpl {
      * @return The amount of pixels from the left edge
      */
     public int getRelativeLeft() {
-        return Integer.valueOf(getData(Constants.DROP_DETAIL_RELATIVE_LEFT)
-                .toString());
+	return Integer.valueOf(getData(Constants.DROP_DETAIL_RELATIVE_LEFT)
+		.toString());
     }
 
     /**
@@ -75,8 +75,8 @@ public class AbsoluteLayoutTargetDetails extends TargetDetailsImpl {
      * @return The amount of pixels from the top edge
      */
     public int getRelativeTop() {
-        return Integer.valueOf(getData(Constants.DROP_DETAIL_RELATIVE_TOP)
-                .toString());
+	return Integer.valueOf(getData(Constants.DROP_DETAIL_RELATIVE_TOP)
+		.toString());
     }
 
     /**
@@ -85,8 +85,8 @@ public class AbsoluteLayoutTargetDetails extends TargetDetailsImpl {
      * @return The width in pixels
      */
     public int getComponentHeight() {
-        return Integer.valueOf(getData(Constants.DROP_DETAIL_COMPONENT_HEIGHT)
-                .toString());
+	return Integer.valueOf(getData(Constants.DROP_DETAIL_COMPONENT_HEIGHT)
+		.toString());
     }
 
     /**
@@ -95,8 +95,8 @@ public class AbsoluteLayoutTargetDetails extends TargetDetailsImpl {
      * @return The height in pixels
      */
     public int getComponentWidth() {
-        return Integer.valueOf(getData(Constants.DROP_DETAIL_COMPONENT_WIDTH)
-                .toString());
+	return Integer.valueOf(getData(Constants.DROP_DETAIL_COMPONENT_WIDTH)
+		.toString());
     }
 
     /**
@@ -106,7 +106,7 @@ public class AbsoluteLayoutTargetDetails extends TargetDetailsImpl {
      *         Practically mouse move or mouse up.
      */
     public MouseEventDetails getMouseEvent() {
-        return MouseEventDetails
-                .deSerialize((String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
+	return MouseEventDetails
+		.deSerialize((String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
     }
 }

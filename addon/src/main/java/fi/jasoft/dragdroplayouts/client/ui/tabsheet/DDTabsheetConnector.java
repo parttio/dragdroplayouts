@@ -29,58 +29,58 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 
 @Connect(DDTabSheet.class)
 public class DDTabsheetConnector extends TabsheetConnector implements
-        Paintable, VHasDragFilter {
+	Paintable, VHasDragFilter {
 
     /**
      * {@inheritDoc}
      */
     @Override
     protected void init() {
-        super.init();
-        VDragDropUtil.listenToStateChangeEvents(this, getWidget()
-                .getMouseHandler(), getWidget().getIframeCoverUtility(),
-                getWidget());
+	super.init();
+	VDragDropUtil.listenToStateChangeEvents(this, getWidget()
+		.getMouseHandler(), getWidget().getIframeCoverUtility(),
+		getWidget());
     }
 
     @Override
     public VDDTabSheet getWidget() {
-        return (VDDTabSheet) super.getWidget();
+	return (VDDTabSheet) super.getWidget();
     }
 
     @Override
     public DDTabSheetState getState() {
-        return (DDTabSheetState) super.getState();
+	return (DDTabSheetState) super.getState();
     }
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
-            UIDL acceptCrit = uidl.getChildByTagName("-ac");
-            if (acceptCrit == null) {
-                getWidget().setDropHandler(null);
-            } else {
-                if (getWidget().getDropHandler() == null) {
-                    getWidget().setDropHandler(
-                            new VDDTabsheetDropHandler(getWidget(), client));
-                }
-                getWidget().getDropHandler().updateAcceptRules(acceptCrit);
-            }
-        }
+	if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
+	    UIDL acceptCrit = uidl.getChildByTagName("-ac");
+	    if (acceptCrit == null) {
+		getWidget().setDropHandler(null);
+	    } else {
+		if (getWidget().getDropHandler() == null) {
+		    getWidget().setDropHandler(
+			    new VDDTabsheetDropHandler(getWidget(), client));
+		}
+		getWidget().getDropHandler().updateAcceptRules(acceptCrit);
+	    }
+	}
     }
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-        getWidget().setDragFilter(new VDragFilter(getState().dd));
+	super.onStateChanged(stateChangeEvent);
+	getWidget().setDragFilter(new VDragFilter(getState().dd));
     }
 
     @Override
     public VDragFilter getDragFilter() {
-        return getWidget().getDragFilter();
+	return getWidget().getDragFilter();
     }
 
     @Override
     public void setDragFilter(VDragFilter filter) {
-        getWidget().setDragFilter(filter);
+	getWidget().setDragFilter(filter);
     }
 }

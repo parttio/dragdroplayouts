@@ -31,14 +31,14 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 @Connect(DDFormLayout.class)
 public class DDFormLayoutConnector extends FormLayoutConnector implements
-        Paintable, VHasDragFilter {
+	Paintable, VHasDragFilter {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public VDDFormLayout getWidget() {
-        return (VDDFormLayout) super.getWidget();
+	return (VDDFormLayout) super.getWidget();
     }
 
     /**
@@ -46,39 +46,39 @@ public class DDFormLayoutConnector extends FormLayoutConnector implements
      */
     @Override
     public DDFormLayoutState getState() {
-        return (DDFormLayoutState) super.getState();
+	return (DDFormLayoutState) super.getState();
     }
 
     /**
      * {@inheritDoc}
      */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
-            UIDL acceptCrit = uidl.getChildByTagName("-ac");
-            if (acceptCrit == null) {
-                getWidget().setDropHandler(null);
-            } else {
-                if (getWidget().getDropHandler() == null) {
-                    getWidget().setDropHandler(
-                            new VDDFormLayoutDropHandler(getWidget(), client));
-                }
-                getWidget().getDropHandler().updateAcceptRules(acceptCrit);
-            }
-        }
+	if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
+	    UIDL acceptCrit = uidl.getChildByTagName("-ac");
+	    if (acceptCrit == null) {
+		getWidget().setDropHandler(null);
+	    } else {
+		if (getWidget().getDropHandler() == null) {
+		    getWidget().setDropHandler(
+			    new VDDFormLayoutDropHandler(getWidget(), client));
+		}
+		getWidget().getDropHandler().updateAcceptRules(acceptCrit);
+	    }
+	}
 
-        // Handles changes in dropHandler
-        handleDragModeUpdate(uidl);
+	// Handles changes in dropHandler
+	handleDragModeUpdate(uidl);
 
-        // Handle drop ratio settings
-        handleCellDropRatioUpdate(uidl);
+	// Handle drop ratio settings
+	handleCellDropRatioUpdate(uidl);
 
-        /*
-         * Always check for iframe covers so new added/removed components get
-         * covered
-         */
-        IframeCoverUtility iframes = getWidget().getIframeCoverUtility();
-        iframes.setIframeCoversEnabled(iframes.isIframeCoversEnabled(),
-                getWidget().getElement(), getState().dd.dragMode);
+	/*
+	 * Always check for iframe covers so new added/removed components get
+	 * covered
+	 */
+	IframeCoverUtility iframes = getWidget().getIframeCoverUtility();
+	iframes.setIframeCoversEnabled(iframes.isIframeCoversEnabled(),
+		getWidget().getElement(), getState().dd.dragMode);
     }
 
     /**
@@ -88,18 +88,18 @@ public class DDFormLayoutConnector extends FormLayoutConnector implements
      *            The UIDL
      */
     private void handleDragModeUpdate(UIDL uidl) {
-        if (uidl.hasAttribute(Constants.DRAGMODE_ATTRIBUTE)) {
-            LayoutDragMode[] modes = LayoutDragMode.values();
-            getState().dd.dragMode = 
-                    modes[uidl.getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)];
-            getWidget().getMouseHandler().updateDragMode(
-                    getState().dd.dragMode);
-            getWidget()
-                    .getIframeCoverUtility()
-                    .setIframeCoversEnabled(
-                            uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
-                            getWidget().getElement(), getState().dd.dragMode);
-        }
+	if (uidl.hasAttribute(Constants.DRAGMODE_ATTRIBUTE)) {
+	    LayoutDragMode[] modes = LayoutDragMode.values();
+	    getState().dd.dragMode = modes[uidl
+		    .getIntAttribute(Constants.DRAGMODE_ATTRIBUTE)];
+	    getWidget().getMouseHandler()
+		    .updateDragMode(getState().dd.dragMode);
+	    getWidget()
+		    .getIframeCoverUtility()
+		    .setIframeCoversEnabled(
+			    uidl.getBooleanAttribute(IframeCoverUtility.SHIM_ATTRIBUTE),
+			    getWidget().getElement(), getState().dd.dragMode);
+	}
     }
 
     /**
@@ -110,27 +110,26 @@ public class DDFormLayoutConnector extends FormLayoutConnector implements
      *            The UIDL
      */
     private void handleCellDropRatioUpdate(UIDL uidl) {
-        if (uidl.hasAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO)) {
-            getState()
-                    .cellTopBottomDropRatio = 
-                            uidl.getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO);
-        }
+	if (uidl.hasAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO)) {
+	    getState().cellTopBottomDropRatio = uidl
+		    .getFloatAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO);
+	}
     }
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-        getWidget().setDragFilter(new VDragFilter(getState().dd));
+	super.onStateChanged(stateChangeEvent);
+	getWidget().setDragFilter(new VDragFilter(getState().dd));
     }
 
     @Override
     public VDragFilter getDragFilter() {
-        return getWidget().getDragFilter();
+	return getWidget().getDragFilter();
     }
 
     @Override
     public void setDragFilter(VDragFilter filter) {
-        getWidget().setDragFilter(filter);
+	getWidget().setDragFilter(filter);
     }
 
 }

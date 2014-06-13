@@ -50,7 +50,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDHorizontalLayout extends HorizontalLayout implements
-        LayoutDragSource, DropTarget, ShimSupport, LegacyComponent {
+	LayoutDragSource, DropTarget, ShimSupport, LegacyComponent {
 
     /**
      * The drop handler which handles dropped components in the layout.
@@ -66,74 +66,74 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      */
     public class HorizontalLayoutTargetDetails extends TargetDetailsImpl {
 
-        private Component over;
+	private Component over;
 
-        private int index = -1;
+	private int index = -1;
 
-        protected HorizontalLayoutTargetDetails(Map<String, Object> rawDropData) {
-            super(rawDropData, DDHorizontalLayout.this);
+	protected HorizontalLayoutTargetDetails(Map<String, Object> rawDropData) {
+	    super(rawDropData, DDHorizontalLayout.this);
 
-            // Get over which component (if any) the drop was made and the
-            // index of it
-            if (getData(Constants.DROP_DETAIL_TO) != null) {
-                index = Integer.valueOf(getData(Constants.DROP_DETAIL_TO)
-                        .toString());
-                if (index >= 0 && index < components.size()) {
-                    over = components.get(index);
-                }
-            }
+	    // Get over which component (if any) the drop was made and the
+	    // index of it
+	    if (getData(Constants.DROP_DETAIL_TO) != null) {
+		index = Integer.valueOf(getData(Constants.DROP_DETAIL_TO)
+			.toString());
+		if (index >= 0 && index < components.size()) {
+		    over = components.get(index);
+		}
+	    }
 
-            // Was the drop over no specific cell
-            if (over == null) {
-                over = DDHorizontalLayout.this;
-            }
-        }
+	    // Was the drop over no specific cell
+	    if (over == null) {
+		over = DDHorizontalLayout.this;
+	    }
+	}
 
-        /**
-         * The component over which the drop was made.
-         * 
-         * @return Null if the drop was not over a component, else the component
-         */
-        public Component getOverComponent() {
-            return over;
-        }
+	/**
+	 * The component over which the drop was made.
+	 * 
+	 * @return Null if the drop was not over a component, else the component
+	 */
+	public Component getOverComponent() {
+	    return over;
+	}
 
-        /**
-         * The index over which the drop was made. If the drop was not made over
-         * any component then it returns -1.
-         * 
-         * @return The index of the component or -1 if over no component.
-         */
-        public int getOverIndex() {
-            return index;
-        }
+	/**
+	 * The index over which the drop was made. If the drop was not made over
+	 * any component then it returns -1.
+	 * 
+	 * @return The index of the component or -1 if over no component.
+	 */
+	public int getOverIndex() {
+	    return index;
+	}
 
-        /**
-         * Some details about the mouse event
-         * 
-         * @return details about the actual event that caused the event details.
-         *         Practically mouse move or mouse up.
-         */
-        public MouseEventDetails getMouseEvent() {
-            return MouseEventDetails.deSerialize(getData(
-                    Constants.DROP_DETAIL_MOUSE_EVENT).toString());
-        }
+	/**
+	 * Some details about the mouse event
+	 * 
+	 * @return details about the actual event that caused the event details.
+	 *         Practically mouse move or mouse up.
+	 */
+	public MouseEventDetails getMouseEvent() {
+	    return MouseEventDetails.deSerialize(getData(
+		    Constants.DROP_DETAIL_MOUSE_EVENT).toString());
+	}
 
-        /**
-         * Get the horizontal position of the dropped component within the
-         * underlying cell.
-         * 
-         * @return The drop location
-         */
-        public HorizontalDropLocation getDropLocation() {
-            if (getData(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION) != null) {
-                return HorizontalDropLocation.valueOf(getData(
-                        Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION)
-                        .toString());
-            } else {
-                return null;
-            }
-        }
+	/**
+	 * Get the horizontal position of the dropped component within the
+	 * underlying cell.
+	 * 
+	 * @return The drop location
+	 */
+	public HorizontalDropLocation getDropLocation() {
+	    if (getData(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION) != null) {
+		return HorizontalDropLocation.valueOf(getData(
+			Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION)
+			.toString());
+	    } else {
+		return null;
+	    }
+	}
     }
 
     /**
@@ -142,26 +142,26 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      */
     public void paintContent(PaintTarget target) throws PaintException {
 
-        if (dropHandler != null && isEnabled()) {
-            dropHandler.getAcceptCriterion().paint(target);
-        }
+	if (dropHandler != null && isEnabled()) {
+	    dropHandler.getAcceptCriterion().paint(target);
+	}
 
-        // Drop ratios
-        target.addAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO,
-                getState().cellLeftRightDropRatio);
+	// Drop ratios
+	target.addAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO,
+		getState().cellLeftRightDropRatio);
 
-        // Drag mode
-        if (isEnabled()) {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, getState()
-                    .dd.dragMode.ordinal());
-        } else {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
-                    LayoutDragMode.NONE.ordinal());
-        }
+	// Drag mode
+	if (isEnabled()) {
+	    target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+		    getState().dd.dragMode.ordinal());
+	} else {
+	    target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+		    LayoutDragMode.NONE.ordinal());
+	}
 
-        // Shims
-        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, getState()
-                .dd.iframeShims);
+	// Shims
+	target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE,
+		getState().dd.iframeShims);
     }
 
     /*
@@ -171,15 +171,15 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      * com.vaadin.event.dd.DropTarget#translateDropTargetDetails(java.util.Map)
      */
     public TargetDetails translateDropTargetDetails(
-            Map<String, Object> clientVariables) {
-        return new HorizontalLayoutTargetDetails(clientVariables);
+	    Map<String, Object> clientVariables) {
+	return new HorizontalLayoutTargetDetails(clientVariables);
     }
 
     /**
      * Get the transferable created by a drag event.
      */
     public Transferable getTransferable(Map<String, Object> rawVariables) {
-        return new LayoutBoundTransferable(this, rawVariables);
+	return new LayoutBoundTransferable(this, rawVariables);
     }
 
     /**
@@ -187,7 +187,7 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      * components on the layout. Returns Null if dropping is disabled.
      */
     public DropHandler getDropHandler() {
-        return dropHandler;
+	return dropHandler;
     }
 
     /**
@@ -200,10 +200,10 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      *            dropping
      */
     public void setDropHandler(DropHandler dropHandler) {
-        if (this.dropHandler != dropHandler) {
-            this.dropHandler = dropHandler;
-            requestRepaint();
-        }
+	if (this.dropHandler != dropHandler) {
+	    this.dropHandler = dropHandler;
+	    requestRepaint();
+	}
     }
 
     /**
@@ -212,7 +212,7 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      * @return
      */
     public LayoutDragMode getDragMode() {
-        return getState().dd.dragMode;
+	return getState().dd.dragMode;
     }
 
     /**
@@ -222,7 +222,7 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      *            The mode of which how the dragging should be visualized.
      */
     public void setDragMode(LayoutDragMode mode) {
-        getState().dd.dragMode = mode;
+	getState().dd.dragMode = mode;
     }
 
     /**
@@ -236,67 +236,67 @@ public class DDHorizontalLayout extends HorizontalLayout implements
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentHorizontalDropRatio(float ratio) {
-        if (getState().cellLeftRightDropRatio != ratio) {
-            if (ratio >= 0 && ratio <= 0.5) {
-                getState().cellLeftRightDropRatio = ratio;
-            } else {
-                throw new IllegalArgumentException(
-                        "Ratio must be between 0 and 0.5");
-            }
-        }
+	if (getState().cellLeftRightDropRatio != ratio) {
+	    if (ratio >= 0 && ratio <= 0.5) {
+		getState().cellLeftRightDropRatio = ratio;
+	    } else {
+		throw new IllegalArgumentException(
+			"Ratio must be between 0 and 0.5");
+	    }
+	}
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        getState().dd.iframeShims = shim;
+	getState().dd.iframeShims = shim;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-        return getState().dd.iframeShims;
+	return getState().dd.iframeShims;
     }
 
     /**
      * {@inheritDoc}
      */
     public DragFilter getDragFilter() {
-        return dragFilter;
+	return dragFilter;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragFilter(DragFilter dragFilter) {
-        this.dragFilter = dragFilter;
+	this.dragFilter = dragFilter;
     }
 
     @Override
     public DDHorizontalLayoutState getState() {
-        return (DDHorizontalLayoutState) super.getState();
+	return (DDHorizontalLayoutState) super.getState();
     }
 
     @Override
     public void beforeClientResponse(boolean initial) {
-        super.beforeClientResponse(initial);
+	super.beforeClientResponse(initial);
 
-        // Update draggable filter
-        Iterator<Component> componentIterator = getComponentIterator();
-        getState().dd.draggable = new ArrayList<Connector>();
-        while (componentIterator.hasNext()) {
-            Component c = componentIterator.next();
-            if (dragFilter.isDraggable(c)) {
-                getState().dd.draggable.add(c);
-            }
-        }
+	// Update draggable filter
+	Iterator<Component> componentIterator = getComponentIterator();
+	getState().dd.draggable = new ArrayList<Connector>();
+	while (componentIterator.hasNext()) {
+	    Component c = componentIterator.next();
+	    if (dragFilter.isDraggable(c)) {
+		getState().dd.draggable.add(c);
+	    }
+	}
     }
 
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Auto-generated method stub
+	// TODO Auto-generated method stub
 
     }
 }

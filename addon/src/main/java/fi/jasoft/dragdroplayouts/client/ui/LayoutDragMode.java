@@ -15,7 +15,6 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui;
 
-
 /**
  * LayoutDragMode specifies how dragging is visualized.
  * 

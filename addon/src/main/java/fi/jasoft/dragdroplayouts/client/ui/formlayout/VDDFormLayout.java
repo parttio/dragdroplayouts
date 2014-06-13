@@ -47,7 +47,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * @since 0.4.0
  */
 public class VDDFormLayout extends VFormLayout implements VHasDragMode,
-VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
+	VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
 
     private Element currentlyEmphasised;
 
@@ -68,57 +68,58 @@ VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     protected ApplicationConnection client;
-    
+
     private LayoutDragMode mode = LayoutDragMode.NONE;
 
     private boolean iframeCovers = false;
 
     public VDDFormLayout() {
-        super();
-        table = (VFormLayoutTable) getWidget();
+	super();
+	table = (VFormLayoutTable) getWidget();
     }
-    
+
     @Override
     protected void onLoad() {
-    	super.onLoad();
-    	ddMouseHandler.addDragStartListener(this);
-    	setDragMode(mode);
-    	iframeShimsEnabled(iframeCovers);
+	super.onLoad();
+	ddMouseHandler.addDragStartListener(this);
+	setDragMode(mode);
+	iframeShimsEnabled(iframeCovers);
     }
 
     @Override
     protected void onUnload() {
-        super.onUnload();
-        ddMouseHandler.removeDragStartListener(this);
-        ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
-    	iframeCoverUtility.setIframeCoversEnabled(false, getElement(), LayoutDragMode.NONE);
+	super.onUnload();
+	ddMouseHandler.removeDragStartListener(this);
+	ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
+	iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
+		LayoutDragMode.NONE);
     }
 
     // The drag mouse handler which handles the creation of the transferable
     private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
-            this, LayoutDragMode.NONE);
+	    this, LayoutDragMode.NONE);
 
     /**
      * Removes any applies drag and drop style applied by emphasis()
      */
     protected void deEmphasis() {
-        if (currentlyEmphasised != null) {
-            // Universal over style
-            UIObject.setStyleName(currentlyEmphasised, OVER, false);
-            UIObject.setStyleName(currentlyEmphasised, OVER_SPACED, false);
+	if (currentlyEmphasised != null) {
+	    // Universal over style
+	    UIObject.setStyleName(currentlyEmphasised, OVER, false);
+	    UIObject.setStyleName(currentlyEmphasised, OVER_SPACED, false);
 
-            // Vertical styles
-            UIObject.setStyleName(currentlyEmphasised, OVER + "-"
-                    + VerticalDropLocation.TOP.toString().toLowerCase(), false);
-            UIObject.setStyleName(currentlyEmphasised, OVER + "-"
-                    + VerticalDropLocation.MIDDLE.toString().toLowerCase(),
-                    false);
-            UIObject.setStyleName(currentlyEmphasised, OVER + "-"
-                    + VerticalDropLocation.BOTTOM.toString().toLowerCase(),
-                    false);
+	    // Vertical styles
+	    UIObject.setStyleName(currentlyEmphasised, OVER + "-"
+		    + VerticalDropLocation.TOP.toString().toLowerCase(), false);
+	    UIObject.setStyleName(currentlyEmphasised, OVER + "-"
+		    + VerticalDropLocation.MIDDLE.toString().toLowerCase(),
+		    false);
+	    UIObject.setStyleName(currentlyEmphasised, OVER + "-"
+		    + VerticalDropLocation.BOTTOM.toString().toLowerCase(),
+		    false);
 
-            currentlyEmphasised = null;
-        }
+	    currentlyEmphasised = null;
+	}
     }
 
     /**
@@ -133,26 +134,26 @@ VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
      * @return The horizontal drop location
      */
     protected VerticalDropLocation getVerticalDropLocation(Element rowElement,
-            VDragEvent event) {
-        return VDragDropUtil.getVerticalDropLocation(
-                (com.google.gwt.user.client.Element) rowElement,
-                Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),
-                cellTopBottomDropRatio);
+	    VDragEvent event) {
+	return VDragDropUtil.getVerticalDropLocation(
+		(com.google.gwt.user.client.Element) rowElement,
+		Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),
+		cellTopBottomDropRatio);
     }
 
     private static boolean elementIsRow(Element e) {
-        String className = e.getClassName() == null ? "" : e.getClassName();
-        if (className.contains("v-formlayout-row")) {
-            return true;
-        }
-        return false;
+	String className = e.getClassName() == null ? "" : e.getClassName();
+	if (className.contains("v-formlayout-row")) {
+	    return true;
+	}
+	return false;
     }
 
     public static Element getRowFromChildElement(Element e, Element root) {
-        while (!elementIsRow(e) && e != root && e.getParentElement() != null) {
-            e = e.getParentElement().cast();
-        }
-        return e;
+	while (!elementIsRow(e) && e != root && e.getParentElement() != null) {
+	    e = e.getParentElement().cast();
+	}
+	return e;
     }
 
     /**
@@ -165,42 +166,42 @@ VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
      *            The drag event
      */
     protected void updateDropDetails(Widget widget, VDragEvent event) {
-        /*
-         * The horizontal position within the cell
-         */
-        event.getDropDetails().put(
-                Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION,
-                getVerticalDropLocation(
-                        VDDFormLayout.getRowFromChildElement(
-                                widget.getElement(),
-                                VDDFormLayout.this.getElement()), event));
+	/*
+	 * The horizontal position within the cell
+	 */
+	event.getDropDetails().put(
+		Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION,
+		getVerticalDropLocation(
+			VDDFormLayout.getRowFromChildElement(
+				widget.getElement(),
+				VDDFormLayout.this.getElement()), event));
 
-        /*
-         * The index over which the drag is. Can be used by a client side
-         * criteria to verify that a drag is over a certain index.
-         */
-        event.getDropDetails().put(Constants.DROP_DETAIL_TO, "-1");
-        for (int i = 0; i < table.getRowCount(); i++) {
-            Widget w = table.getWidget(i, COLUMN_WIDGET);
-            if (widget.equals(w)) {
-                event.getDropDetails().put(Constants.DROP_DETAIL_TO, i);
-            }
-        }
+	/*
+	 * The index over which the drag is. Can be used by a client side
+	 * criteria to verify that a drag is over a certain index.
+	 */
+	event.getDropDetails().put(Constants.DROP_DETAIL_TO, "-1");
+	for (int i = 0; i < table.getRowCount(); i++) {
+	    Widget w = table.getWidget(i, COLUMN_WIDGET);
+	    if (widget.equals(w)) {
+		event.getDropDetails().put(Constants.DROP_DETAIL_TO, i);
+	    }
+	}
 
-        /*
-         * Add Classname of component over the drag. This can be used by a a
-         * client side criteria to verify that a drag is over a specific class
-         * of component.
-         */
-        String className = widget.getClass().getName();
-        event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS, className);
+	/*
+	 * Add Classname of component over the drag. This can be used by a a
+	 * client side criteria to verify that a drag is over a specific class
+	 * of component.
+	 */
+	String className = widget.getClass().getName();
+	event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS, className);
 
-        // Add mouse event details
-        MouseEventDetails details = MouseEventDetailsBuilder
-                .buildMouseEventDetails(event.getCurrentGwtEvent(),
-                        getElement());
-        event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
-                details.serialize());
+	// Add mouse event details
+	MouseEventDetails details = MouseEventDetailsBuilder
+		.buildMouseEventDetails(event.getCurrentGwtEvent(),
+			getElement());
+	event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
+		details.serialize());
     }
 
     /**
@@ -215,29 +216,29 @@ VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
      */
     protected void emphasis(Widget widget, VDragEvent event) {
 
-        // Remove emphasis from previous hovers
-        deEmphasis();
+	// Remove emphasis from previous hovers
+	deEmphasis();
 
 	// Validate
 	if (widget == null || !getElement().isOrHasChild(widget.getElement())) {
 	    return;
 	}
 
-        /*
-         * Get row for widget
-         */
-        Element rowElement = getRowFromChildElement(widget.getElement(),
-                VDDFormLayout.this.getElement());
+	/*
+	 * Get row for widget
+	 */
+	Element rowElement = getRowFromChildElement(widget.getElement(),
+		VDDFormLayout.this.getElement());
 
-        currentlyEmphasised = rowElement;
+	currentlyEmphasised = rowElement;
 
-        if (rowElement != this.getElement()) {
-            VerticalDropLocation vl = getVerticalDropLocation(rowElement, event);
-            UIObject.setStyleName(rowElement, OVER + "-"
-                    + vl.toString().toLowerCase(), true);
-        } else {
-            UIObject.setStyleName(rowElement, OVER, true);
-        }
+	if (rowElement != this.getElement()) {
+	    VerticalDropLocation vl = getVerticalDropLocation(rowElement, event);
+	    UIObject.setStyleName(rowElement, OVER + "-"
+		    + vl.toString().toLowerCase(), true);
+	} else {
+	    UIObject.setStyleName(rowElement, OVER, true);
+	}
     }
 
     /**
@@ -245,7 +246,7 @@ VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
      */
     @Override
     public LayoutDragMode getDragMode() {
-        return ddMouseHandler.getDragMode();
+	return ddMouseHandler.getDragMode();
     }
 
     /**
@@ -254,8 +255,8 @@ VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
      * handler.
      */
     protected boolean postDropHook(VDragEvent drag) {
-        // Extended classes can add content here...
-        return true;
+	// Extended classes can add content here...
+	return true;
     }
 
     /**
@@ -263,7 +264,7 @@ VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
      * Useful if you don't want to override the whole drophandler.
      */
     protected void postEnterHook(VDragEvent drag) {
-        // Extended classes can add content here...
+	// Extended classes can add content here...
     }
 
     /**
@@ -271,7 +272,7 @@ VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
      * Useful if you don't want to override the whole drophandler.
      */
     protected void postLeaveHook(VDragEvent drag) {
-        // Extended classes can add content here...
+	// Extended classes can add content here...
     }
 
     /**
@@ -279,7 +280,7 @@ VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
      * if you don't want to override the whole drophandler.
      */
     protected void postOverHook(VDragEvent drag) {
-        // Extended classes can add content here...
+	// Extended classes can add content here...
     }
 
     /**
@@ -288,8 +289,8 @@ VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
      */
     @Override
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return ddMouseHandler.getDragMode() != LayoutDragMode.NONE
-                && dragFilter.isDraggable(widget);
+	return ddMouseHandler.getDragMode() != LayoutDragMode.NONE
+		&& dragFilter.isDraggable(widget);
     }
 
     /**
@@ -297,11 +298,11 @@ VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
      */
     @Override
     public VDDFormLayoutDropHandler getDropHandler() {
-        return dropHandler;
+	return dropHandler;
     }
 
     public void setDropHandler(VDDFormLayoutDropHandler handler) {
-        dropHandler = handler;
+	dropHandler = handler;
     }
 
     /*
@@ -313,47 +314,47 @@ VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
      */
     @Override
     public VDragFilter getDragFilter() {
-        return dragFilter;
+	return dragFilter;
     }
 
     IframeCoverUtility getIframeCoverUtility() {
-        return iframeCoverUtility;
+	return iframeCoverUtility;
     }
 
     VLayoutDragDropMouseHandler getMouseHandler() {
-        return ddMouseHandler;
+	return ddMouseHandler;
     }
 
     @Override
     public void setDragFilter(VDragFilter filter) {
-        this.dragFilter = filter;
+	this.dragFilter = filter;
     }
 
     public float getCellTopBottomDropRatio() {
-        return cellTopBottomDropRatio;
+	return cellTopBottomDropRatio;
     }
 
     @DelegateToWidget
     public void setCellTopBottomDropRatio(float cellTopBottomDropRatio) {
-        this.cellTopBottomDropRatio = cellTopBottomDropRatio;
+	this.cellTopBottomDropRatio = cellTopBottomDropRatio;
     }
 
-	@Override
-	public void iframeShimsEnabled(boolean enabled) {
-		iframeCovers = enabled;
-		iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
-	}
+    @Override
+    public void iframeShimsEnabled(boolean enabled) {
+	iframeCovers = enabled;
+	iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
+    }
 
-	@Override
-	public boolean isIframeShimsEnabled() {
-		return iframeCovers;
-	}
+    @Override
+    public boolean isIframeShimsEnabled() {
+	return iframeCovers;
+    }
 
-	@Override
-	public void setDragMode(LayoutDragMode mode) {
-		this.mode = mode;
-		ddMouseHandler.updateDragMode(mode);
-		iframeShimsEnabled(iframeCovers);
-	}
+    @Override
+    public void setDragMode(LayoutDragMode mode) {
+	this.mode = mode;
+	ddMouseHandler.updateDragMode(mode);
+	iframeShimsEnabled(iframeCovers);
+    }
 
 }

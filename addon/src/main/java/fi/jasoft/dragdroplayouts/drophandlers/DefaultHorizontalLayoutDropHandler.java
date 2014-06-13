@@ -33,7 +33,7 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
  */
 @SuppressWarnings("serial")
 public class DefaultHorizontalLayoutDropHandler extends
-        AbstractDefaultLayoutDropHandler {
+	AbstractDefaultLayoutDropHandler {
 
     private Alignment dropAlignment;
 
@@ -51,7 +51,7 @@ public class DefaultHorizontalLayoutDropHandler extends
      *            The cell alignment of the component after it has been dropped
      */
     public DefaultHorizontalLayoutDropHandler(Alignment dropCellAlignment) {
-        this.dropAlignment = dropCellAlignment;
+	this.dropAlignment = dropCellAlignment;
     }
 
     /**
@@ -62,44 +62,44 @@ public class DefaultHorizontalLayoutDropHandler extends
      */
     @Override
     protected void handleComponentReordering(DragAndDropEvent event) {
-        // Component re-ordering
-        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-                .getTransferable();
-        HorizontalLayoutTargetDetails details = (HorizontalLayoutTargetDetails) event
-                .getTargetDetails();
-        AbstractOrderedLayout layout = (AbstractOrderedLayout) details
-                .getTarget();
-        Component comp = transferable.getComponent();
-        int idx = details.getOverIndex();
-        int oldIndex = layout.getComponentIndex(comp);
+	// Component re-ordering
+	LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+		.getTransferable();
+	HorizontalLayoutTargetDetails details = (HorizontalLayoutTargetDetails) event
+		.getTargetDetails();
+	AbstractOrderedLayout layout = (AbstractOrderedLayout) details
+		.getTarget();
+	Component comp = transferable.getComponent();
+	int idx = details.getOverIndex();
+	int oldIndex = layout.getComponentIndex(comp);
 
-        // Detach
-        layout.removeComponent(comp);
+	// Detach
+	layout.removeComponent(comp);
 
-        // Account for detachment if new index is bigger then old index
-        if (idx > oldIndex) {
-            idx--;
-        }
+	// Account for detachment if new index is bigger then old index
+	if (idx > oldIndex) {
+	    idx--;
+	}
 
-        // Increase index if component is dropped after or above a previous
-        // component
-        HorizontalDropLocation loc = details.getDropLocation();
-        if (loc == HorizontalDropLocation.CENTER
-                || loc == HorizontalDropLocation.RIGHT) {
-            idx++;
-        }
+	// Increase index if component is dropped after or above a previous
+	// component
+	HorizontalDropLocation loc = details.getDropLocation();
+	if (loc == HorizontalDropLocation.CENTER
+		|| loc == HorizontalDropLocation.RIGHT) {
+	    idx++;
+	}
 
-        // Add component
-        if (idx >= 0) {
-            layout.addComponent(comp, idx);
-        } else {
-            layout.addComponent(comp);
-        }
+	// Add component
+	if (idx >= 0) {
+	    layout.addComponent(comp, idx);
+	} else {
+	    layout.addComponent(comp);
+	}
 
-        // Add component alignment if given
-        if (dropAlignment != null) {
-            layout.setComponentAlignment(comp, dropAlignment);
-        }
+	// Add component alignment if given
+	if (dropAlignment != null) {
+	    layout.setComponentAlignment(comp, dropAlignment);
+	}
     }
 
     /**
@@ -110,54 +110,54 @@ public class DefaultHorizontalLayoutDropHandler extends
      */
     @Override
     protected void handleDropFromLayout(DragAndDropEvent event) {
-        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-                .getTransferable();
-        HorizontalLayoutTargetDetails details = (HorizontalLayoutTargetDetails) event
-                .getTargetDetails();
-        AbstractOrderedLayout layout = (AbstractOrderedLayout) details
-                .getTarget();
-        Component source = event.getTransferable().getSourceComponent();
-        int idx = (details).getOverIndex();
-        Component comp = transferable.getComponent();
+	LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+		.getTransferable();
+	HorizontalLayoutTargetDetails details = (HorizontalLayoutTargetDetails) event
+		.getTargetDetails();
+	AbstractOrderedLayout layout = (AbstractOrderedLayout) details
+		.getTarget();
+	Component source = event.getTransferable().getSourceComponent();
+	int idx = (details).getOverIndex();
+	Component comp = transferable.getComponent();
 
-        // Check that we are not dragging an outer layout into an inner
-        // layout
-        Component parent = layout.getParent();
-        while (parent != null) {
-            if (parent == comp) {
-                return;
-            }
-            parent = parent.getParent();
-        }
+	// Check that we are not dragging an outer layout into an inner
+	// layout
+	Component parent = layout.getParent();
+	while (parent != null) {
+	    if (parent == comp) {
+		return;
+	    }
+	    parent = parent.getParent();
+	}
 
-        // If source is an instance of a component container then remove
-        // it
-        // from there,
-        // the component cannot have two parents.
-        if (source instanceof ComponentContainer) {
-            ComponentContainer sourceLayout = (ComponentContainer) source;
-            sourceLayout.removeComponent(comp);
-        }
+	// If source is an instance of a component container then remove
+	// it
+	// from there,
+	// the component cannot have two parents.
+	if (source instanceof ComponentContainer) {
+	    ComponentContainer sourceLayout = (ComponentContainer) source;
+	    sourceLayout.removeComponent(comp);
+	}
 
-        // Increase index if component is dropped after or above a
-        // previous
-        // component
-        HorizontalDropLocation loc = (details).getDropLocation();
-        if (loc == HorizontalDropLocation.CENTER
-                || loc == HorizontalDropLocation.RIGHT) {
-            idx++;
-        }
+	// Increase index if component is dropped after or above a
+	// previous
+	// component
+	HorizontalDropLocation loc = (details).getDropLocation();
+	if (loc == HorizontalDropLocation.CENTER
+		|| loc == HorizontalDropLocation.RIGHT) {
+	    idx++;
+	}
 
-        // Add component
-        if (idx >= 0) {
-            layout.addComponent(comp, idx);
-        } else {
-            layout.addComponent(comp);
-        }
+	// Add component
+	if (idx >= 0) {
+	    layout.addComponent(comp, idx);
+	} else {
+	    layout.addComponent(comp);
+	}
 
-        // Add component alignment if given
-        if (dropAlignment != null) {
-            layout.setComponentAlignment(comp, dropAlignment);
-        }
+	// Add component alignment if given
+	if (dropAlignment != null) {
+	    layout.setComponentAlignment(comp, dropAlignment);
+	}
     }
 }

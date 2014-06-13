@@ -33,32 +33,32 @@ public class VDDHorizontalLayoutDropHandler extends VAbstractDropHandler {
     private final ApplicationConnection client;
 
     public VDDHorizontalLayoutDropHandler(VDDHorizontalLayout layout,
-            ApplicationConnection client) {
-        this.layout = layout;
-        this.client = client;
+	    ApplicationConnection client) {
+	this.layout = layout;
+	this.client = client;
 
 	VConsole.error("init:" + layout.getStyleName());
     }
 
     public ApplicationConnection getApplicationConnection() {
-        return client;
+	return client;
     }
 
     @Override
     protected void dragAccepted(VDragEvent drag) {
-        dragOver(drag);
+	dragOver(drag);
     }
 
     @Override
     public ComponentConnector getConnector() {
-        return ConnectorMap.get(client).getConnector(layout);
+	return ConnectorMap.get(client).getConnector(layout);
     }
 
     @Override
     public boolean drop(VDragEvent drag) {
-        layout.emphasis(null, null);
+	layout.emphasis(null, null);
 	updateDropDetails(drag);
-        return layout.postDropHook(drag) && super.drop(drag);
+	return layout.postDropHook(drag) && super.drop(drag);
     };
 
     private Slot getSlot(Element e) {
@@ -66,7 +66,7 @@ public class VDDHorizontalLayoutDropHandler extends VAbstractDropHandler {
 	assert layout.getElement().isOrHasChild(e) : "Slot is not inside layout";
 	return slot;
     }
-    
+
     private void updateDropDetails(VDragEvent drag) {
 	Slot slot = getSlot(drag.getElementOver());
 	if (slot != null) {
@@ -80,25 +80,25 @@ public class VDDHorizontalLayoutDropHandler extends VAbstractDropHandler {
     public void dragOver(VDragEvent drag) {
 	layout.deEmphasis();
 	updateDropDetails(drag);
-        layout.postOverHook(drag);
+	layout.postOverHook(drag);
 
-        // Validate the drop
-        validate(new VAcceptCallback() {
-            public void accepted(VDragEvent event) {
-                Slot slot = getSlot(event.getElementOver());
-                if (slot != null) {
-                    layout.emphasis(slot.getWidget(), event);
-                } else {
-                    layout.emphasis(layout, event);
-                }
-            }
-        }, drag);
+	// Validate the drop
+	validate(new VAcceptCallback() {
+	    public void accepted(VDragEvent event) {
+		Slot slot = getSlot(event.getElementOver());
+		if (slot != null) {
+		    layout.emphasis(slot.getWidget(), event);
+		} else {
+		    layout.emphasis(layout, event);
+		}
+	    }
+	}, drag);
     };
 
     @Override
     public void dragLeave(VDragEvent drag) {
 	layout.deEmphasis();
-        layout.postLeaveHook(drag);
+	layout.postLeaveHook(drag);
     }
 
 }

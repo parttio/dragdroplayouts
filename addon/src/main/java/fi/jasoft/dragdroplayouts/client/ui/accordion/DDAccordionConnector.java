@@ -30,14 +30,14 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 
 @Connect(DDAccordion.class)
 public class DDAccordionConnector extends AccordionConnector implements
-        Paintable, VHasDragFilter {
+	Paintable, VHasDragFilter {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public VDDAccordion getWidget() {
-        return (VDDAccordion) super.getWidget();
+	return (VDDAccordion) super.getWidget();
     }
 
     /**
@@ -45,7 +45,7 @@ public class DDAccordionConnector extends AccordionConnector implements
      */
     @Override
     public DDAccordionState getState() {
-        return (DDAccordionState) super.getState();
+	return (DDAccordionState) super.getState();
     }
 
     /**
@@ -53,17 +53,17 @@ public class DDAccordionConnector extends AccordionConnector implements
      */
     @Override
     protected void init() {
-        super.init();
-        VDragDropUtil.listenToStateChangeEvents(this, getWidget()
-                .getMouseHandler(), getWidget().getIframeCoverUtility(),
-                getWidget());
+	super.init();
+	VDragDropUtil.listenToStateChangeEvents(this, getWidget()
+		.getMouseHandler(), getWidget().getIframeCoverUtility(),
+		getWidget());
     }
 
     /**
      * {@inheritDoc}
      */
     public LayoutDragMode getDragMode() {
-        return getState().dd.dragMode;
+	return getState().dd.dragMode;
     }
 
     /**
@@ -72,36 +72,36 @@ public class DDAccordionConnector extends AccordionConnector implements
      * TODO Remove this when drag & drop is done properly in core
      */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // Drop handlers
-        UIDL ac = uidl.getChildByTagName("-ac");
-        if (ac == null) {
-            if (getWidget().getDropHandler() != null) {
-                // remove dropHandler if not present anymore
-                getWidget().setDropHandler(null);
-            }
-        } else {
-            if (getWidget().getDropHandler() == null) {
-                getWidget().setDropHandler(
-                        new VDDAccordionDropHandler(getWidget(), this));
-            }
-            getWidget().getDropHandler().updateAcceptRules(ac);
-        }
+	// Drop handlers
+	UIDL ac = uidl.getChildByTagName("-ac");
+	if (ac == null) {
+	    if (getWidget().getDropHandler() != null) {
+		// remove dropHandler if not present anymore
+		getWidget().setDropHandler(null);
+	    }
+	} else {
+	    if (getWidget().getDropHandler() == null) {
+		getWidget().setDropHandler(
+			new VDDAccordionDropHandler(getWidget(), this));
+	    }
+	    getWidget().getDropHandler().updateAcceptRules(ac);
+	}
     }
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-        getWidget().setDragFilter(new VDragFilter(getState().dd));
+	super.onStateChanged(stateChangeEvent);
+	getWidget().setDragFilter(new VDragFilter(getState().dd));
     }
 
     @Override
     public VDragFilter getDragFilter() {
-        return getWidget().getDragFilter();
+	return getWidget().getDragFilter();
     }
 
     @Override
     public void setDragFilter(VDragFilter filter) {
-        getWidget().setDragFilter(filter);
+	getWidget().setDragFilter(filter);
     }
 
 }

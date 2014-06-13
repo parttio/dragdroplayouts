@@ -36,7 +36,7 @@ import fi.jasoft.dragdroplayouts.events.VerticalLocationIs;
  */
 @SuppressWarnings("serial")
 public class DefaultAccordionDropHandler extends
-        AbstractDefaultLayoutDropHandler {
+	AbstractDefaultLayoutDropHandler {
 
     /**
      * Called when tabs are being rearranged
@@ -46,35 +46,35 @@ public class DefaultAccordionDropHandler extends
      */
     @Override
     protected void handleComponentReordering(DragAndDropEvent event) {
-        AccordionTargetDetails details = (AccordionTargetDetails) event
-                .getTargetDetails();
-        DDAccordion acc = (DDAccordion) details.getTarget();
-        VerticalDropLocation location = details.getDropLocation();
-        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-                .getTransferable();
-        Component c = transferable.getComponent();
-        int idx = details.getOverIndex();
+	AccordionTargetDetails details = (AccordionTargetDetails) event
+		.getTargetDetails();
+	DDAccordion acc = (DDAccordion) details.getTarget();
+	VerticalDropLocation location = details.getDropLocation();
+	LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+		.getTransferable();
+	Component c = transferable.getComponent();
+	int idx = details.getOverIndex();
 
-        Tab tab = acc.getTab(c);
+	Tab tab = acc.getTab(c);
 
-        if (location == VerticalDropLocation.TOP) {
-            // Left of previous tab
-            int originalIndex = acc.getTabPosition(tab);
-            if (originalIndex > idx) {
-                acc.setTabPosition(tab, idx);
-            } else if (idx - 1 >= 0) {
-                acc.setTabPosition(tab, idx - 1);
-            }
+	if (location == VerticalDropLocation.TOP) {
+	    // Left of previous tab
+	    int originalIndex = acc.getTabPosition(tab);
+	    if (originalIndex > idx) {
+		acc.setTabPosition(tab, idx);
+	    } else if (idx - 1 >= 0) {
+		acc.setTabPosition(tab, idx - 1);
+	    }
 
-        } else if (location == VerticalDropLocation.BOTTOM) {
-            // Right of previous tab
-            int originalIndex = acc.getTabPosition(tab);
-            if (originalIndex > idx) {
-                acc.setTabPosition(tab, idx + 1);
-            } else {
-                acc.setTabPosition(tab, idx);
-            }
-        }
+	} else if (location == VerticalDropLocation.BOTTOM) {
+	    // Right of previous tab
+	    int originalIndex = acc.getTabPosition(tab);
+	    if (originalIndex > idx) {
+		acc.setTabPosition(tab, idx + 1);
+	    } else {
+		acc.setTabPosition(tab, idx);
+	    }
+	}
     }
 
     /**
@@ -85,27 +85,27 @@ public class DefaultAccordionDropHandler extends
      */
     @Override
     protected void handleDropFromLayout(DragAndDropEvent event) {
-        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-                .getTransferable();
+	LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+		.getTransferable();
 
-        // Get the target details
-        AccordionTargetDetails details = (AccordionTargetDetails) event
-                .getTargetDetails();
-        DDAccordion acc = (DDAccordion) details.getTarget();
-        Component c = transferable.getComponent();
-        int idx = details.getOverIndex();
-        VerticalDropLocation location = details.getDropLocation();
-        ComponentContainer source = (ComponentContainer) transferable
-                .getSourceComponent();
+	// Get the target details
+	AccordionTargetDetails details = (AccordionTargetDetails) event
+		.getTargetDetails();
+	DDAccordion acc = (DDAccordion) details.getTarget();
+	Component c = transferable.getComponent();
+	int idx = details.getOverIndex();
+	VerticalDropLocation location = details.getDropLocation();
+	ComponentContainer source = (ComponentContainer) transferable
+		.getSourceComponent();
 
-        source.removeComponent(c);
-        if (location == VerticalDropLocation.TOP) {
-            acc.addTab(c, idx);
-        } else if (location == VerticalDropLocation.BOTTOM) {
-            acc.addTab(c, idx + 1);
-        } else {
-            acc.addTab(c);
-        }
+	source.removeComponent(c);
+	if (location == VerticalDropLocation.TOP) {
+	    acc.addTab(c, idx);
+	} else if (location == VerticalDropLocation.BOTTOM) {
+	    acc.addTab(c, idx + 1);
+	} else {
+	    acc.addTab(c);
+	}
     }
 
     /*
@@ -115,6 +115,6 @@ public class DefaultAccordionDropHandler extends
      */
     @Override
     public AcceptCriterion getAcceptCriterion() {
-        return new Not(VerticalLocationIs.MIDDLE);
+	return new Not(VerticalLocationIs.MIDDLE);
     }
 }

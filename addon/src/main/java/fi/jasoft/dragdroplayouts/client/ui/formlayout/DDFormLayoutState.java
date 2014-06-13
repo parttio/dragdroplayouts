@@ -22,17 +22,17 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
 
 public class DDFormLayoutState extends AbstractOrderedLayoutState implements
-        DragAndDropAwareState {
+	DragAndDropAwareState {
 
     public static final float DEFAULT_VERTICAL_DROP_RATIO = 0.3333f;
 
     @DelegateToWidget
     public float cellTopBottomDropRatio = DEFAULT_VERTICAL_DROP_RATIO;
-    
+
     public DDLayoutState dd = new DDLayoutState();
 
-	@Override
-	public DDLayoutState getDragAndDropState() {	
-		return dd;
-	}
+    @Override
+    public DDLayoutState getDragAndDropState() {
+	return dd;
+    }
 }

@@ -52,7 +52,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDCssLayout extends CssLayout implements LayoutDragSource,
-        DropTarget, ShimSupport, LegacyComponent {
+	DropTarget, ShimSupport, LegacyComponent {
 
     // Drop handler which handles dd drop events
     private DropHandler dropHandler;
@@ -65,116 +65,116 @@ public class DDCssLayout extends CssLayout implements LayoutDragSource,
      */
     public class CssLayoutTargetDetails extends TargetDetailsImpl {
 
-        private int index = -1;
+	private int index = -1;
 
-        private Component over;
+	private Component over;
 
-        /**
-         * Constructor
-         * 
-         * @param rawDropData
-         *            The drop data
-         */
-        protected CssLayoutTargetDetails(Map<String, Object> rawDropData) {
-            super(rawDropData, DDCssLayout.this);
+	/**
+	 * Constructor
+	 * 
+	 * @param rawDropData
+	 *            The drop data
+	 */
+	protected CssLayoutTargetDetails(Map<String, Object> rawDropData) {
+	    super(rawDropData, DDCssLayout.this);
 
-            // Get over which component (if any) the drop was made and the
-            // index of it
-            if (getData(Constants.DROP_DETAIL_TO) != null) {
-                index = Integer.valueOf(getData(Constants.DROP_DETAIL_TO)
-                        .toString());
-                if (index >= 0 && index < components.size()) {
-                    over = components.get(index);
-                }
-            } else {
-                index = components.size();
-            }
+	    // Get over which component (if any) the drop was made and the
+	    // index of it
+	    if (getData(Constants.DROP_DETAIL_TO) != null) {
+		index = Integer.valueOf(getData(Constants.DROP_DETAIL_TO)
+			.toString());
+		if (index >= 0 && index < components.size()) {
+		    over = components.get(index);
+		}
+	    } else {
+		index = components.size();
+	    }
 
-            // Was the drop over no specific cell
-            if (over == null) {
-                over = DDCssLayout.this;
-            }
-        }
+	    // Was the drop over no specific cell
+	    if (over == null) {
+		over = DDCssLayout.this;
+	    }
+	}
 
-        /**
-         * Some details about the mouse event
-         * 
-         * @return details about the actual event that caused the event details.
-         *         Practically mouse move or mouse up.
-         */
-        public MouseEventDetails getMouseEvent() {
-            return MouseEventDetails.deSerialize(getData(
-                    Constants.DROP_DETAIL_MOUSE_EVENT).toString());
-        }
+	/**
+	 * Some details about the mouse event
+	 * 
+	 * @return details about the actual event that caused the event details.
+	 *         Practically mouse move or mouse up.
+	 */
+	public MouseEventDetails getMouseEvent() {
+	    return MouseEventDetails.deSerialize(getData(
+		    Constants.DROP_DETAIL_MOUSE_EVENT).toString());
+	}
 
-        /**
-         * Get the horizontal position of the dropped component within the
-         * underlying cell.
-         * 
-         * @return The drop location
-         */
-        public HorizontalDropLocation getHorizontalDropLocation() {
-            return HorizontalDropLocation
-                    .valueOf((String) getData(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION));
-        }
+	/**
+	 * Get the horizontal position of the dropped component within the
+	 * underlying cell.
+	 * 
+	 * @return The drop location
+	 */
+	public HorizontalDropLocation getHorizontalDropLocation() {
+	    return HorizontalDropLocation
+		    .valueOf((String) getData(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION));
+	}
 
-        /**
-         * Get the horizontal position of the dropped component within the
-         * underlying cell.
-         * 
-         * @return The drop location
-         */
-        public VerticalDropLocation getVerticalDropLocation() {
-            return VerticalDropLocation
-                    .valueOf((String) getData(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION));
-        }
+	/**
+	 * Get the horizontal position of the dropped component within the
+	 * underlying cell.
+	 * 
+	 * @return The drop location
+	 */
+	public VerticalDropLocation getVerticalDropLocation() {
+	    return VerticalDropLocation
+		    .valueOf((String) getData(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION));
+	}
 
-        /**
-         * The index over which the drop was made. If the drop was not made over
-         * any component then it returns -1.
-         * 
-         * @return The index of the component or -1 if over no component.
-         */
-        public int getOverIndex() {
-            return index;
-        }
+	/**
+	 * The index over which the drop was made. If the drop was not made over
+	 * any component then it returns -1.
+	 * 
+	 * @return The index of the component or -1 if over no component.
+	 */
+	public int getOverIndex() {
+	    return index;
+	}
 
-        /**
-         * The component over which the drop was made.
-         * 
-         * @return Null if the drop was not over a component, else the component
-         */
-        public Component getOverComponent() {
-            return over;
-        }
+	/**
+	 * The component over which the drop was made.
+	 * 
+	 * @return Null if the drop was not over a component, else the component
+	 */
+	public Component getOverComponent() {
+	    return over;
+	}
     }
 
     /**
      * {@inheritDoc}
      */
     public Transferable getTransferable(Map<String, Object> rawVariables) {
-        return new LayoutBoundTransferable(this, rawVariables);
+	return new LayoutBoundTransferable(this, rawVariables);
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        getState().dd.iframeShims = shim;
+	getState().dd.iframeShims = shim;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-        return getState().dd.iframeShims;
+	return getState().dd.iframeShims;
     }
 
     /**
      * gets the drop handler which handles component drops on the layout
      */
     public DropHandler getDropHandler() {
-        return dropHandler;
+	return dropHandler;
     }
 
     /**
@@ -184,46 +184,46 @@ public class DDCssLayout extends CssLayout implements LayoutDragSource,
      *            The drop handler to set
      */
     public void setDropHandler(DropHandler dropHandler) {
-        if (this.dropHandler != dropHandler) {
-            this.dropHandler = dropHandler;
-            requestRepaint();
-        }
+	if (this.dropHandler != dropHandler) {
+	    this.dropHandler = dropHandler;
+	    requestRepaint();
+	}
     }
 
     /**
      * {@inheritDoc}
      */
     public TargetDetails translateDropTargetDetails(
-            Map<String, Object> clientVariables) {
-        return new CssLayoutTargetDetails(clientVariables);
+	    Map<String, Object> clientVariables) {
+	return new CssLayoutTargetDetails(clientVariables);
     }
 
     /**
      * {@inheritDoc}
      */
     public LayoutDragMode getDragMode() {
-        return getState().dd.dragMode;
+	return getState().dd.dragMode;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragMode(LayoutDragMode mode) {
-        getState().dd.dragMode = mode;
+	getState().dd.dragMode = mode;
     }
 
     /**
      * {@inheritDoc}
      */
     public DragFilter getDragFilter() {
-        return dragFilter;
+	return dragFilter;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragFilter(DragFilter dragFilter) {
-        this.dragFilter = dragFilter;
+	this.dragFilter = dragFilter;
     }
 
     /**
@@ -232,48 +232,48 @@ public class DDCssLayout extends CssLayout implements LayoutDragSource,
      */
     public void paintContent(PaintTarget target) throws PaintException {
 
-        // Paint the drop handler criterions
-        if (dropHandler != null && isEnabled()) {
-            dropHandler.getAcceptCriterion().paint(target);
-        }
+	// Paint the drop handler criterions
+	if (dropHandler != null && isEnabled()) {
+	    dropHandler.getAcceptCriterion().paint(target);
+	}
 
-        // Adds the drag mode (the default is none)
-        if (isEnabled()) {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, getState()
-                    .dd.dragMode.ordinal());
-        } else {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
-                    LayoutDragMode.NONE.ordinal());
-        }
+	// Adds the drag mode (the default is none)
+	if (isEnabled()) {
+	    target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+		    getState().dd.dragMode.ordinal());
+	} else {
+	    target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+		    LayoutDragMode.NONE.ordinal());
+	}
 
-        // Should shims be used
-        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, getState()
-                .dd.iframeShims);
+	// Should shims be used
+	target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE,
+		getState().dd.iframeShims);
     }
 
     @Override
     public DDCssLayoutState getState() {
-        return (DDCssLayoutState) super.getState();
+	return (DDCssLayoutState) super.getState();
     }
 
     @Override
     public void beforeClientResponse(boolean initial) {
-        super.beforeClientResponse(initial);
+	super.beforeClientResponse(initial);
 
-        // Update draggable filter
-        Iterator<Component> componentIterator = getComponentIterator();
-        getState().dd.draggable = new ArrayList<Connector>();
-        while (componentIterator.hasNext()) {
-            Component c = componentIterator.next();
-            if (dragFilter.isDraggable(c)) {
-                getState().dd.draggable.add(c);
-            }
-        }
+	// Update draggable filter
+	Iterator<Component> componentIterator = getComponentIterator();
+	getState().dd.draggable = new ArrayList<Connector>();
+	while (componentIterator.hasNext()) {
+	    Component c = componentIterator.next();
+	    if (dragFilter.isDraggable(c)) {
+		getState().dd.draggable.add(c);
+	    }
+	}
     }
 
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Auto-generated method stub
+	// TODO Auto-generated method stub
 
     }
 }

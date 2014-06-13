@@ -33,19 +33,19 @@ public final class HorizontalLocationIs extends TargetDetailIs {
      * Was the drop made to the left of the centerline of the component
      */
     public static final HorizontalLocationIs LEFT = new HorizontalLocationIs(
-            HorizontalDropLocation.LEFT);
+	    HorizontalDropLocation.LEFT);
 
     /**
      * Was the drop made in the middle of the component
      */
     public static final HorizontalLocationIs CENTER = new HorizontalLocationIs(
-            HorizontalDropLocation.CENTER);
+	    HorizontalDropLocation.CENTER);
 
     /**
      * Was the drop made to the right of the centerline of the component
      */
     public static final HorizontalLocationIs RIGHT = new HorizontalLocationIs(
-            HorizontalDropLocation.RIGHT);
+	    HorizontalDropLocation.RIGHT);
 
     /**
      * A target detail for the horizontal location of a drop
@@ -54,6 +54,6 @@ public final class HorizontalLocationIs extends TargetDetailIs {
      *            The location of the drop
      */
     private HorizontalLocationIs(HorizontalDropLocation location) {
-        super(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION, location.name());
+	super(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION, location.name());
     }
 }

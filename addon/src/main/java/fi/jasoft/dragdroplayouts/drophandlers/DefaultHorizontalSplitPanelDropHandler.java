@@ -35,41 +35,41 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
  */
 @SuppressWarnings("serial")
 public class DefaultHorizontalSplitPanelDropHandler extends
-        AbstractDefaultLayoutDropHandler {
+	AbstractDefaultLayoutDropHandler {
 
     @Override
     public AcceptCriterion getAcceptCriterion() {
-        // Only allow dropping in slots, not on the center bar
-        return new Not(HorizontalLocationIs.CENTER);
+	// Only allow dropping in slots, not on the center bar
+	return new Not(HorizontalLocationIs.CENTER);
     }
 
     @Override
     protected void handleComponentReordering(DragAndDropEvent event) {
-        handleDropFromLayout(event);
+	handleDropFromLayout(event);
     }
 
     @Override
     protected void handleDropFromLayout(DragAndDropEvent event) {
-        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-                .getTransferable();
-        ComponentContainer source = (ComponentContainer) transferable
-                .getSourceComponent();
-        HorizontalSplitPanelTargetDetails details = (HorizontalSplitPanelTargetDetails) event
-                .getTargetDetails();
-        Component component = transferable.getComponent();
-        DDHorizontalSplitPanel panel = (DDHorizontalSplitPanel) details
-                .getTarget();
+	LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+		.getTransferable();
+	ComponentContainer source = (ComponentContainer) transferable
+		.getSourceComponent();
+	HorizontalSplitPanelTargetDetails details = (HorizontalSplitPanelTargetDetails) event
+		.getTargetDetails();
+	Component component = transferable.getComponent();
+	DDHorizontalSplitPanel panel = (DDHorizontalSplitPanel) details
+		.getTarget();
 
-        // Remove component from its source
-        source.removeComponent(component);
+	// Remove component from its source
+	source.removeComponent(component);
 
-        if (details.getDropLocation() == HorizontalDropLocation.LEFT) {
-            // Dropped in the left area
-            panel.setFirstComponent(component);
+	if (details.getDropLocation() == HorizontalDropLocation.LEFT) {
+	    // Dropped in the left area
+	    panel.setFirstComponent(component);
 
-        } else if (details.getDropLocation() == HorizontalDropLocation.RIGHT) {
-            // Dropped in the right area
-            panel.setSecondComponent(component);
-        }
+	} else if (details.getDropLocation() == HorizontalDropLocation.RIGHT) {
+	    // Dropped in the right area
+	    panel.setSecondComponent(component);
+	}
     }
 }

@@ -21,12 +21,12 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
 
 public class DDVerticalSplitPanelState extends VerticalSplitPanelState
-        implements DragAndDropAwareState {
+	implements DragAndDropAwareState {
 
-	public DDLayoutState dd = new DDLayoutState();
-	
-	@Override
-	public DDLayoutState getDragAndDropState() {		
-		return dd;
-	}
+    public DDLayoutState dd = new DDLayoutState();
+
+    @Override
+    public DDLayoutState getDragAndDropState() {
+	return dd;
+    }
 }

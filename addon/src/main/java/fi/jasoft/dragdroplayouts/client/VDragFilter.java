@@ -26,14 +26,14 @@ public class VDragFilter {
     private final DDLayoutState state;
 
     public VDragFilter(DDLayoutState state) {
-        this.state = state;
+	this.state = state;
     }
 
     public boolean isDraggable(Widget widget) {
-        ComponentConnector component = Util.findConnectorFor(widget);
-        if (state.draggable != null) {
-            return state.draggable.contains(component);
-        }
-        return false;
+	ComponentConnector component = Util.findConnectorFor(widget);
+	if (state.draggable != null) {
+	    return state.draggable.contains(component);
+	}
+	return false;
     }
 }

@@ -46,7 +46,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * @since 0.4.0
  */
 public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
-        VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
+	VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
 
     private Widget currentlyEmphasised;
 
@@ -61,7 +61,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
-            this, LayoutDragMode.NONE);
+	    this, LayoutDragMode.NONE);
 
     // Value delegated from the state
     private float cellTopBottomDropRatio = DDVerticalLayoutState.DEFAULT_VERTICAL_DROP_RATIO;
@@ -69,49 +69,50 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
     private LayoutDragMode mode = LayoutDragMode.NONE;
 
     private boolean iframeCovers = false;
-    
+
     public VDDVerticalLayout() {
-        super();
+	super();
     }
 
     @Override
     protected void onLoad() {
-    	super.onLoad();
-    	ddMouseHandler.addDragStartListener(this);
-    	setDragMode(mode);
-    	iframeShimsEnabled(iframeCovers);
+	super.onLoad();
+	ddMouseHandler.addDragStartListener(this);
+	setDragMode(mode);
+	iframeShimsEnabled(iframeCovers);
     }
 
     @Override
     protected void onUnload() {
-        super.onUnload();
-        ddMouseHandler.removeDragStartListener(this);
-        ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
-    	iframeCoverUtility.setIframeCoversEnabled(false, getElement(), LayoutDragMode.NONE);
+	super.onUnload();
+	ddMouseHandler.removeDragStartListener(this);
+	ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
+	iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
+		LayoutDragMode.NONE);
     }
 
     /**
      * Removes any applies drag and drop style applied by emphasis()
      */
     protected void deEmphasis() {
-        if (currentlyEmphasised != null) {
-            // Universal over style
-            UIObject.setStyleName(currentlyEmphasised.getElement(), OVER, false);
-            UIObject.setStyleName(currentlyEmphasised.getElement(),
-                    OVER_SPACED, false);
+	if (currentlyEmphasised != null) {
+	    // Universal over style
+	    UIObject.setStyleName(currentlyEmphasised.getElement(), OVER, false);
+	    UIObject.setStyleName(currentlyEmphasised.getElement(),
+		    OVER_SPACED, false);
 
-            // Vertical styles
-            UIObject.setStyleName(currentlyEmphasised.getElement(), OVER + "-"
-                    + VerticalDropLocation.TOP.toString().toLowerCase(), false);
-            UIObject.setStyleName(currentlyEmphasised.getElement(), OVER + "-"
-                    + VerticalDropLocation.MIDDLE.toString().toLowerCase(),
-                    false);
-            UIObject.setStyleName(currentlyEmphasised.getElement(), OVER + "-"
-                    + VerticalDropLocation.BOTTOM.toString().toLowerCase(),
-                    false);
+	    // Vertical styles
+	    UIObject.setStyleName(currentlyEmphasised.getElement(), OVER + "-"
+		    + VerticalDropLocation.TOP.toString().toLowerCase(), false);
+	    UIObject.setStyleName(currentlyEmphasised.getElement(), OVER + "-"
+		    + VerticalDropLocation.MIDDLE.toString().toLowerCase(),
+		    false);
+	    UIObject.setStyleName(currentlyEmphasised.getElement(), OVER + "-"
+		    + VerticalDropLocation.BOTTOM.toString().toLowerCase(),
+		    false);
 
-            currentlyEmphasised = null;
-        }
+	    currentlyEmphasised = null;
+	}
     }
 
     /**
@@ -126,10 +127,10 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      * @return The horizontal drop location
      */
     protected VerticalDropLocation getVerticalDropLocation(Widget container,
-            VDragEvent event) {
-        return VDragDropUtil.getVerticalDropLocation(container.getElement(),
-                Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),
-                cellTopBottomDropRatio);
+	    VDragEvent event) {
+	return VDragDropUtil.getVerticalDropLocation(container.getElement(),
+		Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),
+		cellTopBottomDropRatio);
     }
 
     /**
@@ -142,44 +143,44 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      *            The drag event
      */
     protected void updateDropDetails(Widget widget, VDragEvent event) {
-        if (widget == null) {
-            return;
-        }
+	if (widget == null) {
+	    return;
+	}
 
-        /*
-         * The horizontal position within the cell{
-         */
-        event.getDropDetails().put(
-                Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION,
-                getVerticalDropLocation(widget, event));
+	/*
+	 * The horizontal position within the cell{
+	 */
+	event.getDropDetails().put(
+		Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION,
+		getVerticalDropLocation(widget, event));
 
-        /*
-         * The index over which the drag is. Can be used by a client side
-         * criteria to verify that a drag is over a certain index.
-         */
-        int index = -1;
-        if (widget instanceof Slot) {
-            WidgetCollection captionsAndSlots = getChildren();
-            int realIndex = 0;
-            for (int i = 0; i < captionsAndSlots.size(); i++) {
-                Widget w = captionsAndSlots.get(i);
-                if (w == widget) {
-                    index = realIndex;
-                    break;
-                } else if (w instanceof Slot) {
-                    realIndex++;
-                }
-            }
-        }
+	/*
+	 * The index over which the drag is. Can be used by a client side
+	 * criteria to verify that a drag is over a certain index.
+	 */
+	int index = -1;
+	if (widget instanceof Slot) {
+	    WidgetCollection captionsAndSlots = getChildren();
+	    int realIndex = 0;
+	    for (int i = 0; i < captionsAndSlots.size(); i++) {
+		Widget w = captionsAndSlots.get(i);
+		if (w == widget) {
+		    index = realIndex;
+		    break;
+		} else if (w instanceof Slot) {
+		    realIndex++;
+		}
+	    }
+	}
 
-        event.getDropDetails().put(Constants.DROP_DETAIL_TO, index);
+	event.getDropDetails().put(Constants.DROP_DETAIL_TO, index);
 
-        // Add mouse event details
-        MouseEventDetails details = MouseEventDetailsBuilder
-                .buildMouseEventDetails(event.getCurrentGwtEvent(),
-                        getElement());
-        event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
-                details.serialize());
+	// Add mouse event details
+	MouseEventDetails details = MouseEventDetailsBuilder
+		.buildMouseEventDetails(event.getCurrentGwtEvent(),
+			getElement());
+	event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
+		details.serialize());
     }
 
     /**
@@ -194,8 +195,8 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      */
     protected void emphasis(Widget container, VDragEvent event) {
 
-        // Remove emphasis from previous hovers
-        deEmphasis();
+	// Remove emphasis from previous hovers
+	deEmphasis();
 
 	// validate container
 	if (container == null
@@ -203,28 +204,28 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
 	    return;
 	}
 
-        currentlyEmphasised = container;
+	currentlyEmphasised = container;
 
-        UIObject.setStyleName(container.getElement(), OVER, true);
+	UIObject.setStyleName(container.getElement(), OVER, true);
 
-        // Add drop location specific style
-        if (container != this) {
-            UIObject.setStyleName(container.getElement(), OVER
-                    + "-"
-                    + getVerticalDropLocation(container, event).toString()
-                            .toLowerCase(), true);
-        } else {
-            UIObject.setStyleName(container.getElement(), OVER + "-"
-                    + VerticalDropLocation.MIDDLE.toString().toLowerCase(),
-                    true);
-        }
+	// Add drop location specific style
+	if (container != this) {
+	    UIObject.setStyleName(container.getElement(), OVER
+		    + "-"
+		    + getVerticalDropLocation(container, event).toString()
+			    .toLowerCase(), true);
+	} else {
+	    UIObject.setStyleName(container.getElement(), OVER + "-"
+		    + VerticalDropLocation.MIDDLE.toString().toLowerCase(),
+		    true);
+	}
     }
 
     /**
      * Returns the current drag mode which determines how the drag is visualized
      */
     public LayoutDragMode getDragMode() {
-        return ddMouseHandler.getDragMode();
+	return ddMouseHandler.getDragMode();
     }
 
     /**
@@ -233,8 +234,8 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      * handler.
      */
     protected boolean postDropHook(VDragEvent drag) {
-        // Extended classes can add content here...
-        return true;
+	// Extended classes can add content here...
+	return true;
     }
 
     /**
@@ -242,7 +243,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      * Useful if you don't want to override the whole drophandler.
      */
     protected void postEnterHook(VDragEvent drag) {
-        // Extended classes can add content here...
+	// Extended classes can add content here...
     }
 
     /**
@@ -250,7 +251,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      * Useful if you don't want to override the whole drophandler.
      */
     protected void postLeaveHook(VDragEvent drag) {
-        // Extended classes can add content here...
+	// Extended classes can add content here...
     }
 
     /**
@@ -258,7 +259,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      * if you don't want to override the whole drophandler.
      */
     protected void postOverHook(VDragEvent drag) {
-        // Extended classes can add content here...
+	// Extended classes can add content here...
     }
 
     /**
@@ -266,19 +267,19 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      * to commence. Return false to interrupt the drag:
      */
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return ddMouseHandler.getDragMode() != LayoutDragMode.NONE
-                && dragFilter.isDraggable(widget);
+	return ddMouseHandler.getDragMode() != LayoutDragMode.NONE
+		&& dragFilter.isDraggable(widget);
     }
 
     /**
      * Get the drop handler attached to the Layout
      */
     public VDDVerticalLayoutDropHandler getDropHandler() {
-        return dropHandler;
+	return dropHandler;
     }
 
     public void setDropHandler(VDDVerticalLayoutDropHandler dropHandler) {
-        this.dropHandler = dropHandler;
+	this.dropHandler = dropHandler;
     }
 
     /*
@@ -289,45 +290,45 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      * ()
      */
     public VDragFilter getDragFilter() {
-        return dragFilter;
+	return dragFilter;
     }
 
     IframeCoverUtility getIframeCoverUtility() {
-        return iframeCoverUtility;
+	return iframeCoverUtility;
     }
 
     VLayoutDragDropMouseHandler getMouseHandler() {
-        return ddMouseHandler;
+	return ddMouseHandler;
     }
 
     @Override
     public void setDragFilter(VDragFilter filter) {
-        this.dragFilter = filter;
+	this.dragFilter = filter;
     }
 
     public void setCellTopBottomDropRatio(float cellTopBottomDropRatio) {
-        this.cellTopBottomDropRatio = cellTopBottomDropRatio;
+	this.cellTopBottomDropRatio = cellTopBottomDropRatio;
     }
 
     public float getCellTopBottomDropRatio() {
-        return cellTopBottomDropRatio;
+	return cellTopBottomDropRatio;
     }
 
-	@Override
-	public void iframeShimsEnabled(boolean enabled) {
-		iframeCovers = enabled;
-		iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
-	}
+    @Override
+    public void iframeShimsEnabled(boolean enabled) {
+	iframeCovers = enabled;
+	iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
+    }
 
-	@Override
-	public boolean isIframeShimsEnabled() {
-		return iframeCovers;
-	}
+    @Override
+    public boolean isIframeShimsEnabled() {
+	return iframeCovers;
+    }
 
-	@Override
-	public void setDragMode(LayoutDragMode mode) {
-		this.mode = mode;
-		ddMouseHandler.updateDragMode(mode);
-		iframeShimsEnabled(iframeCovers);
-	}
+    @Override
+    public void setDragMode(LayoutDragMode mode) {
+	this.mode = mode;
+	ddMouseHandler.updateDragMode(mode);
+	iframeShimsEnabled(iframeCovers);
+    }
 }

@@ -28,13 +28,13 @@ public class VDDCssLayoutDropHandler extends VAbstractDropHandler {
     private final ComponentConnector connector;
 
     public VDDCssLayoutDropHandler(VDDCssLayout layout,
-            ComponentConnector connector) {
-        this.layout = layout;
-        this.connector = connector;
+	    ComponentConnector connector) {
+	this.layout = layout;
+	this.connector = connector;
     }
 
     public ApplicationConnection getApplicationConnection() {
-        return connector.getConnection();
+	return connector.getConnection();
     }
 
     @Override
@@ -44,42 +44,42 @@ public class VDDCssLayoutDropHandler extends VAbstractDropHandler {
 
     @Override
     public ComponentConnector getConnector() {
-        return connector;
+	return connector;
     }
 
     @Override
     public boolean drop(VDragEvent drag) {
-        layout.updateDragDetails(drag);
-        layout.detachDragImageFromLayout(drag);
-        return layout.postDropHook(drag) && super.drop(drag);
+	layout.updateDragDetails(drag);
+	layout.detachDragImageFromLayout(drag);
+	return layout.postDropHook(drag) && super.drop(drag);
     };
 
     @Override
     public void dragEnter(VDragEvent drag) {
-        super.dragEnter(drag);
-        layout.attachDragImageToLayout(drag);
-        layout.updateDragDetails(drag);
-        layout.postEnterHook(drag);
+	super.dragEnter(drag);
+	layout.attachDragImageToLayout(drag);
+	layout.updateDragDetails(drag);
+	layout.postEnterHook(drag);
     };
 
     @Override
     public void dragLeave(VDragEvent drag) {
-        super.dragLeave(drag);
-        layout.detachDragImageFromLayout(drag);
-        layout.postLeaveHook(drag);
+	super.dragLeave(drag);
+	layout.detachDragImageFromLayout(drag);
+	layout.postLeaveHook(drag);
     };
 
     @Override
     public void dragOver(VDragEvent drag) {
-        layout.updateDragDetails(drag);
-        layout.postOverHook(drag);
+	layout.updateDragDetails(drag);
+	layout.postOverHook(drag);
 
-        // Validate the drop
-        validate(new VAcceptCallback() {
-            public void accepted(VDragEvent event) {
-                layout.updateDrag(event);
-            }
-        }, drag);
+	// Validate the drop
+	validate(new VAcceptCallback() {
+	    public void accepted(VDragEvent event) {
+		layout.updateDrag(event);
+	    }
+	}, drag);
     }
 
 }

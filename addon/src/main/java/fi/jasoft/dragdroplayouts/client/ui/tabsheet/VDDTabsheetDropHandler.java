@@ -29,9 +29,9 @@ public class VDDTabsheetDropHandler extends VAbstractDropHandler {
     private final ApplicationConnection client;
 
     public VDDTabsheetDropHandler(VDDTabSheet layout,
-            ApplicationConnection client) {
-        this.layout = layout;
-        this.client = client;
+	    ApplicationConnection client) {
+	this.layout = layout;
+	this.client = client;
     }
 
     /*
@@ -41,12 +41,12 @@ public class VDDTabsheetDropHandler extends VAbstractDropHandler {
      * getApplicationConnection()
      */
     public ApplicationConnection getApplicationConnection() {
-        return client;
+	return client;
     }
 
     @Override
     public ComponentConnector getConnector() {
-        return ConnectorMap.get(client).getConnector(layout);
+	return ConnectorMap.get(client).getConnector(layout);
     }
 
     /*
@@ -57,7 +57,7 @@ public class VDDTabsheetDropHandler extends VAbstractDropHandler {
      */
     @Override
     protected void dragAccepted(VDragEvent drag) {
-        dragOver(drag);
+	dragOver(drag);
     }
 
     /*
@@ -69,11 +69,11 @@ public class VDDTabsheetDropHandler extends VAbstractDropHandler {
     @Override
     public boolean drop(VDragEvent drag) {
 
-        layout.deEmphasis();
+	layout.deEmphasis();
 
-        // Update the details
-        layout.updateDropDetails(drag);
-        return layout.postDropHook(drag) && super.drop(drag);
+	// Update the details
+	layout.updateDropDetails(drag);
+	return layout.postDropHook(drag) && super.drop(drag);
     };
 
     /*
@@ -85,18 +85,18 @@ public class VDDTabsheetDropHandler extends VAbstractDropHandler {
     @Override
     public void dragOver(VDragEvent drag) {
 
-        layout.deEmphasis();
+	layout.deEmphasis();
 
-        layout.updateDropDetails(drag);
+	layout.updateDropDetails(drag);
 
-        layout.postOverHook(drag);
+	layout.postOverHook(drag);
 
-        // Validate the drop
-        validate(new VAcceptCallback() {
-            public void accepted(VDragEvent event) {
-                layout.emphasis(event.getElementOver(), event);
-            }
-        }, drag);
+	// Validate the drop
+	validate(new VAcceptCallback() {
+	    public void accepted(VDragEvent event) {
+		layout.emphasis(event.getElementOver(), event);
+	    }
+	}, drag);
     };
 
     /*
@@ -107,8 +107,8 @@ public class VDDTabsheetDropHandler extends VAbstractDropHandler {
      */
     @Override
     public void dragLeave(VDragEvent drag) {
-        layout.deEmphasis();
-        layout.updateDropDetails(drag);
-        layout.postLeaveHook(drag);
+	layout.deEmphasis();
+	layout.updateDropDetails(drag);
+	layout.postLeaveHook(drag);
     };
 }

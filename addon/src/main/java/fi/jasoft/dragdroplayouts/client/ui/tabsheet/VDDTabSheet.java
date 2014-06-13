@@ -50,7 +50,8 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * @since 0.4.0
  */
 public class VDDTabSheet extends VTabsheet implements VHasDragMode,
-        VHasDropHandler, DragStartListener, VDDTabContainer, VHasDragFilter,VHasIframeShims {
+	VHasDropHandler, DragStartListener, VDDTabContainer, VHasDragFilter,
+	VHasIframeShims {
 
     public static final String CLASSNAME_NEW_TAB = "new-tab";
     public static final String CLASSNAME_NEW_TAB_LEFT = "new-tab-left";
@@ -75,46 +76,47 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
-            this, LayoutDragMode.NONE);
+	    this, LayoutDragMode.NONE);
 
     private double tabLeftRightDropRatio = DDTabSheetState.DEFAULT_HORIZONTAL_DROP_RATIO;
 
     private LayoutDragMode mode = LayoutDragMode.NONE;
 
     private boolean iframeCovers = false;
-    
+
     public VDDTabSheet() {
-        super();
+	super();
 
-        newTab.setClassName(CLASSNAME_NEW_TAB);
+	newTab.setClassName(CLASSNAME_NEW_TAB);
 
-        // Get the tabBar
-        tabBar = (ComplexPanel) getChildren().get(0);
+	// Get the tabBar
+	tabBar = (ComplexPanel) getChildren().get(0);
 
-        // Get the content
-        tabPanel = (VTabsheetPanel) getChildren().get(1);
+	// Get the content
+	tabPanel = (VTabsheetPanel) getChildren().get(1);
 
-        // Get the spacer
-        Element tBody = tabBar.getElement();
-        spacer = tBody.getChild(tBody.getChildCount() - 1).getChild(0)
-                .getChild(0).cast();
+	// Get the spacer
+	Element tBody = tabBar.getElement();
+	spacer = tBody.getChild(tBody.getChildCount() - 1).getChild(0)
+		.getChild(0).cast();
     }
-    
+
     @Override
     protected void onLoad() {
-    	super.onLoad();
-    	ddMouseHandler.addDragStartListener(this);
-    	ddMouseHandler.setAttachTarget(tabBar);
-    	setDragMode(mode);
-    	iframeShimsEnabled(iframeCovers);
+	super.onLoad();
+	ddMouseHandler.addDragStartListener(this);
+	ddMouseHandler.setAttachTarget(tabBar);
+	setDragMode(mode);
+	iframeShimsEnabled(iframeCovers);
     }
 
     @Override
     protected void onUnload() {
-        super.onUnload();
-        ddMouseHandler.removeDragStartListener(this);
-        ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
-    	iframeCoverUtility.setIframeCoversEnabled(false, getElement(), LayoutDragMode.NONE);
+	super.onUnload();
+	ddMouseHandler.removeDragStartListener(this);
+	ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
+	iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
+		LayoutDragMode.NONE);
     }
 
     /*
@@ -124,11 +126,11 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler#getDropHandler()
      */
     public VDDTabsheetDropHandler getDropHandler() {
-        return dropHandler;
+	return dropHandler;
     }
 
     public void setDropHandler(VDDTabsheetDropHandler handler) {
-        this.dropHandler = handler;
+	this.dropHandler = handler;
     }
 
     /*
@@ -137,7 +139,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * @see fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
      */
     public LayoutDragMode getDragMode() {
-        return ddMouseHandler.getDragMode();
+	return ddMouseHandler.getDragMode();
     }
 
     /**
@@ -146,8 +148,8 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * handler.
      */
     protected boolean postDropHook(VDragEvent drag) {
-        // Extended classes can add content here...
-        return true;
+	// Extended classes can add content here...
+	return true;
     }
 
     /**
@@ -155,7 +157,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * Useful if you don't want to override the whole drophandler.
      */
     protected void postEnterHook(VDragEvent drag) {
-        // Extended classes can add content here...
+	// Extended classes can add content here...
     }
 
     /**
@@ -163,7 +165,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * Useful if you don't want to override the whole drophandler.
      */
     protected void postLeaveHook(VDragEvent drag) {
-        // Extended classes can add content here...
+	// Extended classes can add content here...
     }
 
     /**
@@ -171,7 +173,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * if you don't want to override the whole drophandler.
      */
     protected void postOverHook(VDragEvent drag) {
-        // Extended classes can add content here...
+	// Extended classes can add content here...
     }
 
     /**
@@ -179,7 +181,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * to commence. Return false to interrupt the drag:
      */
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return getDragMode() != LayoutDragMode.NONE;
+	return getDragMode() != LayoutDragMode.NONE;
     }
 
     /**
@@ -192,47 +194,47 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      *            The drag event
      */
     protected void updateDropDetails(VDragEvent event) {
-        Element element = event.getElementOver();
+	Element element = event.getElementOver();
 
-        if (tabBar.getElement().isOrHasChild(element)) {
-            Widget w = Util.findWidget(element, null);
+	if (tabBar.getElement().isOrHasChild(element)) {
+	    Widget w = Util.findWidget(element, null);
 
-            if (w == tabBar) {
-                // Ove3r the spacer
+	    if (w == tabBar) {
+		// Ove3r the spacer
 
-                // Add index
-                event.getDropDetails().put(Constants.DROP_DETAIL_TO,
-                        tabBar.getWidgetCount() - 1);
+		// Add index
+		event.getDropDetails().put(Constants.DROP_DETAIL_TO,
+			tabBar.getWidgetCount() - 1);
 
-                // Add drop location
-                event.getDropDetails().put(
-                        Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
-                        HorizontalDropLocation.RIGHT);
+		// Add drop location
+		event.getDropDetails().put(
+			Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
+			HorizontalDropLocation.RIGHT);
 
-            } else {
+	    } else {
 
-                // Add index
-                event.getDropDetails().put(Constants.DROP_DETAIL_TO,
-                        getTabPosition(w));
+		// Add index
+		event.getDropDetails().put(Constants.DROP_DETAIL_TO,
+			getTabPosition(w));
 
-                // Add drop location
-                HorizontalDropLocation location = VDragDropUtil
-                        .getHorizontalDropLocation(element, Util
-                                .getTouchOrMouseClientX(event
-                                        .getCurrentGwtEvent()),
-                                tabLeftRightDropRatio);
-                event.getDropDetails().put(
-                        Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
-                        location);
-            }
+		// Add drop location
+		HorizontalDropLocation location = VDragDropUtil
+			.getHorizontalDropLocation(element, Util
+				.getTouchOrMouseClientX(event
+					.getCurrentGwtEvent()),
+				tabLeftRightDropRatio);
+		event.getDropDetails().put(
+			Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
+			location);
+	    }
 
-            // Add mouse event details
-            MouseEventDetails details = MouseEventDetailsBuilder
-                    .buildMouseEventDetails(event.getCurrentGwtEvent(),
-                            getElement());
-            event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
-                    details.serialize());
-        }
+	    // Add mouse event details
+	    MouseEventDetails details = MouseEventDetailsBuilder
+		    .buildMouseEventDetails(event.getCurrentGwtEvent(),
+			    getElement());
+	    event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
+		    details.serialize());
+	}
     }
 
     /**
@@ -242,77 +244,77 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      */
     protected void emphasis(Element element, VDragEvent event) {
 
-        boolean internalDrag = event.getTransferable().getDragSource() == this;
+	boolean internalDrag = event.getTransferable().getDragSource() == this;
 
-        if (tabBar.getElement().isOrHasChild(element)) {
-            Widget w = Util.findWidget(element, null);
+	if (tabBar.getElement().isOrHasChild(element)) {
+	    Widget w = Util.findWidget(element, null);
 
-            if (w == tabBar && !internalDrag) {
-                // Over spacer
-                Element spacerContent = spacer.getChild(0).cast();
-                spacerContent.appendChild(newTab);
-                currentlyEmphasised = element;
+	    if (w == tabBar && !internalDrag) {
+		// Over spacer
+		Element spacerContent = spacer.getChild(0).cast();
+		spacerContent.appendChild(newTab);
+		currentlyEmphasised = element;
 
-            } else if (w instanceof VCaption) {
+	    } else if (w instanceof VCaption) {
 
-                // Over a tab
-                HorizontalDropLocation location = VDragDropUtil
-                        .getHorizontalDropLocation(element, Util
-                                .getTouchOrMouseClientX(event
-                                        .getCurrentGwtEvent()),
-                                tabLeftRightDropRatio);
+		// Over a tab
+		HorizontalDropLocation location = VDragDropUtil
+			.getHorizontalDropLocation(element, Util
+				.getTouchOrMouseClientX(event
+					.getCurrentGwtEvent()),
+				tabLeftRightDropRatio);
 
-                if (location == HorizontalDropLocation.LEFT) {
+		if (location == HorizontalDropLocation.LEFT) {
 
-                    int index = getTabPosition(w);
+		    int index = getTabPosition(w);
 
-                    if (index == 0) {
+		    if (index == 0) {
 
-                        currentlyEmphasised = tabBar.getWidget(0).getElement()
-                                .getFirstChildElement().cast();
-                        currentlyEmphasised
-                                .addClassName(CLASSNAME_NEW_TAB_LEFT);
-                    } else {
-                        Widget prevTab = tabBar.getWidget(index - 1);
-                        currentlyEmphasised = prevTab.getElement();
-                        currentlyEmphasised
-                                .addClassName(CLASSNAME_NEW_TAB_RIGHT);
-                    }
+			currentlyEmphasised = tabBar.getWidget(0).getElement()
+				.getFirstChildElement().cast();
+			currentlyEmphasised
+				.addClassName(CLASSNAME_NEW_TAB_LEFT);
+		    } else {
+			Widget prevTab = tabBar.getWidget(index - 1);
+			currentlyEmphasised = prevTab.getElement();
+			currentlyEmphasised
+				.addClassName(CLASSNAME_NEW_TAB_RIGHT);
+		    }
 
-                } else if (location == HorizontalDropLocation.RIGHT) {
-                    int index = getTabPosition(w);
-                    currentlyEmphasised = tabBar.getWidget(index).getElement();
-                    currentlyEmphasised.addClassName(CLASSNAME_NEW_TAB_RIGHT);
-                } else {
-                    int index = getTabPosition(w);
-                    currentlyEmphasised = tabBar.getWidget(index).getElement();
-                    currentlyEmphasised.addClassName(CLASSNAME_NEW_TAB_CENTER);
-                }
+		} else if (location == HorizontalDropLocation.RIGHT) {
+		    int index = getTabPosition(w);
+		    currentlyEmphasised = tabBar.getWidget(index).getElement();
+		    currentlyEmphasised.addClassName(CLASSNAME_NEW_TAB_RIGHT);
+		} else {
+		    int index = getTabPosition(w);
+		    currentlyEmphasised = tabBar.getWidget(index).getElement();
+		    currentlyEmphasised.addClassName(CLASSNAME_NEW_TAB_CENTER);
+		}
 
-            }
-        }
+	    }
+	}
     }
 
     /**
      * Removes any previous emphasis made by drag&drop
      */
     protected void deEmphasis() {
-        if (currentlyEmphasised != null
-                && tabBar.getElement().isOrHasChild(currentlyEmphasised)) {
-            Widget w = Util.findWidget(currentlyEmphasised, null);
+	if (currentlyEmphasised != null
+		&& tabBar.getElement().isOrHasChild(currentlyEmphasised)) {
+	    Widget w = Util.findWidget(currentlyEmphasised, null);
 
-            currentlyEmphasised.removeClassName(CLASSNAME_NEW_TAB_LEFT);
-            currentlyEmphasised.removeClassName(CLASSNAME_NEW_TAB_RIGHT);
-            currentlyEmphasised.removeClassName(CLASSNAME_NEW_TAB_CENTER);
+	    currentlyEmphasised.removeClassName(CLASSNAME_NEW_TAB_LEFT);
+	    currentlyEmphasised.removeClassName(CLASSNAME_NEW_TAB_RIGHT);
+	    currentlyEmphasised.removeClassName(CLASSNAME_NEW_TAB_CENTER);
 
-            if (w == tabBar) {
-                // Over spacer
-                Element spacerContent = spacer.getChild(0).cast();
-                spacerContent.removeChild(newTab);
-            }
+	    if (w == tabBar) {
+		// Over spacer
+		Element spacerContent = spacer.getChild(0).cast();
+		spacerContent.removeChild(newTab);
+	    }
 
-            currentlyEmphasised = null;
-        }
+	    currentlyEmphasised = null;
+	}
     }
 
     /*
@@ -323,10 +325,10 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * (com.google.gwt.user.client.ui.Widget)
      */
     public int getTabPosition(Widget tab) {
-        if (tab instanceof TabCaption) {
-            tab = tab.getParent();
-        }
-        return tabBar.getWidgetIndex(tab);
+	if (tab instanceof TabCaption) {
+	    tab = tab.getParent();
+	}
+	return tabBar.getWidgetIndex(tab);
     }
 
     /*
@@ -336,7 +338,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * getTabContentPosition(com.google.gwt.user.client.ui.Widget)
      */
     public int getTabContentPosition(Widget content) {
-        return tabPanel.getWidgetIndex(content);
+	return tabPanel.getWidgetIndex(content);
     }
 
     /*
@@ -347,45 +349,45 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
      * ()
      */
     public VDragFilter getDragFilter() {
-        return dragFilter;
+	return dragFilter;
     }
 
     IframeCoverUtility getIframeCoverUtility() {
-        return iframeCoverUtility;
+	return iframeCoverUtility;
     }
 
     VLayoutDragDropMouseHandler getMouseHandler() {
-        return ddMouseHandler;
+	return ddMouseHandler;
     }
 
     @Override
     public void setDragFilter(VDragFilter filter) {
-        this.dragFilter = filter;
+	this.dragFilter = filter;
     }
 
     public double getTabLeftRightDropRatio() {
-        return tabLeftRightDropRatio;
+	return tabLeftRightDropRatio;
     }
 
     public void setTabLeftRightDropRatio(double tabLeftRightDropRatio) {
-        this.tabLeftRightDropRatio = tabLeftRightDropRatio;
+	this.tabLeftRightDropRatio = tabLeftRightDropRatio;
     }
 
     @Override
-	public void iframeShimsEnabled(boolean enabled) {
-		iframeCovers = enabled;
-		iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
-	}
+    public void iframeShimsEnabled(boolean enabled) {
+	iframeCovers = enabled;
+	iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
+    }
 
-	@Override
-	public boolean isIframeShimsEnabled() {
-		return iframeCovers;
-	}
+    @Override
+    public boolean isIframeShimsEnabled() {
+	return iframeCovers;
+    }
 
-	@Override
-	public void setDragMode(LayoutDragMode mode) {
-		this.mode = mode;
-		ddMouseHandler.updateDragMode(mode);
-		iframeShimsEnabled(iframeCovers);
-	}
+    @Override
+    public void setDragMode(LayoutDragMode mode) {
+	this.mode = mode;
+	ddMouseHandler.updateDragMode(mode);
+	iframeShimsEnabled(iframeCovers);
+    }
 }

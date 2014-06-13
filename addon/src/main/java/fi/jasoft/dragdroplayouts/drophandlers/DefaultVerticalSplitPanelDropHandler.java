@@ -35,41 +35,41 @@ import fi.jasoft.dragdroplayouts.events.VerticalLocationIs;
  */
 @SuppressWarnings("serial")
 public class DefaultVerticalSplitPanelDropHandler extends
-        AbstractDefaultLayoutDropHandler {
+	AbstractDefaultLayoutDropHandler {
 
     @Override
     public AcceptCriterion getAcceptCriterion() {
-        // Only allow dropping in slots, not on the center bar
-        return new Not(VerticalLocationIs.MIDDLE);
+	// Only allow dropping in slots, not on the center bar
+	return new Not(VerticalLocationIs.MIDDLE);
     }
 
     @Override
     protected void handleComponentReordering(DragAndDropEvent event) {
-        handleDropFromLayout(event);
+	handleDropFromLayout(event);
 
     }
 
     @Override
     protected void handleDropFromLayout(DragAndDropEvent event) {
-        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-                .getTransferable();
-        VerticalSplitPanelTargetDetails details = (VerticalSplitPanelTargetDetails) event
-                .getTargetDetails();
-        Component component = transferable.getComponent();
-        DDVerticalSplitPanel panel = (DDVerticalSplitPanel) details.getTarget();
-        ComponentContainer source = (ComponentContainer) transferable
-                .getSourceComponent();
+	LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+		.getTransferable();
+	VerticalSplitPanelTargetDetails details = (VerticalSplitPanelTargetDetails) event
+		.getTargetDetails();
+	Component component = transferable.getComponent();
+	DDVerticalSplitPanel panel = (DDVerticalSplitPanel) details.getTarget();
+	ComponentContainer source = (ComponentContainer) transferable
+		.getSourceComponent();
 
-        // Remove component from its source
-        source.removeComponent(component);
+	// Remove component from its source
+	source.removeComponent(component);
 
-        if (details.getDropLocation() == VerticalDropLocation.TOP) {
-            // Dropped in the left area
-            panel.setFirstComponent(component);
+	if (details.getDropLocation() == VerticalDropLocation.TOP) {
+	    // Dropped in the left area
+	    panel.setFirstComponent(component);
 
-        } else if (details.getDropLocation() == VerticalDropLocation.BOTTOM) {
-            // Dropped in the right area
-            panel.setSecondComponent(component);
-        }
+	} else if (details.getDropLocation() == VerticalDropLocation.BOTTOM) {
+	    // Dropped in the right area
+	    panel.setSecondComponent(component);
+	}
     }
 }

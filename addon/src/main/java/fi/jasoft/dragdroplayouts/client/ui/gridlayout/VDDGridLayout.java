@@ -50,7 +50,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * @since 0.4.0
  */
 public class VDDGridLayout extends VGridLayout implements VHasDragMode,
-        VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
+	VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
 
     public static final String CLASSNAME = "v-ddgridlayout";
     public static final String OVER = CLASSNAME + "-over";
@@ -71,30 +71,31 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
 
     // The drag mouse handler which handles the creation of the transferable
     private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
-            this, LayoutDragMode.NONE);
-    
+	    this, LayoutDragMode.NONE);
+
     private LayoutDragMode mode = LayoutDragMode.NONE;
 
     private boolean iframeCovers = false;
 
     public VDDGridLayout() {
-        super();
+	super();
     }
 
     @Override
     protected void onLoad() {
-    	super.onLoad();
-    	ddMouseHandler.addDragStartListener(this);
-    	setDragMode(mode);
-    	iframeShimsEnabled(iframeCovers);
+	super.onLoad();
+	ddMouseHandler.addDragStartListener(this);
+	setDragMode(mode);
+	iframeShimsEnabled(iframeCovers);
     }
 
     @Override
     protected void onUnload() {
-        super.onUnload();
-        ddMouseHandler.removeDragStartListener(this);
-        ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
-    	iframeCoverUtility.setIframeCoversEnabled(false, getElement(), LayoutDragMode.NONE);
+	super.onUnload();
+	ddMouseHandler.removeDragStartListener(this);
+	ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
+	iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
+		LayoutDragMode.NONE);
     }
 
     /**
@@ -102,70 +103,70 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      * Grid Layout
      */
     public VDDGridLayoutDropHandler getDropHandler() {
-        return dropHandler;
+	return dropHandler;
     }
 
     public void setDropHandler(VDDGridLayoutDropHandler handler) {
-        dropHandler = handler;
+	dropHandler = handler;
     }
 
     void updateDropDetails(VDragEvent event) {
-        CellDetails cd = getCellDetails(event);
-        if (cd != null) {
-            // Add row
-            event.getDropDetails().put(Constants.DROP_DETAIL_ROW,
-                    Integer.valueOf(cd.row));
+	CellDetails cd = getCellDetails(event);
+	if (cd != null) {
+	    // Add row
+	    event.getDropDetails().put(Constants.DROP_DETAIL_ROW,
+		    Integer.valueOf(cd.row));
 
-            // Add column
-            event.getDropDetails().put(Constants.DROP_DETAIL_COLUMN,
-                    Integer.valueOf(cd.column));
+	    // Add column
+	    event.getDropDetails().put(Constants.DROP_DETAIL_COLUMN,
+		    Integer.valueOf(cd.column));
 
-            // Add horizontal position
-            HorizontalDropLocation hl = getHorizontalDropLocation(cd, event);
-            event.getDropDetails().put(
-                    Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION, hl);
+	    // Add horizontal position
+	    HorizontalDropLocation hl = getHorizontalDropLocation(cd, event);
+	    event.getDropDetails().put(
+		    Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION, hl);
 
-            // Add vertical position
-            VerticalDropLocation vl = getVerticalDropLocation(cd, event);
-            event.getDropDetails().put(
-                    Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION, vl);
+	    // Add vertical position
+	    VerticalDropLocation vl = getVerticalDropLocation(cd, event);
+	    event.getDropDetails().put(
+		    Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION, vl);
 
-            // Check if the cell we are hovering over has content
-            /*-FIXME
-             boolean hasContent = false;
-             ChildComponentContainer container = null;
-             for (ChildComponentContainer cont : widgetToComponentContainer
-             .values()) {
-             if (DOM.isOrHasChild(cont.getElement(), event.getElementOver())) {
-             hasContent = true;
-             container = cont;
-             break;
-             }
-             }
-             event.getDropDetails().put(Constants.DROP_DETAIL_EMPTY_CELL,
-             !hasContent);
+	    // Check if the cell we are hovering over has content
+	    /*-FIXME
+	     boolean hasContent = false;
+	     ChildComponentContainer container = null;
+	     for (ChildComponentContainer cont : widgetToComponentContainer
+	     .values()) {
+	     if (DOM.isOrHasChild(cont.getElement(), event.getElementOver())) {
+	     hasContent = true;
+	     container = cont;
+	     break;
+	     }
+	     }
+	     event.getDropDetails().put(Constants.DROP_DETAIL_EMPTY_CELL,
+	     !hasContent);
 
-             if (hasContent) {
-            
-             Widget w = container.getWidget();
-             if (w != null) {
-             String className = w.getClass().getName();
-             event.getDropDetails().put(
-             Constants.DROP_DETAIL_OVER_CLASS, className);
-             } else {
-             event.getDropDetails().put(
-             Constants.DROP_DETAIL_OVER_CLASS,
-             VDDGridLayout.this);
-             }
-             }
-             -*/
-            // Add mouse event details
-            MouseEventDetails details = MouseEventDetailsBuilder
-                    .buildMouseEventDetails(event.getCurrentGwtEvent(),
-                            getElement());
-            event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
-                    details.serialize());
-        }
+	     if (hasContent) {
+	    
+	     Widget w = container.getWidget();
+	     if (w != null) {
+	     String className = w.getClass().getName();
+	     event.getDropDetails().put(
+	     Constants.DROP_DETAIL_OVER_CLASS, className);
+	     } else {
+	     event.getDropDetails().put(
+	     Constants.DROP_DETAIL_OVER_CLASS,
+	     VDDGridLayout.this);
+	     }
+	     }
+	     -*/
+	    // Add mouse event details
+	    MouseEventDetails details = MouseEventDetailsBuilder
+		    .buildMouseEventDetails(event.getCurrentGwtEvent(),
+			    getElement());
+	    event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
+		    details.serialize());
+	}
     }
 
     /**
@@ -178,23 +179,23 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      * @return
      */
     protected HorizontalDropLocation getHorizontalDropLocation(
-            CellDetails cell, VDragEvent event) {
+	    CellDetails cell, VDragEvent event) {
 
-        // Get the horizontal location
-        HorizontalDropLocation hdetail;
-        int x = Util.getTouchOrMouseClientX(event.getCurrentGwtEvent())
-                - getAbsoluteLeft() - cell.x;
+	// Get the horizontal location
+	HorizontalDropLocation hdetail;
+	int x = Util.getTouchOrMouseClientX(event.getCurrentGwtEvent())
+		- getAbsoluteLeft() - cell.x;
 
-        assert (x >= 0 && x <= cell.width);
+	assert (x >= 0 && x <= cell.width);
 
-        if (x < cell.width * cellLeftRightDropRatio) {
-            hdetail = HorizontalDropLocation.LEFT;
-        } else if (x < cell.width * (1.0 - cellLeftRightDropRatio)) {
-            hdetail = HorizontalDropLocation.CENTER;
-        } else {
-            hdetail = HorizontalDropLocation.RIGHT;
-        }
-        return hdetail;
+	if (x < cell.width * cellLeftRightDropRatio) {
+	    hdetail = HorizontalDropLocation.LEFT;
+	} else if (x < cell.width * (1.0 - cellLeftRightDropRatio)) {
+	    hdetail = HorizontalDropLocation.CENTER;
+	} else {
+	    hdetail = HorizontalDropLocation.RIGHT;
+	}
+	return hdetail;
     }
 
     /**
@@ -207,23 +208,23 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      * @return
      */
     protected VerticalDropLocation getVerticalDropLocation(CellDetails cell,
-            VDragEvent event) {
+	    VDragEvent event) {
 
-        // Get the vertical location
-        VerticalDropLocation vdetail;
-        int y = Util.getTouchOrMouseClientY(event.getCurrentGwtEvent())
-                - getAbsoluteTop() - cell.y;
+	// Get the vertical location
+	VerticalDropLocation vdetail;
+	int y = Util.getTouchOrMouseClientY(event.getCurrentGwtEvent())
+		- getAbsoluteTop() - cell.y;
 
-        assert (y >= 0 && y <= cell.height);
+	assert (y >= 0 && y <= cell.height);
 
-        if (y < cell.height * cellTopBottomDropRatio) {
-            vdetail = VerticalDropLocation.TOP;
-        } else if (y < cell.height * (1.0 - cellTopBottomDropRatio)) {
-            vdetail = VerticalDropLocation.MIDDLE;
-        } else {
-            vdetail = VerticalDropLocation.BOTTOM;
-        }
-        return vdetail;
+	if (y < cell.height * cellTopBottomDropRatio) {
+	    vdetail = VerticalDropLocation.TOP;
+	} else if (y < cell.height * (1.0 - cellTopBottomDropRatio)) {
+	    vdetail = VerticalDropLocation.MIDDLE;
+	} else {
+	    vdetail = VerticalDropLocation.BOTTOM;
+	}
+	return vdetail;
     }
 
     /**
@@ -236,38 +237,38 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      */
     protected void emphasis(CellDetails cell, VDragEvent event) {
 
-        Style shadowStyle = dragShadow.getElement().getStyle();
-        shadowStyle.setPosition(Position.ABSOLUTE);
-        shadowStyle.setWidth(cell.width, Unit.PX);
-        shadowStyle.setHeight(cell.height, Unit.PX);
-        shadowStyle.setLeft(cell.x, Unit.PX);
-        shadowStyle.setTop(cell.y, Unit.PX);
+	Style shadowStyle = dragShadow.getElement().getStyle();
+	shadowStyle.setPosition(Position.ABSOLUTE);
+	shadowStyle.setWidth(cell.width, Unit.PX);
+	shadowStyle.setHeight(cell.height, Unit.PX);
+	shadowStyle.setLeft(cell.x, Unit.PX);
+	shadowStyle.setTop(cell.y, Unit.PX);
 
-        // Remove any existing empasis
-        deEmphasis();
+	// Remove any existing empasis
+	deEmphasis();
 
-        // Ensure we are not dragging ourself into ourself
-        ComponentConnector draggedConnector = (ComponentConnector) event
-                .getTransferable().getData(
-                        Constants.TRANSFERABLE_DETAIL_COMPONENT);
+	// Ensure we are not dragging ourself into ourself
+	ComponentConnector draggedConnector = (ComponentConnector) event
+		.getTransferable().getData(
+			Constants.TRANSFERABLE_DETAIL_COMPONENT);
 
-        if (draggedConnector.getWidget() == VDDGridLayout.this) {
-            return;
-        }
+	if (draggedConnector.getWidget() == VDDGridLayout.this) {
+	    return;
+	}
 
-        HorizontalDropLocation hl = getHorizontalDropLocation(cell, event);
-        VerticalDropLocation vl = getVerticalDropLocation(cell, event);
+	HorizontalDropLocation hl = getHorizontalDropLocation(cell, event);
+	VerticalDropLocation vl = getVerticalDropLocation(cell, event);
 
-        // Apply over style
-        UIObject.setStyleName(dragShadow.getElement(), OVER, true);
+	// Apply over style
+	UIObject.setStyleName(dragShadow.getElement(), OVER, true);
 
-        // Add vertical location dependent style
-        UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
-                + vl.toString().toLowerCase(), true);
+	// Add vertical location dependent style
+	UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
+		+ vl.toString().toLowerCase(), true);
 
-        // Add horizontal location dependent style
-        UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
-                + hl.toString().toLowerCase(), true);
+	// Add horizontal location dependent style
+	UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
+		+ hl.toString().toLowerCase(), true);
 
     }
 
@@ -276,28 +277,28 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      */
     protected void deEmphasis() {
 
-        UIObject.setStyleName(dragShadow.getElement(), OVER, false);
+	UIObject.setStyleName(dragShadow.getElement(), OVER, false);
 
-        // Horizontal styles
-        UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
-                + HorizontalDropLocation.LEFT.toString().toLowerCase(), false);
-        UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
-                + HorizontalDropLocation.CENTER.toString().toLowerCase(), false);
-        UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
-                + HorizontalDropLocation.RIGHT.toString().toLowerCase(), false);
+	// Horizontal styles
+	UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
+		+ HorizontalDropLocation.LEFT.toString().toLowerCase(), false);
+	UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
+		+ HorizontalDropLocation.CENTER.toString().toLowerCase(), false);
+	UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
+		+ HorizontalDropLocation.RIGHT.toString().toLowerCase(), false);
 
-        // Vertical styles
-        UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
-                + VerticalDropLocation.TOP.toString().toLowerCase(), false);
-        UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
-                + VerticalDropLocation.MIDDLE.toString().toLowerCase(), false);
-        UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
-                + VerticalDropLocation.BOTTOM.toString().toLowerCase(), false);
+	// Vertical styles
+	UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
+		+ VerticalDropLocation.TOP.toString().toLowerCase(), false);
+	UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
+		+ VerticalDropLocation.MIDDLE.toString().toLowerCase(), false);
+	UIObject.setStyleName(dragShadow.getElement(), OVER + "-"
+		+ VerticalDropLocation.BOTTOM.toString().toLowerCase(), false);
 
     }
 
     public LayoutDragMode getDragMode() {
-        return ddMouseHandler.getDragMode();
+	return ddMouseHandler.getDragMode();
     }
 
     /**
@@ -306,9 +307,9 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      * handler.
      */
     protected boolean postDropHook(VDragEvent drag) {
-        // Extended classes can add content here...
-        remove(dragShadow);
-        return true;
+	// Extended classes can add content here...
+	remove(dragShadow);
+	return true;
     }
 
     /**
@@ -316,8 +317,8 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      * Useful if you don't want to override the whole drophandler.
      */
     protected void postEnterHook(VDragEvent drag) {
-        // Extended classes can add content here...
-        insert(dragShadow, getElement(), 0, true);
+	// Extended classes can add content here...
+	insert(dragShadow, getElement(), 0, true);
     }
 
     /**
@@ -325,8 +326,8 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      * Useful if you don't want to override the whole drophandler.
      */
     protected void postLeaveHook(VDragEvent drag) {
-        // Extended classes can add content here...
-        remove(dragShadow);
+	// Extended classes can add content here...
+	remove(dragShadow);
     }
 
     /**
@@ -334,7 +335,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      * if you don't want to override the whole drophandler.
      */
     protected void postOverHook(VDragEvent drag) {
-        // Extended classes can add content here...
+	// Extended classes can add content here...
     }
 
     /**
@@ -342,8 +343,8 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      * to commence. Return false to interrupt the drag:
      */
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return ddMouseHandler.getDragMode() != LayoutDragMode.NONE
-                && dragFilter.isDraggable(widget);
+	return ddMouseHandler.getDragMode() != LayoutDragMode.NONE
+		&& dragFilter.isDraggable(widget);
     }
 
     /**
@@ -351,20 +352,20 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      * positional and size data of the cell.
      */
     protected class CellDetails {
-        public int row = -1;
-        public int column = -1;
-        public int x = -1;
-        public int y = -1;
-        public int width = -1;
-        public int height = -1;
+	public int row = -1;
+	public int column = -1;
+	public int x = -1;
+	public int y = -1;
+	public int width = -1;
+	public int height = -1;
     }
 
     CellDetails getCellDetails(VDragEvent event) {
-        int x = Util.getTouchOrMouseClientX(event.getCurrentGwtEvent())
-                - getAbsoluteLeft();
-        int y = Util.getTouchOrMouseClientY(event.getCurrentGwtEvent())
-                - getAbsoluteTop();
-        return getCellDetailsByCoordinates(x, y);
+	int x = Util.getTouchOrMouseClientX(event.getCurrentGwtEvent())
+		- getAbsoluteLeft();
+	int y = Util.getTouchOrMouseClientY(event.getCurrentGwtEvent())
+		- getAbsoluteTop();
+	return getCellDetailsByCoordinates(x, y);
     }
 
     /**
@@ -378,41 +379,41 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      */
     private CellDetails getCellDetailsByCoordinates(int x, int y) {
 
-        CellDetails cd = new CellDetails();
-        int[] columnWidths = getColumnWidths();
-        int[] rowHeights = getRowHeights();
+	CellDetails cd = new CellDetails();
+	int[] columnWidths = getColumnWidths();
+	int[] rowHeights = getRowHeights();
 
-        // Get column and x coordinate
-        int temp = 0;
-        for (int col = 0; col < columnWidths.length; col++) {
-            if (x >= temp && x <= temp + columnWidths[col]) {
-                cd.column = col;
-                cd.x = temp;
-                cd.width = columnWidths[col];
-                break;
-            }
-            temp += columnWidths[col] + getHorizontalSpacing();
-        }
+	// Get column and x coordinate
+	int temp = 0;
+	for (int col = 0; col < columnWidths.length; col++) {
+	    if (x >= temp && x <= temp + columnWidths[col]) {
+		cd.column = col;
+		cd.x = temp;
+		cd.width = columnWidths[col];
+		break;
+	    }
+	    temp += columnWidths[col] + getHorizontalSpacing();
+	}
 
-        // get row
-        temp = 0;
-        for (int row = 0; row < rowHeights.length; row++) {
-            if (y >= temp && y <= temp + rowHeights[row]) {
-                cd.row = row;
-                cd.y = temp;
-                cd.height = rowHeights[row];
-                break;
-            }
-            temp += rowHeights[row] + getVerticalSpacing();
-        }
+	// get row
+	temp = 0;
+	for (int row = 0; row < rowHeights.length; row++) {
+	    if (y >= temp && y <= temp + rowHeights[row]) {
+		cd.row = row;
+		cd.y = temp;
+		cd.height = rowHeights[row];
+		break;
+	    }
+	    temp += rowHeights[row] + getVerticalSpacing();
+	}
 
-        // Sanity check
-        if (cd.row == -1 || cd.column == -1 || cd.width == -1
-                || cd.height == -1) {
-            return null;
-        }
+	// Sanity check
+	if (cd.row == -1 || cd.column == -1 || cd.width == -1
+		|| cd.height == -1) {
+	    return null;
+	}
 
-        return cd;
+	return cd;
     }
 
     /*
@@ -423,53 +424,53 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      * ()
      */
     public VDragFilter getDragFilter() {
-        return dragFilter;
+	return dragFilter;
     }
 
     IframeCoverUtility getIframeCoverUtility() {
-        return iframeCoverUtility;
+	return iframeCoverUtility;
     }
 
     VLayoutDragDropMouseHandler getMouseHandler() {
-        return ddMouseHandler;
+	return ddMouseHandler;
     }
 
     @Override
     public void setDragFilter(VDragFilter filter) {
-        this.dragFilter = filter;
+	this.dragFilter = filter;
     }
 
     public float getCellLeftRightDropRatio() {
-        return cellLeftRightDropRatio;
+	return cellLeftRightDropRatio;
     }
 
     public void setCellLeftRightDropRatio(float cellLeftRightDropRatio) {
-        this.cellLeftRightDropRatio = cellLeftRightDropRatio;
+	this.cellLeftRightDropRatio = cellLeftRightDropRatio;
     }
 
     public float getCellTopBottomDropRatio() {
-        return cellTopBottomDropRatio;
+	return cellTopBottomDropRatio;
     }
 
     public void setCellTopBottomDropRatio(float cellTopBottomDropRatio) {
-        this.cellTopBottomDropRatio = cellTopBottomDropRatio;
+	this.cellTopBottomDropRatio = cellTopBottomDropRatio;
     }
 
     @Override
-	public void iframeShimsEnabled(boolean enabled) {
-		iframeCovers = enabled;
-		iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
-	}
+    public void iframeShimsEnabled(boolean enabled) {
+	iframeCovers = enabled;
+	iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
+    }
 
-	@Override
-	public boolean isIframeShimsEnabled() {
-		return iframeCovers;
-	}
+    @Override
+    public boolean isIframeShimsEnabled() {
+	return iframeCovers;
+    }
 
-	@Override
-	public void setDragMode(LayoutDragMode mode) {
-		this.mode = mode;
-		ddMouseHandler.updateDragMode(mode);
-		iframeShimsEnabled(iframeCovers);
-	}
+    @Override
+    public void setDragMode(LayoutDragMode mode) {
+	this.mode = mode;
+	ddMouseHandler.updateDragMode(mode);
+	iframeShimsEnabled(iframeCovers);
+    }
 }

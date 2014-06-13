@@ -50,7 +50,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDTabSheet extends TabSheet implements LayoutDragSource,
-        DropTarget, ShimSupport, LegacyComponent {
+	DropTarget, ShimSupport, LegacyComponent {
 
     /**
      * The drop handler which handles dropped components in the layout.
@@ -62,78 +62,78 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
 
     public class TabSheetTargetDetails extends TargetDetailsImpl {
 
-        private Component over;
+	private Component over;
 
-        private int index = -1;
+	private int index = -1;
 
-        protected TabSheetTargetDetails(Map<String, Object> rawDropData) {
-            super(rawDropData, DDTabSheet.this);
+	protected TabSheetTargetDetails(Map<String, Object> rawDropData) {
+	    super(rawDropData, DDTabSheet.this);
 
-            // Get over which component (if any) the drop was made and the
-            // index of it
-            if (rawDropData.get(Constants.DROP_DETAIL_TO) != null) {
-                Object to = rawDropData.get(Constants.DROP_DETAIL_TO);
-                index = Integer.valueOf(to.toString());
-            }
+	    // Get over which component (if any) the drop was made and the
+	    // index of it
+	    if (rawDropData.get(Constants.DROP_DETAIL_TO) != null) {
+		Object to = rawDropData.get(Constants.DROP_DETAIL_TO);
+		index = Integer.valueOf(to.toString());
+	    }
 
-            if (index >= 0 && index < getComponentCount()) {
-                Iterator<Component> iter = getComponentIterator();
-                int counter = 0;
-                while (iter.hasNext()) {
-                    over = iter.next();
-                    if (counter == index) {
-                        break;
-                    }
-                    counter++;
-                }
-            } else {
-                over = DDTabSheet.this;
-            }
-        }
+	    if (index >= 0 && index < getComponentCount()) {
+		Iterator<Component> iter = getComponentIterator();
+		int counter = 0;
+		while (iter.hasNext()) {
+		    over = iter.next();
+		    if (counter == index) {
+			break;
+		    }
+		    counter++;
+		}
+	    } else {
+		over = DDTabSheet.this;
+	    }
+	}
 
-        /**
-         * The component over which the drop was made.
-         * 
-         * @return Null if the drop was not over a component, else the component
-         */
-        public Component getOverComponent() {
-            return over;
-        }
+	/**
+	 * The component over which the drop was made.
+	 * 
+	 * @return Null if the drop was not over a component, else the component
+	 */
+	public Component getOverComponent() {
+	    return over;
+	}
 
-        /**
-         * The index over which the drop was made. If the drop was not made over
-         * any component then it returns -1.
-         * 
-         * @return The index of the component or -1 if over no component.
-         */
-        public int getOverIndex() {
-            return index;
-        }
+	/**
+	 * The index over which the drop was made. If the drop was not made over
+	 * any component then it returns -1.
+	 * 
+	 * @return The index of the component or -1 if over no component.
+	 */
+	public int getOverIndex() {
+	    return index;
+	}
 
-        /**
-         * Some details about the mouse event
-         * 
-         * @return details about the actual event that caused the event details.
-         *         Practically mouse move or mouse up.
-         */
-        public MouseEventDetails getMouseEvent() {
-            return MouseEventDetails
-                    .deSerialize((String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
-        }
+	/**
+	 * Some details about the mouse event
+	 * 
+	 * @return details about the actual event that caused the event details.
+	 *         Practically mouse move or mouse up.
+	 */
+	public MouseEventDetails getMouseEvent() {
+	    return MouseEventDetails
+		    .deSerialize((String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
+	}
 
-        /**
-         * Get the horizontal position of the dropped component within the
-         * underlying cell.
-         * 
-         * @return The drop location
-         */
-        public HorizontalDropLocation getDropLocation() {
-            if (getData(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION) != null) {
-                return HorizontalDropLocation
-                        .valueOf((String) getData(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION));
-            }
-            return null;
-        }
+	/**
+	 * Get the horizontal position of the dropped component within the
+	 * underlying cell.
+	 * 
+	 * @return The drop location
+	 */
+	public HorizontalDropLocation getDropLocation() {
+	    if (getData(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION) != null) {
+		return HorizontalDropLocation
+			.valueOf((String) getData(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION));
+	    }
+	    return null;
+	}
     }
 
     /*
@@ -142,28 +142,28 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
      * @see com.vaadin.event.dd.DragSource#getTransferable(java.util.Map)
      */
     public Transferable getTransferable(Map<String, Object> rawVariables) {
-        if (rawVariables.get(Constants.TRANSFERABLE_DETAIL_INDEX) != null) {
-            // We dragged a tab, substitute component with tab content
-            int index = Integer.parseInt(rawVariables.get(
-                    Constants.TRANSFERABLE_DETAIL_INDEX).toString());
-            Iterator<Component> iter = getComponentIterator();
-            int counter = 0;
-            Component c = null;
-            while (iter.hasNext()) {
-                c = iter.next();
-                if (counter == index) {
-                    break;
-                }
-                counter++;
-            }
+	if (rawVariables.get(Constants.TRANSFERABLE_DETAIL_INDEX) != null) {
+	    // We dragged a tab, substitute component with tab content
+	    int index = Integer.parseInt(rawVariables.get(
+		    Constants.TRANSFERABLE_DETAIL_INDEX).toString());
+	    Iterator<Component> iter = getComponentIterator();
+	    int counter = 0;
+	    Component c = null;
+	    while (iter.hasNext()) {
+		c = iter.next();
+		if (counter == index) {
+		    break;
+		}
+		counter++;
+	    }
 
-            rawVariables.put(Constants.TRANSFERABLE_DETAIL_COMPONENT, c);
-        } else if (rawVariables.get("component") == null) {
-            rawVariables.put(Constants.TRANSFERABLE_DETAIL_COMPONENT,
-                    DDTabSheet.this);
-        }
+	    rawVariables.put(Constants.TRANSFERABLE_DETAIL_COMPONENT, c);
+	} else if (rawVariables.get("component") == null) {
+	    rawVariables.put(Constants.TRANSFERABLE_DETAIL_COMPONENT,
+		    DDTabSheet.this);
+	}
 
-        return new LayoutBoundTransferable(this, rawVariables);
+	return new LayoutBoundTransferable(this, rawVariables);
     }
 
     /**
@@ -176,10 +176,10 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
      *            dropping
      */
     public void setDropHandler(DropHandler dropHandler) {
-        if (this.dropHandler != dropHandler) {
-            this.dropHandler = dropHandler;
-            requestRepaint();
-        }
+	if (this.dropHandler != dropHandler) {
+	    this.dropHandler = dropHandler;
+	    requestRepaint();
+	}
     }
 
     /*
@@ -188,7 +188,7 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
      * @see com.vaadin.event.dd.DropTarget#getDropHandler()
      */
     public DropHandler getDropHandler() {
-        return dropHandler;
+	return dropHandler;
     }
 
     /*
@@ -198,8 +198,8 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
      * com.vaadin.event.dd.DropTarget#translateDropTargetDetails(java.util.Map)
      */
     public TargetDetails translateDropTargetDetails(
-            Map<String, Object> clientVariables) {
-        return new TabSheetTargetDetails(clientVariables);
+	    Map<String, Object> clientVariables) {
+	return new TabSheetTargetDetails(clientVariables);
     }
 
     /*
@@ -208,7 +208,7 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
      * @see fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource#getDragMode ()
      */
     public LayoutDragMode getDragMode() {
-        return getState().dd.dragMode;
+	return getState().dd.dragMode;
     }
 
     /*
@@ -218,7 +218,7 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
      * (fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode)
      */
     public void setDragMode(LayoutDragMode mode) {
-        getState().dd.dragMode = mode;
+	getState().dd.dragMode = mode;
     }
 
     /*
@@ -231,27 +231,27 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
-        // Add drop handler
-        if (dropHandler != null && isEnabled()) {
-            dropHandler.getAcceptCriterion().paint(target);
-        }
+	// Add drop handler
+	if (dropHandler != null && isEnabled()) {
+	    dropHandler.getAcceptCriterion().paint(target);
+	}
 
-        // Adds the drag mode (the default is none)
-        if (isEnabled()) {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, getState()
-                    .dd.dragMode.ordinal());
-        } else {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
-                    LayoutDragMode.NONE.ordinal());
-        }
+	// Adds the drag mode (the default is none)
+	if (isEnabled()) {
+	    target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+		    getState().dd.dragMode.ordinal());
+	} else {
+	    target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+		    LayoutDragMode.NONE.ordinal());
+	}
 
-        // Drop ratio
-        target.addAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO,
-                getState().tabLeftRightDropRatio);
+	// Drop ratio
+	target.addAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO,
+		getState().tabLeftRightDropRatio);
 
-        // Shims
-        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, getState()
-                .dd.iframeShims);
+	// Shims
+	target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE,
+		getState().dd.iframeShims);
     }
 
     /**
@@ -265,62 +265,62 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource,
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentHorizontalDropRatio(float ratio) {
-        if (getState().tabLeftRightDropRatio != ratio) {
-            if (ratio >= 0 && ratio <= 0.5) {
-                getState().tabLeftRightDropRatio = ratio;
-            } else {
-                throw new IllegalArgumentException(
-                        "Ratio must be between 0 and 0.5");
-            }
-        }
+	if (getState().tabLeftRightDropRatio != ratio) {
+	    if (ratio >= 0 && ratio <= 0.5) {
+		getState().tabLeftRightDropRatio = ratio;
+	    } else {
+		throw new IllegalArgumentException(
+			"Ratio must be between 0 and 0.5");
+	    }
+	}
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        getState().dd.iframeShims = shim;
+	getState().dd.iframeShims = shim;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-        return getState().dd.iframeShims;
+	return getState().dd.iframeShims;
     }
 
     /**
      * {@inheritDoc}
      */
     public DragFilter getDragFilter() {
-        return dragFilter;
+	return dragFilter;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragFilter(DragFilter dragFilter) {
-        this.dragFilter = dragFilter;
+	this.dragFilter = dragFilter;
     }
 
     @Override
     public DDTabSheetState getState() {
-        return (DDTabSheetState) super.getState();
+	return (DDTabSheetState) super.getState();
     }
 
     @Override
     public void beforeClientResponse(boolean initial) {
-        super.beforeClientResponse(initial);
+	super.beforeClientResponse(initial);
 
-        // Update draggable filter
-        Iterator<Component> componentIterator = getComponentIterator();
-        getState().dd.draggable = new ArrayList<Connector>();
-        while (componentIterator.hasNext()) {
-            Component c = componentIterator.next();
-            if (dragFilter.isDraggable(c)) {
-                getState().dd.draggable.add(c);
-            }
-        }
+	// Update draggable filter
+	Iterator<Component> componentIterator = getComponentIterator();
+	getState().dd.draggable = new ArrayList<Connector>();
+	while (componentIterator.hasNext()) {
+	    Component c = componentIterator.next();
+	    if (dragFilter.isDraggable(c)) {
+		getState().dd.draggable.add(c);
+	    }
+	}
     }
 
     @Override

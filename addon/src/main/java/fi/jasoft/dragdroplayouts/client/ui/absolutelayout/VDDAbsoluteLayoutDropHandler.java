@@ -31,50 +31,50 @@ public class VDDAbsoluteLayoutDropHandler extends VAbstractDropHandler {
      * @param vddAbsoluteLayout
      */
     public VDDAbsoluteLayoutDropHandler(VDDAbsoluteLayout layout,
-            ApplicationConnection client) {
-        this.layout = layout;
-        this.client = client;
+	    ApplicationConnection client) {
+	this.layout = layout;
+	this.client = client;
     }
 
     public ApplicationConnection getApplicationConnection() {
-        return client;
+	return client;
     }
 
     @Override
     protected void dragAccepted(VDragEvent drag) {
-        // NOP
+	// NOP
     }
 
     @Override
     public ComponentConnector getConnector() {
-        return ConnectorMap.get(client).getConnector(layout);
+	return ConnectorMap.get(client).getConnector(layout);
     }
 
     @Override
     public boolean drop(VDragEvent drag) {
-        if (super.drop(drag)) {
-            layout.updateDragDetails(drag);
-            return layout.postDropHook(drag);
-        }
-        return false;
+	if (super.drop(drag)) {
+	    layout.updateDragDetails(drag);
+	    return layout.postDropHook(drag);
+	}
+	return false;
     };
 
     @Override
     public void dragEnter(VDragEvent drag) {
-        super.dragEnter(drag);
-        layout.postEnterHook(drag);
+	super.dragEnter(drag);
+	layout.postEnterHook(drag);
     };
 
     @Override
     public void dragLeave(VDragEvent drag) {
-        super.dragLeave(drag);
-        layout.postLeaveHook(drag);
+	super.dragLeave(drag);
+	layout.postLeaveHook(drag);
     };
 
     @Override
     public void dragOver(VDragEvent drag) {
-        drag.getDragImage().getStyle().setProperty("display", "");
-        layout.updateDragDetails(drag);
-        layout.postOverHook(drag);
+	drag.getDragImage().getStyle().setProperty("display", "");
+	layout.updateDragDetails(drag);
+	layout.postOverHook(drag);
     }
 }

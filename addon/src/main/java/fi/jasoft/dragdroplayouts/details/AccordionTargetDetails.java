@@ -32,31 +32,31 @@ public class AccordionTargetDetails extends TargetDetailsImpl {
     private int index = -1;
 
     public AccordionTargetDetails(DDAccordion accordion,
-            Map<String, Object> rawDropData) {
-        super(rawDropData, accordion);
+	    Map<String, Object> rawDropData) {
+	super(rawDropData, accordion);
 
-        // Get over which component (if any) the drop was made and the
-        // index of it
-        Object to = rawDropData.get("to");
-        if (to != null) {
-            index = Integer.valueOf(to.toString());
+	// Get over which component (if any) the drop was made and the
+	// index of it
+	Object to = rawDropData.get("to");
+	if (to != null) {
+	    index = Integer.valueOf(to.toString());
 
-            if (index < accordion.getComponentCount()) {
-                Iterator<Component> iter = accordion.getComponentIterator();
-                int counter = 0;
-                while (iter.hasNext()) {
-                    over = iter.next();
-                    if (counter == index) {
-                        break;
-                    }
-                    counter++;
-                }
-            } else {
-                over = accordion;
-            }
-        } else {
-            over = accordion;
-        }
+	    if (index < accordion.getComponentCount()) {
+		Iterator<Component> iter = accordion.getComponentIterator();
+		int counter = 0;
+		while (iter.hasNext()) {
+		    over = iter.next();
+		    if (counter == index) {
+			break;
+		    }
+		    counter++;
+		}
+	    } else {
+		over = accordion;
+	    }
+	} else {
+	    over = accordion;
+	}
     }
 
     /**
@@ -65,7 +65,7 @@ public class AccordionTargetDetails extends TargetDetailsImpl {
      * @return Null if the drop was not over a component, else the component
      */
     public Component getOverComponent() {
-        return over;
+	return over;
     }
 
     /**
@@ -75,7 +75,7 @@ public class AccordionTargetDetails extends TargetDetailsImpl {
      * @return The index of the component or -1 if over no component.
      */
     public int getOverIndex() {
-        return index;
+	return index;
     }
 
     /**
@@ -85,7 +85,7 @@ public class AccordionTargetDetails extends TargetDetailsImpl {
      *         Practically mouse move or mouse up.
      */
     public MouseEventDetails getMouseEvent() {
-        return MouseEventDetails.deSerialize((String) getData("mouseEvent"));
+	return MouseEventDetails.deSerialize((String) getData("mouseEvent"));
     }
 
     /**
@@ -95,10 +95,10 @@ public class AccordionTargetDetails extends TargetDetailsImpl {
      * @return The drop location
      */
     public VerticalDropLocation getDropLocation() {
-        if (getData("vdetail") != null) {
-            return VerticalDropLocation.valueOf((String) getData("vdetail"));
-        } else {
-            return null;
-        }
+	if (getData("vdetail") != null) {
+	    return VerticalDropLocation.valueOf((String) getData("vdetail"));
+	} else {
+	    return null;
+	}
     }
 }

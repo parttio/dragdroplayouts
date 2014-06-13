@@ -29,14 +29,14 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 
 @Connect(DDCssLayout.class)
 public class DDCssLayoutConnector extends CssLayoutConnector implements
-        Paintable, VHasDragFilter {
+	Paintable, VHasDragFilter {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public VDDCssLayout getWidget() {
-        return (VDDCssLayout) super.getWidget();
+	return (VDDCssLayout) super.getWidget();
     }
 
     /**
@@ -44,48 +44,48 @@ public class DDCssLayoutConnector extends CssLayoutConnector implements
      */
     @Override
     public DDCssLayoutState getState() {
-        return (DDCssLayoutState) super.getState();
+	return (DDCssLayoutState) super.getState();
     }
 
     @Override
     protected void init() {
-        super.init();
-        VDragDropUtil.listenToStateChangeEvents(this, getWidget()
-                .getMouseHandler(), getWidget().getIframeCoverUtility(),
-                getWidget());
+	super.init();
+	VDragDropUtil.listenToStateChangeEvents(this, getWidget()
+		.getMouseHandler(), getWidget().getIframeCoverUtility(),
+		getWidget());
     }
 
     /**
      * {@inheritDoc}
      */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
-            UIDL acceptCrit = uidl.getChildByTagName("-ac");
-            if (acceptCrit == null) {
-                getWidget().setDropHandler(null);
-            } else {
-                if (getWidget().getDropHandler() == null) {
-                    getWidget().setDropHandler(
-                            new VDDCssLayoutDropHandler(getWidget(), this));
-                }
-                getWidget().getDropHandler().updateAcceptRules(acceptCrit);
-            }
-        }
+	if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
+	    UIDL acceptCrit = uidl.getChildByTagName("-ac");
+	    if (acceptCrit == null) {
+		getWidget().setDropHandler(null);
+	    } else {
+		if (getWidget().getDropHandler() == null) {
+		    getWidget().setDropHandler(
+			    new VDDCssLayoutDropHandler(getWidget(), this));
+		}
+		getWidget().getDropHandler().updateAcceptRules(acceptCrit);
+	    }
+	}
     }
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-        getWidget().setDragFilter(new VDragFilter(getState().dd));
+	super.onStateChanged(stateChangeEvent);
+	getWidget().setDragFilter(new VDragFilter(getState().dd));
     }
 
     @Override
     public VDragFilter getDragFilter() {
-        return getWidget().getDragFilter();
+	return getWidget().getDragFilter();
     }
 
     @Override
     public void setDragFilter(VDragFilter filter) {
-        getWidget().setDragFilter(filter);
+	getWidget().setDragFilter(filter);
     }
 }

@@ -52,50 +52,50 @@ public class IframeCoverUtility {
      * @return The element which covers the iframe
      */
     private static Element addIframeCover(Element iframe) {
-        if (iframeCoverMap.containsKey(iframe)) {
-            return iframeCoverMap.get(iframe);
-        }
+	if (iframeCoverMap.containsKey(iframe)) {
+	    return iframeCoverMap.get(iframe);
+	}
 
-        // Get dimensions
-        String iframeWidth = iframe.getAttribute("width");
-        String iframeHeight = iframe.getAttribute("height");
+	// Get dimensions
+	String iframeWidth = iframe.getAttribute("width");
+	String iframeHeight = iframe.getAttribute("height");
 
-        Style iframeStyle = iframe.getStyle();
+	Style iframeStyle = iframe.getStyle();
 
-        if (!iframeWidth.equals("") && !iframeHeight.equals("")) {
-            iframeStyle.setPosition(Position.ABSOLUTE);
-            iframeStyle.setTop(0, Unit.PX);
-            iframeStyle.setLeft(0, Unit.PX);
-        }
+	if (!iframeWidth.equals("") && !iframeHeight.equals("")) {
+	    iframeStyle.setPosition(Position.ABSOLUTE);
+	    iframeStyle.setTop(0, Unit.PX);
+	    iframeStyle.setLeft(0, Unit.PX);
+	}
 
-        // Create the cover element
-        Element coverContainer = DOM.createDiv();
-        DOM.setStyleAttribute(coverContainer, "width", iframeWidth);
-        DOM.setStyleAttribute(coverContainer, "height", iframeHeight);
+	// Create the cover element
+	Element coverContainer = DOM.createDiv();
+	DOM.setStyleAttribute(coverContainer, "width", iframeWidth);
+	DOM.setStyleAttribute(coverContainer, "height", iframeHeight);
 
-        coverContainer.setClassName("v-dragdrop-iframe-container");
-        coverContainer.getStyle().setPosition(Position.RELATIVE);
-        iframe.getParentElement().appendChild(coverContainer);
+	coverContainer.setClassName("v-dragdrop-iframe-container");
+	coverContainer.getStyle().setPosition(Position.RELATIVE);
+	iframe.getParentElement().appendChild(coverContainer);
 
-        // Move iframe to cover container
-        iframe.getParentElement().replaceChild(coverContainer, iframe);
-        coverContainer.appendChild(iframe);
+	// Move iframe to cover container
+	iframe.getParentElement().replaceChild(coverContainer, iframe);
+	coverContainer.appendChild(iframe);
 
-        // Style the cover
-        Element cover = DOM.createDiv();
-        cover.setClassName(SHIM_STYLENAME);
-        Style coverStyle = cover.getStyle();
-        coverStyle.setPosition(Position.ABSOLUTE);
-        coverStyle.setWidth(100, Unit.PCT);
-        coverStyle.setHeight(100, Unit.PCT);
-        coverStyle.setTop(0, Unit.PX);
-        coverStyle.setLeft(0, Unit.PX);
+	// Style the cover
+	Element cover = DOM.createDiv();
+	cover.setClassName(SHIM_STYLENAME);
+	Style coverStyle = cover.getStyle();
+	coverStyle.setPosition(Position.ABSOLUTE);
+	coverStyle.setWidth(100, Unit.PCT);
+	coverStyle.setHeight(100, Unit.PCT);
+	coverStyle.setTop(0, Unit.PX);
+	coverStyle.setLeft(0, Unit.PX);
 
-        coverContainer.appendChild(cover);
+	coverContainer.appendChild(cover);
 
-        iframeCoverMap.put(iframe, coverContainer);
+	iframeCoverMap.put(iframe, coverContainer);
 
-        return coverContainer;
+	return coverContainer;
     }
 
     /**
@@ -105,13 +105,13 @@ public class IframeCoverUtility {
      *            The iframe element which has been covered
      */
     private static void removeIframeCover(Element iframe) {
-        Element coverContainer = iframeCoverMap.get(iframe);
-        if (coverContainer != null) {
-            Element parent = coverContainer.getParentElement().cast();
-            parent.replaceChild(iframe, coverContainer);
-            iframe.getStyle().clearPosition();
-            iframeCoverMap.remove(iframe);
-        }
+	Element coverContainer = iframeCoverMap.get(iframe);
+	if (coverContainer != null) {
+	    Element parent = coverContainer.getParentElement().cast();
+	    parent.replaceChild(iframe, coverContainer);
+	    iframe.getStyle().clearPosition();
+	    iframeCoverMap.remove(iframe);
+	}
     }
 
     /**
@@ -122,15 +122,15 @@ public class IframeCoverUtility {
      * @return A set of elements with the iframe covers
      */
     private static Set<Element> addIframeCovers(Element rootElement) {
-        Set<Element> coveredIframes = new HashSet<Element>();
-        NodeList<com.google.gwt.dom.client.Element> iframes = rootElement
-                .getElementsByTagName("iframe");
-        for (int i = 0; i < iframes.getLength(); i++) {
-            Element iframe = (Element) iframes.getItem(i);
-            addIframeCover(iframe);
-            coveredIframes.add(iframe);
-        }
-        return coveredIframes;
+	Set<Element> coveredIframes = new HashSet<Element>();
+	NodeList<com.google.gwt.dom.client.Element> iframes = rootElement
+		.getElementsByTagName("iframe");
+	for (int i = 0; i < iframes.getLength(); i++) {
+	    Element iframe = (Element) iframes.getItem(i);
+	    addIframeCover(iframe);
+	    coveredIframes.add(iframe);
+	}
+	return coveredIframes;
     }
 
     /**
@@ -140,11 +140,11 @@ public class IframeCoverUtility {
      *            The iframes to remove the covers from
      */
     private static void removeIframeCovers(Set<Element> iframes) {
-        if (iframes != null) {
-            for (Element iframe : iframes) {
-                removeIframeCover(iframe);
-            }
-        }
+	if (iframes != null) {
+	    for (Element iframe : iframes) {
+		removeIframeCover(iframe);
+	    }
+	}
     }
 
     // The covered ifream covers
@@ -159,21 +159,21 @@ public class IframeCoverUtility {
      *            The root element where to put the IFrame covers
      */
     public void setIframeCoversEnabled(final boolean enabled,
-            final Element root, final LayoutDragMode mode) {
-        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-            @Override
-            public void execute() {
-                if (enabled && mode != LayoutDragMode.NONE) {
-                    coveredIframes = addIframeCovers(root);
-                } else if (coveredIframes != null) {
-                    removeIframeCovers(coveredIframes);
-                    coveredIframes = null;
-                }
-            }
-        });
+	    final Element root, final LayoutDragMode mode) {
+	Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+	    @Override
+	    public void execute() {
+		if (enabled && mode != LayoutDragMode.NONE) {
+		    coveredIframes = addIframeCovers(root);
+		} else if (coveredIframes != null) {
+		    removeIframeCovers(coveredIframes);
+		    coveredIframes = null;
+		}
+	    }
+	});
     }
 
     public boolean isIframeCoversEnabled() {
-        return coveredIframes != null;
+	return coveredIframes != null;
     }
 }

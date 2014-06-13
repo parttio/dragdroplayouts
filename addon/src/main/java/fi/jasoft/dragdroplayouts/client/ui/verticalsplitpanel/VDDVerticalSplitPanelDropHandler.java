@@ -31,9 +31,9 @@ public class VDDVerticalSplitPanelDropHandler extends VAbstractDropHandler {
     private final ApplicationConnection client;
 
     public VDDVerticalSplitPanelDropHandler(VDDVerticalSplitPanel layout,
-            ApplicationConnection client) {
-        this.layout = layout;
-        this.client = client;
+	    ApplicationConnection client) {
+	this.layout = layout;
+	this.client = client;
     }
 
     /*
@@ -43,12 +43,12 @@ public class VDDVerticalSplitPanelDropHandler extends VAbstractDropHandler {
      * getApplicationConnection()
      */
     public ApplicationConnection getApplicationConnection() {
-        return client;
+	return client;
     }
 
     @Override
     public ComponentConnector getConnector() {
-        return ConnectorMap.get(client).getConnector(layout);
+	return ConnectorMap.get(client).getConnector(layout);
     }
 
     /*
@@ -59,7 +59,7 @@ public class VDDVerticalSplitPanelDropHandler extends VAbstractDropHandler {
      */
     @Override
     protected void dragAccepted(VDragEvent drag) {
-        dragOver(drag);
+	dragOver(drag);
     }
 
     /*
@@ -71,12 +71,12 @@ public class VDDVerticalSplitPanelDropHandler extends VAbstractDropHandler {
     @Override
     public boolean drop(VDragEvent drag) {
 
-        // Un-emphasis any selections
-        layout.deEmphasis();
+	// Un-emphasis any selections
+	layout.deEmphasis();
 
-        // Update the details
-        layout.updateDropDetails(drag);
-        return layout.postDropHook(drag) && super.drop(drag);
+	// Update the details
+	layout.updateDropDetails(drag);
+	return layout.postDropHook(drag) && super.drop(drag);
     };
 
     /*
@@ -88,26 +88,26 @@ public class VDDVerticalSplitPanelDropHandler extends VAbstractDropHandler {
     @Override
     public void dragOver(VDragEvent drag) {
 
-        layout.deEmphasis();
+	layout.deEmphasis();
 
-        layout.updateDropDetails(drag);
+	layout.updateDropDetails(drag);
 
-        layout.postOverHook(drag);
+	layout.postOverHook(drag);
 
-        ComponentConnector widgetConnector = (ComponentConnector) drag
-                .getTransferable().getData(
-                        Constants.TRANSFERABLE_DETAIL_COMPONENT);
+	ComponentConnector widgetConnector = (ComponentConnector) drag
+		.getTransferable().getData(
+			Constants.TRANSFERABLE_DETAIL_COMPONENT);
 
-        if (layout.equals(widgetConnector.getWidget())) {
-            return;
-        }
+	if (layout.equals(widgetConnector.getWidget())) {
+	    return;
+	}
 
-        // Validate the drop
-        validate(new VAcceptCallback() {
-            public void accepted(VDragEvent event) {
-                layout.emphasis(event.getElementOver());
-            }
-        }, drag);
+	// Validate the drop
+	validate(new VAcceptCallback() {
+	    public void accepted(VDragEvent event) {
+		layout.emphasis(event.getElementOver());
+	    }
+	}, drag);
     };
 
     /*
@@ -118,7 +118,7 @@ public class VDDVerticalSplitPanelDropHandler extends VAbstractDropHandler {
      */
     @Override
     public void dragLeave(VDragEvent drag) {
-        layout.deEmphasis();
-        layout.postLeaveHook(drag);
+	layout.deEmphasis();
+	layout.postLeaveHook(drag);
     }
 }

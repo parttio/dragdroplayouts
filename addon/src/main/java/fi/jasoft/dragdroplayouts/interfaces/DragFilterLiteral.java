@@ -37,14 +37,14 @@ final class DragFilterLiteral implements DragFilter {
      *            Should dragging be allowed
      */
     public DragFilterLiteral(boolean allowDragging) {
-        this.allowDragging = allowDragging;
+	this.allowDragging = allowDragging;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isDraggable(Component component) {
-        return allowDragging;
+	return allowDragging;
     }
 
     /**
@@ -55,6 +55,6 @@ final class DragFilterLiteral implements DragFilter {
      * @throws InvalidObjectException
      */
     private Object readResolve() throws InvalidObjectException {
-        return allowDragging ? DragFilter.ALL : DragFilter.NONE;
+	return allowDragging ? DragFilter.ALL : DragFilter.NONE;
     }
 }

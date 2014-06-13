@@ -33,7 +33,7 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
  */
 @SuppressWarnings("serial")
 public class DefaultAbsoluteLayoutDropHandler extends
-        AbstractDefaultLayoutDropHandler {
+	AbstractDefaultLayoutDropHandler {
 
     /**
      * Called when a component changed location within the layout
@@ -43,21 +43,21 @@ public class DefaultAbsoluteLayoutDropHandler extends
      */
     @Override
     protected void handleComponentReordering(DragAndDropEvent event) {
-        AbsoluteLayoutTargetDetails details = (AbsoluteLayoutTargetDetails) event
-                .getTargetDetails();
-        DDAbsoluteLayout layout = (DDAbsoluteLayout) details.getTarget();
-        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-                .getTransferable();
-        Component component = transferable.getComponent();
+	AbsoluteLayoutTargetDetails details = (AbsoluteLayoutTargetDetails) event
+		.getTargetDetails();
+	DDAbsoluteLayout layout = (DDAbsoluteLayout) details.getTarget();
+	LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+		.getTransferable();
+	Component component = transferable.getComponent();
 
-        // Get top-left pixel position
-        int leftPixelPosition = details.getRelativeLeft();
-        int topPixelPosition = details.getRelativeTop();
+	// Get top-left pixel position
+	int leftPixelPosition = details.getRelativeLeft();
+	int topPixelPosition = details.getRelativeTop();
 
-        ComponentPosition position = layout.getPosition(component);
+	ComponentPosition position = layout.getPosition(component);
 
-        position.setLeft((float) leftPixelPosition, Sizeable.UNITS_PIXELS);
-        position.setTop((float) topPixelPosition, Sizeable.UNITS_PIXELS);
+	position.setLeft((float) leftPixelPosition, Sizeable.UNITS_PIXELS);
+	position.setTop((float) topPixelPosition, Sizeable.UNITS_PIXELS);
     }
 
     /**
@@ -68,32 +68,32 @@ public class DefaultAbsoluteLayoutDropHandler extends
      */
     @Override
     protected void handleDropFromLayout(DragAndDropEvent event) {
-        AbsoluteLayoutTargetDetails details = (AbsoluteLayoutTargetDetails) event
-                .getTargetDetails();
-        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
-                .getTransferable();
-        Component component = transferable.getComponent();
-        Component source = event.getTransferable().getSourceComponent();
-        DDAbsoluteLayout layout = (DDAbsoluteLayout) details.getTarget();
-        int leftPixelPosition = details.getRelativeLeft();
-        int topPixelPosition = details.getRelativeTop();
+	AbsoluteLayoutTargetDetails details = (AbsoluteLayoutTargetDetails) event
+		.getTargetDetails();
+	LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+		.getTransferable();
+	Component component = transferable.getComponent();
+	Component source = event.getTransferable().getSourceComponent();
+	DDAbsoluteLayout layout = (DDAbsoluteLayout) details.getTarget();
+	int leftPixelPosition = details.getRelativeLeft();
+	int topPixelPosition = details.getRelativeTop();
 
-        // Check that we are not dragging an outer layout into an
-        // inner
-        // layout
-        Component parent = source.getParent();
-        while (parent != null) {
-            parent = parent.getParent();
-        }
+	// Check that we are not dragging an outer layout into an
+	// inner
+	// layout
+	Component parent = source.getParent();
+	while (parent != null) {
+	    parent = parent.getParent();
+	}
 
-        // remove component from source
-        if (source instanceof ComponentContainer) {
-            ComponentContainer sourceLayout = (ComponentContainer) source;
-            sourceLayout.removeComponent(component);
-        }
+	// remove component from source
+	if (source instanceof ComponentContainer) {
+	    ComponentContainer sourceLayout = (ComponentContainer) source;
+	    sourceLayout.removeComponent(component);
+	}
 
-        // Add component to absolute layout
-        layout.addComponent(component, "left:" + leftPixelPosition + "px;top:"
-                + topPixelPosition + "px");
+	// Add component to absolute layout
+	layout.addComponent(component, "left:" + leftPixelPosition + "px;top:"
+		+ topPixelPosition + "px");
     }
 }

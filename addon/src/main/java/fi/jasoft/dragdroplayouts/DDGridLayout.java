@@ -51,7 +51,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDGridLayout extends GridLayout implements LayoutDragSource,
-        DropTarget, ShimSupport, LegacyComponent {
+	DropTarget, ShimSupport, LegacyComponent {
 
     private DropHandler dropHandler;
 
@@ -63,108 +63,108 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      */
     public class GridLayoutTargetDetails extends TargetDetailsImpl {
 
-        private Component over;
+	private Component over;
 
-        private int row = -1;
+	private int row = -1;
 
-        private int column = -1;
+	private int column = -1;
 
-        protected GridLayoutTargetDetails(Map<String, Object> rawDropData) {
-            super(rawDropData, DDGridLayout.this);
+	protected GridLayoutTargetDetails(Map<String, Object> rawDropData) {
+	    super(rawDropData, DDGridLayout.this);
 
-            if (getData(Constants.DROP_DETAIL_ROW) != null) {
-                row = Integer.valueOf(getData(Constants.DROP_DETAIL_ROW)
-                        .toString());
-            } else {
-                row = -1;
-            }
+	    if (getData(Constants.DROP_DETAIL_ROW) != null) {
+		row = Integer.valueOf(getData(Constants.DROP_DETAIL_ROW)
+			.toString());
+	    } else {
+		row = -1;
+	    }
 
-            if (getData(Constants.DROP_DETAIL_COLUMN) != null) {
-                column = Integer.valueOf(getData(Constants.DROP_DETAIL_COLUMN)
-                        .toString());
-            } else {
-                column = -1;
-            }
+	    if (getData(Constants.DROP_DETAIL_COLUMN) != null) {
+		column = Integer.valueOf(getData(Constants.DROP_DETAIL_COLUMN)
+			.toString());
+	    } else {
+		column = -1;
+	    }
 
-            if (row != -1 && column != -1) {
-                over = getComponent(column, row);
-            }
+	    if (row != -1 && column != -1) {
+		over = getComponent(column, row);
+	    }
 
-            if (over == null) {
-                over = DDGridLayout.this;
-            }
-        }
+	    if (over == null) {
+		over = DDGridLayout.this;
+	    }
+	}
 
-        /**
-         * Returns the component over which the dragged component was dropped.
-         * Returns NULL if no component was under the dragged component
-         * 
-         * @return
-         */
-        public Component getOverComponent() {
-            return over;
-        }
+	/**
+	 * Returns the component over which the dragged component was dropped.
+	 * Returns NULL if no component was under the dragged component
+	 * 
+	 * @return
+	 */
+	public Component getOverComponent() {
+	    return over;
+	}
 
-        /**
-         * Over which row was the component dropped
-         * 
-         * @return The index of the row over which the component was dropped
-         */
-        public int getOverRow() {
-            return row;
-        }
+	/**
+	 * Over which row was the component dropped
+	 * 
+	 * @return The index of the row over which the component was dropped
+	 */
+	public int getOverRow() {
+	    return row;
+	}
 
-        /**
-         * Over which column was the component dropped
-         * 
-         * @return The index of the column over which the component was dropped
-         */
-        public int getOverColumn() {
-            return column;
-        }
+	/**
+	 * Over which column was the component dropped
+	 * 
+	 * @return The index of the column over which the component was dropped
+	 */
+	public int getOverColumn() {
+	    return column;
+	}
 
-        /**
-         * Returns the horizontal location within the cell the component was
-         * dropped
-         * 
-         * @return
-         */
-        public HorizontalDropLocation getHorizontalDropLocation() {
-            return HorizontalDropLocation.valueOf(getData(
-                    Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION).toString());
-        }
+	/**
+	 * Returns the horizontal location within the cell the component was
+	 * dropped
+	 * 
+	 * @return
+	 */
+	public HorizontalDropLocation getHorizontalDropLocation() {
+	    return HorizontalDropLocation.valueOf(getData(
+		    Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION).toString());
+	}
 
-        /**
-         * Returns the vertical location within the cell the component was
-         * dropped
-         * 
-         * @return
-         */
-        public VerticalDropLocation getVerticalDropLocation() {
-            return VerticalDropLocation.valueOf(getData(
-                    Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION).toString());
-        }
+	/**
+	 * Returns the vertical location within the cell the component was
+	 * dropped
+	 * 
+	 * @return
+	 */
+	public VerticalDropLocation getVerticalDropLocation() {
+	    return VerticalDropLocation.valueOf(getData(
+		    Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION).toString());
+	}
 
-        /**
-         * Was the dropped component dropped in an empty cell
-         * 
-         * @return
-         */
-        public boolean overEmptyCell() {
-            return Boolean.valueOf(getData(Constants.DROP_DETAIL_EMPTY_CELL)
-                    .toString());
-        }
+	/**
+	 * Was the dropped component dropped in an empty cell
+	 * 
+	 * @return
+	 */
+	public boolean overEmptyCell() {
+	    return Boolean.valueOf(getData(Constants.DROP_DETAIL_EMPTY_CELL)
+		    .toString());
+	}
 
-        /**
-         * Some details about the mouse event
-         * 
-         * @return details about the actual event that caused the event details.
-         *         Practically mouse move or mouse up.
-         */
-        public MouseEventDetails getMouseEvent() {
-            return MouseEventDetails.deSerialize(getData(
-                    Constants.DROP_DETAIL_MOUSE_EVENT).toString());
-        }
+	/**
+	 * Some details about the mouse event
+	 * 
+	 * @return details about the actual event that caused the event details.
+	 *         Practically mouse move or mouse up.
+	 */
+	public MouseEventDetails getMouseEvent() {
+	    return MouseEventDetails.deSerialize(getData(
+		    Constants.DROP_DETAIL_MOUSE_EVENT).toString());
+	}
     }
 
     /**
@@ -172,38 +172,38 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      */
     public class GridLayoutTransferable extends LayoutBoundTransferable {
 
-        /**
-         * Constructor
-         * 
-         * @param sourceComponent
-         *            The source layout from where the component was dragged
-         * @param rawVariables
-         *            The drag details
-         */
-        public GridLayoutTransferable(Component sourceComponent,
-                Map<String, Object> rawVariables) {
-            super(sourceComponent, rawVariables);
-        }
+	/**
+	 * Constructor
+	 * 
+	 * @param sourceComponent
+	 *            The source layout from where the component was dragged
+	 * @param rawVariables
+	 *            The drag details
+	 */
+	public GridLayoutTransferable(Component sourceComponent,
+		Map<String, Object> rawVariables) {
+	    super(sourceComponent, rawVariables);
+	}
 
-        /**
-         * The row from where the component was dragged
-         * 
-         * @return The row index
-         */
-        public int getSourceRow() {
-            return Integer.valueOf(getData(Constants.DROP_DETAIL_ROW)
-                    .toString());
-        }
+	/**
+	 * The row from where the component was dragged
+	 * 
+	 * @return The row index
+	 */
+	public int getSourceRow() {
+	    return Integer.valueOf(getData(Constants.DROP_DETAIL_ROW)
+		    .toString());
+	}
 
-        /**
-         * The column from where the component was dragged
-         * 
-         * @return The column index
-         */
-        public int getSourceColumn() {
-            return Integer.valueOf(getData(Constants.DROP_DETAIL_COLUMN)
-                    .toString());
-        }
+	/**
+	 * The column from where the component was dragged
+	 * 
+	 * @return The column index
+	 */
+	public int getSourceColumn() {
+	    return Integer.valueOf(getData(Constants.DROP_DETAIL_COLUMN)
+		    .toString());
+	}
     }
 
     /**
@@ -217,14 +217,14 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      *            Number of rows in the grid.
      */
     public DDGridLayout(int columns, int rows) {
-        super(columns, rows);
+	super(columns, rows);
     }
 
     /**
      * Constructs an empty grid layout that is extended as needed.
      */
     public DDGridLayout() {
-        super();
+	super();
     }
 
     /**
@@ -232,76 +232,76 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
+	super.paintContent(target);
 
-        if (dropHandler != null && isEnabled()) {
-            dropHandler.getAcceptCriterion().paint(target);
-        }
+	if (dropHandler != null && isEnabled()) {
+	    dropHandler.getAcceptCriterion().paint(target);
+	}
 
-        // Drop ratios
-        target.addAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO,
-                getState().cellLeftRightDropRatio);
-        target.addAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO, getState()
-                .cellTopBottomDropRatio);
+	// Drop ratios
+	target.addAttribute(Constants.ATTRIBUTE_HORIZONTAL_DROP_RATIO,
+		getState().cellLeftRightDropRatio);
+	target.addAttribute(Constants.ATTRIBUTE_VERTICAL_DROP_RATIO,
+		getState().cellTopBottomDropRatio);
 
-        // Drag mode
-        if (isEnabled()) {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, getState()
-                    .dd.dragMode.ordinal());
-        } else {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
-                    LayoutDragMode.NONE.ordinal());
-        }
+	// Drag mode
+	if (isEnabled()) {
+	    target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+		    getState().dd.dragMode.ordinal());
+	} else {
+	    target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+		    LayoutDragMode.NONE.ordinal());
+	}
 
-        // Shims
-        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, getState()
-                .dd.iframeShims);
+	// Shims
+	target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE,
+		getState().dd.iframeShims);
     }
 
     /**
      * {@inheritDoc}
      */
     public DropHandler getDropHandler() {
-        return dropHandler;
+	return dropHandler;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDropHandler(DropHandler dropHandler) {
-        if (dropHandler != this.dropHandler) {
-            this.dropHandler = dropHandler;
-            requestRepaint();
-        }
+	if (dropHandler != this.dropHandler) {
+	    this.dropHandler = dropHandler;
+	    requestRepaint();
+	}
     }
 
     /**
      * {@inheritDoc}
      */
     public LayoutDragMode getDragMode() {
-        return getState().dd.dragMode;
+	return getState().dd.dragMode;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragMode(LayoutDragMode mode) {
-        getState().dd.dragMode = mode;
+	getState().dd.dragMode = mode;
     }
 
     /**
      * {@inheritDoc}
      */
     public TargetDetails translateDropTargetDetails(
-            Map<String, Object> clientVariables) {
-        return new GridLayoutTargetDetails(clientVariables);
+	    Map<String, Object> clientVariables) {
+	return new GridLayoutTargetDetails(clientVariables);
     }
 
     /**
      * {@inheritDoc}
      */
     public Transferable getTransferable(Map<String, Object> rawVariables) {
-        return new GridLayoutTransferable(this, rawVariables);
+	return new GridLayoutTransferable(this, rawVariables);
     }
 
     /**
@@ -315,14 +315,14 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentHorizontalDropRatio(float ratio) {
-        if (ratio != getState().cellLeftRightDropRatio) {
-            if (ratio >= 0 && ratio <= 0.5) {
-                getState().cellLeftRightDropRatio = ratio;
-            } else {
-                throw new IllegalArgumentException(
-                        "Ratio must be between 0 and 0.5");
-            }
-        }
+	if (ratio != getState().cellLeftRightDropRatio) {
+	    if (ratio >= 0 && ratio <= 0.5) {
+		getState().cellLeftRightDropRatio = ratio;
+	    } else {
+		throw new IllegalArgumentException(
+			"Ratio must be between 0 and 0.5");
+	    }
+	}
     }
 
     /**
@@ -336,61 +336,61 @@ public class DDGridLayout extends GridLayout implements LayoutDragSource,
      *            A ratio between 0 and 0.5. Default is 0.2
      */
     public void setComponentVerticalDropRatio(float ratio) {
-        if (ratio != getState().cellTopBottomDropRatio) {
-            if (ratio >= 0 && ratio <= 0.5) {
-                getState().cellTopBottomDropRatio = ratio;
-            } else {
-                throw new IllegalArgumentException(
-                        "Ratio must be between 0 and 0.5");
-            }
-        }
+	if (ratio != getState().cellTopBottomDropRatio) {
+	    if (ratio >= 0 && ratio <= 0.5) {
+		getState().cellTopBottomDropRatio = ratio;
+	    } else {
+		throw new IllegalArgumentException(
+			"Ratio must be between 0 and 0.5");
+	    }
+	}
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        getState().dd.iframeShims = shim;
+	getState().dd.iframeShims = shim;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-        return getState().dd.iframeShims;
+	return getState().dd.iframeShims;
     }
 
     /**
      * {@inheritDoc}
      */
     public DragFilter getDragFilter() {
-        return dragFilter;
+	return dragFilter;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragFilter(DragFilter dragFilter) {
-        this.dragFilter = dragFilter;
+	this.dragFilter = dragFilter;
     }
 
     @Override
     public DDGridLayoutState getState() {
-        return (DDGridLayoutState) super.getState();
+	return (DDGridLayoutState) super.getState();
     }
 
     @Override
     public void beforeClientResponse(boolean initial) {
-        super.beforeClientResponse(initial);
+	super.beforeClientResponse(initial);
 
-        // Update draggable filter
-        Iterator<Component> componentIterator = getComponentIterator();
-        getState().dd.draggable = new ArrayList<Connector>();
-        while (componentIterator.hasNext()) {
-            Component c = componentIterator.next();
-            if (dragFilter.isDraggable(c)) {
-                getState().dd.draggable.add(c);
-            }
-        }
+	// Update draggable filter
+	Iterator<Component> componentIterator = getComponentIterator();
+	getState().dd.draggable = new ArrayList<Connector>();
+	while (componentIterator.hasNext()) {
+	    Component c = componentIterator.next();
+	    if (dragFilter.isDraggable(c)) {
+		getState().dd.draggable.add(c);
+	    }
+	}
     }
 }

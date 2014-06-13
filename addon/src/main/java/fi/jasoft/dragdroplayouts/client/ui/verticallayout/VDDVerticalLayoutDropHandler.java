@@ -32,77 +32,77 @@ public class VDDVerticalLayoutDropHandler extends VAbstractDropHandler {
     private final ComponentConnector connector;
 
     public VDDVerticalLayoutDropHandler(VDDVerticalLayout layout,
-            ComponentConnector connector) {
-        this.layout = layout;
-        this.connector = connector;
+	    ComponentConnector connector) {
+	this.layout = layout;
+	this.connector = connector;
     }
 
     public ApplicationConnection getApplicationConnection() {
-        return connector.getConnection();
+	return connector.getConnection();
     }
 
     @Override
     protected void dragAccepted(VDragEvent drag) {
-        dragOver(drag);
+	dragOver(drag);
     }
 
     @Override
     public ComponentConnector getConnector() {
-        return connector;
+	return connector;
     }
 
     @Override
     public boolean drop(VDragEvent drag) {
 
-        // Un-emphasis any selections
-        layout.emphasis(null, null);
+	// Un-emphasis any selections
+	layout.emphasis(null, null);
 
-        // Update the details
-        Widget slot = getSlot(drag.getElementOver());
-        layout.updateDropDetails(slot, drag);
+	// Update the details
+	Widget slot = getSlot(drag.getElementOver());
+	layout.updateDropDetails(slot, drag);
 
-        return layout.postDropHook(drag) && super.drop(drag);
+	return layout.postDropHook(drag) && super.drop(drag);
     };
 
     private Slot getSlot(Element e) {
-        return Util.findWidget(e, Slot.class);
+	return Util.findWidget(e, Slot.class);
     }
 
     @Override
     public void dragOver(VDragEvent drag) {
 
-        // Remove any emphasis
-        layout.emphasis(null, null);
+	// Remove any emphasis
+	layout.emphasis(null, null);
 
-        // Update the dropdetails so we can validate the drop
-        Slot slot = getSlot(drag.getElementOver());
+	// Update the dropdetails so we can validate the drop
+	Slot slot = getSlot(drag.getElementOver());
 
-        if (slot != null) {
-            layout.updateDropDetails(slot, drag);
-        } else {
-            layout.updateDropDetails(layout, drag);
-        }
+	if (slot != null) {
+	    layout.updateDropDetails(slot, drag);
+	} else {
+	    layout.updateDropDetails(layout, drag);
+	}
 
-        layout.postOverHook(drag);
+	layout.postOverHook(drag);
 
-        // Validate the drop
-        validate(new VAcceptCallback() {
-            public void accepted(VDragEvent event) {
-                Slot slot = getSlot(event.getElementOver());
-                if (slot != null) {
-                    layout.emphasis(slot.getWidget(), event);
-                } else {
-                    layout.emphasis(layout, event);
-                }
-            }
-        }, drag);
+	// Validate the drop
+	validate(new VAcceptCallback() {
+	    public void accepted(VDragEvent event) {
+		Slot slot = getSlot(event.getElementOver());
+		if (slot != null) {
+		    layout.emphasis(slot.getWidget(), event);
+		} else {
+		    layout.emphasis(layout, event);
+		}
+	    }
+	}, drag);
     };
 
     @Override
     public void dragLeave(VDragEvent drag) {
-        layout.emphasis(null, drag);
+	layout.emphasis(null, drag);
 
-        layout.postLeaveHook(drag);
+	layout.postLeaveHook(drag);
     };
 
 }

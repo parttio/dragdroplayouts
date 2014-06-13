@@ -59,7 +59,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 public final class VDragDropUtil {
 
     private VDragDropUtil() {
-        // Prevent instantiation
+	// Prevent instantiation
     }
 
     /**
@@ -74,10 +74,10 @@ public final class VDragDropUtil {
      * @return The drop location
      */
     public static VerticalDropLocation getVerticalDropLocation(Element element,
-            int clientY, double topBottomRatio) {
-        int offsetHeight = element.getOffsetHeight();
-        return getVerticalDropLocation(element, offsetHeight, clientY,
-                topBottomRatio);
+	    int clientY, double topBottomRatio) {
+	int offsetHeight = element.getOffsetHeight();
+	return getVerticalDropLocation(element, offsetHeight, clientY,
+		topBottomRatio);
     }
 
     /**
@@ -94,19 +94,19 @@ public final class VDragDropUtil {
      * @return The location of the drop
      */
     public static VerticalDropLocation getVerticalDropLocation(Element element,
-            int offsetHeight, int clientY, double topBottomRatio) {
+	    int offsetHeight, int clientY, double topBottomRatio) {
 
-        int absoluteTop = element.getAbsoluteTop();
-        int fromTop = clientY - absoluteTop;
+	int absoluteTop = element.getAbsoluteTop();
+	int fromTop = clientY - absoluteTop;
 
-        float percentageFromTop = (fromTop / (float) offsetHeight);
-        if (percentageFromTop < topBottomRatio) {
-            return VerticalDropLocation.TOP;
-        } else if (percentageFromTop > 1 - topBottomRatio) {
-            return VerticalDropLocation.BOTTOM;
-        } else {
-            return VerticalDropLocation.MIDDLE;
-        }
+	float percentageFromTop = (fromTop / (float) offsetHeight);
+	if (percentageFromTop < topBottomRatio) {
+	    return VerticalDropLocation.TOP;
+	} else if (percentageFromTop > 1 - topBottomRatio) {
+	    return VerticalDropLocation.BOTTOM;
+	} else {
+	    return VerticalDropLocation.MIDDLE;
+	}
     }
 
     /**
@@ -121,20 +121,20 @@ public final class VDragDropUtil {
      * @return the drop location relative to the cell
      */
     public static HorizontalDropLocation getHorizontalDropLocation(
-            Element element, int clientX, double leftRightRatio) {
+	    Element element, int clientX, double leftRightRatio) {
 
-        int absoluteLeft = element.getAbsoluteLeft();
-        int offsetWidth = element.getOffsetWidth();
-        int fromTop = clientX - absoluteLeft;
+	int absoluteLeft = element.getAbsoluteLeft();
+	int offsetWidth = element.getOffsetWidth();
+	int fromTop = clientX - absoluteLeft;
 
-        float percentageFromTop = (fromTop / (float) offsetWidth);
-        if (percentageFromTop < leftRightRatio) {
-            return HorizontalDropLocation.LEFT;
-        } else if (percentageFromTop > 1 - leftRightRatio) {
-            return HorizontalDropLocation.RIGHT;
-        } else {
-            return HorizontalDropLocation.CENTER;
-        }
+	float percentageFromTop = (fromTop / (float) offsetWidth);
+	if (percentageFromTop < leftRightRatio) {
+	    return HorizontalDropLocation.LEFT;
+	} else if (percentageFromTop > 1 - leftRightRatio) {
+	    return HorizontalDropLocation.RIGHT;
+	} else {
+	    return HorizontalDropLocation.CENTER;
+	}
     }
 
     /**
@@ -151,22 +151,22 @@ public final class VDragDropUtil {
      * @return
      */
     private static VTransferable createTabsheetTransferableFromMouseDown(
-            VDDTabSheet tabsheet, Widget tab, NativeEvent event) {
+	    VDDTabSheet tabsheet, Widget tab, NativeEvent event) {
 
-        // Create transferable
-        VTransferable transferable = new VTransferable();
-        transferable.setDragSource(Util.findConnectorFor(tabsheet));
-        if (tabsheet != tab) {
-            transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
-                    Util.findConnectorFor(tabsheet));
-            transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
-                    tabsheet.getTabPosition(tab));
-        }
-        transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
-                MouseEventDetailsBuilder.buildMouseEventDetails(event)
-                .serialize());
+	// Create transferable
+	VTransferable transferable = new VTransferable();
+	transferable.setDragSource(Util.findConnectorFor(tabsheet));
+	if (tabsheet != tab) {
+	    transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
+		    Util.findConnectorFor(tabsheet));
+	    transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
+		    tabsheet.getTabPosition(tab));
+	}
+	transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
+		MouseEventDetailsBuilder.buildMouseEventDetails(event)
+			.serialize());
 
-        return transferable;
+	return transferable;
     }
 
     /**
@@ -183,20 +183,20 @@ public final class VDragDropUtil {
      * @return
      */
     private static VTransferable createAccordionTransferableFromMouseDown(
-            VDDAccordion accordion, VCaption tabCaption, NativeEvent event) {
+	    VDDAccordion accordion, VCaption tabCaption, NativeEvent event) {
 
-        // Create transferable
-        VTransferable transferable = new VTransferable();
-        transferable.setDragSource(Util.findConnectorFor(accordion));
-        transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
-                Util.findConnectorFor(tabCaption.getParent()));
-        transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
-                accordion.getWidgetIndex(tabCaption.getParent()));
-        transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
-                MouseEventDetailsBuilder.buildMouseEventDetails(event)
-                .serialize());
+	// Create transferable
+	VTransferable transferable = new VTransferable();
+	transferable.setDragSource(Util.findConnectorFor(accordion));
+	transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
+		Util.findConnectorFor(tabCaption.getParent()));
+	transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
+		accordion.getWidgetIndex(tabCaption.getParent()));
+	transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
+		MouseEventDetailsBuilder.buildMouseEventDetails(event)
+			.serialize());
 
-        return transferable;
+	return transferable;
     }
 
     /**
@@ -210,90 +210,87 @@ public final class VDragDropUtil {
      * @return A transferable or NULL if something failed
      */
     public static VTransferable createLayoutTransferableFromMouseDown(
-            NativeEvent event, Widget root, Widget target) {
+	    NativeEvent event, Widget root, Widget target) {
 
-        // NPE check
-        if (target == null) {
-            VConsole.error("Could not find widget");
-            return null;
-        }
+	// NPE check
+	if (target == null) {
+	    VConsole.error("Could not find widget");
+	    return null;
+	}
 
-        // Special treatment for Tabsheet
-        if (root instanceof VDDTabSheet) {
-            if (isCaption(target) || target == root) {
-                // We are dragging a tabsheet tab, handle it
-                return createTabsheetTransferableFromMouseDown(
-                        (VDDTabSheet) root, target, event);
-            } else {
-                return null;
-            }
-        }
+	// Special treatment for Tabsheet
+	if (root instanceof VDDTabSheet) {
+	    if (isCaption(target) || target == root) {
+		// We are dragging a tabsheet tab, handle it
+		return createTabsheetTransferableFromMouseDown(
+			(VDDTabSheet) root, target, event);
+	    } else {
+		return null;
+	    }
+	}
 
-        // Special treatment for Accordion
-        if (root instanceof VDDAccordion) {
-            if (isCaption(target) || target == root) {
-                // We are dragging a Accordion tab, handle it
-                return createAccordionTransferableFromMouseDown(
-                        (VDDAccordion) root, (VCaption) target, event);
-            } else {
-                // Do not allow dragging content, only the "tab"
-                return null;
-            }
-        }
+	// Special treatment for Accordion
+	if (root instanceof VDDAccordion) {
+	    if (isCaption(target) || target == root) {
+		// We are dragging a Accordion tab, handle it
+		return createAccordionTransferableFromMouseDown(
+			(VDDAccordion) root, (VCaption) target, event);
+	    } else {
+		// Do not allow dragging content, only the "tab"
+		return null;
+	    }
+	}
 
-        // Ensure we have the right widget
-        target = getTransferableWidget(target);
+	// Ensure we have the right widget
+	target = getTransferableWidget(target);
 
-        // Find the containing layout of the component
-        ComponentConnector widgetConnector = Util
-                .findConnectorFor(target);
-        if (widgetConnector == null) {
-            VConsole.error("No connector found for " + target);
-            return null;
-        }
+	// Find the containing layout of the component
+	ComponentConnector widgetConnector = Util.findConnectorFor(target);
+	if (widgetConnector == null) {
+	    VConsole.error("No connector found for " + target);
+	    return null;
+	}
 
+	// Iterate until parent either is the root or a layout with drag and
+	// drop enabled
+	ComponentConnector layoutConnector = (ComponentConnector) widgetConnector
+		.getParent();
+	Widget layout = layoutConnector.getWidget();
+	while (layout != root && layout != null && layoutConnector != null) {
+	    if (isDraggingEnabled(layoutConnector, target)) {
+		// Found parent layout with support for drag and drop
+		break;
+	    }
+	    target = layout;
+	    widgetConnector = layoutConnector;
 
+	    layoutConnector = (ComponentConnector) layoutConnector.getParent();
+	    if (layoutConnector == null) {
+		break;
+	    }
 
-        // Iterate until parent either is the root or a layout with drag and
-        // drop enabled
-        ComponentConnector layoutConnector = (ComponentConnector) widgetConnector
-                .getParent();
-        Widget layout = layoutConnector.getWidget();
-        while (layout != root && layout != null && layoutConnector != null) {
-            if (isDraggingEnabled(layoutConnector, target)) {
-                // Found parent layout with support for drag and drop
-                break;
-            }
-            target = layout;
-            widgetConnector = layoutConnector;
+	    layout = layoutConnector.getWidget();
+	}
 
-            layoutConnector = (ComponentConnector) layoutConnector.getParent();
-            if (layoutConnector == null) {
-                break;
-            }
+	// Consistency check
+	if (target == null || root == target || layoutConnector == null) {
+	    // No draggable layouts found, abort
+	    return null;
+	}
 
-            layout = layoutConnector.getWidget();
-        }
-
-        // Consistency check
-        if (target == null || root == target || layoutConnector == null) {
-            // No draggable layouts found, abort
-            return null;
-        }
-
-        return createTransferable(layoutConnector, widgetConnector, event);
+	return createTransferable(layoutConnector, widgetConnector, event);
     }
 
     private static VTransferable createTransferable(ComponentConnector layout,
-            ComponentConnector widgetConnector, NativeEvent event) {
-        VTransferable transferable = new VTransferable();
-        transferable.setDragSource(layout);
-        transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
-                widgetConnector);
-        transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
-                MouseEventDetailsBuilder.buildMouseEventDetails(event)
-                .serialize());
-        return transferable;
+	    ComponentConnector widgetConnector, NativeEvent event) {
+	VTransferable transferable = new VTransferable();
+	transferable.setDragSource(layout);
+	transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
+		widgetConnector);
+	transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN,
+		MouseEventDetailsBuilder.buildMouseEventDetails(event)
+			.serialize());
+	return transferable;
     }
 
     /**
@@ -304,7 +301,7 @@ public final class VDragDropUtil {
      * @return True if the widget is a caption widget, false otherwise
      */
     public static boolean isCaption(Widget w) {
-        return w instanceof VCaption || w instanceof VFormLayout.Caption;
+	return w instanceof VCaption || w instanceof VFormLayout.Caption;
     }
 
     /**
@@ -317,7 +314,7 @@ public final class VDragDropUtil {
      * @return True if the widget is a caption widget, false otherwise
      */
     public static boolean isCaptionOrCaptionless(Widget w) {
-        return isCaption(w) || w instanceof VButton || w instanceof VLink;
+	return isCaption(w) || w instanceof VButton || w instanceof VLink;
     }
 
     private static final native Widget getTabsheetTabOwner(TabCaption tab)
@@ -325,48 +322,48 @@ public final class VDragDropUtil {
         return tab.@com.vaadin.client.ui.VTabsheet.TabCaption::getTab().getTabsheet();
     }-*/;
 
-    public static Widget getTransferableWidget(Widget w) {    	           	
-    	
-        if (isCaption(w)) {
-            // Dragging caption means dragging component the caption belongs to
-            Widget owner = null;
-            if (w instanceof TabCaption) {
-                TabCaption caption = (TabCaption) w;
-                owner = getTabsheetTabOwner(caption);
-            }
-            if (w instanceof VCaption) {
-                ComponentConnector ownerConnector = ((VCaption) w).getOwner();
-                owner = ownerConnector.getWidget();
-            } else if (w instanceof VFormLayout.Caption) {
-                ComponentConnector ownerConnector = ((VFormLayout.Caption) w)
-                        .getOwner();
-                owner = ownerConnector.getWidget();
-            }
-            if (owner != null) {
-                w = owner;
-            }
-        } else if (w instanceof VScrollTable.VScrollTableBody.VScrollTableRow) {
-            // Table rows are paintable but we do not want to drag them so
-            // search for next paintable which should be the table itself
-            w = w.getParent();
-            while (!(w instanceof Paintable)) {
-                w = w.getParent();
-            }
-        } else if (w.getParent().getParent().getParent() instanceof VTwinColSelect) {
-            // TwinColSelect has paintable buttons..
-            w = w.getParent().getParent().getParent();
-        } else if(w.getParent() instanceof VFilterSelect) {        	
-        	w = w.getParent();
-        } else {
-        	 // Ensure we are dealing with a Vaadin component
-            ComponentConnector connector = Util.findConnectorFor(w);
-            while(connector == null){
-            	w = w.getParent();
-            	connector = Util.findConnectorFor(w);
-            }  
-        }
-        
-        return w;
+    public static Widget getTransferableWidget(Widget w) {
+
+	if (isCaption(w)) {
+	    // Dragging caption means dragging component the caption belongs to
+	    Widget owner = null;
+	    if (w instanceof TabCaption) {
+		TabCaption caption = (TabCaption) w;
+		owner = getTabsheetTabOwner(caption);
+	    }
+	    if (w instanceof VCaption) {
+		ComponentConnector ownerConnector = ((VCaption) w).getOwner();
+		owner = ownerConnector.getWidget();
+	    } else if (w instanceof VFormLayout.Caption) {
+		ComponentConnector ownerConnector = ((VFormLayout.Caption) w)
+			.getOwner();
+		owner = ownerConnector.getWidget();
+	    }
+	    if (owner != null) {
+		w = owner;
+	    }
+	} else if (w instanceof VScrollTable.VScrollTableBody.VScrollTableRow) {
+	    // Table rows are paintable but we do not want to drag them so
+	    // search for next paintable which should be the table itself
+	    w = w.getParent();
+	    while (!(w instanceof Paintable)) {
+		w = w.getParent();
+	    }
+	} else if (w.getParent().getParent().getParent() instanceof VTwinColSelect) {
+	    // TwinColSelect has paintable buttons..
+	    w = w.getParent().getParent().getParent();
+	} else if (w.getParent() instanceof VFilterSelect) {
+	    w = w.getParent();
+	} else {
+	    // Ensure we are dealing with a Vaadin component
+	    ComponentConnector connector = Util.findConnectorFor(w);
+	    while (connector == null) {
+		w = w.getParent();
+		connector = Util.findConnectorFor(w);
+	    }
+	}
+
+	return w;
     }
 
     /**
@@ -377,16 +374,17 @@ public final class VDragDropUtil {
      * @return
      */
     public static boolean isDraggingEnabled(ComponentConnector layout, Widget w) {
-        boolean draggingEnabled = false;
-        if (layout.getWidget() instanceof VHasDragMode) {
-            LayoutDragMode dm = ((VHasDragMode) layout.getWidget()).getDragMode();
-            draggingEnabled = dm != LayoutDragMode.NONE;
-        }
-        if (layout instanceof VHasDragFilter) {
-            draggingEnabled = draggingEnabled
-                    && ((VHasDragFilter) layout).getDragFilter().isDraggable(w);
-        }
-        return draggingEnabled;
+	boolean draggingEnabled = false;
+	if (layout.getWidget() instanceof VHasDragMode) {
+	    LayoutDragMode dm = ((VHasDragMode) layout.getWidget())
+		    .getDragMode();
+	    draggingEnabled = dm != LayoutDragMode.NONE;
+	}
+	if (layout instanceof VHasDragFilter) {
+	    draggingEnabled = draggingEnabled
+		    && ((VHasDragFilter) layout).getDragFilter().isDraggable(w);
+	}
+	return draggingEnabled;
     }
 
     /**
@@ -415,8 +413,8 @@ public final class VDragDropUtil {
      * @return Left margin in pixels
      */
     public static int measureMarginLeft(Element element) {
-        return element.getAbsoluteLeft()
-                - element.getParentElement().getAbsoluteLeft();
+	return element.getAbsoluteLeft()
+		- element.getParentElement().getAbsoluteLeft();
     }
 
     /**
@@ -427,53 +425,56 @@ public final class VDragDropUtil {
      * @return Top margin in pixels
      */
     public static int measureMarginTop(Element element) {
-        return element.getAbsoluteTop()
-                - element.getParentElement().getAbsoluteTop();
+	return element.getAbsoluteTop()
+		- element.getParentElement().getAbsoluteTop();
     }
 
     public static void listenToStateChangeEvents(
-            final AbstractConnector connector,
-            final VLayoutDragDropMouseHandler mouseHandler,
-            final IframeCoverUtility iframeUtility, final Widget widget) {
-        /*
-         * Listen to drag mode updates
-         */
-        connector.addStateChangeHandler("dragMode", new StateChangeHandler() {
-            @Override
-            public void onStateChanged(StateChangeEvent stateChangeEvent) {
+	    final AbstractConnector connector,
+	    final VLayoutDragDropMouseHandler mouseHandler,
+	    final IframeCoverUtility iframeUtility, final Widget widget) {
+	/*
+	 * Listen to drag mode updates
+	 */
+	connector.addStateChangeHandler("dragMode", new StateChangeHandler() {
+	    @Override
+	    public void onStateChanged(StateChangeEvent stateChangeEvent) {
 
-                DDLayoutState state = ((DragAndDropAwareState) connector.getState()).getDragAndDropState();
-            	
-            	if(widget instanceof VHasDragMode){
-            		((VHasDragMode)widget).setDragMode(state.dragMode);
-            	}
-//            	
-//
-//                mouseHandler.updateDragMode(state.getDragMode());
-//
-//                iframeUtility.setIframeCoversEnabled(state.isIframeShims(),
-//                        widget.getElement(), state.getDragMode());
-            }
-        });
+		DDLayoutState state = ((DragAndDropAwareState) connector
+			.getState()).getDragAndDropState();
 
-        /*
-         * Listen to iframe shim updates
-         */
-        connector.addStateChangeHandler("iframeShims",
-                new StateChangeHandler() {
-            @Override
-            public void onStateChanged(StateChangeEvent stateChangeEvent) {
-                DDLayoutState state = ((DragAndDropAwareState) connector.getState()).getDragAndDropState();
-                
-                if(widget instanceof VHasIframeShims) {
-                	((VHasIframeShims)widget).iframeShimsEnabled(state.iframeShims);
-                }
-//                
-//                iframeUtility.setIframeCoversEnabled(
-//                        state.isIframeShims(), widget.getElement(),
-//                        state.getDragMode());
-            }
-        });
+		if (widget instanceof VHasDragMode) {
+		    ((VHasDragMode) widget).setDragMode(state.dragMode);
+		}
+		//
+		//
+		// mouseHandler.updateDragMode(state.getDragMode());
+		//
+		// iframeUtility.setIframeCoversEnabled(state.isIframeShims(),
+		// widget.getElement(), state.getDragMode());
+	    }
+	});
+
+	/*
+	 * Listen to iframe shim updates
+	 */
+	connector.addStateChangeHandler("iframeShims",
+		new StateChangeHandler() {
+		    @Override
+		    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+			DDLayoutState state = ((DragAndDropAwareState) connector
+				.getState()).getDragAndDropState();
+
+			if (widget instanceof VHasIframeShims) {
+			    ((VHasIframeShims) widget)
+				    .iframeShimsEnabled(state.iframeShims);
+			}
+			//
+			// iframeUtility.setIframeCoversEnabled(
+			// state.isIframeShims(), widget.getElement(),
+			// state.getDragMode());
+		    }
+		});
 
     }
 

@@ -50,7 +50,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDVerticalSplitPanel extends VerticalSplitPanel implements
-        LayoutDragSource, DropTarget, ShimSupport, LegacyComponent {
+	LayoutDragSource, DropTarget, ShimSupport, LegacyComponent {
 
     /**
      * The drop handler which handles dropped components in the layout.
@@ -65,51 +65,51 @@ public class DDVerticalSplitPanel extends VerticalSplitPanel implements
      */
     public class VerticalSplitPanelTargetDetails extends TargetDetailsImpl {
 
-        private Component over;
+	private Component over;
 
-        protected VerticalSplitPanelTargetDetails(
-                Map<String, Object> rawDropData) {
-            super(rawDropData, DDVerticalSplitPanel.this);
+	protected VerticalSplitPanelTargetDetails(
+		Map<String, Object> rawDropData) {
+	    super(rawDropData, DDVerticalSplitPanel.this);
 
-            if (getDropLocation() == VerticalDropLocation.TOP) {
-                over = getFirstComponent();
-            } else if (getDropLocation() == VerticalDropLocation.BOTTOM) {
-                over = getSecondComponent();
-            } else {
-                over = DDVerticalSplitPanel.this;
-            }
-        }
+	    if (getDropLocation() == VerticalDropLocation.TOP) {
+		over = getFirstComponent();
+	    } else if (getDropLocation() == VerticalDropLocation.BOTTOM) {
+		over = getSecondComponent();
+	    } else {
+		over = DDVerticalSplitPanel.this;
+	    }
+	}
 
-        /**
-         * The component over which the drop was made.
-         * 
-         * @return Null if the drop was not over a component, else the component
-         */
-        public Component getOverComponent() {
-            return over;
-        }
+	/**
+	 * The component over which the drop was made.
+	 * 
+	 * @return Null if the drop was not over a component, else the component
+	 */
+	public Component getOverComponent() {
+	    return over;
+	}
 
-        /**
-         * Some details about the mouse event
-         * 
-         * @return details about the actual event that caused the event details.
-         *         Practically mouse move or mouse up.
-         */
-        public MouseEventDetails getMouseEvent() {
-            return MouseEventDetails
-                    .deSerialize((String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
-        }
+	/**
+	 * Some details about the mouse event
+	 * 
+	 * @return details about the actual event that caused the event details.
+	 *         Practically mouse move or mouse up.
+	 */
+	public MouseEventDetails getMouseEvent() {
+	    return MouseEventDetails
+		    .deSerialize((String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
+	}
 
-        /**
-         * Get the horizontal position of the dropped component within the
-         * underlying cell.
-         * 
-         * @return The drop location
-         */
-        public VerticalDropLocation getDropLocation() {
-            return VerticalDropLocation
-                    .valueOf((String) getData(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION));
-        }
+	/**
+	 * Get the horizontal position of the dropped component within the
+	 * underlying cell.
+	 * 
+	 * @return The drop location
+	 */
+	public VerticalDropLocation getDropLocation() {
+	    return VerticalDropLocation
+		    .valueOf((String) getData(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION));
+	}
     }
 
     /*
@@ -119,15 +119,15 @@ public class DDVerticalSplitPanel extends VerticalSplitPanel implements
      * com.vaadin.event.dd.DropTarget#translateDropTargetDetails(java.util.Map)
      */
     public TargetDetails translateDropTargetDetails(
-            Map<String, Object> clientVariables) {
-        return new VerticalSplitPanelTargetDetails(clientVariables);
+	    Map<String, Object> clientVariables) {
+	return new VerticalSplitPanelTargetDetails(clientVariables);
     }
 
     /**
      * Get the transferable created by a drag event.
      */
     public Transferable getTransferable(Map<String, Object> rawVariables) {
-        return new LayoutBoundTransferable(this, rawVariables);
+	return new LayoutBoundTransferable(this, rawVariables);
     }
 
     /**
@@ -135,7 +135,7 @@ public class DDVerticalSplitPanel extends VerticalSplitPanel implements
      * components on the layout. Returns Null if dropping is disabled.
      */
     public DropHandler getDropHandler() {
-        return dropHandler;
+	return dropHandler;
     }
 
     /**
@@ -148,10 +148,10 @@ public class DDVerticalSplitPanel extends VerticalSplitPanel implements
      *            dropping
      */
     public void setDropHandler(DropHandler dropHandler) {
-        if (this.dropHandler != dropHandler) {
-            this.dropHandler = dropHandler;
-            requestRepaint();
-        }
+	if (this.dropHandler != dropHandler) {
+	    this.dropHandler = dropHandler;
+	    requestRepaint();
+	}
     }
 
     /**
@@ -160,7 +160,7 @@ public class DDVerticalSplitPanel extends VerticalSplitPanel implements
      * @return
      */
     public LayoutDragMode getDragMode() {
-        return getState().dd.dragMode;
+	return getState().dd.dragMode;
     }
 
     /**
@@ -170,7 +170,7 @@ public class DDVerticalSplitPanel extends VerticalSplitPanel implements
      *            The mode of which how the dragging should be visualized.
      */
     public void setDragMode(LayoutDragMode mode) {
-        getState().dd.dragMode = mode;
+	getState().dd.dragMode = mode;
     }
 
     /**
@@ -179,76 +179,76 @@ public class DDVerticalSplitPanel extends VerticalSplitPanel implements
      */
     public void paintContent(PaintTarget target) throws PaintException {
 
-        // Add drop handler
-        if (dropHandler != null && isEnabled()) {
-            dropHandler.getAcceptCriterion().paint(target);
-        }
+	// Add drop handler
+	if (dropHandler != null && isEnabled()) {
+	    dropHandler.getAcceptCriterion().paint(target);
+	}
 
-        // Drag mode
-        if (isEnabled()) {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE, getState()
-                    .dd.dragMode.ordinal());
-        } else {
-            target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
-                    LayoutDragMode.NONE.ordinal());
-        }
+	// Drag mode
+	if (isEnabled()) {
+	    target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+		    getState().dd.dragMode.ordinal());
+	} else {
+	    target.addAttribute(Constants.DRAGMODE_ATTRIBUTE,
+		    LayoutDragMode.NONE.ordinal());
+	}
 
-        // Shims
-        target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE, getState()
-                .dd.iframeShims);
+	// Shims
+	target.addAttribute(IframeCoverUtility.SHIM_ATTRIBUTE,
+		getState().dd.iframeShims);
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        getState().dd.iframeShims = shim;
+	getState().dd.iframeShims = shim;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-        return getState().dd.iframeShims;
+	return getState().dd.iframeShims;
     }
 
     /**
      * {@inheritDoc}
      */
     public DragFilter getDragFilter() {
-        return dragFilter;
+	return dragFilter;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragFilter(DragFilter dragFilter) {
-        this.dragFilter = dragFilter;
+	this.dragFilter = dragFilter;
     }
 
     @Override
     public DDVerticalSplitPanelState getState() {
-        return (DDVerticalSplitPanelState) super.getState();
+	return (DDVerticalSplitPanelState) super.getState();
     }
 
     @Override
     public void beforeClientResponse(boolean initial) {
-        super.beforeClientResponse(initial);
+	super.beforeClientResponse(initial);
 
-        // Update draggable filter
-        Iterator<Component> componentIterator = getComponentIterator();
-        getState().dd.draggable = new ArrayList<Connector>();
-        while (componentIterator.hasNext()) {
-            Component c = componentIterator.next();
-            if (dragFilter.isDraggable(c)) {
-                getState().dd.draggable.add(c);
-            }
-        }
+	// Update draggable filter
+	Iterator<Component> componentIterator = getComponentIterator();
+	getState().dd.draggable = new ArrayList<Connector>();
+	while (componentIterator.hasNext()) {
+	    Component c = componentIterator.next();
+	    if (dragFilter.isDraggable(c)) {
+		getState().dd.draggable.add(c);
+	    }
+	}
     }
 
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Auto-generated method stub
+	// TODO Auto-generated method stub
 
     }
 }

@@ -31,13 +31,13 @@ public class VDDGridLayoutDropHandler extends VAbstractDropHandler {
     private final ApplicationConnection client;
 
     public VDDGridLayoutDropHandler(VDDGridLayout layout,
-            ApplicationConnection client) {
-        this.layout = layout;
-        this.client = client;
+	    ApplicationConnection client) {
+	this.layout = layout;
+	this.client = client;
     }
 
     public ApplicationConnection getApplicationConnection() {
-        return client;
+	return client;
     };
 
     /*
@@ -48,7 +48,7 @@ public class VDDGridLayoutDropHandler extends VAbstractDropHandler {
      */
     @Override
     protected void dragAccepted(VDragEvent drag) {
-        // Nop
+	// Nop
     }
 
     /*
@@ -59,9 +59,9 @@ public class VDDGridLayoutDropHandler extends VAbstractDropHandler {
      */
     @Override
     public void dragEnter(VDragEvent drag) {
-        // Add the marker that shows the drop location while
-        // dragging
-        layout.postEnterHook(drag);
+	// Add the marker that shows the drop location while
+	// dragging
+	layout.postEnterHook(drag);
     };
 
     /*
@@ -73,13 +73,13 @@ public class VDDGridLayoutDropHandler extends VAbstractDropHandler {
     @Override
     public boolean drop(VDragEvent drag) {
 
-        // Update the detail of the drop
-        layout.updateDropDetails(drag);
+	// Update the detail of the drop
+	layout.updateDropDetails(drag);
 
-        // Remove emphasis
-        layout.deEmphasis();
+	// Remove emphasis
+	layout.deEmphasis();
 
-        return layout.postDropHook(drag);
+	return layout.postDropHook(drag);
     };
 
     /*
@@ -91,23 +91,23 @@ public class VDDGridLayoutDropHandler extends VAbstractDropHandler {
     @Override
     public void dragOver(VDragEvent drag) {
 
-        // Remove emphasis from previous selection
-        layout.deEmphasis();
+	// Remove emphasis from previous selection
+	layout.deEmphasis();
 
-        // Update the drop details so we can then validate them
-        layout.updateDropDetails(drag);
+	// Update the drop details so we can then validate them
+	layout.updateDropDetails(drag);
 
-        layout.postOverHook(drag);
+	layout.postOverHook(drag);
 
-        // Emphasis drop location
-        validate(new VAcceptCallback() {
-            public void accepted(VDragEvent event) {
-                CellDetails cd = layout.getCellDetails(event);
-                if (cd != null) {
-                    layout.emphasis(cd, event);
-                }
-            }
-        }, drag);
+	// Emphasis drop location
+	validate(new VAcceptCallback() {
+	    public void accepted(VDragEvent event) {
+		CellDetails cd = layout.getCellDetails(event);
+		if (cd != null) {
+		    layout.emphasis(cd, event);
+		}
+	    }
+	}, drag);
     };
 
     /*
@@ -118,13 +118,13 @@ public class VDDGridLayoutDropHandler extends VAbstractDropHandler {
      */
     @Override
     public void dragLeave(VDragEvent drag) {
-        layout.deEmphasis();
-        layout.postLeaveHook(drag);
-        super.dragLeave(drag);
+	layout.deEmphasis();
+	layout.postLeaveHook(drag);
+	super.dragLeave(drag);
     }
 
     @Override
     public ComponentConnector getConnector() {
-        return ConnectorMap.get(client).getConnector(layout);
+	return ConnectorMap.get(client).getConnector(layout);
     }
 }

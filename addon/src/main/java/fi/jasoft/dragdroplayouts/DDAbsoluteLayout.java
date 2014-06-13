@@ -45,7 +45,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDAbsoluteLayout extends AbsoluteLayout implements
-        LayoutDragSource, DropTarget, ShimSupport, LegacyComponent {
+	LayoutDragSource, DropTarget, ShimSupport, LegacyComponent {
 
     // Drop handler which handles dd drop events
     private DropHandler dropHandler;
@@ -57,7 +57,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
      * Creates an AbsoluteLayout with full size.
      */
     public DDAbsoluteLayout() {
-        super();
+	super();
     }
 
     /**
@@ -65,17 +65,17 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
      */
     public void paintContent(PaintTarget target) throws PaintException {
 
-        // Paint the drop handler criterions
-        if (dropHandler != null && isEnabled()) {
-            dropHandler.getAcceptCriterion().paint(target);
-        }
+	// Paint the drop handler criterions
+	if (dropHandler != null && isEnabled()) {
+	    dropHandler.getAcceptCriterion().paint(target);
+	}
     }
 
     /**
      * Get the drophandler which handles component drops on the layout
      */
     public DropHandler getDropHandler() {
-        return dropHandler;
+	return dropHandler;
     }
 
     /**
@@ -85,67 +85,67 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
      *            The drop handler to set
      */
     public void setDropHandler(DropHandler dropHandler) {
-        if (this.dropHandler != dropHandler) {
-            this.dropHandler = dropHandler;
-            markAsDirty();
-        }
+	if (this.dropHandler != dropHandler) {
+	    this.dropHandler = dropHandler;
+	    markAsDirty();
+	}
     }
 
     /**
      * {@inheritDoc}
      */
     public TargetDetails translateDropTargetDetails(
-            Map<String, Object> clientVariables) {
-        return new AbsoluteLayoutTargetDetails(this, clientVariables);
+	    Map<String, Object> clientVariables) {
+	return new AbsoluteLayoutTargetDetails(this, clientVariables);
     }
 
     /**
      * {@inheritDoc}
      */
     public Transferable getTransferable(Map<String, Object> rawVariables) {
-        return new LayoutBoundTransferable(this, rawVariables);
+	return new LayoutBoundTransferable(this, rawVariables);
     }
 
     /**
      * {@inheritDoc}
      */
     public LayoutDragMode getDragMode() {
-        return getState().dd.dragMode;
+	return getState().dd.dragMode;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragMode(LayoutDragMode mode) {
-        getState().dd.dragMode = mode;
+	getState().dd.dragMode = mode;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setShim(boolean shim) {
-        getState().dd.iframeShims = shim;
+	getState().dd.iframeShims = shim;
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean isShimmed() {
-        return getState().dd.iframeShims;
+	return getState().dd.iframeShims;
     }
 
     /**
      * {@inheritDoc}
      */
     public DragFilter getDragFilter() {
-        return dragFilter;
+	return dragFilter;
     }
 
     /**
      * {@inheritDoc}
      */
     public void setDragFilter(DragFilter dragFilter) {
-        this.dragFilter = dragFilter;
+	this.dragFilter = dragFilter;
     }
 
     /**
@@ -153,7 +153,7 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
      */
     @Override
     public DDAbsoluteLayoutState getState() {
-        return (DDAbsoluteLayoutState) super.getState();
+	return (DDAbsoluteLayoutState) super.getState();
     }
 
     /**
@@ -161,22 +161,22 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
      */
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Auto-generated method stub
+	// TODO Auto-generated method stub
 
     }
 
     @Override
     public void beforeClientResponse(boolean initial) {
-        super.beforeClientResponse(initial);
+	super.beforeClientResponse(initial);
 
-        // Update draggable filter
-        Iterator<Component> componentIterator = getComponentIterator();
-        getState().dd.draggable = new ArrayList<Connector>();
-        while (componentIterator.hasNext()) {
-            Component c = componentIterator.next();
-            if (dragFilter.isDraggable(c)) {
-                getState().dd.draggable.add(c);
-            }
-        }
+	// Update draggable filter
+	Iterator<Component> componentIterator = getComponentIterator();
+	getState().dd.draggable = new ArrayList<Connector>();
+	while (componentIterator.hasNext()) {
+	    Component c = componentIterator.next();
+	    if (dragFilter.isDraggable(c)) {
+		getState().dd.draggable.add(c);
+	    }
+	}
     }
 }

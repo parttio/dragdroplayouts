@@ -43,7 +43,8 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * @since 0.4.0
  */
 public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
-        VHasDragMode, VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
+	VHasDragMode, VHasDropHandler, DragStartListener, VHasDragFilter,
+	VHasIframeShims {
 
     public static final String OVER = "v-ddsplitpanel-over";
     public static final String OVER_SPLITTER = OVER + "-splitter";
@@ -64,30 +65,31 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
 
     // The drag mouse handler which handles the creation of the transferable
     private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
-            this, LayoutDragMode.NONE);
-    
+	    this, LayoutDragMode.NONE);
+
     private LayoutDragMode mode = LayoutDragMode.NONE;
-   
+
     private boolean iframeCovers = false;
-    
+
     public VDDHorizontalSplitPanel() {
-        super();
+	super();
     }
 
     @Override
     protected void onLoad() {
-    	super.onLoad();
-    	ddMouseHandler.addDragStartListener(this);
-    	setDragMode(mode);
-    	iframeShimsEnabled(iframeCovers);
+	super.onLoad();
+	ddMouseHandler.addDragStartListener(this);
+	setDragMode(mode);
+	iframeShimsEnabled(iframeCovers);
     }
 
     @Override
     protected void onUnload() {
-        super.onUnload();
-        ddMouseHandler.removeDragStartListener(this);
-        ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
-    	iframeCoverUtility.setIframeCoversEnabled(false, getElement(), LayoutDragMode.NONE);
+	super.onUnload();
+	ddMouseHandler.removeDragStartListener(this);
+	ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
+	iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
+		LayoutDragMode.NONE);
     }
 
     /*
@@ -97,13 +99,13 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      */
     @Override
     protected void constructDom() {
-        super.constructDom();
+	super.constructDom();
 
-        // Save references
-        Element wrapper = getElement().getChild(0).cast();
-        firstContainer = wrapper.getChild(0).cast();
-        splitter = wrapper.getChild(1).cast();
-        secondContainer = wrapper.getChild(2).cast();
+	// Save references
+	Element wrapper = getElement().getChild(0).cast();
+	firstContainer = wrapper.getChild(0).cast();
+	splitter = wrapper.getChild(1).cast();
+	secondContainer = wrapper.getChild(2).cast();
     }
 
     /**
@@ -112,8 +114,8 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      * handler.
      */
     protected boolean postDropHook(VDragEvent drag) {
-        // Extended classes can add content here...
-        return true;
+	// Extended classes can add content here...
+	return true;
     }
 
     /**
@@ -121,7 +123,7 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      * Useful if you don't want to override the whole drophandler.
      */
     protected void postEnterHook(VDragEvent drag) {
-        // Extended classes can add content here...
+	// Extended classes can add content here...
     }
 
     /**
@@ -129,7 +131,7 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      * Useful if you don't want to override the whole drophandler.
      */
     protected void postLeaveHook(VDragEvent drag) {
-        // Extended classes can add content here...
+	// Extended classes can add content here...
     }
 
     /**
@@ -137,7 +139,7 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      * if you don't want to override the whole drophandler.
      */
     protected void postOverHook(VDragEvent drag) {
-        // Extended classes can add content here...
+	// Extended classes can add content here...
     }
 
     /**
@@ -145,12 +147,12 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      * to commence. Return false to interrupt the drag:
      */
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return getDragMode() != LayoutDragMode.NONE
-                && dragFilter.isDraggable(widget);
+	return getDragMode() != LayoutDragMode.NONE
+		&& dragFilter.isDraggable(widget);
     }
 
     public void setDropHandler(VDDHorizontalSplitPanelDropHandler handler) {
-        dropHandler = handler;
+	dropHandler = handler;
     }
 
     /*
@@ -160,7 +162,7 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      * com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler#getDropHandler()
      */
     public VDDHorizontalSplitPanelDropHandler getDropHandler() {
-        return dropHandler;
+	return dropHandler;
     }
 
     /**
@@ -169,31 +171,31 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      * @param element
      */
     protected void emphasis(Element element) {
-        // Remove previous emphasis
-        deEmphasis();
+	// Remove previous emphasis
+	deEmphasis();
 
 	if (element == null || !getElement().isOrHasChild(element)) {
 	    return;
 	}
 
-        if (element == firstContainer || element == secondContainer) {
-            element.addClassName(OVER);
-            currentEmphasis = element;
-        } else if (splitter.isOrHasChild(element)) {
-            currentEmphasis = splitter.getChild(0).cast();
-            currentEmphasis.addClassName(OVER_SPLITTER);
-        }
+	if (element == firstContainer || element == secondContainer) {
+	    element.addClassName(OVER);
+	    currentEmphasis = element;
+	} else if (splitter.isOrHasChild(element)) {
+	    currentEmphasis = splitter.getChild(0).cast();
+	    currentEmphasis.addClassName(OVER_SPLITTER);
+	}
     }
 
     /**
      * Removes any previous emphasis made by drag&drag
      */
     protected void deEmphasis() {
-        if (currentEmphasis != null) {
-            currentEmphasis.removeClassName(OVER);
-            currentEmphasis.removeClassName(OVER_SPLITTER);
-            currentEmphasis = null;
-        }
+	if (currentEmphasis != null) {
+	    currentEmphasis.removeClassName(OVER);
+	    currentEmphasis.removeClassName(OVER_SPLITTER);
+	    currentEmphasis = null;
+	}
     }
 
     /**
@@ -202,7 +204,7 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      * @return
      */
     protected Element getFirstContainer() {
-        return firstContainer;
+	return firstContainer;
     }
 
     /**
@@ -212,7 +214,7 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      * @return
      */
     protected Element getSecondContainer() {
-        return secondContainer;
+	return secondContainer;
     }
 
     /**
@@ -221,7 +223,7 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      * @return
      */
     protected Element getSplitter() {
-        return splitter;
+	return splitter;
     }
 
     /**
@@ -234,39 +236,39 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      *            The drag event
      */
     protected void updateDropDetails(VDragEvent event) {
-        Element over = event.getElementOver();
+	Element over = event.getElementOver();
 
-        // Resolve where the drop was made
-        HorizontalDropLocation location = null;
-        Widget content = null;
-        if (firstContainer.isOrHasChild(over)) {
-            location = HorizontalDropLocation.LEFT;
-            content = Util.findWidget(firstContainer, null);
-        } else if (splitter.isOrHasChild(over)) {
-            location = HorizontalDropLocation.CENTER;
-            content = this;
-        } else if (secondContainer.isOrHasChild(over)) {
-            location = HorizontalDropLocation.RIGHT;
-            content = Util.findWidget(secondContainer, null);
-        }
+	// Resolve where the drop was made
+	HorizontalDropLocation location = null;
+	Widget content = null;
+	if (firstContainer.isOrHasChild(over)) {
+	    location = HorizontalDropLocation.LEFT;
+	    content = Util.findWidget(firstContainer, null);
+	} else if (splitter.isOrHasChild(over)) {
+	    location = HorizontalDropLocation.CENTER;
+	    content = this;
+	} else if (secondContainer.isOrHasChild(over)) {
+	    location = HorizontalDropLocation.RIGHT;
+	    content = Util.findWidget(secondContainer, null);
+	}
 
-        event.getDropDetails().put(
-                Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION, location);
+	event.getDropDetails().put(
+		Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION, location);
 
-        if (content != null) {
-            event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
-                    content.getClass().getName());
-        } else {
-            event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
-                    this.getClass().getName());
-        }
+	if (content != null) {
+	    event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
+		    content.getClass().getName());
+	} else {
+	    event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
+		    this.getClass().getName());
+	}
 
-        // Add mouse event details
-        MouseEventDetails details = MouseEventDetailsBuilder
-                .buildMouseEventDetails(event.getCurrentGwtEvent(),
-                        getElement());
-        event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
-                details.serialize());
+	// Add mouse event details
+	MouseEventDetails details = MouseEventDetailsBuilder
+		.buildMouseEventDetails(event.getCurrentGwtEvent(),
+			getElement());
+	event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
+		details.serialize());
     }
 
     /*
@@ -277,44 +279,44 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      * ()
      */
     public VDragFilter getDragFilter() {
-        return dragFilter;
+	return dragFilter;
     }
 
     IframeCoverUtility getIframeCoverUtility() {
-        return iframeCoverUtility;
+	return iframeCoverUtility;
     }
 
     VLayoutDragDropMouseHandler getMouseHandler() {
-        return ddMouseHandler;
+	return ddMouseHandler;
     }
 
     @Override
     public void setDragFilter(VDragFilter filter) {
-        this.dragFilter = filter;
+	this.dragFilter = filter;
     }
 
     /**
      * Returns the current drag mode which determines how the drag is visualized
      */
     public LayoutDragMode getDragMode() {
-        return ddMouseHandler.getDragMode();
+	return ddMouseHandler.getDragMode();
     }
 
     @Override
-	public void iframeShimsEnabled(boolean enabled) {
-		iframeCovers = enabled;
-		iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
-	}
+    public void iframeShimsEnabled(boolean enabled) {
+	iframeCovers = enabled;
+	iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
+    }
 
-	@Override
-	public boolean isIframeShimsEnabled() {
-		return iframeCovers;
-	}
+    @Override
+    public boolean isIframeShimsEnabled() {
+	return iframeCovers;
+    }
 
-	@Override
-	public void setDragMode(LayoutDragMode mode) {
-		this.mode = mode;
-		ddMouseHandler.updateDragMode(mode);
-		iframeShimsEnabled(iframeCovers);
-	}
+    @Override
+    public void setDragMode(LayoutDragMode mode) {
+	this.mode = mode;
+	ddMouseHandler.updateDragMode(mode);
+	iframeShimsEnabled(iframeCovers);
+    }
 }

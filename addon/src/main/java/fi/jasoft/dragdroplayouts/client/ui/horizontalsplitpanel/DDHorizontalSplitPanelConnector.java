@@ -29,14 +29,14 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 
 @Connect(DDHorizontalSplitPanel.class)
 public class DDHorizontalSplitPanelConnector extends
-        HorizontalSplitPanelConnector implements Paintable,VHasDragFilter {
+	HorizontalSplitPanelConnector implements Paintable, VHasDragFilter {
 
     @Override
     protected void init() {
-        super.init();
-        VDragDropUtil.listenToStateChangeEvents(this, getWidget()
-                .getMouseHandler(), getWidget().getIframeCoverUtility(),
-                getWidget());
+	super.init();
+	VDragDropUtil.listenToStateChangeEvents(this, getWidget()
+		.getMouseHandler(), getWidget().getIframeCoverUtility(),
+		getWidget());
     }
 
     /**
@@ -44,7 +44,7 @@ public class DDHorizontalSplitPanelConnector extends
      */
     @Override
     public VDDHorizontalSplitPanel getWidget() {
-        return (VDDHorizontalSplitPanel) super.getWidget();
+	return (VDDHorizontalSplitPanel) super.getWidget();
     }
 
     /**
@@ -52,41 +52,41 @@ public class DDHorizontalSplitPanelConnector extends
      */
     @Override
     public DDHorizontalSplitPanelState getState() {
-        return (DDHorizontalSplitPanelState) super.getState();
+	return (DDHorizontalSplitPanelState) super.getState();
     }
 
     /**
      * {@inheritDoc}
      */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
-            UIDL acceptCrit = uidl.getChildByTagName("-ac");
-            if (acceptCrit == null) {
-                getWidget().setDropHandler(null);
-            } else {
-                if (getWidget().getDropHandler() == null) {
-                    getWidget().setDropHandler(
-                            new VDDHorizontalSplitPanelDropHandler(getWidget(),
-                                    client));
-                }
-                getWidget().getDropHandler().updateAcceptRules(acceptCrit);
-            }
-        }
+	if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
+	    UIDL acceptCrit = uidl.getChildByTagName("-ac");
+	    if (acceptCrit == null) {
+		getWidget().setDropHandler(null);
+	    } else {
+		if (getWidget().getDropHandler() == null) {
+		    getWidget().setDropHandler(
+			    new VDDHorizontalSplitPanelDropHandler(getWidget(),
+				    client));
+		}
+		getWidget().getDropHandler().updateAcceptRules(acceptCrit);
+	    }
+	}
     }
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-        getWidget().setDragFilter(new VDragFilter(getState().dd));
+	super.onStateChanged(stateChangeEvent);
+	getWidget().setDragFilter(new VDragFilter(getState().dd));
     }
 
     @Override
     public VDragFilter getDragFilter() {
-        return getWidget().getDragFilter();
+	return getWidget().getDragFilter();
     }
 
     @Override
     public void setDragFilter(VDragFilter filter) {
-        getWidget().setDragFilter(filter);
+	getWidget().setDragFilter(filter);
     }
 }

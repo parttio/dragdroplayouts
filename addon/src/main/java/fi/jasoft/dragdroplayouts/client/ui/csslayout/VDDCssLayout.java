@@ -49,14 +49,14 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * 
  */
 public class VDDCssLayout extends VCssLayout implements VHasDragMode,
-        VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
+	VHasDropHandler, DragStartListener, VHasDragFilter, VHasIframeShims {
 
     public static final String DRAG_SHADOW_STYLE_NAME = "v-ddcsslayout-drag-shadow";
 
     private VDDCssLayoutDropHandler dropHandler;
 
     private final VLayoutDragDropMouseHandler ddHandler = new VLayoutDragDropMouseHandler(
-            this, LayoutDragMode.NONE);
+	    this, LayoutDragMode.NONE);
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
@@ -65,16 +65,16 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
     private double horizontalDropRatio = DDCssLayoutState.DEFAULT_HORIZONTAL_DROP_RATIO;
 
     private double verticalDropRatio = DDCssLayoutState.DEFAULT_VERTICAL_DROP_RATIO;
-    
+
     private LayoutDragMode mode = LayoutDragMode.NONE;
 
     private boolean iframeCovers = false;
-    
+
     /**
      * Default constructor
      */
     public VDDCssLayout() {
-        super();
+	super();
     }
 
     /**
@@ -82,19 +82,19 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      * to commence. Return false to interrupt the drag:
      */
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return ddHandler.getDragMode() != LayoutDragMode.NONE
-                && dragFilter.isDraggable(widget);
+	return ddHandler.getDragMode() != LayoutDragMode.NONE
+		&& dragFilter.isDraggable(widget);
     }
 
     /**
      * Returns the drop handler which handles the drop events
      */
     public VDDCssLayoutDropHandler getDropHandler() {
-        return dropHandler;
+	return dropHandler;
     }
 
     public void setDropHandler(VDDCssLayoutDropHandler dropHandler) {
-        this.dropHandler = dropHandler;
+	this.dropHandler = dropHandler;
     }
 
     /**
@@ -103,23 +103,24 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      * @return
      */
     public LayoutDragMode getDragMode() {
-        return ddHandler.getDragMode();
+	return ddHandler.getDragMode();
     }
 
     @Override
     protected void onLoad() {
-    	super.onLoad();
-    	ddHandler.addDragStartListener(this);
-    	setDragMode(mode);
-    	iframeShimsEnabled(iframeCovers);
+	super.onLoad();
+	ddHandler.addDragStartListener(this);
+	setDragMode(mode);
+	iframeShimsEnabled(iframeCovers);
     }
 
     @Override
     protected void onUnload() {
-        super.onUnload();
-        ddHandler.removeDragStartListener(this);
-        ddHandler.updateDragMode(LayoutDragMode.NONE);
-    	iframeCoverUtility.setIframeCoversEnabled(false, getElement(), LayoutDragMode.NONE);
+	super.onUnload();
+	ddHandler.removeDragStartListener(this);
+	ddHandler.updateDragMode(LayoutDragMode.NONE);
+	iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
+		LayoutDragMode.NONE);
     }
 
     /**
@@ -128,8 +129,8 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      * handler.
      */
     protected boolean postDropHook(VDragEvent drag) {
-        // Extended classes can add content here...
-        return true;
+	// Extended classes can add content here...
+	return true;
     }
 
     /**
@@ -137,7 +138,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      * Useful if you don't want to override the whole drophandler.
      */
     protected void postEnterHook(VDragEvent drag) {
-        // Extended classes can add content here...
+	// Extended classes can add content here...
     }
 
     /**
@@ -145,7 +146,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      * Useful if you don't want to override the whole drophandler.
      */
     protected void postLeaveHook(VDragEvent drag) {
-        // Extended classes can add content here...
+	// Extended classes can add content here...
     }
 
     /**
@@ -153,47 +154,47 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      * if you don't want to override the whole drophandler.
      */
     protected void postOverHook(VDragEvent drag) {
-        // Extended classes can add content here...
+	// Extended classes can add content here...
     }
 
     private Element placeHolderElement;
 
     public void attachDragImageToLayout(VDragEvent drag) {
-        if (placeHolderElement == null) {
-            placeHolderElement = DOM.createDiv();
-            placeHolderElement.setInnerHTML("&nbsp;");
-        }
+	if (placeHolderElement == null) {
+	    placeHolderElement = DOM.createDiv();
+	    placeHolderElement.setInnerHTML("&nbsp;");
+	}
     }
 
     private void updatePlaceHolderStyleProperties(VDragEvent drag) {
-        ComponentConnector draggedConnector = (ComponentConnector) drag
-                .getTransferable().getData(
-                        Constants.TRANSFERABLE_DETAIL_COMPONENT);
-        if (draggedConnector != null) {
-            int height = Util.getRequiredHeight(draggedConnector.getWidget());
-            int width = Util.getRequiredWidth(draggedConnector.getWidget());
-            String className = draggedConnector.getWidget().getElement()
-                    .getClassName();
+	ComponentConnector draggedConnector = (ComponentConnector) drag
+		.getTransferable().getData(
+			Constants.TRANSFERABLE_DETAIL_COMPONENT);
+	if (draggedConnector != null) {
+	    int height = Util.getRequiredHeight(draggedConnector.getWidget());
+	    int width = Util.getRequiredWidth(draggedConnector.getWidget());
+	    String className = draggedConnector.getWidget().getElement()
+		    .getClassName();
 
-            className = className.replaceAll(
-                    VLayoutDragDropMouseHandler.ACTIVE_DRAG_SOURCE_STYLENAME,
-                    "");
+	    className = className.replaceAll(
+		    VLayoutDragDropMouseHandler.ACTIVE_DRAG_SOURCE_STYLENAME,
+		    "");
 
-            placeHolderElement.setClassName(DRAG_SHADOW_STYLE_NAME);
-            placeHolderElement.addClassName(className);
+	    placeHolderElement.setClassName(DRAG_SHADOW_STYLE_NAME);
+	    placeHolderElement.addClassName(className);
 
-            placeHolderElement.getStyle().setWidth(width, Unit.PX);
-            placeHolderElement.getStyle().setHeight(height, Unit.PX);
-        }
+	    placeHolderElement.getStyle().setWidth(width, Unit.PX);
+	    placeHolderElement.getStyle().setHeight(height, Unit.PX);
+	}
     }
 
     public void detachDragImageFromLayout(VDragEvent drag) {
-        if (placeHolderElement != null) {
-            if (placeHolderElement.hasParentElement()) {
-                placeHolderElement.removeFromParent();
-            }
-            placeHolderElement = null;
-        }
+	if (placeHolderElement != null) {
+	    if (placeHolderElement.hasParentElement()) {
+		placeHolderElement.removeFromParent();
+	    }
+	    placeHolderElement = null;
+	}
     }
 
     /**
@@ -205,133 +206,133 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      */
     protected void updateDragDetails(VDragEvent event) {
 
-        com.google.gwt.user.client.Element over = event.getElementOver();
-        if (placeHolderElement.isOrHasChild(over)) {
-            // Dragging over the placeholder
-            return;
-        }
+	com.google.gwt.user.client.Element over = event.getElementOver();
+	if (placeHolderElement.isOrHasChild(over)) {
+	    // Dragging over the placeholder
+	    return;
+	}
 
-        Widget widget = (Widget) Util.findWidget(over, null);
-        if (widget == null) {
-            // Null check
-            return;
-        }
+	Widget widget = (Widget) Util.findWidget(over, null);
+	if (widget == null) {
+	    // Null check
+	    return;
+	}
 
-        int offset = 0;
-        int index = -1;
-        for (int i = 0; i < getElement().getChildCount(); i++) {
-            Element child = getElement().getChild(i).cast();
-            if (child.isOrHasChild(placeHolderElement)) {
-                offset--;
-            } else if (child.isOrHasChild(widget.getElement())) {
-                index = i + offset;
-                break;
-            }
-        }
-        event.getDropDetails().put(Constants.DROP_DETAIL_TO, index);
+	int offset = 0;
+	int index = -1;
+	for (int i = 0; i < getElement().getChildCount(); i++) {
+	    Element child = getElement().getChild(i).cast();
+	    if (child.isOrHasChild(placeHolderElement)) {
+		offset--;
+	    } else if (child.isOrHasChild(widget.getElement())) {
+		index = i + offset;
+		break;
+	    }
+	}
+	event.getDropDetails().put(Constants.DROP_DETAIL_TO, index);
 
-        /*
-         * The horizontal position within the cell
-         */
-        event.getDropDetails().put(
-                Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
-                getHorizontalDropLocation(widget, event));
+	/*
+	 * The horizontal position within the cell
+	 */
+	event.getDropDetails().put(
+		Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
+		getHorizontalDropLocation(widget, event));
 
-        /*
-         * The vertical position within the cell
-         */
-        event.getDropDetails().put(
-                Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION,
-                getVerticalDropLocation(widget, event));
+	/*
+	 * The vertical position within the cell
+	 */
+	event.getDropDetails().put(
+		Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION,
+		getVerticalDropLocation(widget, event));
 
-        // Add mouse event details
-        MouseEventDetails details = MouseEventDetailsBuilder
-                .buildMouseEventDetails(event.getCurrentGwtEvent(),
-                        getElement());
-        event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
-                details.serialize());
+	// Add mouse event details
+	MouseEventDetails details = MouseEventDetailsBuilder
+		.buildMouseEventDetails(event.getCurrentGwtEvent(),
+			getElement());
+	event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
+		details.serialize());
     }
 
     public void updateDrag(VDragEvent drag) {
 
-        if (placeHolderElement == null) {
-            /*
-             * Drag image might not have been detach due to lazy attaching in
-             * the DragAndDropManager. Detach it again here if it has not been
-             * detached.
-             */
-            attachDragImageToLayout(drag);
-            return;
-        }
+	if (placeHolderElement == null) {
+	    /*
+	     * Drag image might not have been detach due to lazy attaching in
+	     * the DragAndDropManager. Detach it again here if it has not been
+	     * detached.
+	     */
+	    attachDragImageToLayout(drag);
+	    return;
+	}
 
-        if (drag.getElementOver().isOrHasChild(placeHolderElement)) {
-            return;
-        }
+	if (drag.getElementOver().isOrHasChild(placeHolderElement)) {
+	    return;
+	}
 
-        if (placeHolderElement.hasParentElement()) {
-            /*
-             * Remove the placeholder from the DOM so we can reposition
-             */
-            placeHolderElement.removeFromParent();
-        }
+	if (placeHolderElement.hasParentElement()) {
+	    /*
+	     * Remove the placeholder from the DOM so we can reposition
+	     */
+	    placeHolderElement.removeFromParent();
+	}
 
-        Widget w = Util.findWidget(drag.getElementOver(), null);
-        ComponentConnector draggedConnector = (ComponentConnector) drag
-                .getTransferable().getData(
-                        Constants.TRANSFERABLE_DETAIL_COMPONENT);
+	Widget w = Util.findWidget(drag.getElementOver(), null);
+	ComponentConnector draggedConnector = (ComponentConnector) drag
+		.getTransferable().getData(
+			Constants.TRANSFERABLE_DETAIL_COMPONENT);
 
-        if (w == draggedConnector.getWidget()) {
-            /*
-             * Dragging drag image over the placeholder should not have any
-             * effect (except placeholder should be removed)
-             */
-            return;
-        }
+	if (w == draggedConnector.getWidget()) {
+	    /*
+	     * Dragging drag image over the placeholder should not have any
+	     * effect (except placeholder should be removed)
+	     */
+	    return;
+	}
 
-        if (w != null && w != this) {
+	if (w != null && w != this) {
 
-            HorizontalDropLocation hl = getHorizontalDropLocation(w, drag);
-            VerticalDropLocation vl = getVerticalDropLocation(w, drag);
+	    HorizontalDropLocation hl = getHorizontalDropLocation(w, drag);
+	    VerticalDropLocation vl = getVerticalDropLocation(w, drag);
 
-            if (hl == HorizontalDropLocation.LEFT
-                    || vl == VerticalDropLocation.TOP) {
-                Element prev = w.getElement().getPreviousSibling().cast();
-                if (prev == null
-                        || !draggedConnector.getWidget().getElement()
-                                .isOrHasChild(prev)) {
+	    if (hl == HorizontalDropLocation.LEFT
+		    || vl == VerticalDropLocation.TOP) {
+		Element prev = w.getElement().getPreviousSibling().cast();
+		if (prev == null
+			|| !draggedConnector.getWidget().getElement()
+				.isOrHasChild(prev)) {
 
-                    w.getElement().getParentElement()
-                            .insertBefore(placeHolderElement, w.getElement());
+		    w.getElement().getParentElement()
+			    .insertBefore(placeHolderElement, w.getElement());
 
-                }
-            } else if (hl == HorizontalDropLocation.RIGHT
-                    || vl == VerticalDropLocation.BOTTOM) {
-                Element next = w.getElement().getNextSibling().cast();
-                if (next == null
-                        || !draggedConnector.getWidget().getElement()
-                                .isOrHasChild(next)) {
-                    w.getElement().getParentElement()
-                            .insertAfter(placeHolderElement, w.getElement());
-                }
+		}
+	    } else if (hl == HorizontalDropLocation.RIGHT
+		    || vl == VerticalDropLocation.BOTTOM) {
+		Element next = w.getElement().getNextSibling().cast();
+		if (next == null
+			|| !draggedConnector.getWidget().getElement()
+				.isOrHasChild(next)) {
+		    w.getElement().getParentElement()
+			    .insertAfter(placeHolderElement, w.getElement());
+		}
 
-            } else {
-                Element prev = w.getElement().getPreviousSibling().cast();
-                if (prev == null
-                        || !draggedConnector.getWidget().getElement()
-                                .isOrHasChild(prev)) {
-                    w.getElement().getParentElement()
-                            .insertBefore(placeHolderElement, w.getElement());
-                }
-            }
+	    } else {
+		Element prev = w.getElement().getPreviousSibling().cast();
+		if (prev == null
+			|| !draggedConnector.getWidget().getElement()
+				.isOrHasChild(prev)) {
+		    w.getElement().getParentElement()
+			    .insertBefore(placeHolderElement, w.getElement());
+		}
+	    }
 
-        } else {
-            /*
-             * First child or hoovering outside of current components
-             */
-            getElement().appendChild(placeHolderElement);
-        }
+	} else {
+	    /*
+	     * First child or hoovering outside of current components
+	     */
+	    getElement().appendChild(placeHolderElement);
+	}
 
-        updatePlaceHolderStyleProperties(drag);
+	updatePlaceHolderStyleProperties(drag);
     }
 
     /**
@@ -346,10 +347,10 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      * @return The horizontal drop location
      */
     protected HorizontalDropLocation getHorizontalDropLocation(
-            Widget container, VDragEvent event) {
-        return VDragDropUtil.getHorizontalDropLocation(container.getElement(),
-                Util.getTouchOrMouseClientX(event.getCurrentGwtEvent()),
-                horizontalDropRatio);
+	    Widget container, VDragEvent event) {
+	return VDragDropUtil.getHorizontalDropLocation(container.getElement(),
+		Util.getTouchOrMouseClientX(event.getCurrentGwtEvent()),
+		horizontalDropRatio);
     }
 
     /**
@@ -364,10 +365,10 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      * @return The horizontal drop location
      */
     protected VerticalDropLocation getVerticalDropLocation(Widget container,
-            VDragEvent event) {
-        return VDragDropUtil.getVerticalDropLocation(container.getElement(),
-                Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),
-                verticalDropRatio);
+	    VDragEvent event) {
+	return VDragDropUtil.getVerticalDropLocation(container.getElement(),
+		Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),
+		verticalDropRatio);
     }
 
     /*
@@ -378,53 +379,53 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      * ()
      */
     public VDragFilter getDragFilter() {
-        return dragFilter;
+	return dragFilter;
     }
 
     IframeCoverUtility getIframeCoverUtility() {
-        return iframeCoverUtility;
+	return iframeCoverUtility;
     }
 
     VLayoutDragDropMouseHandler getMouseHandler() {
-        return ddHandler;
+	return ddHandler;
     }
 
     public double getHorizontalDropRatio() {
-        return horizontalDropRatio;
+	return horizontalDropRatio;
     }
 
     public void setHorizontalDropRatio(float horizontalDropRatio) {
-        this.horizontalDropRatio = horizontalDropRatio;
+	this.horizontalDropRatio = horizontalDropRatio;
     }
 
     public double getVerticalDropRatio() {
-        return verticalDropRatio;
+	return verticalDropRatio;
     }
 
     public void setVerticalDropRatio(float verticalDropRatio) {
-        this.verticalDropRatio = verticalDropRatio;
+	this.verticalDropRatio = verticalDropRatio;
     }
 
     @Override
     public void setDragFilter(VDragFilter filter) {
-        this.dragFilter = filter;
+	this.dragFilter = filter;
     }
 
     @Override
-	public void iframeShimsEnabled(boolean enabled) {
-		iframeCovers = enabled;
-		iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
-	}
+    public void iframeShimsEnabled(boolean enabled) {
+	iframeCovers = enabled;
+	iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
+    }
 
-	@Override
-	public boolean isIframeShimsEnabled() {
-		return iframeCovers;
-	}
+    @Override
+    public boolean isIframeShimsEnabled() {
+	return iframeCovers;
+    }
 
-	@Override
-	public void setDragMode(LayoutDragMode mode) {
-		this.mode = mode;
-		ddHandler.updateDragMode(mode);
-		iframeShimsEnabled(isIframeShimsEnabled());
-	}
+    @Override
+    public void setDragMode(LayoutDragMode mode) {
+	this.mode = mode;
+	ddHandler.updateDragMode(mode);
+	iframeShimsEnabled(isIframeShimsEnabled());
+    }
 }

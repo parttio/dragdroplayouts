@@ -41,8 +41,8 @@ public class LayoutBoundTransferable extends TransferableImpl {
      *            The details of the drag
      */
     public LayoutBoundTransferable(Component sourceComponent,
-            Map<String, Object> rawVariables) {
-        super(sourceComponent, rawVariables);
+	    Map<String, Object> rawVariables) {
+	super(sourceComponent, rawVariables);
     }
 
     /**
@@ -51,14 +51,14 @@ public class LayoutBoundTransferable extends TransferableImpl {
      * @return The component
      */
     public Component getComponent() {
-        return (Component) getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
+	return (Component) getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
     }
 
     /**
      * @return the mouse down event that started the drag and drop operation
      */
     public MouseEventDetails getMouseDownEvent() {
-        return MouseEventDetails
-                .deSerialize((String) getData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN));
+	return MouseEventDetails
+		.deSerialize((String) getData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN));
     }
 }

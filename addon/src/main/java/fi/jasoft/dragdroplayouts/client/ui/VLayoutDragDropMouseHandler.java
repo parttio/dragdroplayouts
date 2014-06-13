@@ -61,7 +61,7 @@ import fi.jasoft.dragdroplayouts.client.ui.formlayout.VDDFormLayout;
  * @since 0.4.0
  */
 public class VLayoutDragDropMouseHandler implements MouseDownHandler,
-TouchStartHandler {
+	TouchStartHandler {
 
     public static final String ACTIVE_DRAG_SOURCE_STYLENAME = "v-dd-active-drag-source";
 
@@ -83,16 +83,16 @@ TouchStartHandler {
      * A listener to listen for drag start events
      */
     public interface DragStartListener {
-        /**
-         * Called when a drag is about to begin
-         * 
-         * @param widget
-         *            The widget which is about to be dragged
-         * @param mode
-         *            The draggin mode
-         * @return Should the dragging be commenced.
-         */
-        boolean dragStart(Widget widget, LayoutDragMode mode);
+	/**
+	 * Called when a drag is about to begin
+	 * 
+	 * @param widget
+	 *            The widget which is about to be dragged
+	 * @param mode
+	 *            The draggin mode
+	 * @return Should the dragging be commenced.
+	 */
+	boolean dragStart(Widget widget, LayoutDragMode mode);
     }
 
     /**
@@ -104,8 +104,8 @@ TouchStartHandler {
      *            The drag mode of the layout
      */
     public VLayoutDragDropMouseHandler(Widget root, LayoutDragMode dragMode) {
-        this.dragMode = dragMode;
-        this.root = root;
+	this.dragMode = dragMode;
+	this.root = root;
     }
 
     /**
@@ -117,9 +117,9 @@ TouchStartHandler {
      * @return Is the mouse event a valid drag event
      */
     private boolean isMouseDragEvent(NativeEvent event) {
-        boolean hasModifierKey = event.getAltKey() || event.getCtrlKey()
-                || event.getMetaKey() || event.getShiftKey();
-        return !(hasModifierKey || event.getButton() > NativeEvent.BUTTON_LEFT);
+	boolean hasModifierKey = event.getAltKey() || event.getCtrlKey()
+		|| event.getMetaKey() || event.getShiftKey();
+	return !(hasModifierKey || event.getButton() > NativeEvent.BUTTON_LEFT);
     }
 
     /*
@@ -131,7 +131,7 @@ TouchStartHandler {
      */
     @Override
     public void onTouchStart(TouchStartEvent event) {
-        initiateDrag(event.getNativeEvent());
+	initiateDrag(event.getNativeEvent());
     }
 
     /*
@@ -143,7 +143,7 @@ TouchStartHandler {
      */
     @Override
     public void onMouseDown(MouseDownEvent event) {
-        initiateDrag(event.getNativeEvent());
+	initiateDrag(event.getNativeEvent());
     }
 
     /**
@@ -156,223 +156,227 @@ TouchStartHandler {
      * @param event
      */
     protected void initiateDrag(NativeEvent event) {
-        // Check that dragging is enabled
-        if (dragMode == LayoutDragMode.NONE) {
-            return;
-        }
+	// Check that dragging is enabled
+	if (dragMode == LayoutDragMode.NONE) {
+	    return;
+	}
 
-        // Dragging can only be done with left mouse button and no modifier keys
-        if (!isMouseDragEvent(event) && !Util.isTouchEvent(event)) {
-            return;
-        }
+	// Dragging can only be done with left mouse button and no modifier keys
+	if (!isMouseDragEvent(event) && !Util.isTouchEvent(event)) {
+	    return;
+	}
 
-        // Get target widget
-        Element targetElement = event.getEventTarget().cast();
-        Widget target = Util.findWidget(targetElement, null);
+	// Get target widget
+	Element targetElement = event.getEventTarget().cast();
+	Widget target = Util.findWidget(targetElement, null);
 
-        // Abort if drag mode is caption mode and widget is not a caption
-        boolean isPanelCaption = target instanceof VPanel
-                && targetElement.getParentElement().getClassName()
-                .contains("v-panel-caption");
-        boolean isCaption = isPanelCaption
-                || VDragDropUtil.isCaptionOrCaptionless(target);
+	// Abort if drag mode is caption mode and widget is not a caption
+	boolean isPanelCaption = target instanceof VPanel
+		&& targetElement.getParentElement().getClassName()
+			.contains("v-panel-caption");
+	boolean isCaption = isPanelCaption
+		|| VDragDropUtil.isCaptionOrCaptionless(target);
 
-        if (dragMode == LayoutDragMode.CAPTION && !isCaption) {
-            /*
-             * Ensure target is a caption in caption mode
-             */
-            return;
-        }
+	if (dragMode == LayoutDragMode.CAPTION && !isCaption) {
+	    /*
+	     * Ensure target is a caption in caption mode
+	     */
+	    return;
+	}
 
-        if (dragMode == LayoutDragMode.CAPTION && isCaption) {
+	if (dragMode == LayoutDragMode.CAPTION && isCaption) {
 
-            /*
-             * Ensure that captions in nested layouts don't get accepted if in
-             * caption mode
-             */
+	    /*
+	     * Ensure that captions in nested layouts don't get accepted if in
+	     * caption mode
+	     */
 
-            Widget w = VDragDropUtil.getTransferableWidget(target);
-            ComponentConnector c = Util.findConnectorFor(w);
-            ComponentConnector parent = (ComponentConnector) c.getParent();
-            if (parent.getWidget() != root) {
-                return;
-            }
-        }
+	    Widget w = VDragDropUtil.getTransferableWidget(target);
+	    ComponentConnector c = Util.findConnectorFor(w);
+	    ComponentConnector parent = (ComponentConnector) c.getParent();
+	    if (parent.getWidget() != root) {
+		return;
+	    }
+	}
 
-        // Create the transfarable
-        VTransferable transferable = VDragDropUtil
-                .createLayoutTransferableFromMouseDown(event, root, target);
+	// Create the transfarable
+	VTransferable transferable = VDragDropUtil
+		.createLayoutTransferableFromMouseDown(event, root, target);
 
-        // Are we trying to drag the root layout
-        if (transferable == null) {
-            VConsole.error("Creating transferable on mouse down returned null");
-            return;
-        }
-                       
-        // Resolve the component
-        final Widget w;
-        ComponentConnector c = null, parent = null;
-        
-        if (target instanceof TabCaption) {        	
-        	TabCaption tabCaption = (TabCaption) target;
-        	Tab tab = tabCaption.getTab();
-        	int tabIndex = ((ComplexPanel)tab.getParent()).getWidgetIndex(tab);
-        	VTabsheet tabsheet = tab.getTabsheet();
-        	        	
-            w = tab;
-        	c = tabsheet.getTab(tabIndex);
-        	parent = Util.findConnectorFor(tabsheet);
-                        
-        } else if (root instanceof VDDAccordion) {
-            StackItem item = ((VDDAccordion) root).getTabByElement(targetElement);        	
-            w = target;            
-            parent = Util.findConnectorFor(root);
-            if(item.getComponent() != null){
-            	c = Util.findConnectorFor(item.getComponent());            	
-            }            
-            
-        } else if (transferable
-                .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT) != null) {
-            
-        	ComponentConnector connector = (ComponentConnector) transferable
-                    .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
-            w = connector.getWidget();
-            c = Util.findConnectorFor(w);
-            parent = (ComponentConnector) c.getParent();
+	// Are we trying to drag the root layout
+	if (transferable == null) {
+	    VConsole.error("Creating transferable on mouse down returned null");
+	    return;
+	}
 
-        } else {
-            // Failsafe if no widget was found
-            w = root;
-            c = Util.findConnectorFor(w);
-            parent = c;
-            VConsole.log("Could not resolve component, using root as component");
-        }
-        
-        // Ensure component is draggable
-        if(!VDragDropUtil.isDraggingEnabled(parent, w)){
-        	VConsole.log("Dragging disabled for "+w.getClass().getName() + " in "+parent.getWidget().getClass().getName());
-        	VDragAndDropManager.get().interruptDrag();
-        	return;
-        }
-        
-        event.preventDefault();
-        event.stopPropagation();
+	// Resolve the component
+	final Widget w;
+	ComponentConnector c = null, parent = null;
 
-        // Announce drag start to listeners
-        for (DragStartListener dl : dragStartListeners) {
-            if (!dl.dragStart(w, dragMode)) {
-                VDragAndDropManager.get().interruptDrag();
-                return;
-            }
-        }
+	if (target instanceof TabCaption) {
+	    TabCaption tabCaption = (TabCaption) target;
+	    Tab tab = tabCaption.getTab();
+	    int tabIndex = ((ComplexPanel) tab.getParent()).getWidgetIndex(tab);
+	    VTabsheet tabsheet = tab.getTabsheet();
 
-        /*
-         * A hack to remove slider popup when dragging. This is done by first
-         * focusing the slider and then unfocusing so we get a blur event which
-         * will remove the popup.
-         */
-        if (w instanceof VSlider) {
-            VSlider slider = (VSlider) w;
-            slider.setFocus(true);
-            slider.setFocus(false);
-        }
+	    w = tab;
+	    c = tabsheet.getTab(tabIndex);
+	    parent = Util.findConnectorFor(tabsheet);
 
-        /*
-         * Ensure textfields get focus when dragging so they can be used
-         */
-        if (w instanceof VTextField) {
-            ((VTextField) w).setFocus(true);
-        }
+	} else if (root instanceof VDDAccordion) {
+	    StackItem item = ((VDDAccordion) root)
+		    .getTabByElement(targetElement);
+	    w = target;
+	    parent = Util.findConnectorFor(root);
+	    if (item.getComponent() != null) {
+		c = Util.findConnectorFor(item.getComponent());
+	    }
 
-        currentDraggedWidget = w;
+	} else if (transferable
+		.getData(Constants.TRANSFERABLE_DETAIL_COMPONENT) != null) {
 
-        // Announce to handler that we are starting a drag operation
-        VDragEvent currentDragEvent = VDragAndDropManager.get().startDrag(
-                transferable, event, true);
+	    ComponentConnector connector = (ComponentConnector) transferable
+		    .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
+	    w = connector.getWidget();
+	    c = Util.findConnectorFor(w);
+	    parent = (ComponentConnector) c.getParent();
 
-        // Create the drag image
-        if (root instanceof VCssLayout) {
-            /*
-             * CSS Layout does not have an enclosing div so we just use the
-             * component div
-             */
-            currentDragEvent.createDragImage((Element) w.getElement().cast(),
-                    true);
+	} else {
+	    // Failsafe if no widget was found
+	    w = root;
+	    c = Util.findConnectorFor(w);
+	    parent = c;
+	    VConsole.log("Could not resolve component, using root as component");
+	}
 
-        } else if (root instanceof VTabsheet) {
-            /*
-             * Tabsheet should use the dragged tab as a drag image
-             */
-            currentDragEvent.createDragImage(targetElement, true);
+	// Ensure component is draggable
+	if (!VDragDropUtil.isDraggingEnabled(parent, w)) {
+	    VConsole.log("Dragging disabled for " + w.getClass().getName()
+		    + " in " + parent.getWidget().getClass().getName());
+	    VDragAndDropManager.get().interruptDrag();
+	    return;
+	}
 
-        } else if (root instanceof VAccordion) {
-            currentDragEvent.createDragImage(targetElement, true);
+	event.preventDefault();
+	event.stopPropagation();
 
-        } else if (root instanceof VFormLayout) {
-            /*
-             * Dragging a component in a form layout should include the caption
-             * and error indicator as well
-             */
-            Element rowElement = (Element) VDDFormLayout
-                    .getRowFromChildElement(
-                            (com.google.gwt.dom.client.Element) w.getElement()
-                                    .cast(),
-                            (com.google.gwt.dom.client.Element) root
-                                    .getElement().cast()).cast();
+	// Announce drag start to listeners
+	for (DragStartListener dl : dragStartListeners) {
+	    if (!dl.dragStart(w, dragMode)) {
+		VDragAndDropManager.get().interruptDrag();
+		return;
+	    }
+	}
 
-            currentDragEvent.createDragImage(rowElement, true);
+	/*
+	 * A hack to remove slider popup when dragging. This is done by first
+	 * focusing the slider and then unfocusing so we get a blur event which
+	 * will remove the popup.
+	 */
+	if (w instanceof VSlider) {
+	    VSlider slider = (VSlider) w;
+	    slider.setFocus(true);
+	    slider.setFocus(false);
+	}
 
-        } else {
-            /*
-             * Other layouts uses a enclosing div so we use it.
-             */
-            currentDragEvent.createDragImage((Element) w.getElement()
-                    .getParentNode().cast(), true);
-        }
+	/*
+	 * Ensure textfields get focus when dragging so they can be used
+	 */
+	if (w instanceof VTextField) {
+	    ((VTextField) w).setFocus(true);
+	}
 
-        Element clone = currentDragEvent.getDragImage();
-        assert (clone != null);
-        
-        if( c!= null && c.delegateCaptionHandling() && !(root instanceof VTabsheet) && !(root instanceof VAccordion)){
-        	/*
-        	 * Captions are not being dragged with the widget since they are separate. Manually add 
-        	 * a clone of the caption to the drag image.
-        	 */
-        	if(target instanceof VCaption) {        		
-        		clone.insertFirst(targetElement.cloneNode(true));
-        	}        	        	
-        }
+	currentDraggedWidget = w;
 
-        if (BrowserInfo.get().isIE()) {
-            // Fix IE not aligning the drag image correctly when dragging
-            // layouts
-            clone.getStyle().setPosition(Position.ABSOLUTE);
-        }
+	// Announce to handler that we are starting a drag operation
+	VDragEvent currentDragEvent = VDragAndDropManager.get().startDrag(
+		transferable, event, true);
 
-        currentDraggedWidget.addStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);
+	// Create the drag image
+	if (root instanceof VCssLayout) {
+	    /*
+	     * CSS Layout does not have an enclosing div so we just use the
+	     * component div
+	     */
+	    currentDragEvent.createDragImage((Element) w.getElement().cast(),
+		    true);
 
-        // Listen to mouse up for cleanup
-        mouseUpHandlerReg = Event
-                .addNativePreviewHandler(new Event.NativePreviewHandler() {
-                    @Override
-                    public void onPreviewNativeEvent(NativePreviewEvent event) {
-                        if (event.getTypeInt() == Event.ONMOUSEUP
-                                || event.getTypeInt() == Event.ONTOUCHEND
-                                || event.getTypeInt() == Event.ONTOUCHCANCEL) {
-                            if (mouseUpHandlerReg != null) {
-                                mouseUpHandlerReg.removeHandler();
-                                if (currentDraggedWidget != null) {
-                                    currentDraggedWidget
-                                    .removeStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);
-                                    currentDraggedWidget = null;
-                                }
-                            }
+	} else if (root instanceof VTabsheet) {
+	    /*
+	     * Tabsheet should use the dragged tab as a drag image
+	     */
+	    currentDragEvent.createDragImage(targetElement, true);
 
-                            // Ensure capturing is turned off at mouse up
-                            Event.releaseCapture(RootPanel.getBodyElement());
-                        }
-                    }
-                });
+	} else if (root instanceof VAccordion) {
+	    currentDragEvent.createDragImage(targetElement, true);
+
+	} else if (root instanceof VFormLayout) {
+	    /*
+	     * Dragging a component in a form layout should include the caption
+	     * and error indicator as well
+	     */
+	    Element rowElement = (Element) VDDFormLayout
+		    .getRowFromChildElement(
+			    (com.google.gwt.dom.client.Element) w.getElement()
+				    .cast(),
+			    (com.google.gwt.dom.client.Element) root
+				    .getElement().cast()).cast();
+
+	    currentDragEvent.createDragImage(rowElement, true);
+
+	} else {
+	    /*
+	     * Other layouts uses a enclosing div so we use it.
+	     */
+	    currentDragEvent.createDragImage((Element) w.getElement()
+		    .getParentNode().cast(), true);
+	}
+
+	Element clone = currentDragEvent.getDragImage();
+	assert (clone != null);
+
+	if (c != null && c.delegateCaptionHandling()
+		&& !(root instanceof VTabsheet)
+		&& !(root instanceof VAccordion)) {
+	    /*
+	     * Captions are not being dragged with the widget since they are
+	     * separate. Manually add a clone of the caption to the drag image.
+	     */
+	    if (target instanceof VCaption) {
+		clone.insertFirst(targetElement.cloneNode(true));
+	    }
+	}
+
+	if (BrowserInfo.get().isIE()) {
+	    // Fix IE not aligning the drag image correctly when dragging
+	    // layouts
+	    clone.getStyle().setPosition(Position.ABSOLUTE);
+	}
+
+	currentDraggedWidget.addStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);
+
+	// Listen to mouse up for cleanup
+	mouseUpHandlerReg = Event
+		.addNativePreviewHandler(new Event.NativePreviewHandler() {
+		    @Override
+		    public void onPreviewNativeEvent(NativePreviewEvent event) {
+			if (event.getTypeInt() == Event.ONMOUSEUP
+				|| event.getTypeInt() == Event.ONTOUCHEND
+				|| event.getTypeInt() == Event.ONTOUCHCANCEL) {
+			    if (mouseUpHandlerReg != null) {
+				mouseUpHandlerReg.removeHandler();
+				if (currentDraggedWidget != null) {
+				    currentDraggedWidget
+					    .removeStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);
+				    currentDraggedWidget = null;
+				}
+			    }
+
+			    // Ensure capturing is turned off at mouse up
+			    Event.releaseCapture(RootPanel.getBodyElement());
+			}
+		    }
+		});
 
     }
 
@@ -383,16 +387,16 @@ TouchStartHandler {
      *            The drag mode to use
      */
     public void updateDragMode(LayoutDragMode dragMode) {
-    	if(dragMode == this.dragMode){
-    		return;
-    	}
-    	
-        this.dragMode = dragMode;
-        if (dragMode == LayoutDragMode.NONE) {
-            detach();
-        } else {
-            attach();
-        }
+	if (dragMode == this.dragMode) {
+	    return;
+	}
+
+	this.dragMode = dragMode;
+	if (dragMode == LayoutDragMode.NONE) {
+	    detach();
+	} else {
+	    attach();
+	}
     }
 
     /**
@@ -401,7 +405,7 @@ TouchStartHandler {
      * @param listener
      */
     public void addDragStartListener(DragStartListener listener) {
-        dragStartListeners.add(listener);
+	dragStartListeners.add(listener);
     }
 
     /**
@@ -410,45 +414,45 @@ TouchStartHandler {
      * @param listener
      */
     public void removeDragStartListener(DragStartListener listener) {
-        dragStartListeners.remove(listener);
+	dragStartListeners.remove(listener);
     }
 
     /**
      * Start listening to events
      */
     private void attach() {
-        if (handlers.isEmpty()) {
-            if (attachTarget == null) {
-                handlers.add(root.addDomHandler(this, MouseDownEvent.getType()));
-                handlers.add(root.addDomHandler(this, TouchStartEvent.getType()));
-            } else {
-                handlers.add(attachTarget.addDomHandler(this,
-                        MouseDownEvent.getType()));
-                handlers.add(attachTarget.addDomHandler(this,
-                        TouchStartEvent.getType()));
-            }
-        }
+	if (handlers.isEmpty()) {
+	    if (attachTarget == null) {
+		handlers.add(root.addDomHandler(this, MouseDownEvent.getType()));
+		handlers.add(root.addDomHandler(this, TouchStartEvent.getType()));
+	    } else {
+		handlers.add(attachTarget.addDomHandler(this,
+			MouseDownEvent.getType()));
+		handlers.add(attachTarget.addDomHandler(this,
+			TouchStartEvent.getType()));
+	    }
+	}
     }
 
     /**
      * Stop listening to events
      */
     private void detach() {
-        for (HandlerRegistration reg : handlers) {
-            reg.removeHandler();
-        }
-        handlers.clear();
+	for (HandlerRegistration reg : handlers) {
+	    reg.removeHandler();
+	}
+	handlers.clear();
     }
 
     public Widget getAttachTarget() {
-        return attachTarget;
+	return attachTarget;
     }
 
     public void setAttachTarget(Widget attachTarget) {
-        this.attachTarget = attachTarget;
+	this.attachTarget = attachTarget;
     }
 
     public LayoutDragMode getDragMode() {
-        return dragMode;
+	return dragMode;
     }
 }
