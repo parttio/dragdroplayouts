@@ -15,7 +15,10 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.interfaces;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.SharedState;
@@ -31,5 +34,8 @@ public class DDLayoutState extends SharedState {
     public boolean iframeShims = true;
 
     // Which connectors are draggable
-    public List<Connector> draggable;
+    public List<Connector> draggable = new ArrayList<Connector>();
+
+    // Reference drag images
+    public Map<Connector, Connector> referenceImageComponents = new HashMap<Connector, Connector>();
 }

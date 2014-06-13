@@ -38,5 +38,13 @@ public enum LayoutDragMode {
      * The same as {@link LayoutDragMode#CLONE} except that components can only
      * be dragged from their captions.
      */
-    CAPTION;
+    CAPTION,
+    
+    /**
+     * The same as {@link LayoutDragMode#CLONE} except that the dragged
+     * component is not shown, but instead another component defined by
+     */
+    CLONE_OTHER
+    
+    ;
 }

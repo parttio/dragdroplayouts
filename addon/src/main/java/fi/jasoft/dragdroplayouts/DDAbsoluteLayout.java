@@ -16,6 +16,7 @@
 package fi.jasoft.dragdroplayouts;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -32,9 +33,12 @@ import com.vaadin.ui.LegacyComponent;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.absolutelayout.DDAbsoluteLayoutState;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.details.AbsoluteLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
+import fi.jasoft.dragdroplayouts.interfaces.DragImageProvider;
+import fi.jasoft.dragdroplayouts.interfaces.DragImageReferenceSupport;
 import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
 import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 
@@ -45,13 +49,16 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  */
 @SuppressWarnings("serial")
 public class DDAbsoluteLayout extends AbsoluteLayout implements
-	LayoutDragSource, DropTarget, ShimSupport, LegacyComponent {
+	LayoutDragSource, DropTarget, ShimSupport, LegacyComponent,
+	DragImageReferenceSupport {
 
     // Drop handler which handles dd drop events
     private DropHandler dropHandler;
 
     // A filter for dragging components.
     private DragFilter dragFilter = DragFilter.ALL;
+
+    private DragImageProvider dragImageProvider;
 
     /**
      * Creates an AbsoluteLayout with full size.
@@ -156,6 +163,11 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
 	return (DDAbsoluteLayoutState) super.getState();
     }
 
+    @Override
+    protected DDAbsoluteLayoutState getState(boolean markAsDirty) {
+	return (DDAbsoluteLayoutState) super.getState(markAsDirty);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -169,14 +181,32 @@ public class DDAbsoluteLayout extends AbsoluteLayout implements
     public void beforeClientResponse(boolean initial) {
 	super.beforeClientResponse(initial);
 
-	// Update draggable filter
-	Iterator<Component> componentIterator = getComponentIterator();
-	getState().ddState.draggable = new ArrayList<Connector>();
+	Iterator<Component> componentIterator = iterator();
+	DDLayoutState dragAndDropState = getState().getDragAndDropState();
+
+	dragAndDropState.draggable = new ArrayList<Connector>();
+	dragAndDropState.referenceImageComponents = new HashMap<Connector, Connector>();
 	while (componentIterator.hasNext()) {
 	    Component c = componentIterator.next();
+
+	    // Update draggable filter
 	    if (dragFilter.isDraggable(c)) {
-		getState().ddState.draggable.add(c);
+		dragAndDropState.draggable.add(c);
+	    }
+
+	    // Update reference drag images
+	    if (dragImageProvider != null) {
+		Component dragImage = dragImageProvider.getDragImage(c);
+		if (dragImage != null) {
+		    dragAndDropState.referenceImageComponents.put(c, dragImage);
+		}
 	    }
 	}
+    }
+
+    @Override
+    public void setDragImageProvider(DragImageProvider provider) {
+	this.dragImageProvider = provider;
+	markAsDirty();
     }
 }

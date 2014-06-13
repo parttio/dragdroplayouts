@@ -48,6 +48,7 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragImageReferenceSupport;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
 import fi.jasoft.dragdroplayouts.client.ui.tabsheet.VDDTabSheet;
@@ -462,6 +463,12 @@ public final class VDragDropUtil {
 		if (widget instanceof VHasDragFilter) {
 		    ((VHasDragFilter) widget).setDragFilter(new VDragFilter(
 			    state));
+		}
+
+		if (widget instanceof VHasDragImageReferenceSupport) {
+		    ((VHasDragImageReferenceSupport) widget)
+			    .setDragImageProvider(new VDDLayoutStateDragImageProvider(
+				    state));
 		}
 	    }
 	});

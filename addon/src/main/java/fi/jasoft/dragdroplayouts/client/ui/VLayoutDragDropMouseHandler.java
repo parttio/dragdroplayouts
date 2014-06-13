@@ -53,6 +53,8 @@ import com.vaadin.client.ui.dd.VTransferable;
 
 import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
 import fi.jasoft.dragdroplayouts.client.ui.formlayout.VDDFormLayout;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDragImageProvider;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragImageReferenceSupport;
 
 /**
  * Mouse handler for starting component drag operations
@@ -61,7 +63,7 @@ import fi.jasoft.dragdroplayouts.client.ui.formlayout.VDDFormLayout;
  * @since 0.4.0
  */
 public class VLayoutDragDropMouseHandler implements MouseDownHandler,
-	TouchStartHandler {
+	TouchStartHandler, VHasDragImageReferenceSupport {
 
     public static final String ACTIVE_DRAG_SOURCE_STYLENAME = "v-dd-active-drag-source";
 
@@ -78,6 +80,8 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
     private final List<DragStartListener> dragStartListeners = new ArrayList<VLayoutDragDropMouseHandler.DragStartListener>();
 
     private Widget attachTarget;
+
+    private VDragImageProvider dragImageProvider;
 
     /**
      * A listener to listen for drag start events
@@ -292,23 +296,31 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 	VDragEvent currentDragEvent = VDragAndDropManager.get().startDrag(
 		transferable, event, true);
 
-	// Create the drag image
-	if (root instanceof VCssLayout) {
+	/*
+	 * Create the drag image
+	 */
+	com.google.gwt.dom.client.Element dragImageElement = dragImageProvider
+		.getDragImageElement(w);
+	if (dragImageElement != null) {
+
+	    // Set stylename to proxy component as well
+	    dragImageElement.addClassName(ACTIVE_DRAG_SOURCE_STYLENAME);
+
+	} else if (root instanceof VCssLayout) {
 	    /*
 	     * CSS Layout does not have an enclosing div so we just use the
 	     * component div
 	     */
-	    currentDragEvent.createDragImage((Element) w.getElement().cast(),
-		    true);
+	    dragImageElement = w.getElement();
 
 	} else if (root instanceof VTabsheet) {
 	    /*
 	     * Tabsheet should use the dragged tab as a drag image
 	     */
-	    currentDragEvent.createDragImage(targetElement, true);
+	    dragImageElement = targetElement;
 
 	} else if (root instanceof VAccordion) {
-	    currentDragEvent.createDragImage(targetElement, true);
+	    dragImageElement = targetElement;
 
 	} else if (root instanceof VFormLayout) {
 	    /*
@@ -322,16 +334,16 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 			    (com.google.gwt.dom.client.Element) root
 				    .getElement().cast()).cast();
 
-	    currentDragEvent.createDragImage(rowElement, true);
+	    dragImageElement = rowElement;
 
 	} else {
 	    /*
 	     * Other layouts uses a enclosing div so we use it.
 	     */
-	    currentDragEvent.createDragImage((Element) w.getElement()
-		    .getParentNode().cast(), true);
+	    dragImageElement = w.getElement().getParentElement();
 	}
 
+	currentDragEvent.createDragImage(dragImageElement, true);
 	Element clone = currentDragEvent.getDragImage();
 	assert (clone != null);
 
@@ -366,8 +378,19 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 			    if (mouseUpHandlerReg != null) {
 				mouseUpHandlerReg.removeHandler();
 				if (currentDraggedWidget != null) {
+
 				    currentDraggedWidget
 					    .removeStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);
+
+				    if (dragImageProvider != null) {
+					com.google.gwt.dom.client.Element dragImageElement = dragImageProvider
+						.getDragImageElement(currentDraggedWidget);
+					if (dragImageElement != null) {
+					    dragImageElement
+						    .removeClassName(ACTIVE_DRAG_SOURCE_STYLENAME);
+					}
+				    }
+
 				    currentDraggedWidget = null;
 				}
 			    }
@@ -454,5 +477,10 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
     public LayoutDragMode getDragMode() {
 	return dragMode;
+    }
+
+    @Override
+    public void setDragImageProvider(VDragImageProvider provider) {
+	this.dragImageProvider = provider;
     }
 }
