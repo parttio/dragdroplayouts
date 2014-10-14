@@ -3,6 +3,9 @@ package fi.jasoft.dragdroplayouts.client.ui.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.DragEnterEvent;
 import com.google.gwt.event.dom.client.DragEnterHandler;
 import com.google.gwt.event.dom.client.DragLeaveEvent;
@@ -22,9 +25,91 @@ import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
 
 public class HTML5Support {
 
-  private VDragEvent vaadinDragEvent;
-
   private final List<HandlerRegistration> handlers = new ArrayList<HandlerRegistration>();
+
+  public static class HTML5DragHandler implements DragEnterHandler, DragLeaveHandler,
+      DragOverHandler, DropHandler {
+
+    private VDragEvent vaadinDragEvent;
+
+    private ComponentConnector connector;
+
+    private VDDAbstractDropHandler<? extends Widget> dropHandler;
+
+    public HTML5DragHandler(ComponentConnector connector,
+        VDDAbstractDropHandler<? extends Widget> handler) {
+      this.connector = connector;
+      this.dropHandler = handler;
+    }
+
+    @Override
+    public void onDrop(DropEvent event) {
+      NativeEvent nativeEvent = event.getNativeEvent();
+      if (nativeEvent != null && Element.is(nativeEvent.getEventTarget())) {
+        nativeEvent.preventDefault();
+
+        vaadinDragEvent.setCurrentGwtEvent(nativeEvent);
+
+        // FIXME only text currently supported
+        String data = event.getData("text/plain");
+        vaadinDragEvent.getTransferable().setData("html5Data", data);
+
+        if (dropHandler.drop(vaadinDragEvent)) {
+          VDragAndDropManager.get().endDrag();
+        } else {
+          VDragAndDropManager.get().interruptDrag();
+        }
+
+        vaadinDragEvent = null;
+      }
+    }
+
+    @Override
+    public void onDragOver(DragOverEvent event) {
+      NativeEvent nativeEvent = event.getNativeEvent();
+      if (Element.is(nativeEvent.getEventTarget())) {
+        Element target = Element.as(nativeEvent.getEventTarget());
+        if (connector.getWidget().getElement().equals(target)) {
+          nativeEvent.preventDefault();
+          vaadinDragEvent.setCurrentGwtEvent(nativeEvent);
+          dropHandler.dragOver(vaadinDragEvent);
+
+        }
+      }
+    }
+
+    @Override
+    public void onDragLeave(DragLeaveEvent event) {
+      NativeEvent nativeEvent = event.getNativeEvent();
+      if (Element.is(nativeEvent.getEventTarget())) {
+        Element target = Element.as(nativeEvent.getEventTarget());
+        if (connector.getWidget().getElement().equals(target)) {
+          nativeEvent.preventDefault();
+          vaadinDragEvent.setCurrentGwtEvent(nativeEvent);
+          dropHandler.dragLeave(vaadinDragEvent);
+        }
+      }
+    }
+
+    @Override
+    public void onDragEnter(DragEnterEvent event) {
+      NativeEvent nativeEvent = event.getNativeEvent();
+      if (vaadinDragEvent == null && Element.is(nativeEvent.getEventTarget())) {
+        Element target = Element.as(nativeEvent.getEventTarget());
+
+        nativeEvent.preventDefault();
+        nativeEvent.stopPropagation();
+
+        VTransferable transferable = new VTransferable();
+        transferable.setDragSource(connector);
+        vaadinDragEvent =
+            VDragAndDropManager.get().startDrag(transferable, event.getNativeEvent(), false);
+
+        vaadinDragEvent.setCurrentGwtEvent(nativeEvent);
+        dropHandler.dragEnter(vaadinDragEvent);
+      }
+    }
+  }
 
   public static final HTML5Support enable(final ComponentConnector connector,
       final VDDAbstractDropHandler<? extends Widget> handler) {
@@ -33,73 +118,19 @@ public class HTML5Support {
     }
 
     Widget w = connector.getWidget();
-    final HTML5Support support = new HTML5Support();
+    final HTML5Support support = GWT.create(HTML5Support.class);
+    final HTML5DragHandler dragHandler = new HTML5DragHandler(connector, handler);
 
-    support.handlers.add(w.addDomHandler(new DragEnterHandler() {
-
-      @Override
-      public void onDragEnter(DragEnterEvent event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        VTransferable transferable = new VTransferable();
-        transferable.setDragSource(connector);
-        support.vaadinDragEvent =
-            VDragAndDropManager.get().startDrag(transferable, event.getNativeEvent(), false);
-
-        VDragAndDropManager.get().setCurrentDropHandler(handler);
-
-      }
-    }, DragEnterEvent.getType()));
-
-    support.handlers.add(w.addDomHandler(new DragLeaveHandler() {
-
-      @Override
-      public void onDragLeave(DragLeaveEvent event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        support.vaadinDragEvent.setCurrentGwtEvent(event.getNativeEvent());
-        handler.dragLeave(support.vaadinDragEvent);
-
-      }
-    }, DragLeaveEvent.getType()));
-
-    support.handlers.add(w.addDomHandler(new DragOverHandler() {
-
-      @Override
-      public void onDragOver(DragOverEvent event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        support.vaadinDragEvent.setCurrentGwtEvent(event.getNativeEvent());
-        handler.dragOver(support.vaadinDragEvent);
-
-      }
-    }, DragOverEvent.getType()));
-
-    support.handlers.add(w.addDomHandler(new DropHandler() {
-
-      @Override
-      public void onDrop(DropEvent event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        support.vaadinDragEvent.setCurrentGwtEvent(event.getNativeEvent());
-
-        // FIXME only text currently supported
-        String data = event.getData("text/plain");
-        support.vaadinDragEvent.getTransferable().setData("html5Data", data);
-
-        if (handler.drop(support.vaadinDragEvent)) {
-          VDragAndDropManager.get().endDrag();
-        } else {
-          VDragAndDropManager.get().interruptDrag();
-        }
-      }
-    }, DropEvent.getType()));
+    support.handlers.add(w.addDomHandler(dragHandler, DragEnterEvent.getType()));
+    support.handlers.add(w.addDomHandler(dragHandler, DragLeaveEvent.getType()));
+    support.handlers.add(w.addDomHandler(dragHandler, DragOverEvent.getType()));
+    support.handlers.add(w.addDomHandler(dragHandler, DropEvent.getType()));
 
     return support;
+  }
+
+  private HTML5Support() {
+    // Factory
   }
 
   public void disable() {

@@ -152,32 +152,36 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
   protected void updateDragDetails(VDragEvent drag) {
 
     // Get absolute coordinates
-    int absoluteLeft = getAbsoluteLeft();
-    int absoluteTop = getAbsoluteTop();
+    int absoluteLeft = drag.getCurrentGwtEvent().getClientX();
+    int absoluteTop = drag.getCurrentGwtEvent().getClientY();
 
     drag.getDropDetails().put(Constants.DROP_DETAIL_ABSOLUTE_LEFT, absoluteLeft);
     drag.getDropDetails().put(Constants.DROP_DETAIL_ABSOLUTE_TOP, absoluteTop);
 
     // Get relative coordinates
+    int offsetLeft = 0;
     if (drag.getDragImage() != null) {
       String offsetLeftStr = drag.getDragImage().getStyle().getMarginLeft();
-      int offsetLeft = Integer.parseInt(offsetLeftStr.substring(0, offsetLeftStr.length() - 2));
-      int relativeLeft =
-          Util.getTouchOrMouseClientX(drag.getCurrentGwtEvent()) - canvas.getAbsoluteLeft()
-              + offsetLeft;
-
-      String offsetTopStr = drag.getDragImage().getStyle().getMarginTop();
-      int offsetTop = Integer.parseInt(offsetTopStr.substring(0, offsetTopStr.length() - 2));
-      int relativeTop =
-          Util.getTouchOrMouseClientY(drag.getCurrentGwtEvent()) - canvas.getAbsoluteTop()
-              + offsetTop;
-
-      drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_LEFT, relativeLeft);
-      drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_TOP, relativeTop);
-    } else {
-      drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_LEFT, absoluteLeft);
-      drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_TOP, absoluteTop);
+      offsetLeft = Integer.parseInt(offsetLeftStr.substring(0, offsetLeftStr.length() - 2));
     }
+
+    int relativeLeft =
+        Util.getTouchOrMouseClientX(drag.getCurrentGwtEvent()) - canvas.getAbsoluteLeft()
+            + offsetLeft;
+
+    int offsetTop = 0;
+    if (drag.getDragImage() != null) {
+      String offsetTopStr = drag.getDragImage().getStyle().getMarginTop();
+      offsetTop = Integer.parseInt(offsetTopStr.substring(0, offsetTopStr.length() - 2));
+    }
+
+    int relativeTop =
+        Util.getTouchOrMouseClientY(drag.getCurrentGwtEvent()) - canvas.getAbsoluteTop()
+            + offsetTop;
+
+    drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_LEFT, relativeLeft);
+    drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_TOP, relativeTop);
+
 
     // Get component size
     ComponentConnector widgetConnector =
