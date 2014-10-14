@@ -26,10 +26,13 @@ import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.util.HTML5Support;
 
 @Connect(DDAbsoluteLayout.class)
 public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
 	implements Paintable, VHasDragFilter {
+
+    private HTML5Support html5Support;
 
     @Override
     public VDDAbsoluteLayout getWidget() {
@@ -53,8 +56,14 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
      */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-	VDragDropUtil.updateDropHandlerFromUIDL(uidl, this,
-		new VDDAbsoluteLayoutDropHandler(this));
+        VDDAbsoluteLayoutDropHandler dropHandler = new VDDAbsoluteLayoutDropHandler(
+                this);
+        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
+
+        if (html5Support != null) {
+            html5Support.disable();
+        }
+        html5Support = HTML5Support.enable(this, dropHandler);
     }
 
     public LayoutDragMode getDragMode() {

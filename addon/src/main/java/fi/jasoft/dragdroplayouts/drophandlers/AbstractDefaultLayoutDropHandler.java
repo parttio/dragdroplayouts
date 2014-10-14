@@ -43,6 +43,10 @@ public abstract class AbstractDefaultLayoutDropHandler implements DropHandler {
 
     protected abstract void handleDropFromLayout(DragAndDropEvent event);
 
+    protected void handleHTML5Drop(DragAndDropEvent event) {
+        throw new RuntimeException("HTML5 support not implemented by layout");
+    }
+
     /**
      * Handles a drop by a component which has an absolute layout as parent. In
      * this case the component is moved.
@@ -77,7 +81,9 @@ public abstract class AbstractDefaultLayoutDropHandler implements DropHandler {
 	DropTarget layout = details.getTarget();
 	Component source = event.getTransferable().getSourceComponent();
 
-	if (layout == source) {
+        if (event.getTransferable().getData("html5Data") != null) {
+            handleHTML5Drop(event);
+        } else if (layout == source) {
 	    handleComponentReordering(event);
 	} else if (event.getTransferable() instanceof LayoutBoundTransferable) {
 	    LayoutBoundTransferable transferable = (LayoutBoundTransferable) event

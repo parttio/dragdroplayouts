@@ -20,6 +20,7 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.Label;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.details.AbsoluteLayoutTargetDetails;
@@ -95,5 +96,19 @@ public class DefaultAbsoluteLayoutDropHandler extends
 	// Add component to absolute layout
 	layout.addComponent(component, "left:" + leftPixelPosition + "px;top:"
 		+ topPixelPosition + "px");
+    }
+
+    @Override
+    protected void handleHTML5Drop(DragAndDropEvent event) {
+        AbsoluteLayoutTargetDetails details = (AbsoluteLayoutTargetDetails) event
+                .getTargetDetails();
+        DDAbsoluteLayout layout = (DDAbsoluteLayout) details.getTarget();
+
+        int leftPixelPosition = details.getRelativeLeft();
+        int topPixelPosition = details.getRelativeTop();
+        String text = event.getTransferable().getData("html5Data").toString();
+        layout.addComponent(new Label(text), "left:" + leftPixelPosition
+                + "px;top:" + topPixelPosition + "px");
+
     }
 }

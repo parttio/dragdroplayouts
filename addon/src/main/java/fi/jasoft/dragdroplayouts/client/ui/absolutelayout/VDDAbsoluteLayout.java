@@ -135,7 +135,7 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     }
 
     public void setDropHandler(VDDAbsoluteLayoutDropHandler dropHandler) {
-	this.dropHandler = dropHandler;
+        this.dropHandler = dropHandler;
     }
 
     public VDragFilter getDragFilter() {
@@ -166,23 +166,34 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
 		absoluteTop);
 
 	// Get relative coordinates
-	String offsetLeftStr = drag.getDragImage().getStyle().getMarginLeft();
-	int offsetLeft = Integer.parseInt(offsetLeftStr.substring(0,
-		offsetLeftStr.length() - 2));
-	int relativeLeft = Util.getTouchOrMouseClientX(drag
-		.getCurrentGwtEvent()) - canvas.getAbsoluteLeft() + offsetLeft;
+        if (drag.getDragImage() != null) {
+            String offsetLeftStr = drag.getDragImage().getStyle()
+                    .getMarginLeft();
+            int offsetLeft = Integer.parseInt(offsetLeftStr.substring(0,
+                    offsetLeftStr.length() - 2));
+            int relativeLeft = Util.getTouchOrMouseClientX(drag
+                    .getCurrentGwtEvent())
+                    - canvas.getAbsoluteLeft()
+                    + offsetLeft;
 
-	String offsetTopStr = drag.getDragImage().getStyle().getMarginTop();
-	int offsetTop = Integer.parseInt(offsetTopStr.substring(0,
-		offsetTopStr.length() - 2));
-	int relativeTop = Util
-		.getTouchOrMouseClientY(drag.getCurrentGwtEvent())
-		- canvas.getAbsoluteTop() + offsetTop;
+            String offsetTopStr = drag.getDragImage().getStyle().getMarginTop();
+            int offsetTop = Integer.parseInt(offsetTopStr.substring(0,
+                    offsetTopStr.length() - 2));
+            int relativeTop = Util.getTouchOrMouseClientY(drag
+                    .getCurrentGwtEvent())
+                    - canvas.getAbsoluteTop()
+                    + offsetTop;
 
-	drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_LEFT,
-		relativeLeft);
-	drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_TOP,
-		relativeTop);
+            drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_LEFT,
+                    relativeLeft);
+            drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_TOP,
+                    relativeTop);
+        } else {
+            drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_LEFT,
+                    absoluteLeft);
+            drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_TOP,
+                    absoluteTop);
+        }
 
 	// Get component size
 	ComponentConnector widgetConnector = (ComponentConnector) drag
@@ -227,7 +238,7 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     public void setDragMode(LayoutDragMode mode) {
 	this.mode = mode;
 	ddHandler.updateDragMode(mode);
-	iframeShimsEnabled(iframeCovers);
+        iframeShimsEnabled(iframeCovers);
     }
 
     @Override

@@ -50,7 +50,9 @@ public class VDDAbsoluteLayoutDropHandler extends
 
     @Override
     public void dragOver(VDragEvent drag) {
-	drag.getDragImage().getStyle().setProperty("display", "");
+        if (drag.getDragImage() != null) {
+            drag.getDragImage().getStyle().setProperty("display", "");
+        }
 	getLayout().updateDragDetails(drag);
 	getLayout().postOverHook(drag);
     }
