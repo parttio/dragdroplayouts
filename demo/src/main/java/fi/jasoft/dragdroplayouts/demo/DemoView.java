@@ -1,17 +1,15 @@
 /*
  * Copyright 2014 John Ahlroos
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package fi.jasoft.dragdroplayouts.demo;
 
@@ -28,59 +26,57 @@ import com.vaadin.ui.CustomComponent;
 
 public abstract class DemoView extends CustomComponent implements View {
 
-    private final Navigator navigator;
+  private final Navigator navigator;
 
-    public DemoView(Navigator navigator) {
-	this.navigator = navigator;
-	setSizeFull();
-	setCompositionRoot(getLayout());
+  public DemoView(Navigator navigator) {
+    this.navigator = navigator;
+    setSizeFull();
+    setCompositionRoot(getLayout());
+  }
+
+  @Override
+  public void enter(ViewChangeEvent event) {}
+
+  public String getSource() {
+    String path = getClass().getCanonicalName().replaceAll("\\.", "/") + ".java";
+
+    InputStream is = getClass().getClassLoader().getResourceAsStream(path);
+    if (is == null) {
+      return "No source code available.";
     }
 
-    @Override
-    public void enter(ViewChangeEvent event) {
+    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+    try {
+
+      boolean inCodeBlock = false;
+
+      StringBuilder codelines = new StringBuilder();
+      String line = reader.readLine();
+      while (line != null) {
+        if (line.contains("//start-source")) {
+          inCodeBlock = true;
+        } else if (line.contains("//end-source")) {
+          inCodeBlock = false;
+        } else if (inCodeBlock) {
+          codelines.append(line);
+          codelines.append("\n");
+        }
+        line = reader.readLine();
+      }
+
+      reader.close();
+
+      String code = codelines.toString();
+
+      return code;
+    } catch (IOException e) {
+      return "No source code available.";
     }
+  }
 
-    public String getSource() {
-	String path = getClass().getCanonicalName().replaceAll("\\.", "/")
-		+ ".java";
+  public abstract Component getLayout();
 
-	InputStream is = getClass().getClassLoader().getResourceAsStream(path);
-	if (is == null) {
-	    return "No source code available.";
-	}
-
-	BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
-	try {
-
-	    boolean inCodeBlock = false;
-
-	    StringBuilder codelines = new StringBuilder();
-	    String line = reader.readLine();
-	    while (line != null) {
-		if (line.contains("//start-source")) {
-		    inCodeBlock = true;
-		} else if (line.contains("//end-source")) {
-		    inCodeBlock = false;
-		} else if (inCodeBlock) {
-		    codelines.append(line);
-		    codelines.append("\n");
-		}
-		line = reader.readLine();
-	    }
-
-	    reader.close();
-
-	    String code = codelines.toString();
-
-	    return code;
-	} catch (IOException e) {
-	    return "No source code available.";
-	}
-    }
-
-    public abstract Component getLayout();
-
-    public abstract String getCaption();
+  public abstract String getCaption();
 
 }

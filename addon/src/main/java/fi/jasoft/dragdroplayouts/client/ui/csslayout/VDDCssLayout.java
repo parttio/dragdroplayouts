@@ -1,17 +1,15 @@
 /*
  * Copyright 2014 John Ahlroos
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package fi.jasoft.dragdroplayouts.client.ui.csslayout;
 
@@ -51,389 +49,355 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * 
  */
 public class VDDCssLayout extends VCssLayout implements VHasDragMode,
-	VDDHasDropHandler<VDDCssLayoutDropHandler>, DragStartListener,
-	VHasDragFilter, VHasIframeShims, VHasDragImageReferenceSupport {
+    VDDHasDropHandler<VDDCssLayoutDropHandler>, DragStartListener, VHasDragFilter, VHasIframeShims,
+    VHasDragImageReferenceSupport {
 
-    public static final String DRAG_SHADOW_STYLE_NAME = "v-ddcsslayout-drag-shadow";
+  public static final String DRAG_SHADOW_STYLE_NAME = "v-ddcsslayout-drag-shadow";
 
-    private VDDCssLayoutDropHandler dropHandler;
+  private VDDCssLayoutDropHandler dropHandler;
 
-    private final VLayoutDragDropMouseHandler ddHandler = new VLayoutDragDropMouseHandler(
-	    this, LayoutDragMode.NONE);
+  private final VLayoutDragDropMouseHandler ddHandler = new VLayoutDragDropMouseHandler(this,
+      LayoutDragMode.NONE);
 
-    private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
+  private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
-    private VDragFilter dragFilter;
+  private VDragFilter dragFilter;
 
-    private double horizontalDropRatio = DDCssLayoutState.DEFAULT_HORIZONTAL_DROP_RATIO;
+  private double horizontalDropRatio = DDCssLayoutState.DEFAULT_HORIZONTAL_DROP_RATIO;
 
-    private double verticalDropRatio = DDCssLayoutState.DEFAULT_VERTICAL_DROP_RATIO;
+  private double verticalDropRatio = DDCssLayoutState.DEFAULT_VERTICAL_DROP_RATIO;
 
-    private LayoutDragMode mode = LayoutDragMode.NONE;
+  private LayoutDragMode mode = LayoutDragMode.NONE;
 
-    private boolean iframeCovers = false;
+  private boolean iframeCovers = false;
 
-    /**
-     * Default constructor
-     */
-    public VDDCssLayout() {
-	super();
+  /**
+   * Default constructor
+   */
+  public VDDCssLayout() {
+    super();
+  }
+
+  /**
+   * Can be used to listen to drag start events, must return true for the drag to commence. Return
+   * false to interrupt the drag:
+   */
+  public boolean dragStart(Widget widget, LayoutDragMode mode) {
+    return ddHandler.getDragMode() != LayoutDragMode.NONE && dragFilter.isDraggable(widget);
+  }
+
+  /**
+   * Returns the drop handler which handles the drop events
+   */
+  public VDDCssLayoutDropHandler getDropHandler() {
+    return dropHandler;
+  }
+
+  public void setDropHandler(VDDCssLayoutDropHandler dropHandler) {
+    this.dropHandler = dropHandler;
+  }
+
+  /**
+   * Returns the drag mode
+   * 
+   * @return
+   */
+  public LayoutDragMode getDragMode() {
+    return ddHandler.getDragMode();
+  }
+
+  @Override
+  protected void onLoad() {
+    super.onLoad();
+    ddHandler.addDragStartListener(this);
+    setDragMode(mode);
+    iframeShimsEnabled(iframeCovers);
+  }
+
+  @Override
+  protected void onUnload() {
+    super.onUnload();
+    ddHandler.removeDragStartListener(this);
+    ddHandler.updateDragMode(LayoutDragMode.NONE);
+    iframeCoverUtility.setIframeCoversEnabled(false, getElement(), LayoutDragMode.NONE);
+  }
+
+  /**
+   * A hook for extended components to post process the the drop before it is sent to the server.
+   * Useful if you don't want to override the whole drop handler.
+   */
+  protected boolean postDropHook(VDragEvent drag) {
+    // Extended classes can add content here...
+    return true;
+  }
+
+  /**
+   * A hook for extended components to post process the the enter event. Useful if you don't want to
+   * override the whole drophandler.
+   */
+  protected void postEnterHook(VDragEvent drag) {
+    // Extended classes can add content here...
+  }
+
+  /**
+   * A hook for extended components to post process the the leave event. Useful if you don't want to
+   * override the whole drophandler.
+   */
+  protected void postLeaveHook(VDragEvent drag) {
+    // Extended classes can add content here...
+  }
+
+  /**
+   * A hook for extended components to post process the the over event. Useful if you don't want to
+   * override the whole drophandler.
+   */
+  protected void postOverHook(VDragEvent drag) {
+    // Extended classes can add content here...
+  }
+
+  private Element placeHolderElement;
+
+  public void attachDragImageToLayout(VDragEvent drag) {
+    if (placeHolderElement == null) {
+      placeHolderElement = DOM.createDiv();
+      placeHolderElement.setInnerHTML("&nbsp;");
+    }
+  }
+
+  private void updatePlaceHolderStyleProperties(VDragEvent drag) {
+    ComponentConnector draggedConnector =
+        (ComponentConnector) drag.getTransferable()
+            .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
+    if (draggedConnector != null) {
+      int height = Util.getRequiredHeight(draggedConnector.getWidget());
+      int width = Util.getRequiredWidth(draggedConnector.getWidget());
+      String className = draggedConnector.getWidget().getElement().getClassName();
+
+      className =
+          className.replaceAll(VLayoutDragDropMouseHandler.ACTIVE_DRAG_SOURCE_STYLENAME, "");
+
+      placeHolderElement.setClassName(DRAG_SHADOW_STYLE_NAME);
+      placeHolderElement.addClassName(className);
+
+      placeHolderElement.getStyle().setWidth(width, Unit.PX);
+      placeHolderElement.getStyle().setHeight(height, Unit.PX);
+    }
+  }
+
+  public void detachDragImageFromLayout(VDragEvent drag) {
+    if (placeHolderElement != null) {
+      if (placeHolderElement.hasParentElement()) {
+        placeHolderElement.removeFromParent();
+      }
+      placeHolderElement = null;
+    }
+  }
+
+  /**
+   * Updates the drop details while dragging. This is needed to ensure client side criterias can
+   * validate the drop location.
+   * 
+   * @param event The drag event
+   */
+  protected void updateDragDetails(VDragEvent event) {
+
+    com.google.gwt.user.client.Element over = event.getElementOver();
+    if (placeHolderElement.isOrHasChild(over)) {
+      // Dragging over the placeholder
+      return;
     }
 
-    /**
-     * Can be used to listen to drag start events, must return true for the drag
-     * to commence. Return false to interrupt the drag:
-     */
-    public boolean dragStart(Widget widget, LayoutDragMode mode) {
-	return ddHandler.getDragMode() != LayoutDragMode.NONE
-		&& dragFilter.isDraggable(widget);
+    Widget widget = (Widget) Util.findWidget(over, null);
+    if (widget == null) {
+      // Null check
+      return;
     }
 
-    /**
-     * Returns the drop handler which handles the drop events
-     */
-    public VDDCssLayoutDropHandler getDropHandler() {
-	return dropHandler;
+    int offset = 0;
+    int index = -1;
+    for (int i = 0; i < getElement().getChildCount(); i++) {
+      Element child = getElement().getChild(i).cast();
+      if (child.isOrHasChild(placeHolderElement)) {
+        offset--;
+      } else if (child.isOrHasChild(widget.getElement())) {
+        index = i + offset;
+        break;
+      }
     }
-
-    public void setDropHandler(VDDCssLayoutDropHandler dropHandler) {
-	this.dropHandler = dropHandler;
-    }
-
-    /**
-     * Returns the drag mode
-     * 
-     * @return
-     */
-    public LayoutDragMode getDragMode() {
-	return ddHandler.getDragMode();
-    }
-
-    @Override
-    protected void onLoad() {
-	super.onLoad();
-	ddHandler.addDragStartListener(this);
-	setDragMode(mode);
-	iframeShimsEnabled(iframeCovers);
-    }
-
-    @Override
-    protected void onUnload() {
-	super.onUnload();
-	ddHandler.removeDragStartListener(this);
-	ddHandler.updateDragMode(LayoutDragMode.NONE);
-	iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
-		LayoutDragMode.NONE);
-    }
-
-    /**
-     * A hook for extended components to post process the the drop before it is
-     * sent to the server. Useful if you don't want to override the whole drop
-     * handler.
-     */
-    protected boolean postDropHook(VDragEvent drag) {
-	// Extended classes can add content here...
-	return true;
-    }
-
-    /**
-     * A hook for extended components to post process the the enter event.
-     * Useful if you don't want to override the whole drophandler.
-     */
-    protected void postEnterHook(VDragEvent drag) {
-	// Extended classes can add content here...
-    }
-
-    /**
-     * A hook for extended components to post process the the leave event.
-     * Useful if you don't want to override the whole drophandler.
-     */
-    protected void postLeaveHook(VDragEvent drag) {
-	// Extended classes can add content here...
-    }
-
-    /**
-     * A hook for extended components to post process the the over event. Useful
-     * if you don't want to override the whole drophandler.
-     */
-    protected void postOverHook(VDragEvent drag) {
-	// Extended classes can add content here...
-    }
-
-    private Element placeHolderElement;
-
-    public void attachDragImageToLayout(VDragEvent drag) {
-	if (placeHolderElement == null) {
-	    placeHolderElement = DOM.createDiv();
-	    placeHolderElement.setInnerHTML("&nbsp;");
-	}
-    }
-
-    private void updatePlaceHolderStyleProperties(VDragEvent drag) {
-	ComponentConnector draggedConnector = (ComponentConnector) drag
-		.getTransferable().getData(
-			Constants.TRANSFERABLE_DETAIL_COMPONENT);
-	if (draggedConnector != null) {
-	    int height = Util.getRequiredHeight(draggedConnector.getWidget());
-	    int width = Util.getRequiredWidth(draggedConnector.getWidget());
-	    String className = draggedConnector.getWidget().getElement()
-		    .getClassName();
-
-	    className = className.replaceAll(
-		    VLayoutDragDropMouseHandler.ACTIVE_DRAG_SOURCE_STYLENAME,
-		    "");
-
-	    placeHolderElement.setClassName(DRAG_SHADOW_STYLE_NAME);
-	    placeHolderElement.addClassName(className);
-
-	    placeHolderElement.getStyle().setWidth(width, Unit.PX);
-	    placeHolderElement.getStyle().setHeight(height, Unit.PX);
-	}
-    }
-
-    public void detachDragImageFromLayout(VDragEvent drag) {
-	if (placeHolderElement != null) {
-	    if (placeHolderElement.hasParentElement()) {
-		placeHolderElement.removeFromParent();
-	    }
-	    placeHolderElement = null;
-	}
-    }
-
-    /**
-     * Updates the drop details while dragging. This is needed to ensure client
-     * side criterias can validate the drop location.
-     * 
-     * @param event
-     *            The drag event
-     */
-    protected void updateDragDetails(VDragEvent event) {
-
-	com.google.gwt.user.client.Element over = event.getElementOver();
-	if (placeHolderElement.isOrHasChild(over)) {
-	    // Dragging over the placeholder
-	    return;
-	}
-
-	Widget widget = (Widget) Util.findWidget(over, null);
-	if (widget == null) {
-	    // Null check
-	    return;
-	}
-
-	int offset = 0;
-	int index = -1;
-	for (int i = 0; i < getElement().getChildCount(); i++) {
-	    Element child = getElement().getChild(i).cast();
-	    if (child.isOrHasChild(placeHolderElement)) {
-		offset--;
-	    } else if (child.isOrHasChild(widget.getElement())) {
-		index = i + offset;
-		break;
-	    }
-	}
-	event.getDropDetails().put(Constants.DROP_DETAIL_TO, index);
-
-	/*
-	 * The horizontal position within the cell
-	 */
-	event.getDropDetails().put(
-		Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
-		getHorizontalDropLocation(widget, event));
-
-	/*
-	 * The vertical position within the cell
-	 */
-	event.getDropDetails().put(
-		Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION,
-		getVerticalDropLocation(widget, event));
-
-	// Add mouse event details
-	MouseEventDetails details = MouseEventDetailsBuilder
-		.buildMouseEventDetails(event.getCurrentGwtEvent(),
-			getElement());
-	event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
-		details.serialize());
-    }
-
-    public void updateDrag(VDragEvent drag) {
-
-	if (placeHolderElement == null) {
-	    /*
-	     * Drag image might not have been detach due to lazy attaching in
-	     * the DragAndDropManager. Detach it again here if it has not been
-	     * detached.
-	     */
-	    attachDragImageToLayout(drag);
-	    return;
-	}
-
-	if (drag.getElementOver().isOrHasChild(placeHolderElement)) {
-	    return;
-	}
-
-	if (placeHolderElement.hasParentElement()) {
-	    /*
-	     * Remove the placeholder from the DOM so we can reposition
-	     */
-	    placeHolderElement.removeFromParent();
-	}
-
-	Widget w = Util.findWidget(drag.getElementOver(), null);
-	ComponentConnector draggedConnector = (ComponentConnector) drag
-		.getTransferable().getData(
-			Constants.TRANSFERABLE_DETAIL_COMPONENT);
-
-	if (w == draggedConnector.getWidget()) {
-	    /*
-	     * Dragging drag image over the placeholder should not have any
-	     * effect (except placeholder should be removed)
-	     */
-	    return;
-	}
-
-	if (w != null && w != this) {
-
-	    HorizontalDropLocation hl = getHorizontalDropLocation(w, drag);
-	    VerticalDropLocation vl = getVerticalDropLocation(w, drag);
-
-	    if (hl == HorizontalDropLocation.LEFT
-		    || vl == VerticalDropLocation.TOP) {
-		Element prev = w.getElement().getPreviousSibling().cast();
-		if (prev == null
-			|| !draggedConnector.getWidget().getElement()
-				.isOrHasChild(prev)) {
-
-		    w.getElement().getParentElement()
-			    .insertBefore(placeHolderElement, w.getElement());
-
-		}
-	    } else if (hl == HorizontalDropLocation.RIGHT
-		    || vl == VerticalDropLocation.BOTTOM) {
-		Element next = w.getElement().getNextSibling().cast();
-		if (next == null
-			|| !draggedConnector.getWidget().getElement()
-				.isOrHasChild(next)) {
-		    w.getElement().getParentElement()
-			    .insertAfter(placeHolderElement, w.getElement());
-		}
-
-	    } else {
-		Element prev = w.getElement().getPreviousSibling().cast();
-		if (prev == null
-			|| !draggedConnector.getWidget().getElement()
-				.isOrHasChild(prev)) {
-		    w.getElement().getParentElement()
-			    .insertBefore(placeHolderElement, w.getElement());
-		}
-	    }
-
-	} else {
-	    /*
-	     * First child or hoovering outside of current components
-	     */
-	    getElement().appendChild(placeHolderElement);
-	}
-
-	updatePlaceHolderStyleProperties(drag);
-    }
-
-    /**
-     * Returns the horizontal location within the cell when hoovering over the
-     * cell. By default the cell is devided into three parts: left,center,right
-     * with the ratios 10%,80%,10%;
-     * 
-     * @param container
-     *            The widget container
-     * @param event
-     *            The drag event
-     * @return The horizontal drop location
-     */
-    protected HorizontalDropLocation getHorizontalDropLocation(
-	    Widget container, VDragEvent event) {
-	return VDragDropUtil.getHorizontalDropLocation(container.getElement(),
-		Util.getTouchOrMouseClientX(event.getCurrentGwtEvent()),
-		horizontalDropRatio);
-    }
-
-    /**
-     * Returns the horizontal location within the cell when hoovering over the
-     * cell. By default the cell is devided into three parts: left,center,right
-     * with the ratios 10%,80%,10%;
-     * 
-     * @param container
-     *            The widget container
-     * @param event
-     *            The drag event
-     * @return The horizontal drop location
-     */
-    protected VerticalDropLocation getVerticalDropLocation(Widget container,
-	    VDragEvent event) {
-	return VDragDropUtil.getVerticalDropLocation(container.getElement(),
-		Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()),
-		verticalDropRatio);
-    }
+    event.getDropDetails().put(Constants.DROP_DETAIL_TO, index);
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter#getDragFilter
-     * ()
+     * The horizontal position within the cell
      */
-    public VDragFilter getDragFilter() {
-	return dragFilter;
+    event.getDropDetails().put(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION,
+        getHorizontalDropLocation(widget, event));
+
+    /*
+     * The vertical position within the cell
+     */
+    event.getDropDetails().put(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION,
+        getVerticalDropLocation(widget, event));
+
+    // Add mouse event details
+    MouseEventDetails details =
+        MouseEventDetailsBuilder.buildMouseEventDetails(event.getCurrentGwtEvent(), getElement());
+    event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT, details.serialize());
+  }
+
+  public void updateDrag(VDragEvent drag) {
+
+    if (placeHolderElement == null) {
+      /*
+       * Drag image might not have been detach due to lazy attaching in the DragAndDropManager.
+       * Detach it again here if it has not been detached.
+       */
+      attachDragImageToLayout(drag);
+      return;
     }
 
-    IframeCoverUtility getIframeCoverUtility() {
-	return iframeCoverUtility;
+    if (drag.getElementOver().isOrHasChild(placeHolderElement)) {
+      return;
     }
 
-    VLayoutDragDropMouseHandler getMouseHandler() {
-	return ddHandler;
+    if (placeHolderElement.hasParentElement()) {
+      /*
+       * Remove the placeholder from the DOM so we can reposition
+       */
+      placeHolderElement.removeFromParent();
     }
 
-    public double getHorizontalDropRatio() {
-	return horizontalDropRatio;
+    Widget w = Util.findWidget(drag.getElementOver(), null);
+    ComponentConnector draggedConnector =
+        (ComponentConnector) drag.getTransferable()
+            .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
+
+    if (w == draggedConnector.getWidget()) {
+      /*
+       * Dragging drag image over the placeholder should not have any effect (except placeholder
+       * should be removed)
+       */
+      return;
     }
 
-    public void setHorizontalDropRatio(float horizontalDropRatio) {
-	this.horizontalDropRatio = horizontalDropRatio;
+    if (w != null && w != this) {
+
+      HorizontalDropLocation hl = getHorizontalDropLocation(w, drag);
+      VerticalDropLocation vl = getVerticalDropLocation(w, drag);
+
+      if (hl == HorizontalDropLocation.LEFT || vl == VerticalDropLocation.TOP) {
+        Element prev = w.getElement().getPreviousSibling().cast();
+        if (prev == null || !draggedConnector.getWidget().getElement().isOrHasChild(prev)) {
+
+          w.getElement().getParentElement().insertBefore(placeHolderElement, w.getElement());
+
+        }
+      } else if (hl == HorizontalDropLocation.RIGHT || vl == VerticalDropLocation.BOTTOM) {
+        Element next = w.getElement().getNextSibling().cast();
+        if (next == null || !draggedConnector.getWidget().getElement().isOrHasChild(next)) {
+          w.getElement().getParentElement().insertAfter(placeHolderElement, w.getElement());
+        }
+
+      } else {
+        Element prev = w.getElement().getPreviousSibling().cast();
+        if (prev == null || !draggedConnector.getWidget().getElement().isOrHasChild(prev)) {
+          w.getElement().getParentElement().insertBefore(placeHolderElement, w.getElement());
+        }
+      }
+
+    } else {
+      /*
+       * First child or hoovering outside of current components
+       */
+      getElement().appendChild(placeHolderElement);
     }
 
-    public double getVerticalDropRatio() {
-	return verticalDropRatio;
-    }
+    updatePlaceHolderStyleProperties(drag);
+  }
 
-    public void setVerticalDropRatio(float verticalDropRatio) {
-	this.verticalDropRatio = verticalDropRatio;
-    }
+  /**
+   * Returns the horizontal location within the cell when hoovering over the cell. By default the
+   * cell is devided into three parts: left,center,right with the ratios 10%,80%,10%;
+   * 
+   * @param container The widget container
+   * @param event The drag event
+   * @return The horizontal drop location
+   */
+  protected HorizontalDropLocation getHorizontalDropLocation(Widget container, VDragEvent event) {
+    return VDragDropUtil.getHorizontalDropLocation(container.getElement(),
+        Util.getTouchOrMouseClientX(event.getCurrentGwtEvent()), horizontalDropRatio);
+  }
 
-    @Override
-    public void setDragFilter(VDragFilter filter) {
-	this.dragFilter = filter;
-    }
+  /**
+   * Returns the horizontal location within the cell when hoovering over the cell. By default the
+   * cell is devided into three parts: left,center,right with the ratios 10%,80%,10%;
+   * 
+   * @param container The widget container
+   * @param event The drag event
+   * @return The horizontal drop location
+   */
+  protected VerticalDropLocation getVerticalDropLocation(Widget container, VDragEvent event) {
+    return VDragDropUtil.getVerticalDropLocation(container.getElement(),
+        Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()), verticalDropRatio);
+  }
 
-    @Override
-    public void iframeShimsEnabled(boolean enabled) {
-	iframeCovers = enabled;
-	iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
-    }
+  /*
+   * (non-Javadoc)
+   * 
+   * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter#getDragFilter ()
+   */
+  public VDragFilter getDragFilter() {
+    return dragFilter;
+  }
 
-    @Override
-    public boolean isIframeShimsEnabled() {
-	return iframeCovers;
-    }
+  IframeCoverUtility getIframeCoverUtility() {
+    return iframeCoverUtility;
+  }
 
-    @Override
-    public void setDragMode(LayoutDragMode mode) {
-	this.mode = mode;
-	ddHandler.updateDragMode(mode);
-	iframeShimsEnabled(isIframeShimsEnabled());
-    }
+  VLayoutDragDropMouseHandler getMouseHandler() {
+    return ddHandler;
+  }
 
-    @Override
-    public void setDragImageProvider(VDragImageProvider provider) {
-	ddHandler.setDragImageProvider(provider);
-    }
+  public double getHorizontalDropRatio() {
+    return horizontalDropRatio;
+  }
+
+  public void setHorizontalDropRatio(float horizontalDropRatio) {
+    this.horizontalDropRatio = horizontalDropRatio;
+  }
+
+  public double getVerticalDropRatio() {
+    return verticalDropRatio;
+  }
+
+  public void setVerticalDropRatio(float verticalDropRatio) {
+    this.verticalDropRatio = verticalDropRatio;
+  }
+
+  @Override
+  public void setDragFilter(VDragFilter filter) {
+    this.dragFilter = filter;
+  }
+
+  @Override
+  public void iframeShimsEnabled(boolean enabled) {
+    iframeCovers = enabled;
+    iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
+  }
+
+  @Override
+  public boolean isIframeShimsEnabled() {
+    return iframeCovers;
+  }
+
+  @Override
+  public void setDragMode(LayoutDragMode mode) {
+    this.mode = mode;
+    ddHandler.updateDragMode(mode);
+    iframeShimsEnabled(isIframeShimsEnabled());
+  }
+
+  @Override
+  public void setDragImageProvider(VDragImageProvider provider) {
+    ddHandler.setDragImageProvider(provider);
+  }
 }

@@ -1,17 +1,15 @@
 /*
  * Copyright 2014 John Ahlroos
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package fi.jasoft.dragdroplayouts.demo.views;
 
@@ -29,92 +27,89 @@ import fi.jasoft.dragdroplayouts.drophandlers.DefaultAbsoluteLayoutDropHandler;
 
 public class DragdropIframeDragging extends DemoView {
 
-    public static final String NAME = "dd-iframes";
+  public static final String NAME = "dd-iframes";
 
-    public DragdropIframeDragging(Navigator navigator) {
-	super(navigator);
-    }
+  public DragdropIframeDragging(Navigator navigator) {
+    super(navigator);
+  }
 
-    private DDAbsoluteLayout createShimmedLayout() {
-	DDAbsoluteLayout layout = new DDAbsoluteLayout();
-	layout.setStyleName("shimmed-layout");
-	layout.setSizeFull();
-	layout.setDragMode(LayoutDragMode.CLONE);
-	layout.setDropHandler(new DefaultAbsoluteLayoutDropHandler());
+  private DDAbsoluteLayout createShimmedLayout() {
+    DDAbsoluteLayout layout = new DDAbsoluteLayout();
+    layout.setStyleName("shimmed-layout");
+    layout.setSizeFull();
+    layout.setDragMode(LayoutDragMode.CLONE);
+    layout.setDropHandler(new DefaultAbsoluteLayoutDropHandler());
 
-	/*
-	 * Enable shimming of iframe based components.
-	 * 
-	 * Iframe components will be draggable, but the page behind the iframe
-	 * cannot be accessed
-	 */
-	layout.setShim(true);
+    /*
+     * Enable shimming of iframe based components.
+     * 
+     * Iframe components will be draggable, but the page behind the iframe cannot be accessed
+     */
+    layout.setShim(true);
 
-	layout.addComponent(new Label(
-		"Adding iframe components to an layout where shimming is"
-			+ " turned on makes dragging possible but accessing the iframed component not possible. "
-			+ "For instance the tweet button below can be dragged around but not clicked"));
+    layout.addComponent(new Label("Adding iframe components to an layout where shimming is"
+        + " turned on makes dragging possible but accessing the iframed component not possible. "
+        + "For instance the tweet button below can be dragged around but not clicked"));
 
-	addComponentsToLayout(layout, null);
+    addComponentsToLayout(layout, null);
 
-	return layout;
-    }
+    return layout;
+  }
 
-    private DDAbsoluteLayout createUnShimmedLayout() {
-	DDAbsoluteLayout layout = new DDAbsoluteLayout();
-	layout.setStyleName("unshimmed-layout");
-	layout.setSizeFull();
-	layout.setDragMode(LayoutDragMode.CLONE);
-	layout.setDropHandler(new DefaultAbsoluteLayoutDropHandler());
+  private DDAbsoluteLayout createUnShimmedLayout() {
+    DDAbsoluteLayout layout = new DDAbsoluteLayout();
+    layout.setStyleName("unshimmed-layout");
+    layout.setSizeFull();
+    layout.setDragMode(LayoutDragMode.CLONE);
+    layout.setDropHandler(new DefaultAbsoluteLayoutDropHandler());
 
-	/*
-	 * Disable shimming of iframe based components.
-	 * 
-	 * Iframe components cannot be dragged but can be accessed through the
-	 * layout
-	 */
-	layout.setShim(false);
+    /*
+     * Disable shimming of iframe based components.
+     * 
+     * Iframe components cannot be dragged but can be accessed through the layout
+     */
+    layout.setShim(false);
 
-	layout.addComponent(new Label(
-		"Adding iframe components to an layout where shimming is"
-			+ " turned off makes dragging those components impossible. "
-			+ "For instance the tweet button below can be normally used but not dragged"));
+    layout.addComponent(new Label("Adding iframe components to an layout where shimming is"
+        + " turned off makes dragging those components impossible. "
+        + "For instance the tweet button below can be normally used but not dragged"));
 
-	addComponentsToLayout(layout, null);
+    addComponentsToLayout(layout, null);
 
-	return layout;
-    }
+    return layout;
+  }
 
-    private void addComponentsToLayout(DDAbsoluteLayout layout, String caption) {
+  private void addComponentsToLayout(DDAbsoluteLayout layout, String caption) {
 
-	BrowserFrame frame = new BrowserFrame(caption, new ExternalResource(
-		"https://platform.twitter.com/widgets/tweet_button.html"));
-	frame.setWidth("300px");
-	frame.setHeight("300px");
+    BrowserFrame frame =
+        new BrowserFrame(caption, new ExternalResource(
+            "https://platform.twitter.com/widgets/tweet_button.html"));
+    frame.setWidth("300px");
+    frame.setHeight("300px");
 
-	layout.addComponent(frame, "top:100px;left:50px");
+    layout.addComponent(frame, "top:100px;left:50px");
 
-    }
+  }
 
-    @Override
-    public Component getLayout() {
-	HorizontalLayout root = new HorizontalLayout();
-	root.setSizeFull();
-	root.setSpacing(true);
-	setCompositionRoot(root);
+  @Override
+  public Component getLayout() {
+    HorizontalLayout root = new HorizontalLayout();
+    root.setSizeFull();
+    root.setSpacing(true);
+    setCompositionRoot(root);
 
-	// Add a layout where shimming is turned on
-	root.addComponent(createShimmedLayout());
+    // Add a layout where shimming is turned on
+    root.addComponent(createShimmedLayout());
 
-	// Add a layout where shimming is turned off
-	root.addComponent(createUnShimmedLayout());
+    // Add a layout where shimming is turned off
+    root.addComponent(createUnShimmedLayout());
 
-	return root;
-    }
+    return root;
+  }
 
-    @Override
-    public String getCaption() {
-	return "Dragging iframes";
-    }
+  @Override
+  public String getCaption() {
+    return "Dragging iframes";
+  }
 
 }

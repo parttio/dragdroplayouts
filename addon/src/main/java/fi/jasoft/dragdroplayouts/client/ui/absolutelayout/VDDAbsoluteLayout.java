@@ -1,17 +1,15 @@
 /*
  * Copyright 2014 John Ahlroos
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package fi.jasoft.dragdroplayouts.client.ui.absolutelayout;
 
@@ -44,205 +42,188 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * @since 0.4.0
  */
 public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
-	VDDHasDropHandler<VDDAbsoluteLayoutDropHandler>, DragStartListener,
-	VHasDragFilter, VHasIframeShims, VHasDragImageReferenceSupport {
+    VDDHasDropHandler<VDDAbsoluteLayoutDropHandler>, DragStartListener, VHasDragFilter,
+    VHasIframeShims, VHasDragImageReferenceSupport {
 
-    public static final String CLASSNAME = "v-ddabsolutelayout";
+  public static final String CLASSNAME = "v-ddabsolutelayout";
 
-    private VDDAbsoluteLayoutDropHandler dropHandler;
+  private VDDAbsoluteLayoutDropHandler dropHandler;
 
-    private final VLayoutDragDropMouseHandler ddHandler = new VLayoutDragDropMouseHandler(
-	    this, LayoutDragMode.NONE);
+  private final VLayoutDragDropMouseHandler ddHandler = new VLayoutDragDropMouseHandler(this,
+      LayoutDragMode.NONE);
 
-    private VDragFilter dragFilter;
+  private VDragFilter dragFilter;
 
-    private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
+  private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
-    private LayoutDragMode mode = LayoutDragMode.NONE;
+  private LayoutDragMode mode = LayoutDragMode.NONE;
 
-    private boolean iframeCovers = false;
+  private boolean iframeCovers = false;
 
-    public VDDAbsoluteLayout() {
-	super();
-	addStyleName(CLASSNAME);
+  public VDDAbsoluteLayout() {
+    super();
+    addStyleName(CLASSNAME);
+  }
+
+  @Override
+  protected void onLoad() {
+    super.onLoad();
+    ddHandler.addDragStartListener(this);
+    setDragMode(mode);
+    iframeShimsEnabled(iframeCovers);
+  }
+
+  @Override
+  protected void onUnload() {
+    super.onUnload();
+    ddHandler.removeDragStartListener(this);
+    ddHandler.updateDragMode(LayoutDragMode.NONE);
+    iframeCoverUtility.setIframeCoversEnabled(false, getElement(), LayoutDragMode.NONE);
+  }
+
+  /**
+   * A hook for extended components to post process the the drop before it is sent to the server.
+   * Useful if you don't want to override the whole drop handler.
+   */
+  protected boolean postDropHook(VDragEvent drag) {
+    // Extended classes can add content here...
+    return true;
+  }
+
+  /**
+   * A hook for extended components to post process the the enter event. Useful if you don't want to
+   * override the whole drophandler.
+   */
+  protected void postEnterHook(VDragEvent drag) {
+    // Extended classes can add content here...
+  }
+
+  /**
+   * A hook for extended components to post process the the leave event. Useful if you don't want to
+   * override the whole drophandler.
+   */
+  protected void postLeaveHook(VDragEvent drag) {
+    // Extended classes can add content here...
+  }
+
+  /**
+   * A hook for extended components to post process the the over event. Useful if you don't want to
+   * override the whole drophandler.
+   */
+  protected void postOverHook(VDragEvent drag) {
+    // Extended classes can add content here...
+  }
+
+  /**
+   * Can be used to listen to drag start events, must return true for the drag to commence. Return
+   * false to interrupt the drag:
+   */
+  public boolean dragStart(Widget widget, LayoutDragMode mode) {
+    return ddHandler.getDragMode() != LayoutDragMode.NONE && dragFilter.isDraggable(widget);
+  }
+
+  /**
+   * Returns the drop handler which handles the drop events
+   */
+  public VDDAbsoluteLayoutDropHandler getDropHandler() {
+    return dropHandler;
+  }
+
+  public void setDropHandler(VDDAbsoluteLayoutDropHandler dropHandler) {
+    this.dropHandler = dropHandler;
+  }
+
+  public VDragFilter getDragFilter() {
+    return dragFilter;
+  }
+
+  IframeCoverUtility getIframeCoverUtility() {
+    return iframeCoverUtility;
+  }
+
+  VLayoutDragDropMouseHandler getMouseHandler() {
+    return ddHandler;
+  }
+
+  public LayoutDragMode getDragMode() {
+    return ddHandler.getDragMode();
+  }
+
+  protected void updateDragDetails(VDragEvent drag) {
+
+    // Get absolute coordinates
+    int absoluteLeft = getAbsoluteLeft();
+    int absoluteTop = getAbsoluteTop();
+
+    drag.getDropDetails().put(Constants.DROP_DETAIL_ABSOLUTE_LEFT, absoluteLeft);
+    drag.getDropDetails().put(Constants.DROP_DETAIL_ABSOLUTE_TOP, absoluteTop);
+
+    // Get relative coordinates
+    if (drag.getDragImage() != null) {
+      String offsetLeftStr = drag.getDragImage().getStyle().getMarginLeft();
+      int offsetLeft = Integer.parseInt(offsetLeftStr.substring(0, offsetLeftStr.length() - 2));
+      int relativeLeft =
+          Util.getTouchOrMouseClientX(drag.getCurrentGwtEvent()) - canvas.getAbsoluteLeft()
+              + offsetLeft;
+
+      String offsetTopStr = drag.getDragImage().getStyle().getMarginTop();
+      int offsetTop = Integer.parseInt(offsetTopStr.substring(0, offsetTopStr.length() - 2));
+      int relativeTop =
+          Util.getTouchOrMouseClientY(drag.getCurrentGwtEvent()) - canvas.getAbsoluteTop()
+              + offsetTop;
+
+      drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_LEFT, relativeLeft);
+      drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_TOP, relativeTop);
+    } else {
+      drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_LEFT, absoluteLeft);
+      drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_TOP, absoluteTop);
     }
 
-    @Override
-    protected void onLoad() {
-	super.onLoad();
-	ddHandler.addDragStartListener(this);
-	setDragMode(mode);
-	iframeShimsEnabled(iframeCovers);
+    // Get component size
+    ComponentConnector widgetConnector =
+        (ComponentConnector) drag.getTransferable()
+            .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
+    if (widgetConnector != null) {
+      drag.getDropDetails().put(Constants.DROP_DETAIL_COMPONENT_WIDTH,
+          widgetConnector.getWidget().getOffsetWidth());
+      drag.getDropDetails().put(Constants.DROP_DETAIL_COMPONENT_HEIGHT,
+          widgetConnector.getWidget().getOffsetHeight());
+    } else {
+      drag.getDropDetails().put(Constants.DROP_DETAIL_COMPONENT_WIDTH, -1);
+      drag.getDropDetails().put(Constants.DROP_DETAIL_COMPONENT_HEIGHT, -1);
     }
 
-    @Override
-    protected void onUnload() {
-	super.onUnload();
-	ddHandler.removeDragStartListener(this);
-	ddHandler.updateDragMode(LayoutDragMode.NONE);
-	iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
-		LayoutDragMode.NONE);
-    }
+    // Add mouse event details
+    MouseEventDetails details =
+        MouseEventDetailsBuilder.buildMouseEventDetails(drag.getCurrentGwtEvent(), getElement());
+    drag.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT, details.serialize());
+  }
 
-    /**
-     * A hook for extended components to post process the the drop before it is
-     * sent to the server. Useful if you don't want to override the whole drop
-     * handler.
-     */
-    protected boolean postDropHook(VDragEvent drag) {
-	// Extended classes can add content here...
-	return true;
-    }
+  @Override
+  public void setDragFilter(VDragFilter filter) {
+    this.dragFilter = filter;
+  }
 
-    /**
-     * A hook for extended components to post process the the enter event.
-     * Useful if you don't want to override the whole drophandler.
-     */
-    protected void postEnterHook(VDragEvent drag) {
-	// Extended classes can add content here...
-    }
+  @Override
+  public void iframeShimsEnabled(boolean enabled) {
+    iframeCovers = enabled;
+    iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
+  }
 
-    /**
-     * A hook for extended components to post process the the leave event.
-     * Useful if you don't want to override the whole drophandler.
-     */
-    protected void postLeaveHook(VDragEvent drag) {
-	// Extended classes can add content here...
-    }
+  @Override
+  public boolean isIframeShimsEnabled() {
+    return iframeCovers;
+  }
 
-    /**
-     * A hook for extended components to post process the the over event. Useful
-     * if you don't want to override the whole drophandler.
-     */
-    protected void postOverHook(VDragEvent drag) {
-	// Extended classes can add content here...
-    }
+  @Override
+  public void setDragMode(LayoutDragMode mode) {
+    this.mode = mode;
+    ddHandler.updateDragMode(mode);
+    iframeShimsEnabled(iframeCovers);
+  }
 
-    /**
-     * Can be used to listen to drag start events, must return true for the drag
-     * to commence. Return false to interrupt the drag:
-     */
-    public boolean dragStart(Widget widget, LayoutDragMode mode) {
-	return ddHandler.getDragMode() != LayoutDragMode.NONE
-		&& dragFilter.isDraggable(widget);
-    }
-
-    /**
-     * Returns the drop handler which handles the drop events
-     */
-    public VDDAbsoluteLayoutDropHandler getDropHandler() {
-	return dropHandler;
-    }
-
-    public void setDropHandler(VDDAbsoluteLayoutDropHandler dropHandler) {
-        this.dropHandler = dropHandler;
-    }
-
-    public VDragFilter getDragFilter() {
-	return dragFilter;
-    }
-
-    IframeCoverUtility getIframeCoverUtility() {
-	return iframeCoverUtility;
-    }
-
-    VLayoutDragDropMouseHandler getMouseHandler() {
-	return ddHandler;
-    }
-
-    public LayoutDragMode getDragMode() {
-	return ddHandler.getDragMode();
-    }
-
-    protected void updateDragDetails(VDragEvent drag) {
-
-	// Get absolute coordinates
-	int absoluteLeft = getAbsoluteLeft();
-	int absoluteTop = getAbsoluteTop();
-
-	drag.getDropDetails().put(Constants.DROP_DETAIL_ABSOLUTE_LEFT,
-		absoluteLeft);
-	drag.getDropDetails().put(Constants.DROP_DETAIL_ABSOLUTE_TOP,
-		absoluteTop);
-
-	// Get relative coordinates
-        if (drag.getDragImage() != null) {
-            String offsetLeftStr = drag.getDragImage().getStyle()
-                    .getMarginLeft();
-            int offsetLeft = Integer.parseInt(offsetLeftStr.substring(0,
-                    offsetLeftStr.length() - 2));
-            int relativeLeft = Util.getTouchOrMouseClientX(drag
-                    .getCurrentGwtEvent())
-                    - canvas.getAbsoluteLeft()
-                    + offsetLeft;
-
-            String offsetTopStr = drag.getDragImage().getStyle().getMarginTop();
-            int offsetTop = Integer.parseInt(offsetTopStr.substring(0,
-                    offsetTopStr.length() - 2));
-            int relativeTop = Util.getTouchOrMouseClientY(drag
-                    .getCurrentGwtEvent())
-                    - canvas.getAbsoluteTop()
-                    + offsetTop;
-
-            drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_LEFT,
-                    relativeLeft);
-            drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_TOP,
-                    relativeTop);
-        } else {
-            drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_LEFT,
-                    absoluteLeft);
-            drag.getDropDetails().put(Constants.DROP_DETAIL_RELATIVE_TOP,
-                    absoluteTop);
-        }
-
-	// Get component size
-	ComponentConnector widgetConnector = (ComponentConnector) drag
-		.getTransferable().getData(
-			Constants.TRANSFERABLE_DETAIL_COMPONENT);
-	if (widgetConnector != null) {
-	    drag.getDropDetails().put(Constants.DROP_DETAIL_COMPONENT_WIDTH,
-		    widgetConnector.getWidget().getOffsetWidth());
-	    drag.getDropDetails().put(Constants.DROP_DETAIL_COMPONENT_HEIGHT,
-		    widgetConnector.getWidget().getOffsetHeight());
-	} else {
-	    drag.getDropDetails()
-		    .put(Constants.DROP_DETAIL_COMPONENT_WIDTH, -1);
-	    drag.getDropDetails().put(Constants.DROP_DETAIL_COMPONENT_HEIGHT,
-		    -1);
-	}
-
-	// Add mouse event details
-	MouseEventDetails details = MouseEventDetailsBuilder
-		.buildMouseEventDetails(drag.getCurrentGwtEvent(), getElement());
-	drag.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
-		details.serialize());
-    }
-
-    @Override
-    public void setDragFilter(VDragFilter filter) {
-	this.dragFilter = filter;
-    }
-
-    @Override
-    public void iframeShimsEnabled(boolean enabled) {
-	iframeCovers = enabled;
-	iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
-    }
-
-    @Override
-    public boolean isIframeShimsEnabled() {
-	return iframeCovers;
-    }
-
-    @Override
-    public void setDragMode(LayoutDragMode mode) {
-	this.mode = mode;
-	ddHandler.updateDragMode(mode);
-        iframeShimsEnabled(iframeCovers);
-    }
-
-    @Override
-    public void setDragImageProvider(VDragImageProvider provider) {
-	ddHandler.setDragImageProvider(provider);
-    }
+  @Override
+  public void setDragImageProvider(VDragImageProvider provider) {
+    ddHandler.setDragImageProvider(provider);
+  }
 }

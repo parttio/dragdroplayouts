@@ -1,17 +1,15 @@
 /*
  * Copyright 2014 John Ahlroos
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package fi.jasoft.dragdroplayouts;
 
@@ -48,195 +46,186 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  * @since 0.4.0
  */
 @SuppressWarnings("serial")
-public class DDHorizontalSplitPanel extends HorizontalSplitPanel implements
-	LayoutDragSource, DropTarget, ShimSupport, LegacyComponent,
-	DragFilterSupport, DragImageReferenceSupport {
+public class DDHorizontalSplitPanel extends HorizontalSplitPanel implements LayoutDragSource,
+    DropTarget, ShimSupport, LegacyComponent, DragFilterSupport, DragImageReferenceSupport {
 
-    /**
-     * The drop handler which handles dropped components in the layout.
-     */
-    private DropHandler dropHandler;
+  /**
+   * The drop handler which handles dropped components in the layout.
+   */
+  private DropHandler dropHandler;
 
-    // A filter for dragging components.
-    private DragFilter dragFilter = DragFilter.ALL;
+  // A filter for dragging components.
+  private DragFilter dragFilter = DragFilter.ALL;
 
-    private DragImageProvider dragImageProvider;
+  private DragImageProvider dragImageProvider;
 
-    /**
-     * Contains the location and other information about the drop.
-     */
-    public class HorizontalSplitPanelTargetDetails extends TargetDetailsImpl {
+  /**
+   * Contains the location and other information about the drop.
+   */
+  public class HorizontalSplitPanelTargetDetails extends TargetDetailsImpl {
 
-	private Component over;
+    private Component over;
 
-	protected HorizontalSplitPanelTargetDetails(
-		Map<String, Object> rawDropData) {
-	    super(rawDropData, DDHorizontalSplitPanel.this);
+    protected HorizontalSplitPanelTargetDetails(Map<String, Object> rawDropData) {
+      super(rawDropData, DDHorizontalSplitPanel.this);
 
-	    if (getDropLocation() == HorizontalDropLocation.LEFT) {
-		over = getFirstComponent();
-	    } else if (getDropLocation() == HorizontalDropLocation.RIGHT) {
-		over = getSecondComponent();
-	    } else {
-		over = DDHorizontalSplitPanel.this;
-	    }
-	}
-
-	/**
-	 * The component over which the drop was made.
-	 * 
-	 * @return Null if the drop was not over a component, else the component
-	 */
-	public Component getOverComponent() {
-	    return over;
-	}
-
-	/**
-	 * Some details about the mouse event
-	 * 
-	 * @return details about the actual event that caused the event details.
-	 *         Practically mouse move or mouse up.
-	 */
-	public MouseEventDetails getMouseEvent() {
-	    return MouseEventDetails
-		    .deSerialize((String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
-	}
-
-	/**
-	 * Get the horizontal position of the dropped component within the
-	 * underlying cell.
-	 * 
-	 * @return The drop location
-	 */
-	public HorizontalDropLocation getDropLocation() {
-	    return HorizontalDropLocation
-		    .valueOf((String) getData(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION));
-	}
+      if (getDropLocation() == HorizontalDropLocation.LEFT) {
+        over = getFirstComponent();
+      } else if (getDropLocation() == HorizontalDropLocation.RIGHT) {
+        over = getSecondComponent();
+      } else {
+        over = DDHorizontalSplitPanel.this;
+      }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * The component over which the drop was made.
      * 
-     * @see
-     * com.vaadin.event.dd.DropTarget#translateDropTargetDetails(java.util.Map)
+     * @return Null if the drop was not over a component, else the component
      */
-    public TargetDetails translateDropTargetDetails(
-	    Map<String, Object> clientVariables) {
-	return new HorizontalSplitPanelTargetDetails(clientVariables);
+    public Component getOverComponent() {
+      return over;
     }
 
     /**
-     * Get the transferable created by a drag event.
-     */
-    public Transferable getTransferable(Map<String, Object> rawVariables) {
-	return new LayoutBoundTransferable(this, rawVariables);
-    }
-
-    /**
-     * Returns the drop handler which handles drop events from dropping
-     * components on the layout. Returns Null if dropping is disabled.
-     */
-    public DropHandler getDropHandler() {
-	return dropHandler;
-    }
-
-    /**
-     * Sets the current handler which handles dropped components on the layout.
-     * By setting a drop handler dropping components on the layout is enabled.
-     * By setting the dropHandler to null dropping is disabled.
+     * Some details about the mouse event
      * 
-     * @param dropHandler
-     *            The drop handler to handle drop events or null to disable
-     *            dropping
+     * @return details about the actual event that caused the event details. Practically mouse move
+     *         or mouse up.
      */
-    public void setDropHandler(DropHandler dropHandler) {
-	if (this.dropHandler != dropHandler) {
-	    this.dropHandler = dropHandler;
-	    requestRepaint();
-	}
+    public MouseEventDetails getMouseEvent() {
+      return MouseEventDetails.deSerialize((String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
     }
 
     /**
-     * Returns the mode of which dragging is visualized.
+     * Get the horizontal position of the dropped component within the underlying cell.
      * 
-     * @return
+     * @return The drop location
      */
-    public LayoutDragMode getDragMode() {
-	return getState().ddState.dragMode;
+    public HorizontalDropLocation getDropLocation() {
+      return HorizontalDropLocation
+          .valueOf((String) getData(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION));
     }
+  }
 
-    /**
-     * Enables dragging components from the layout.
-     * 
-     * @param mode
-     *            The mode of which how the dragging should be visualized.
-     */
-    public void setDragMode(LayoutDragMode mode) {
-	getState().ddState.dragMode = mode;
-    }
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.vaadin.event.dd.DropTarget#translateDropTargetDetails(java.util.Map)
+   */
+  public TargetDetails translateDropTargetDetails(Map<String, Object> clientVariables) {
+    return new HorizontalSplitPanelTargetDetails(clientVariables);
+  }
 
-    /**
-     * {@inheritDoc}
-     * 
-     */
-    public void paintContent(PaintTarget target) throws PaintException {
-	if (dropHandler != null && isEnabled()) {
-	    dropHandler.getAcceptCriterion().paint(target);
-	}
-    }
+  /**
+   * Get the transferable created by a drag event.
+   */
+  public Transferable getTransferable(Map<String, Object> rawVariables) {
+    return new LayoutBoundTransferable(this, rawVariables);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void setShim(boolean shim) {
-	getState().ddState.iframeShims = shim;
-    }
+  /**
+   * Returns the drop handler which handles drop events from dropping components on the layout.
+   * Returns Null if dropping is disabled.
+   */
+  public DropHandler getDropHandler() {
+    return dropHandler;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isShimmed() {
-	return getState().ddState.iframeShims;
+  /**
+   * Sets the current handler which handles dropped components on the layout. By setting a drop
+   * handler dropping components on the layout is enabled. By setting the dropHandler to null
+   * dropping is disabled.
+   * 
+   * @param dropHandler The drop handler to handle drop events or null to disable dropping
+   */
+  public void setDropHandler(DropHandler dropHandler) {
+    if (this.dropHandler != dropHandler) {
+      this.dropHandler = dropHandler;
+      requestRepaint();
     }
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public DragFilter getDragFilter() {
-	return dragFilter;
-    }
+  /**
+   * Returns the mode of which dragging is visualized.
+   * 
+   * @return
+   */
+  public LayoutDragMode getDragMode() {
+    return getState().ddState.dragMode;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void setDragFilter(DragFilter dragFilter) {
-	this.dragFilter = dragFilter;
-    }
+  /**
+   * Enables dragging components from the layout.
+   * 
+   * @param mode The mode of which how the dragging should be visualized.
+   */
+  public void setDragMode(LayoutDragMode mode) {
+    getState().ddState.dragMode = mode;
+  }
 
-    @Override
-    public DDHorizontalSplitPanelState getState() {
-	return (DDHorizontalSplitPanelState) super.getState();
+  /**
+   * {@inheritDoc}
+   * 
+   */
+  public void paintContent(PaintTarget target) throws PaintException {
+    if (dropHandler != null && isEnabled()) {
+      dropHandler.getAcceptCriterion().paint(target);
     }
+  }
 
-    @Override
-    public void beforeClientResponse(boolean initial) {
-	super.beforeClientResponse(initial);
-	DDUtil.onBeforeClientResponse(this, getState());
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public void setShim(boolean shim) {
+    getState().ddState.iframeShims = shim;
+  }
 
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-	// TODO Auto-generated method stub
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isShimmed() {
+    return getState().ddState.iframeShims;
+  }
 
-    @Override
-    public void setDragImageProvider(DragImageProvider provider) {
-	this.dragImageProvider = provider;
-	markAsDirty();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public DragFilter getDragFilter() {
+    return dragFilter;
+  }
 
-    @Override
-    public DragImageProvider getDragImageProvider() {
-	return this.dragImageProvider;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public void setDragFilter(DragFilter dragFilter) {
+    this.dragFilter = dragFilter;
+  }
+
+  @Override
+  public DDHorizontalSplitPanelState getState() {
+    return (DDHorizontalSplitPanelState) super.getState();
+  }
+
+  @Override
+  public void beforeClientResponse(boolean initial) {
+    super.beforeClientResponse(initial);
+    DDUtil.onBeforeClientResponse(this, getState());
+  }
+
+  @Override
+  public void changeVariables(Object source, Map<String, Object> variables) {
+    // TODO Auto-generated method stub
+  }
+
+  @Override
+  public void setDragImageProvider(DragImageProvider provider) {
+    this.dragImageProvider = provider;
+    markAsDirty();
+  }
+
+  @Override
+  public DragImageProvider getDragImageProvider() {
+    return this.dragImageProvider;
+  }
 }

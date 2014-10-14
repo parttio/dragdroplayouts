@@ -1,17 +1,15 @@
 /*
  * Copyright 2014 John Ahlroos
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package fi.jasoft.dragdroplayouts;
 
@@ -48,237 +46,223 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  * @since 0.8.0
  * 
  */
-public class DDFormLayout extends FormLayout implements LayoutDragSource,
-	DropTarget, ShimSupport, LegacyComponent, DragFilterSupport,
-	DragImageReferenceSupport {
-    /**
-     * The drop handler which handles dropped components in the layout.
-     */
-    private DropHandler dropHandler;
+public class DDFormLayout extends FormLayout implements LayoutDragSource, DropTarget, ShimSupport,
+    LegacyComponent, DragFilterSupport, DragImageReferenceSupport {
+  /**
+   * The drop handler which handles dropped components in the layout.
+   */
+  private DropHandler dropHandler;
 
-    // A filter for dragging components.
-    private DragFilter dragFilter = DragFilter.ALL;
+  // A filter for dragging components.
+  private DragFilter dragFilter = DragFilter.ALL;
 
-    private DragImageProvider dragImageProvider;
+  private DragImageProvider dragImageProvider;
 
-    /**
-     * Contains the component over which the drop was made and the index on
-     * which the drop was made.
-     */
-    public class FormLayoutTargetDetails extends TargetDetailsImpl {
+  /**
+   * Contains the component over which the drop was made and the index on which the drop was made.
+   */
+  public class FormLayoutTargetDetails extends TargetDetailsImpl {
 
-	private Component over;
+    private Component over;
 
-	private int index = -1;
+    private int index = -1;
 
-	protected FormLayoutTargetDetails(Map<String, Object> rawDropData) {
-	    super(rawDropData, DDFormLayout.this);
+    protected FormLayoutTargetDetails(Map<String, Object> rawDropData) {
+      super(rawDropData, DDFormLayout.this);
 
-	    // Get over which component (if any) the drop was made and the
-	    // index of it
-	    if (getData(Constants.DROP_DETAIL_TO) != null) {
-		index = Integer.valueOf(getData(Constants.DROP_DETAIL_TO)
-			.toString());
-		if (index >= 0 && index < components.size()) {
-		    over = components.get(index);
-		}
-	    }
+      // Get over which component (if any) the drop was made and the
+      // index of it
+      if (getData(Constants.DROP_DETAIL_TO) != null) {
+        index = Integer.valueOf(getData(Constants.DROP_DETAIL_TO).toString());
+        if (index >= 0 && index < components.size()) {
+          over = components.get(index);
+        }
+      }
 
-	    // Was the drop over no specific cell
-	    if (over == null) {
-		over = DDFormLayout.this;
-	    }
-	}
-
-	/**
-	 * The component over which the drop was made.
-	 * 
-	 * @return Null if the drop was not over a component, else the component
-	 */
-	public Component getOverComponent() {
-	    return over;
-	}
-
-	/**
-	 * The index over which the drop was made. If the drop was not made over
-	 * any component then it returns -1.
-	 * 
-	 * @return The index of the component or -1 if over no component.
-	 */
-	public int getOverIndex() {
-	    return index;
-	}
-
-	/**
-	 * Some details about the mouse event
-	 * 
-	 * @return details about the actual event that caused the event details.
-	 *         Practically mouse move or mouse up.
-	 */
-	public MouseEventDetails getMouseEvent() {
-	    return MouseEventDetails
-		    .deSerialize((String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
-	}
-
-	/**
-	 * Get the horizontal position of the dropped component within the
-	 * underlying cell.
-	 * 
-	 * @return The drop location
-	 */
-	public VerticalDropLocation getDropLocation() {
-	    return VerticalDropLocation
-		    .valueOf((String) getData(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION));
-	}
-
-	@Override
-	public Object getData(String key) {
-	    // TODO Auto-generated method stub
-	    return super.getData(key);
-	}
+      // Was the drop over no specific cell
+      if (over == null) {
+        over = DDFormLayout.this;
+      }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * The component over which the drop was made.
      * 
-     * @see
-     * com.vaadin.ui.AbstractOrderedLayout#translateDropTargetDetails(java.util
-     * .Map)
+     * @return Null if the drop was not over a component, else the component
      */
-    public void paintContent(PaintTarget target) throws PaintException {
-	if (dropHandler != null && isEnabled()) {
-	    dropHandler.getAcceptCriterion().paint(target);
-	}
-    }
-
-    public TargetDetails translateDropTargetDetails(
-	    Map<String, Object> clientVariables) {
-	return new FormLayoutTargetDetails(clientVariables);
+    public Component getOverComponent() {
+      return over;
     }
 
     /**
-     * Get the transferable created by a drag event.
-     */
-    public Transferable getTransferable(Map<String, Object> rawVariables) {
-	return new LayoutBoundTransferable(this, rawVariables);
-    }
-
-    /**
-     * Returns the drop handler which handles drop events from dropping
-     * components on the layout. Returns Null if dropping is disabled.
-     */
-    public DropHandler getDropHandler() {
-	return dropHandler;
-    }
-
-    /**
-     * Sets the current handler which handles dropped components on the layout.
-     * By setting a drop handler dropping components on the layout is enabled.
-     * By setting the dropHandler to null dropping is disabled.
+     * The index over which the drop was made. If the drop was not made over any component then it
+     * returns -1.
      * 
-     * @param dropHandler
-     *            The drop handler to handle drop events or null to disable
-     *            dropping
+     * @return The index of the component or -1 if over no component.
      */
-    public void setDropHandler(DropHandler dropHandler) {
-	if (this.dropHandler != dropHandler) {
-	    this.dropHandler = dropHandler;
-	    requestRepaint();
-	}
+    public int getOverIndex() {
+      return index;
     }
 
     /**
-     * Returns the mode of which dragging is visualized.
+     * Some details about the mouse event
      * 
-     * @return
+     * @return details about the actual event that caused the event details. Practically mouse move
+     *         or mouse up.
      */
-    public LayoutDragMode getDragMode() {
-	return getState().ddState.dragMode;
+    public MouseEventDetails getMouseEvent() {
+      return MouseEventDetails.deSerialize((String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
     }
 
     /**
-     * Enables dragging components from the layout.
+     * Get the horizontal position of the dropped component within the underlying cell.
      * 
-     * @param mode
-     *            The mode of which how the dragging should be visualized.
+     * @return The drop location
      */
-    public void setDragMode(LayoutDragMode mode) {
-	getState().ddState.dragMode = mode;
-    }
-
-    /**
-     * Sets the ratio which determines how a cell is divided into drop zones.
-     * The ratio is measured from the top and bottom borders. For example,
-     * setting the ratio to 0.3 will divide the drop zone in three equal parts
-     * (left,middle,right). Setting the ratio to 0.5 will disable dropping in
-     * the middle and setting it to 0 will disable dropping at the sides.
-     * 
-     * @param ratio
-     *            A ratio between 0 and 0.5. Default is 0.2
-     */
-    public void setComponentVerticalDropRatio(float ratio) {
-	if (getState().cellTopBottomDropRatio != ratio) {
-	    if (ratio >= 0 && ratio <= 0.5) {
-		getState().cellTopBottomDropRatio = ratio;
-	    } else {
-		throw new IllegalArgumentException(
-			"Ratio must be between 0 and 0.5");
-	    }
-	}
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setShim(boolean shim) {
-	getState().ddState.iframeShims = shim;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isShimmed() {
-	return getState().ddState.iframeShims;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public DragFilter getDragFilter() {
-	return dragFilter;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setDragFilter(DragFilter dragFilter) {
-	this.dragFilter = dragFilter;
+    public VerticalDropLocation getDropLocation() {
+      return VerticalDropLocation
+          .valueOf((String) getData(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION));
     }
 
     @Override
-    public DDFormLayoutState getState() {
-	return (DDFormLayoutState) super.getState();
+    public Object getData(String key) {
+      // TODO Auto-generated method stub
+      return super.getData(key);
     }
+  }
 
-    @Override
-    public void beforeClientResponse(boolean initial) {
-	super.beforeClientResponse(initial);
-	DDUtil.onBeforeClientResponse(this, getState());
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.vaadin.ui.AbstractOrderedLayout#translateDropTargetDetails(java.util .Map)
+   */
+  public void paintContent(PaintTarget target) throws PaintException {
+    if (dropHandler != null && isEnabled()) {
+      dropHandler.getAcceptCriterion().paint(target);
     }
+  }
 
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-	// TODO Auto-generated method stub
-    }
+  public TargetDetails translateDropTargetDetails(Map<String, Object> clientVariables) {
+    return new FormLayoutTargetDetails(clientVariables);
+  }
 
-    @Override
-    public void setDragImageProvider(DragImageProvider provider) {
-	this.dragImageProvider = provider;
-	markAsDirty();
-    }
+  /**
+   * Get the transferable created by a drag event.
+   */
+  public Transferable getTransferable(Map<String, Object> rawVariables) {
+    return new LayoutBoundTransferable(this, rawVariables);
+  }
 
-    @Override
-    public DragImageProvider getDragImageProvider() {
-	return this.dragImageProvider;
+  /**
+   * Returns the drop handler which handles drop events from dropping components on the layout.
+   * Returns Null if dropping is disabled.
+   */
+  public DropHandler getDropHandler() {
+    return dropHandler;
+  }
+
+  /**
+   * Sets the current handler which handles dropped components on the layout. By setting a drop
+   * handler dropping components on the layout is enabled. By setting the dropHandler to null
+   * dropping is disabled.
+   * 
+   * @param dropHandler The drop handler to handle drop events or null to disable dropping
+   */
+  public void setDropHandler(DropHandler dropHandler) {
+    if (this.dropHandler != dropHandler) {
+      this.dropHandler = dropHandler;
+      requestRepaint();
     }
+  }
+
+  /**
+   * Returns the mode of which dragging is visualized.
+   * 
+   * @return
+   */
+  public LayoutDragMode getDragMode() {
+    return getState().ddState.dragMode;
+  }
+
+  /**
+   * Enables dragging components from the layout.
+   * 
+   * @param mode The mode of which how the dragging should be visualized.
+   */
+  public void setDragMode(LayoutDragMode mode) {
+    getState().ddState.dragMode = mode;
+  }
+
+  /**
+   * Sets the ratio which determines how a cell is divided into drop zones. The ratio is measured
+   * from the top and bottom borders. For example, setting the ratio to 0.3 will divide the drop
+   * zone in three equal parts (left,middle,right). Setting the ratio to 0.5 will disable dropping
+   * in the middle and setting it to 0 will disable dropping at the sides.
+   * 
+   * @param ratio A ratio between 0 and 0.5. Default is 0.2
+   */
+  public void setComponentVerticalDropRatio(float ratio) {
+    if (getState().cellTopBottomDropRatio != ratio) {
+      if (ratio >= 0 && ratio <= 0.5) {
+        getState().cellTopBottomDropRatio = ratio;
+      } else {
+        throw new IllegalArgumentException("Ratio must be between 0 and 0.5");
+      }
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void setShim(boolean shim) {
+    getState().ddState.iframeShims = shim;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isShimmed() {
+    return getState().ddState.iframeShims;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public DragFilter getDragFilter() {
+    return dragFilter;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void setDragFilter(DragFilter dragFilter) {
+    this.dragFilter = dragFilter;
+  }
+
+  @Override
+  public DDFormLayoutState getState() {
+    return (DDFormLayoutState) super.getState();
+  }
+
+  @Override
+  public void beforeClientResponse(boolean initial) {
+    super.beforeClientResponse(initial);
+    DDUtil.onBeforeClientResponse(this, getState());
+  }
+
+  @Override
+  public void changeVariables(Object source, Map<String, Object> variables) {
+    // TODO Auto-generated method stub
+  }
+
+  @Override
+  public void setDragImageProvider(DragImageProvider provider) {
+    this.dragImageProvider = provider;
+    markAsDirty();
+  }
+
+  @Override
+  public DragImageProvider getDragImageProvider() {
+    return this.dragImageProvider;
+  }
 }

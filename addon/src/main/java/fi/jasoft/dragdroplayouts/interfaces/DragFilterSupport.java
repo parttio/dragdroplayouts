@@ -2,7 +2,7 @@ package fi.jasoft.dragdroplayouts.interfaces;
 
 public interface DragFilterSupport {
 
-    DragFilter getDragFilter();
+  DragFilter getDragFilter();
 
-    void setDragFilter(DragFilter dragFilter);
+  void setDragFilter(DragFilter dragFilter);
 }
