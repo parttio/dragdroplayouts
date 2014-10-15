@@ -19,6 +19,7 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.Label;
 
 import fi.jasoft.dragdroplayouts.DDVerticalLayout.VerticalLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
@@ -146,5 +147,37 @@ public class DefaultVerticalLayoutDropHandler extends AbstractDefaultLayoutDropH
     if (dropAlignment != null) {
       layout.setComponentAlignment(comp, dropAlignment);
     }
+  }
+
+  @Override
+  protected void handleHTML5Drop(DragAndDropEvent event) {
+    LayoutBoundTransferable transferable = (LayoutBoundTransferable) event.getTransferable();
+    VerticalLayoutTargetDetails details = (VerticalLayoutTargetDetails) event.getTargetDetails();
+    AbstractOrderedLayout layout = (AbstractOrderedLayout) details.getTarget();
+    int idx = (details).getOverIndex();
+
+    // Increase index if component is dropped after or above a
+    // previous
+    // component
+    VerticalDropLocation loc = (details).getDropLocation();
+    if (loc == VerticalDropLocation.MIDDLE || loc == VerticalDropLocation.BOTTOM) {
+      idx++;
+    }
+
+    String text = event.getTransferable().getData("html5Data").toString();
+    Component comp = new Label(text);
+
+    // Add component
+    if (idx >= 0) {
+      layout.addComponent(comp, idx);
+    } else {
+      layout.addComponent(comp);
+    }
+
+    // Add component alignment if given
+    if (dropAlignment != null) {
+      layout.setComponentAlignment(comp, dropAlignment);
+    }
+
   }
 }

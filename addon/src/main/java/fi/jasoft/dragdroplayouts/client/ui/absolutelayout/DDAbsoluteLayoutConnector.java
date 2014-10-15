@@ -63,6 +63,15 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector implement
     html5Support = HTML5Support.enable(this, dropHandler);
   }
 
+  @Override
+  public void onUnregister() {
+    if (html5Support != null) {
+      html5Support.disable();
+      html5Support = null;
+    }
+    super.onUnregister();
+  }
+
   public LayoutDragMode getDragMode() {
     return getWidget().getDragMode();
   }

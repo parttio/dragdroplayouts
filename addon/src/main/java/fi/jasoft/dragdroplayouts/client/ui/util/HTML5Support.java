@@ -34,6 +34,7 @@ import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VTransferable;
 
 import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
 
 /**
  * Provides HTML5 drops for any connector
@@ -96,9 +97,12 @@ public class HTML5Support {
     @Override
     public void onDragEnter(DragEnterEvent event) {
       NativeEvent nativeEvent = event.getNativeEvent();
+
       if (validate(nativeEvent)) {
         VTransferable transferable = new VTransferable();
         transferable.setDragSource(connector);
+
+        VDragAndDropManager.get().interruptDrag();
         vaadinDragEvent =
             VDragAndDropManager.get().startDrag(transferable, event.getNativeEvent(), false);
 
@@ -107,15 +111,19 @@ public class HTML5Support {
         VDragAndDropManager.get().setCurrentDropHandler(dropHandler);
 
         dropHandler.dragEnter(vaadinDragEvent);
-      } else if (vaadinDragEvent != null) {
+
+        nativeEvent.preventDefault();
+        nativeEvent.stopPropagation();
+
+      } else if (vaadinDragEvent != null && Element.is(nativeEvent.getEventTarget())) {
         vaadinDragEvent.setCurrentGwtEvent(nativeEvent);
         VDragAndDropManager.get().setCurrentDropHandler(null);
         VDragAndDropManager.get().interruptDrag();
         vaadinDragEvent = null;
-      }
 
-      nativeEvent.preventDefault();
-      nativeEvent.stopPropagation();
+        nativeEvent.preventDefault();
+        nativeEvent.stopPropagation();
+      }
     }
 
     private boolean validate(NativeEvent event) {
@@ -126,7 +134,18 @@ public class HTML5Support {
       Element target = Element.as(event.getEventTarget());
       Widget widget = Util.findWidget(target, null);
       ComponentConnector connector = Util.findConnectorFor(widget);
-      return this.connector == connector;
+
+      if (this.connector == connector) {
+        return true;
+      } else if (connector == null) {
+        return false;
+      } else if (connector.getWidget() instanceof VDDHasDropHandler) {
+        // Child connector handles its own drops
+        return false;
+      }
+
+      // Over non droppable child
+      return true;
     }
   }
 
