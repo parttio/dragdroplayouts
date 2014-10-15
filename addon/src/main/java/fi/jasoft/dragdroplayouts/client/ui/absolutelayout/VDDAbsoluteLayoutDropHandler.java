@@ -43,8 +43,12 @@ public class VDDAbsoluteLayoutDropHandler extends VDDAbstractDropHandler<VDDAbso
   @Override
   public void dragLeave(VDragEvent drag) {
     super.dragLeave(drag);
-    getLayout().updateDragDetails(drag);
-    getLayout().postLeaveHook(drag);
+
+    // Due to http://dev.vaadin.com/ticket/14880 we need to abort if gwt event is null
+    if (drag.getCurrentGwtEvent() != null) {
+      getLayout().updateDragDetails(drag);
+      getLayout().postLeaveHook(drag);
+    }
   };
 
   @Override

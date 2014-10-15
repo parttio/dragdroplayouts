@@ -21,8 +21,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.DragEnterEvent;
 import com.google.gwt.event.dom.client.DragEnterHandler;
-import com.google.gwt.event.dom.client.DragLeaveEvent;
-import com.google.gwt.event.dom.client.DragLeaveHandler;
 import com.google.gwt.event.dom.client.DragOverEvent;
 import com.google.gwt.event.dom.client.DragOverHandler;
 import com.google.gwt.event.dom.client.DropEvent;
@@ -30,6 +28,7 @@ import com.google.gwt.event.dom.client.DropHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.Util;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VTransferable;
@@ -45,8 +44,7 @@ public class HTML5Support {
 
   private final List<HandlerRegistration> handlers = new ArrayList<HandlerRegistration>();
 
-  public static class HTML5DragHandler implements DragEnterHandler, DragLeaveHandler,
-      DragOverHandler, DropHandler {
+  public static class HTML5DragHandler implements DragEnterHandler, DragOverHandler, DropHandler {
 
     private VDragEvent vaadinDragEvent;
 
@@ -63,10 +61,12 @@ public class HTML5Support {
     @Override
     public void onDrop(DropEvent event) {
       NativeEvent nativeEvent = event.getNativeEvent();
-      if (nativeEvent != null && Element.is(nativeEvent.getEventTarget())) {
+      if (validate(nativeEvent)) {
         nativeEvent.preventDefault();
+        nativeEvent.stopPropagation();
 
         vaadinDragEvent.setCurrentGwtEvent(nativeEvent);
+        VDragAndDropManager.get().setCurrentDropHandler(dropHandler);
 
         // FIXME only text currently supported
         String data = event.getData("text/plain");
@@ -85,47 +85,48 @@ public class HTML5Support {
     @Override
     public void onDragOver(DragOverEvent event) {
       NativeEvent nativeEvent = event.getNativeEvent();
-      if (Element.is(nativeEvent.getEventTarget())) {
-        Element target = Element.as(nativeEvent.getEventTarget());
-        if (connector.getWidget().getElement().equals(target)) {
-          nativeEvent.preventDefault();
-          vaadinDragEvent.setCurrentGwtEvent(nativeEvent);
-          dropHandler.dragOver(vaadinDragEvent);
-
-        }
-      }
-    }
-
-    @Override
-    public void onDragLeave(DragLeaveEvent event) {
-      NativeEvent nativeEvent = event.getNativeEvent();
-      if (Element.is(nativeEvent.getEventTarget())) {
-        Element target = Element.as(nativeEvent.getEventTarget());
-        if (connector.getWidget().getElement().equals(target)) {
-          nativeEvent.preventDefault();
-          vaadinDragEvent.setCurrentGwtEvent(nativeEvent);
-          dropHandler.dragLeave(vaadinDragEvent);
-        }
+      if (validate(nativeEvent)) {
+        nativeEvent.preventDefault();
+        vaadinDragEvent.setCurrentGwtEvent(nativeEvent);
+        VDragAndDropManager.get().setCurrentDropHandler(dropHandler);
+        dropHandler.dragOver(vaadinDragEvent);
       }
     }
 
     @Override
     public void onDragEnter(DragEnterEvent event) {
       NativeEvent nativeEvent = event.getNativeEvent();
-      if (vaadinDragEvent == null && Element.is(nativeEvent.getEventTarget())) {
-        Element target = Element.as(nativeEvent.getEventTarget());
-
-        nativeEvent.preventDefault();
-        nativeEvent.stopPropagation();
-
+      if (validate(nativeEvent)) {
         VTransferable transferable = new VTransferable();
         transferable.setDragSource(connector);
         vaadinDragEvent =
             VDragAndDropManager.get().startDrag(transferable, event.getNativeEvent(), false);
 
         vaadinDragEvent.setCurrentGwtEvent(nativeEvent);
+
+        VDragAndDropManager.get().setCurrentDropHandler(dropHandler);
+
         dropHandler.dragEnter(vaadinDragEvent);
+      } else if (vaadinDragEvent != null) {
+        vaadinDragEvent.setCurrentGwtEvent(nativeEvent);
+        VDragAndDropManager.get().setCurrentDropHandler(null);
+        VDragAndDropManager.get().interruptDrag();
+        vaadinDragEvent = null;
       }
+
+      nativeEvent.preventDefault();
+      nativeEvent.stopPropagation();
+    }
+
+    private boolean validate(NativeEvent event) {
+      if (!Element.is(event.getEventTarget())) {
+        return false;
+      }
+
+      Element target = Element.as(event.getEventTarget());
+      Widget widget = Util.findWidget(target, null);
+      ComponentConnector connector = Util.findConnectorFor(widget);
+      return this.connector == connector;
     }
   }
 
@@ -140,7 +141,6 @@ public class HTML5Support {
     final HTML5DragHandler dragHandler = new HTML5DragHandler(connector, handler);
 
     support.handlers.add(w.addDomHandler(dragHandler, DragEnterEvent.getType()));
-    support.handlers.add(w.addDomHandler(dragHandler, DragLeaveEvent.getType()));
     support.handlers.add(w.addDomHandler(dragHandler, DragOverEvent.getType()));
     support.handlers.add(w.addDomHandler(dragHandler, DropEvent.getType()));
 
