@@ -13,7 +13,7 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.horizontalsplitpanel;
 
-import com.google.gwt.user.client.Element;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
@@ -230,6 +230,9 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements VH
    */
   protected void updateDropDetails(VDragEvent event) {
     Element over = event.getElementOver();
+    if (over == null) {
+      return;
+    }
 
     // Resolve where the drop was made
     HorizontalDropLocation location = null;
