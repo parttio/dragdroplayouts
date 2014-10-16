@@ -56,7 +56,7 @@ public class VDDHorizontalSplitPanelDropHandler extends
         (ComponentConnector) drag.getTransferable()
             .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
 
-    if (getLayout().equals(widgetConnector.getWidget())) {
+    if (widgetConnector != null && getLayout().equals(widgetConnector.getWidget())) {
       return;
     }
 

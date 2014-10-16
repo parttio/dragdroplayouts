@@ -66,4 +66,21 @@ public class DefaultHorizontalSplitPanelDropHandler extends AbstractDefaultLayou
       panel.setSecondComponent(component);
     }
   }
+
+  @Override
+  protected void handleHTML5Drop(DragAndDropEvent event) {
+    HorizontalSplitPanelTargetDetails details =
+        (HorizontalSplitPanelTargetDetails) event.getTargetDetails();
+    DDHorizontalSplitPanel panel = (DDHorizontalSplitPanel) details.getTarget();
+
+    if (details.getDropLocation() == HorizontalDropLocation.LEFT) {
+      // Dropped in the left area
+      panel.setFirstComponent(resolveComponentFromHTML5Drop(event));
+
+    } else if (details.getDropLocation() == HorizontalDropLocation.RIGHT) {
+      // Dropped in the right area
+      panel.setSecondComponent(resolveComponentFromHTML5Drop(event));
+    }
+
+  }
 }
