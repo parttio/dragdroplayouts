@@ -19,6 +19,7 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.Label;
 
 import fi.jasoft.dragdroplayouts.DDHorizontalLayout.HorizontalLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
@@ -135,6 +136,38 @@ public class DefaultHorizontalLayoutDropHandler extends AbstractDefaultLayoutDro
     if (loc == HorizontalDropLocation.CENTER || loc == HorizontalDropLocation.RIGHT) {
       idx++;
     }
+
+    // Add component
+    if (idx >= 0) {
+      layout.addComponent(comp, idx);
+    } else {
+      layout.addComponent(comp);
+    }
+
+    // Add component alignment if given
+    if (dropAlignment != null) {
+      layout.setComponentAlignment(comp, dropAlignment);
+    }
+  }
+
+  @Override
+  protected void handleHTML5Drop(DragAndDropEvent event) {
+    LayoutBoundTransferable transferable = (LayoutBoundTransferable) event.getTransferable();
+    HorizontalLayoutTargetDetails details =
+        (HorizontalLayoutTargetDetails) event.getTargetDetails();
+    AbstractOrderedLayout layout = (AbstractOrderedLayout) details.getTarget();
+    Component source = event.getTransferable().getSourceComponent();
+    int idx = (details).getOverIndex();
+
+    // Increase index if component is dropped after or above a
+    // previous component
+    HorizontalDropLocation loc = (details).getDropLocation();
+    if (loc == HorizontalDropLocation.CENTER || loc == HorizontalDropLocation.RIGHT) {
+      idx++;
+    }
+
+    String text = event.getTransferable().getData("html5Data").toString();
+    Component comp = new Label(text);
 
     // Add component
     if (idx >= 0) {

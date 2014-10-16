@@ -23,10 +23,13 @@ import fi.jasoft.dragdroplayouts.DDHorizontalLayout;
 import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.util.HTML5Support;
 
 @Connect(DDHorizontalLayout.class)
 public class DDHorizontalLayoutConnector extends HorizontalLayoutConnector implements Paintable,
     VHasDragFilter {
+
+  private HTML5Support html5Support;
 
   @Override
   public VDDHorizontalLayout getWidget() {
@@ -45,7 +48,21 @@ public class DDHorizontalLayoutConnector extends HorizontalLayoutConnector imple
   }
 
   public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-    VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, new VDDHorizontalLayoutDropHandler(this));
+    VDDHorizontalLayoutDropHandler dropHandler = new VDDHorizontalLayoutDropHandler(this);
+    VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
+    if (html5Support != null) {
+      html5Support.disable();
+    }
+    html5Support = HTML5Support.enable(this, dropHandler);
+  }
+
+  @Override
+  public void onUnregister() {
+    if (html5Support != null) {
+      html5Support.disable();
+      html5Support = null;
+    }
+    super.onUnregister();
   }
 
   @Override
