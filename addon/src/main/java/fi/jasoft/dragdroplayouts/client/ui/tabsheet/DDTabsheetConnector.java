@@ -23,9 +23,12 @@ import fi.jasoft.dragdroplayouts.DDTabSheet;
 import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.util.HTML5Support;
 
 @Connect(DDTabSheet.class)
 public class DDTabsheetConnector extends TabsheetConnector implements Paintable, VHasDragFilter {
+
+  private HTML5Support html5Support;
 
   @Override
   protected void init() {
@@ -45,7 +48,21 @@ public class DDTabsheetConnector extends TabsheetConnector implements Paintable,
 
   @Override
   public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-    VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, new VDDTabsheetDropHandler(this));
+    VDDTabsheetDropHandler dropHandler = new VDDTabsheetDropHandler(this);
+    VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
+    if (html5Support != null) {
+      html5Support.disable();
+    }
+    html5Support = HTML5Support.enable(this, dropHandler);
+  }
+
+  @Override
+  public void onUnregister() {
+    if (html5Support != null) {
+      html5Support.disable();
+      html5Support = null;
+    }
+    super.onUnregister();
   }
 
   @Override

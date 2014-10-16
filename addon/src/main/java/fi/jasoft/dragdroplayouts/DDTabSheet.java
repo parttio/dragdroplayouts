@@ -134,11 +134,6 @@ public class DDTabSheet extends TabSheet implements LayoutDragSource, DropTarget
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.vaadin.event.dd.DragSource#getTransferable(java.util.Map)
-   */
   public Transferable getTransferable(Map<String, Object> rawVariables) {
     if (rawVariables.get(Constants.TRANSFERABLE_DETAIL_INDEX) != null) {
       // We dragged a tab, substitute component with tab content

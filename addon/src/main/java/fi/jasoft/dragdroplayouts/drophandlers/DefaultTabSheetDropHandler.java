@@ -69,7 +69,6 @@ public class DefaultTabSheetDropHandler extends AbstractDefaultLayoutDropHandler
         tabSheet.setTabPosition(tab, idx);
       }
     }
-
   }
 
   @Override
@@ -83,6 +82,23 @@ public class DefaultTabSheetDropHandler extends AbstractDefaultLayoutDropHandler
     ComponentContainer source = (ComponentContainer) transferable.getSourceComponent();
 
     source.removeComponent(c);
+    if (location == HorizontalDropLocation.LEFT) {
+      tabSheet.addTab(c, idx);
+    } else if (location == HorizontalDropLocation.RIGHT) {
+      tabSheet.addTab(c, idx + 1);
+    }
+  }
+
+  @Override
+  protected void handleHTML5Drop(DragAndDropEvent event) {
+    TabSheetTargetDetails details = (TabSheetTargetDetails) event.getTargetDetails();
+    HorizontalDropLocation location = details.getDropLocation();
+    DDTabSheet tabSheet = (DDTabSheet) details.getTarget();
+    int idx = details.getOverIndex();
+
+    Component c = resolveComponentFromHTML5Drop(event);
+    c.setCaption(event.getTransferable().getData("html5Data").toString());
+
     if (location == HorizontalDropLocation.LEFT) {
       tabSheet.addTab(c, idx);
     } else if (location == HorizontalDropLocation.RIGHT) {

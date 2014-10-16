@@ -13,11 +13,10 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.tabsheet;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
@@ -59,8 +58,6 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
   public static final String CLASSNAME_NEW_TAB_CENTER = "new-tab-center";
 
   private VDDTabsheetDropHandler dropHandler;
-
-  private ApplicationConnection client;
 
   private final ComplexPanel tabBar;
   private final VTabsheetPanel tabPanel;
@@ -189,6 +186,8 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
    */
   protected void updateDropDetails(VDragEvent event) {
     Element element = event.getElementOver();
+    if (element == null)
+      return;
 
     if (tabBar.getElement().isOrHasChild(element)) {
       Widget w = Util.findWidget(element, null);
@@ -210,7 +209,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
 
         // Add drop location
         HorizontalDropLocation location =
-            VDragDropUtil.getHorizontalDropLocation(element,
+            VDragDropUtil.getHorizontalDropLocation(DOM.asOld(element),
                 Util.getTouchOrMouseClientX(event.getCurrentGwtEvent()), tabLeftRightDropRatio);
         event.getDropDetails().put(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION, location);
       }
@@ -244,7 +243,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
 
         // Over a tab
         HorizontalDropLocation location =
-            VDragDropUtil.getHorizontalDropLocation(element,
+            VDragDropUtil.getHorizontalDropLocation(DOM.asOld(element),
                 Util.getTouchOrMouseClientX(event.getCurrentGwtEvent()), tabLeftRightDropRatio);
 
         if (location == HorizontalDropLocation.LEFT) {
