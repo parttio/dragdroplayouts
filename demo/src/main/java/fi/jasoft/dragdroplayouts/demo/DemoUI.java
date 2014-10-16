@@ -22,20 +22,20 @@ import java.util.List;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.ColumnHeaderMode;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.ui.themes.ValoTheme;
 
 import de.java2html.converter.JavaSource2HTMLConverter;
 import de.java2html.javasource.JavaSource;
@@ -61,7 +61,7 @@ public class DemoUI extends UI {
 
   private Navigator navigator;
 
-  private ListSelect selection;
+  private Table selection;
 
   private final List<DemoView> views = new ArrayList<DemoView>();
 
@@ -70,15 +70,13 @@ public class DemoUI extends UI {
   @Override
   protected void init(VaadinRequest request) {
 
-    VerticalLayout content = new VerticalLayout();
+    HorizontalLayout content = new HorizontalLayout();
     content.setSizeFull();
-
-    Label header = new Label("DragDropLayouts for Vaadin 7");
-    header.setStyleName(Reindeer.LABEL_H1);
-    content.addComponent(header);
     setContent(content);
 
-    content.addComponent(new Label("<br/><hr/>", ContentMode.HTML));
+    Label header = new Label("DragDropLayouts for Vaadin 7");
+    header.setStyleName(ValoTheme.LABEL_H1);
+    content.addComponent(header);
 
     HorizontalLayout hl = new HorizontalLayout();
     hl.setSizeFull();
@@ -151,18 +149,26 @@ public class DemoUI extends UI {
     views.add(view);
   }
 
-  private ListSelect createViewSelection() {
+  private Table createViewSelection() {
 
-    BeanItemContainer<DemoView> views = new BeanItemContainer<DemoView>(DemoView.class);
-    views.addAll(this.views);
 
-    ListSelect select = new ListSelect();
+    Table select = new Table();
+    select.addGeneratedColumn("caption", new Table.ColumnGenerator() {
+
+      @Override
+      public Object generateCell(Table source, Object itemId, Object columnId) {
+        return ((DemoView) itemId).getCaption();
+      }
+    });
+    select.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
     select.setNullSelectionAllowed(false);
     select.setImmediate(true);
-    select.setContainerDataSource(views);
+    select.setItemCaptionMode(ItemCaptionMode.PROPERTY);
     select.setItemCaptionPropertyId("caption");
     select.setWidth("200px");
     select.setHeight("100%");
+    select.setPageLength(this.views.size());
+    select.setSelectable(true);
 
     select.addValueChangeListener(new Property.ValueChangeListener() {
 
@@ -178,6 +184,8 @@ public class DemoUI extends UI {
         }
       }
     });
+
+    select.addItems(this.views);
 
     return select;
   }

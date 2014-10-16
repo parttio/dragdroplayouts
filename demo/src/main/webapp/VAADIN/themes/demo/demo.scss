@@ -1,7 +1,7 @@
-@import "../reindeer/reindeer.scss";
+@import "../valo/valo.scss";
 
 @mixin demo {
-	@include reindeer;
+	@include valo;
 
 	/* Add your theme selectors here */
 }
