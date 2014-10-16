@@ -67,4 +67,20 @@ public class DefaultVerticalSplitPanelDropHandler extends AbstractDefaultLayoutD
       panel.setSecondComponent(component);
     }
   }
+
+  @Override
+  protected void handleHTML5Drop(DragAndDropEvent event) {
+    VerticalSplitPanelTargetDetails details =
+        (VerticalSplitPanelTargetDetails) event.getTargetDetails();
+    DDVerticalSplitPanel panel = (DDVerticalSplitPanel) details.getTarget();
+
+    if (details.getDropLocation() == VerticalDropLocation.TOP) {
+      // Dropped in the left area
+      panel.setFirstComponent(resolveComponentFromHTML5Drop(event));
+
+    } else if (details.getDropLocation() == VerticalDropLocation.BOTTOM) {
+      // Dropped in the right area
+      panel.setSecondComponent(resolveComponentFromHTML5Drop(event));
+    }
+  }
 }
