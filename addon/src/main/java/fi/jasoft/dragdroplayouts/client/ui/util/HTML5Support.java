@@ -73,12 +73,7 @@ public class HTML5Support {
         String data = event.getData("text/plain");
         vaadinDragEvent.getTransferable().setData("html5Data", data);
 
-        if (dropHandler.drop(vaadinDragEvent)) {
-          VDragAndDropManager.get().endDrag();
-        } else {
-          VDragAndDropManager.get().interruptDrag();
-        }
-
+        VDragAndDropManager.get().endDrag();
         vaadinDragEvent = null;
       }
     }

@@ -19,7 +19,6 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.Label;
 
 import fi.jasoft.dragdroplayouts.DDHorizontalLayout.HorizontalLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
@@ -166,8 +165,7 @@ public class DefaultHorizontalLayoutDropHandler extends AbstractDefaultLayoutDro
       idx++;
     }
 
-    String text = event.getTransferable().getData("html5Data").toString();
-    Component comp = new Label(text);
+    Component comp = resolveComponentFromHTML5Drop(event);
 
     // Add component
     if (idx >= 0) {

@@ -33,12 +33,6 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 @SuppressWarnings("serial")
 public class DefaultCssLayoutDropHandler extends AbstractDefaultLayoutDropHandler {
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see fi.jasoft.dragdroplayouts.drophandlers.AbstractDefaultLayoutDropHandler
-   * #handleComponentReordering(com.vaadin.event.dd.DragAndDropEvent)
-   */
   @Override
   protected void handleComponentReordering(DragAndDropEvent event) {
     // Component re-ordering
@@ -60,12 +54,6 @@ public class DefaultCssLayoutDropHandler extends AbstractDefaultLayoutDropHandle
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see fi.jasoft.dragdroplayouts.drophandlers.AbstractDefaultLayoutDropHandler
-   * #handleDropFromLayout(com.vaadin.event.dd.DragAndDropEvent)
-   */
   @Override
   protected void handleDropFromLayout(DragAndDropEvent event) {
     LayoutBoundTransferable transferable = (LayoutBoundTransferable) event.getTransferable();
@@ -114,6 +102,34 @@ public class DefaultCssLayoutDropHandler extends AbstractDefaultLayoutDropHandle
       layout.addComponent(comp, idx);
     } else {
       layout.addComponent(comp);
+    }
+  }
+
+  @Override
+  protected void handleHTML5Drop(DragAndDropEvent event) {
+    CssLayoutTargetDetails details = (CssLayoutTargetDetails) event.getTargetDetails();
+    Component over = details.getOverComponent();
+    DDCssLayout layout = (DDCssLayout) details.getTarget();
+    int idx = (details).getOverIndex();
+    HorizontalDropLocation hl = details.getHorizontalDropLocation();
+    VerticalDropLocation vl = details.getVerticalDropLocation();
+
+    if (over == layout) {
+      if (vl == VerticalDropLocation.TOP || hl == HorizontalDropLocation.LEFT) {
+        idx = 0;
+      } else if (vl == VerticalDropLocation.BOTTOM || hl == HorizontalDropLocation.RIGHT) {
+        idx = -1;
+      }
+    } else {
+      if (vl == VerticalDropLocation.BOTTOM || hl == HorizontalDropLocation.RIGHT) {
+        idx++;
+      }
+    }
+
+    if (idx >= 0 && idx < layout.getComponentCount()) {
+      layout.addComponent(resolveComponentFromHTML5Drop(event), idx);
+    } else {
+      layout.addComponent(resolveComponentFromHTML5Drop(event));
     }
   }
 }

@@ -20,7 +20,6 @@ import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.Label;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.DDGridLayout;
@@ -138,11 +137,7 @@ public class DefaultGridLayoutDropHandler extends AbstractDefaultLayoutDropHandl
     GridLayoutTargetDetails details = (GridLayoutTargetDetails) event.getTargetDetails();
     int row = details.getOverRow();
     int column = details.getOverColumn();
-
-    String text = event.getTransferable().getData("html5Data").toString();
-    Component comp = new Label(text);
-
-    addComponent(event, comp, column, row);
+    addComponent(event, resolveComponentFromHTML5Drop(event), column, row);
   }
 
   protected void addComponent(DragAndDropEvent event, Component component, int column, int row) {
