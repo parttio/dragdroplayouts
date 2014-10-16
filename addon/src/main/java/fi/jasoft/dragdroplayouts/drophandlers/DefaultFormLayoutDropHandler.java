@@ -116,7 +116,7 @@ public class DefaultFormLayoutDropHandler extends AbstractDefaultLayoutDropHandl
     FormLayoutTargetDetails details = (FormLayoutTargetDetails) event.getTargetDetails();
     AbstractOrderedLayout layout = (AbstractOrderedLayout) details.getTarget();
     Component source = event.getTransferable().getSourceComponent();
-    int idx = (details).getOverIndex();
+    int idx = details.getOverIndex();
     Component comp = transferable.getComponent();
 
     // Check that we are not dragging an outer layout into an inner
@@ -160,8 +160,34 @@ public class DefaultFormLayoutDropHandler extends AbstractDefaultLayoutDropHandl
   }
 
   @Override
-  public AcceptCriterion getAcceptCriterion() {
+  protected void handleHTML5Drop(DragAndDropEvent event) {
+    FormLayoutTargetDetails details = (FormLayoutTargetDetails) event.getTargetDetails();
+    int idx = details.getOverIndex();
+    AbstractOrderedLayout layout = (AbstractOrderedLayout) details.getTarget();
 
+    // Increase index if component is dropped after or above a
+    // previous component
+    VerticalDropLocation loc = details.getDropLocation();
+    if (loc == VerticalDropLocation.MIDDLE || loc == VerticalDropLocation.BOTTOM) {
+      idx++;
+    }
+
+    // Add component
+    if (idx >= 0) {
+      layout.addComponent(resolveComponentFromHTML5Drop(event), idx);
+    } else {
+      layout.addComponent(resolveComponentFromHTML5Drop(event));
+    }
+
+    // Add component alignment if given
+    if (dropAlignment != null) {
+      layout.setComponentAlignment(resolveComponentFromHTML5Drop(event), dropAlignment);
+    }
+  }
+
+
+  @Override
+  public AcceptCriterion getAcceptCriterion() {
     TargetDetailIs isOverEmptyLayout = new TargetDetailIs(Constants.DROP_DETAIL_TO, "-1");
     return new Or(isOverEmptyLayout, VerticalLocationIs.TOP, VerticalLocationIs.BOTTOM);
   }
