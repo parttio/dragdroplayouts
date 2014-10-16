@@ -133,7 +133,12 @@ public class HTML5Support {
 
       Element target = Element.as(event.getEventTarget());
       Widget widget = Util.findWidget(target, null);
+
       ComponentConnector connector = Util.findConnectorFor(widget);
+      while (connector == null) {
+        widget = widget.getParent();
+        connector = Util.findConnectorFor(widget);
+      }
 
       if (this.connector == connector) {
         return true;

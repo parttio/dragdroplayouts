@@ -151,7 +151,6 @@ public class DefaultVerticalLayoutDropHandler extends AbstractDefaultLayoutDropH
 
   @Override
   protected void handleHTML5Drop(DragAndDropEvent event) {
-    LayoutBoundTransferable transferable = (LayoutBoundTransferable) event.getTransferable();
     VerticalLayoutTargetDetails details = (VerticalLayoutTargetDetails) event.getTargetDetails();
     AbstractOrderedLayout layout = (AbstractOrderedLayout) details.getTarget();
     int idx = (details).getOverIndex();

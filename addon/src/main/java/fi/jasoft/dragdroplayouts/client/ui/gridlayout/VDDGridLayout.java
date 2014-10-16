@@ -235,7 +235,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
         (ComponentConnector) event.getTransferable().getData(
             Constants.TRANSFERABLE_DETAIL_COMPONENT);
 
-    if (draggedConnector.getWidget() == VDDGridLayout.this) {
+    if (draggedConnector != null && draggedConnector.getWidget() == VDDGridLayout.this) {
       return;
     }
 
