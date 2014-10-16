@@ -89,6 +89,10 @@ public class DefaultTabSheetDropHandler extends AbstractDefaultLayoutDropHandler
     }
   }
 
+  protected String resolveCaptionFromHTML5Drop(DragAndDropEvent event) {
+    return event.getTransferable().getData("html5Data").toString();
+  }
+
   @Override
   protected void handleHTML5Drop(DragAndDropEvent event) {
     TabSheetTargetDetails details = (TabSheetTargetDetails) event.getTargetDetails();
@@ -97,7 +101,7 @@ public class DefaultTabSheetDropHandler extends AbstractDefaultLayoutDropHandler
     int idx = details.getOverIndex();
 
     Component c = resolveComponentFromHTML5Drop(event);
-    c.setCaption(event.getTransferable().getData("html5Data").toString());
+    c.setCaption(resolveCaptionFromHTML5Drop(event));
 
     if (location == HorizontalDropLocation.LEFT) {
       tabSheet.addTab(c, idx);

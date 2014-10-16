@@ -171,6 +171,10 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
    * @param event The drag event
    */
   public void updateDropDetails(VDragEvent event) {
+    if (event.getElementOver() == null) {
+      return;
+    }
+
     StackItem tab = getTabByElement(event.getElementOver());
     if (tab != null) {
       // Add index

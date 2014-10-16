@@ -97,7 +97,6 @@ public class HTML5Support {
         VTransferable transferable = new VTransferable();
         transferable.setDragSource(connector);
 
-        VDragAndDropManager.get().interruptDrag();
         vaadinDragEvent =
             VDragAndDropManager.get().startDrag(transferable, event.getNativeEvent(), false);
 

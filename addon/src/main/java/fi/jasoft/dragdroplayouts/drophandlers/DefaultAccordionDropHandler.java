@@ -98,11 +98,29 @@ public class DefaultAccordionDropHandler extends AbstractDefaultLayoutDropHandle
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.vaadin.event.dd.DropHandler#getAcceptCriterion()
-   */
+  @Override
+  protected void handleHTML5Drop(DragAndDropEvent event) {
+    AccordionTargetDetails details = (AccordionTargetDetails) event.getTargetDetails();
+    VerticalDropLocation location = details.getDropLocation();
+    DDAccordion acc = (DDAccordion) details.getTarget();
+    int idx = details.getOverIndex();
+
+    Component c = resolveComponentFromHTML5Drop(event);
+    c.setCaption(resolveCaptionFromHTML5Drop(event));
+
+    if (location == VerticalDropLocation.TOP) {
+      acc.addTab(c, idx);
+    } else if (location == VerticalDropLocation.BOTTOM) {
+      acc.addTab(c, idx + 1);
+    } else {
+      acc.addTab(c);
+    }
+  }
+
+  protected String resolveCaptionFromHTML5Drop(DragAndDropEvent event) {
+    return event.getTransferable().getData("html5Data").toString();
+  }
+
   @Override
   public AcceptCriterion getAcceptCriterion() {
     return new Not(VerticalLocationIs.MIDDLE);
