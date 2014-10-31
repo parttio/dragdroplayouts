@@ -27,12 +27,15 @@ import com.google.gwt.event.dom.client.DropEvent;
 import com.google.gwt.event.dom.client.DropHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Util;
+import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VTransferable;
 
+import elemental.client.Browser;
 import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
 
@@ -69,8 +72,16 @@ public class HTML5Support {
         vaadinDragEvent.setCurrentGwtEvent(nativeEvent);
         VDragAndDropManager.get().setCurrentDropHandler(dropHandler);
 
-        // FIXME only text currently supported
-        String data = event.getData("text/plain");
+		// FIXME only text currently supported
+		String data;
+		if (BrowserInfo.get().isIE()) {
+			// IE does not support MIME types
+			// http://www.developerfusion.com/article/144828/the-html5-drag-and-drop-api/
+			data = event.getData("text");
+		} else {
+			data = event.getData("text/plain");
+		}
+
         vaadinDragEvent.getTransferable().setData("html5Data", data);
 
         VDragAndDropManager.get().endDrag();
