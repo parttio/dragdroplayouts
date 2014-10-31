@@ -13,9 +13,12 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.gridlayout;
 
+import java.util.Map;
+
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -109,57 +112,58 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
     dropHandler = handler;
   }
 
-  void updateDropDetails(VDragEvent event) {
-    CellDetails cd = getCellDetails(event);
-    if (cd != null) {
-      // Add row
-      event.getDropDetails().put(Constants.DROP_DETAIL_ROW, Integer.valueOf(cd.row));
+  /**
+   * Updates the drop details while dragging
+   * 
+   * @param event
+   * 		The drag event
+   */
+  public void updateDropDetails(VDragEvent event) {
+		CellDetails cd = getCellDetails(event);
+		if (cd != null) {
+			Map<String, Object> ddetails = event.getDropDetails();
 
-      // Add column
-      event.getDropDetails().put(Constants.DROP_DETAIL_COLUMN, Integer.valueOf(cd.column));
+			// Add row
+			ddetails.put(Constants.DROP_DETAIL_ROW, Integer.valueOf(cd.row));
 
-      // Add horizontal position
-      HorizontalDropLocation hl = getHorizontalDropLocation(cd, event);
-      event.getDropDetails().put(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION, hl);
+			// Add column
+			ddetails.put(Constants.DROP_DETAIL_COLUMN,
+					Integer.valueOf(cd.column));
 
-      // Add vertical position
-      VerticalDropLocation vl = getVerticalDropLocation(cd, event);
-      event.getDropDetails().put(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION, vl);
+			// Add horizontal position
+			HorizontalDropLocation hl = getHorizontalDropLocation(cd, event);
+			ddetails.put(Constants.DROP_DETAIL_HORIZONTAL_DROP_LOCATION, hl);
 
-      // Check if the cell we are hovering over has content
-      /*-FIXME
-       boolean hasContent = false;
-       ChildComponentContainer container = null;
-       for (ChildComponentContainer cont : widgetToComponentContainer
-       .values()) {
-       if (DOM.isOrHasChild(cont.getElement(), event.getElementOver())) {
-       hasContent = true;
-       container = cont;
-       break;
-       }
-       }
-       event.getDropDetails().put(Constants.DROP_DETAIL_EMPTY_CELL,
-       !hasContent);
+			// Add vertical position
+			VerticalDropLocation vl = getVerticalDropLocation(cd, event);
+			ddetails.put(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION, vl);
 
-       if (hasContent) {
-      
-       Widget w = container.getWidget();
-       if (w != null) {
-       String className = w.getClass().getName();
-       event.getDropDetails().put(
-       Constants.DROP_DETAIL_OVER_CLASS, className);
-       } else {
-       event.getDropDetails().put(
-       Constants.DROP_DETAIL_OVER_CLASS,
-       VDDGridLayout.this);
-       }
-       }
-       -*/
-      // Add mouse event details
-      MouseEventDetails details =
-          MouseEventDetailsBuilder.buildMouseEventDetails(event.getCurrentGwtEvent(), getElement());
-      event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT, details.serialize());
-    }
+			// Check if the cell we are hovering over has content
+			Cell cell = getCell(cd.row, cd.column);
+			ddetails.put(Constants.DROP_DETAIL_EMPTY_CELL, cell != null);
+
+			// Get class information from child
+			if(cell != null) {
+				ComponentConnector child = cell.slot.getChild();
+				if (child != null) {
+					String className = child.getWidget().getClass().getName();
+					ddetails.put(Constants.DROP_DETAIL_OVER_CLASS, className);
+				} else {
+					ddetails.put(Constants.DROP_DETAIL_OVER_CLASS,
+							VDDGridLayout.this.getClass().getName());
+				}
+			} else {
+				ddetails.put(Constants.DROP_DETAIL_OVER_CLASS,
+						VDDGridLayout.this.getClass().getName());
+			}
+
+			// Add mouse event details
+			MouseEventDetails details = MouseEventDetailsBuilder
+					.buildMouseEventDetails(event.getCurrentGwtEvent(),
+							getElement());
+			event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
+					details.serialize());
+		}
   }
 
   /**
