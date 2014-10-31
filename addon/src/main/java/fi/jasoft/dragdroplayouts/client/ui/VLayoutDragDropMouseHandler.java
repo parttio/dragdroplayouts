@@ -17,14 +17,16 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -157,13 +159,18 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler, TouchStart
       return;
     }
 
-    // Dragging can only be done with left mouse button and no modifier keys
-    if (!isMouseDragEvent(event) && !Util.isTouchEvent(event)) {
-      return;
-    }
+	// Dragging can only be done with left mouse button and no modifier keys
+	if (!isMouseDragEvent(event) && !Util.isTouchEvent(event)) {
+		return;
+	}
+
+	if (!Element.is(event.getEventTarget())) {
+		// Only element nodes are draggable
+		return;
+	}
 
     // Get target widget
-    Element targetElement = event.getEventTarget().cast();
+    Element targetElement = Element.as(event.getEventTarget());;
     Widget target = Util.findWidget(targetElement, null);
 
     // Abort if drag mode is caption mode and widget is not a caption
@@ -218,7 +225,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler, TouchStart
       parent = Util.findConnectorFor(tabsheet);
 
     } else if (root instanceof VDDAccordion) {
-      StackItem item = ((VDDAccordion) root).getTabByElement(targetElement);
+      StackItem item = ((VDDAccordion) root).getTabByElement(DOM.asOld(targetElement));
       w = target;
       parent = Util.findConnectorFor(root);
       if (item.getComponent() != null) {
@@ -330,6 +337,10 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler, TouchStart
     currentDragEvent.createDragImage(dragImageElement, true);
     Element clone = currentDragEvent.getDragImage();
     assert (clone != null);
+
+    // Lock drag image dimensions
+    clone.getStyle().setWidth(dragImageElement.getOffsetWidth(), Unit.PX);
+	clone.getStyle().setHeight(dragImageElement.getOffsetHeight(), Unit.PX);
 
     if (c != null && c.delegateCaptionHandling() && !(root instanceof VTabsheet)
         && !(root instanceof VAccordion)) {
