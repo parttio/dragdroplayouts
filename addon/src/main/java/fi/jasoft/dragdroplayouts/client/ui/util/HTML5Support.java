@@ -30,12 +30,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VTransferable;
 
-import elemental.client.Browser;
 import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
 
