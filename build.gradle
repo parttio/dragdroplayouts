@@ -41,6 +41,11 @@ project(':addon'){
         }
         manifest { // the manifest of the default jar is of type OsgiManifest
             name = 'dragdroplayouts'
+/* 
+  it seems we need to export the client-side stuff too to make it easier to include the jar file as project dependency
+            instruction 'Export-Package', '!fi.jasoft.dragdroplayouts.client.*', '*' 
+*/
+	    instruction 'Import-Package', '!com.google.gwt.*', '!com.vaadin.client.*', '*'
             instruction 'Bundle-Vendor', 'johndevs'
             instruction 'Bundle-Description', 'Drag and drop layouts addon'
             instruction 'Bundle-DocURL', 'https://github.com/johndevs/dragdroplayouts'
