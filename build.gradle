@@ -16,6 +16,7 @@ subprojects {
  */
 project(':addon'){
     apply plugin: 'maven'
+    apply plugin: 'osgi'
 
     dependencies{
         testCompile     group:'junit',  name:'junit',   version: '4.8.+'
@@ -37,6 +38,17 @@ project(':addon'){
 
         sourceSets.main.java.srcDirs.each{
             from it
+        }
+        manifest { // the manifest of the default jar is of type OsgiManifest
+            name = 'dragdroplayouts'
+/* 
+  it seems we need to export the client-side stuff too to make it easier to include the jar file as project dependency
+            instruction 'Export-Package', '!fi.jasoft.dragdroplayouts.client.*', '*' 
+*/
+	    instruction 'Import-Package', '!com.google.gwt.*', '!com.vaadin.client.*', '*'
+            instruction 'Bundle-Vendor', 'johndevs'
+            instruction 'Bundle-Description', 'Drag and drop layouts addon'
+            instruction 'Bundle-DocURL', 'https://github.com/johndevs/dragdroplayouts'
         }
     }
 
