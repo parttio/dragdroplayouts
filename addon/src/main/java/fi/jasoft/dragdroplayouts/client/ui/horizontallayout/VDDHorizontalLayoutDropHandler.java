@@ -42,7 +42,7 @@ public class VDDHorizontalLayoutDropHandler extends VDDAbstractDropHandler<VDDHo
 
     // Update the details
     Widget slot = getSlot(drag.getElementOver());
-    getLayout().updateDropDetails(slot, drag);
+    getLayout().updateDragDetails(slot, drag);
 
     return getLayout().postDropHook(drag) && super.drop(drag);
   };
@@ -61,9 +61,9 @@ public class VDDHorizontalLayoutDropHandler extends VDDAbstractDropHandler<VDDHo
     Slot slot = getSlot(drag.getElementOver());
 
     if (slot != null) {
-      getLayout().updateDropDetails(slot, drag);
+      getLayout().updateDragDetails(slot, drag);
     } else {
-      getLayout().updateDropDetails(getLayout(), drag);
+      getLayout().updateDragDetails(getLayout(), drag);
     }
 
     getLayout().postOverHook(drag);

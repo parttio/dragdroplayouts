@@ -33,7 +33,7 @@ public class VDDAccordionDropHandler extends VDDAbstractDropHandler<VDDAccordion
   @Override
   public boolean drop(VDragEvent drag) {
     getLayout().deEmphasis();
-    getLayout().updateDropDetails(drag);
+    getLayout().updateDragDetails(drag);
     return getLayout().postDropHook(drag) && super.drop(drag);
   };
 
@@ -42,7 +42,7 @@ public class VDDAccordionDropHandler extends VDDAbstractDropHandler<VDDAccordion
 
     getLayout().deEmphasis();
 
-    getLayout().updateDropDetails(drag);
+    getLayout().updateDragDetails(drag);
 
     getLayout().postOverHook(drag);
 
@@ -57,7 +57,7 @@ public class VDDAccordionDropHandler extends VDDAbstractDropHandler<VDDAccordion
   @Override
   public void dragLeave(VDragEvent drag) {
     getLayout().deEmphasis();
-    getLayout().updateDropDetails(drag);
+    getLayout().updateDragDetails(drag);
     getLayout().postLeaveHook(drag);
   }
 }

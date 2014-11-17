@@ -39,7 +39,7 @@ public class VDDFormLayoutDropHandler extends VDDAbstractDropHandler<VDDFormLayo
     getLayout().emphasis(null, null);
 
     // Update the details
-    getLayout().updateDropDetails(getTableRowWidgetFromDragEvent(drag), drag);
+    getLayout().updateDragDetails(getTableRowWidgetFromDragEvent(drag), drag);
     return getLayout().postDropHook(drag) && super.drop(drag);
   };
 
@@ -98,9 +98,9 @@ public class VDDFormLayoutDropHandler extends VDDAbstractDropHandler<VDDFormLayo
     // Update the drop details so we can validate the drop
     Widget c = getTableRowWidgetFromDragEvent(drag);
     if (c != null) {
-      getLayout().updateDropDetails(c, drag);
+      getLayout().updateDragDetails(c, drag);
     } else {
-      getLayout().updateDropDetails(getLayout(), drag);
+      getLayout().updateDragDetails(getLayout(), drag);
     }
 
     getLayout().postOverHook(drag);
@@ -124,10 +124,13 @@ public class VDDFormLayoutDropHandler extends VDDAbstractDropHandler<VDDFormLayo
 
     Widget c = getTableRowWidgetFromDragEvent(drag);
     if (c != null) {
-      getLayout().updateDropDetails(c, drag);
+      getLayout().updateDragDetails(c, drag);
     } else {
-      getLayout().updateDropDetails(getLayout(), drag);
+      getLayout().updateDragDetails(getLayout(), drag);
     }
+
+    getLayout().postEnterHook(drag);
+
     super.dragEnter(drag);
   }
 

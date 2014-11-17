@@ -184,7 +184,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
    * @param widget The container which we are hovering over
    * @param event The drag event
    */
-  protected void updateDropDetails(VDragEvent event) {
+  protected void updateDragDetails(VDragEvent event) {
     Element element = event.getElementOver();
     if (element == null)
       return;

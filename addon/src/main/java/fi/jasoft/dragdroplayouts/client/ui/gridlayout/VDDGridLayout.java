@@ -118,7 +118,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
    * @param event
    * 		The drag event
    */
-  public void updateDropDetails(VDragEvent event) {
+  public void updateDragDetails(VDragEvent event) {
 		CellDetails cd = getCellDetails(event);
 		if (cd != null) {
 			Map<String, Object> ddetails = event.getDropDetails();
@@ -199,7 +199,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
    * @return
    */
   protected VerticalDropLocation getVerticalDropLocation(CellDetails cell, VDragEvent event) {
-
+ 
     // Get the vertical location
     VerticalDropLocation vdetail;
     int y = Util.getTouchOrMouseClientY(event.getCurrentGwtEvent()) - getAbsoluteTop() - cell.y;

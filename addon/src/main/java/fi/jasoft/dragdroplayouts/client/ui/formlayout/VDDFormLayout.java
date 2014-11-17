@@ -155,7 +155,7 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
    * @param widget The container which we are hovering over
    * @param event The drag event
    */
-  protected void updateDropDetails(Widget widget, VDragEvent event) {
+  protected void updateDragDetails(Widget widget, VDragEvent event) {
     /*
      * The horizontal position within the cell
      */
