@@ -228,7 +228,7 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements VH
    * @param widget The container which we are hovering over
    * @param event The drag event
    */
-  protected void updateDropDetails(VDragEvent event) {
+  protected void updateDragDetails(VDragEvent event) {
     Element over = event.getElementOver();
     if (over == null) {
       return;

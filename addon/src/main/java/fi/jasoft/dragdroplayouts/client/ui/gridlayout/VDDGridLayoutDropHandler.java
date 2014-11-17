@@ -37,7 +37,7 @@ public class VDDGridLayoutDropHandler extends VDDAbstractDropHandler<VDDGridLayo
   public boolean drop(VDragEvent drag) {
 
     // Update the detail of the drop
-    getLayout().updateDropDetails(drag);
+    getLayout().updateDragDetails(drag);
 
     // Remove emphasis
     getLayout().deEmphasis();
@@ -52,7 +52,7 @@ public class VDDGridLayoutDropHandler extends VDDAbstractDropHandler<VDDGridLayo
     getLayout().deEmphasis();
 
     // Update the drop details so we can then validate them
-    getLayout().updateDropDetails(drag);
+    getLayout().updateDragDetails(drag);
 
     getLayout().postOverHook(drag);
 

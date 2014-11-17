@@ -38,7 +38,7 @@ public class VDDVerticalSplitPanelDropHandler extends VDDAbstractDropHandler<VDD
     getLayout().deEmphasis();
 
     // Update the details
-    getLayout().updateDropDetails(drag);
+    getLayout().updateDragDetails(drag);
     return getLayout().postDropHook(drag) && super.drop(drag);
   };
 
@@ -47,7 +47,7 @@ public class VDDVerticalSplitPanelDropHandler extends VDDAbstractDropHandler<VDD
 
     getLayout().deEmphasis();
 
-    getLayout().updateDropDetails(drag);
+    getLayout().updateDragDetails(drag);
 
     getLayout().postOverHook(drag);
 

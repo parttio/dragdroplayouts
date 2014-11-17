@@ -170,7 +170,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
    * @param widget The container which we are hovering over
    * @param event The drag event
    */
-  public void updateDropDetails(VDragEvent event) {
+  protected void updateDragDetails(VDragEvent event) {
     if (event.getElementOver() == null) {
       return;
     }

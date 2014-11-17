@@ -39,7 +39,7 @@ public class VDDHorizontalSplitPanelDropHandler extends
     getLayout().deEmphasis();
 
     // Update the details
-    getLayout().updateDropDetails(drag);
+    getLayout().updateDragDetails(drag);
     return getLayout().postDropHook(drag) && super.drop(drag);
   };
 
@@ -48,7 +48,7 @@ public class VDDHorizontalSplitPanelDropHandler extends
 
     getLayout().deEmphasis();
 
-    getLayout().updateDropDetails(drag);
+    getLayout().updateDragDetails(drag);
 
     getLayout().postOverHook(drag);
 
@@ -71,7 +71,7 @@ public class VDDHorizontalSplitPanelDropHandler extends
   @Override
   public void dragLeave(VDragEvent drag) {
     getLayout().deEmphasis();
-    getLayout().updateDropDetails(drag);
+    getLayout().updateDragDetails(drag);
     getLayout().postLeaveHook(drag);
   };
 }

@@ -234,7 +234,7 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements VHasDr
    * @param widget The container which we are hovering over
    * @param event The drag event
    */
-  protected void updateDropDetails(VDragEvent event) {
+  protected void updateDragDetails(VDragEvent event) {
     Element over = event.getElementOver();
 
     // Resolve where the drop was made

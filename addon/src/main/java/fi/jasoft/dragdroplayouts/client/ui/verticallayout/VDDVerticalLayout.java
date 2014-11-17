@@ -132,7 +132,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
    * @param widget The container which we are hovering over
    * @param event The drag event
    */
-  protected void updateDropDetails(Widget widget, VDragEvent event) {
+  protected void updateDragDetails(Widget widget, VDragEvent event) {
     if (widget == null) {
       return;
     }
