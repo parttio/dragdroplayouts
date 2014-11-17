@@ -128,6 +128,9 @@ public class VDDFormLayoutDropHandler extends VDDAbstractDropHandler<VDDFormLayo
     } else {
       getLayout().updateDragDetails(getLayout(), drag);
     }
+
+    getLayout().postEnterHook(drag);
+
     super.dragEnter(drag);
   }
 
