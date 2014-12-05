@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
@@ -252,10 +253,10 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
         }
       } else if (!spacer.isAttached()) {
         if (location == VerticalDropLocation.TOP) {
-          insert(spacer, getElement(), getWidgetIndex(tab), true);
+            insertSpacer(spacer, getElement(), getWidgetIndex(tab));
           tab.setHeight((tab.getOffsetHeight() - spacer.getOffsetHeight()) + "px");
         } else if (location == VerticalDropLocation.BOTTOM) {
-          insert(spacer, getElement(), getWidgetIndex(tab) + 1, true);
+            insertSpacer(spacer, getElement(), getWidgetIndex(tab) + 1);
           int newHeight = tab.getOffsetHeight() - spacer.getOffsetHeight();
           if (getWidgetIndex(spacer) == getWidgetCount() - 1) {
             newHeight -= spacer.getOffsetHeight();
@@ -269,6 +270,40 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     }
   }
 
+  private void insertSpacer(Widget spacer, com.google.gwt.dom.client.Element container,
+          int beforeIndex) {
+    // Validate index; adjust if the widget is already a child of this panel.
+    beforeIndex = adjustIndex(spacer, beforeIndex);
+
+    // Detach new child.
+    spacer.removeFromParent();
+
+    // We don't add the spacer to the children otherwise we mess the accordion logic.
+
+    // Physical attach.
+    DOM.insertChild(container, spacer.getElement(), beforeIndex);
+
+    // Adopt.
+    adopt(spacer);
+  }
+
+  private boolean removeSpacer(Widget spacer) {
+    // Validate.
+    if (spacer.getParent() != this) {
+      return false;
+    }
+    // Orphan.
+    try {
+      orphan(spacer);
+    } finally {
+      // Physical detach.
+      Element elem = spacer.getElement();
+      DOM.getParent(elem).removeChild(elem);
+  
+      // We don't remove the spacer from the children otherwise we mess the accordion logic.
+    }
+    return true;
+  }
   /**
    * Removes any previous emphasis made by drag&drop
    */
@@ -286,7 +321,7 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
 
         currentlyEmphasised.setHeight(newHeight + "px");
 
-        remove(spacer);
+        removeSpacer(spacer);
       }
       currentlyEmphasised = null;
     }
