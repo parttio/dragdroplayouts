@@ -25,6 +25,10 @@ project(':addon'){
     vaadin {
         widgetset = 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
 
+				gwt {
+					userAgent = 'ie8,ie9,gecko1_8,safari,ie10'
+				}
+
         addon {
             author 'John Ahlroos'
             license 'Apache 2.0'
@@ -41,9 +45,9 @@ project(':addon'){
         }
         manifest { // the manifest of the default jar is of type OsgiManifest
             name = 'dragdroplayouts'
-/* 
+/*
   it seems we need to export the client-side stuff too to make it easier to include the jar file as project dependency
-            instruction 'Export-Package', '!fi.jasoft.dragdroplayouts.client.*', '*' 
+            instruction 'Export-Package', '!fi.jasoft.dragdroplayouts.client.*', '*'
 */
 	    instruction 'Import-Package', '!com.google.gwt.*', '!com.vaadin.client.*', '*'
             instruction 'Bundle-Vendor', 'johndevs'
@@ -85,7 +89,7 @@ project(':demo'){
 
 	plugin {
 		logToConsole true
-	}	
+	}
 
     }
 
