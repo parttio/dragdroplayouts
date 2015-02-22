@@ -1,13 +1,16 @@
 allprojects {
-	group='fi.jasoft'
-	version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : 'development';
+  group='fi.jasoft'
+  version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : 'development';
+  apply plugin: 'eclipse-wtp'
 }
 
 subprojects {
-	apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
-	apply plugin: 'eclipse-wtp'
-	sourceCompatibility = 1.6
-	targetCompatibility = 1.6
+  apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
+  sourceCompatibility = 1.6
+  targetCompatibility = 1.6
+  vaadin { 
+    version '7.4.0' 
+  }
 }
 
 
@@ -15,48 +18,49 @@ subprojects {
  * Vaadin addon project
  */
 project(':addon'){
-    apply plugin: 'maven'
-    apply plugin: 'osgi'
+  apply plugin: 'maven'
+  apply plugin: 'osgi'
 
-    dependencies{
-        testCompile     group:'junit',  name:'junit',   version: '4.8.+'
+  dependencies{
+    testCompile     group:'junit',  name:'junit',   version: '4.8.+'
+  }
+
+  vaadin {
+    widgetset = 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
+
+    addon {
+      author 'John Ahlroos'
+      license 'Apache 2.0'
+      title 'DragDropLayouts'
     }
+  }
 
-    vaadin {
-        widgetset = 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
+  jar {
+    baseName = 'dragdroplayouts'
+    dependsOn test
 
-        addon {
-            author 'John Ahlroos'
-            license 'Apache 2.0'
-            title 'DragDropLayouts'
-        }
+    // Include sources
+    sourceSets.main.java.srcDirs.each{ 
+      from it 
     }
-
-    jar {
-        baseName = 'dragdroplayouts'
-        dependsOn test
-
-        sourceSets.main.java.srcDirs.each{
-            from it
-        }
-        manifest { // the manifest of the default jar is of type OsgiManifest
-            name = 'dragdroplayouts'
-/* 
-  it seems we need to export the client-side stuff too to make it easier to include the jar file as project dependency
-            instruction 'Export-Package', '!fi.jasoft.dragdroplayouts.client.*', '*' 
-*/
-	    instruction 'Import-Package', '!com.google.gwt.*', '!com.vaadin.client.*', '*'
-            instruction 'Bundle-Vendor', 'johndevs'
-            instruction 'Bundle-Description', 'Drag and drop layouts addon'
-            instruction 'Bundle-DocURL', 'https://github.com/johndevs/dragdroplayouts'
-        }
+    
+    manifest {
+      // the manifest of the default jar is of type OsgiManifest
+      name = 'dragdroplayouts'
+      /* 
+       it seems we need to export the client-side stuff too to make it easier to include the jar file as project dependency
+       instruction 'Export-Package', '!fi.jasoft.dragdroplayouts.client.*', '*' 
+       */
+      instruction 'Import-Package', '!com.google.gwt.*', '!com.vaadin.client.*', '*'
+      instruction 'Bundle-Vendor', 'johndevs'
+      instruction 'Bundle-Description', 'Drag and drop layouts addon'
+      instruction 'Bundle-DocURL', 'https://github.com/johndevs/dragdroplayouts'
     }
+  }
 
-    task createAddonPom {
-        pom{
-            artifactId = 'dragdroplayouts'
-        }.writeTo("META-INF/maven/fi.jasoft/dragdroplayouts/pom.xml")
-    }
+  task createAddonPom {
+    pom{ artifactId = 'dragdroplayouts' }.writeTo("META-INF/maven/fi.jasoft/dragdroplayouts/pom.xml")
+  }
 }
 
 
@@ -64,48 +68,47 @@ project(':addon'){
  * Demo application for demonstrating the addon
  */
 project(':demo'){
-    dependencies {
-        compile project(':addon')
-        compile group:'de.sven-jacobs', name:'loremipsum', version:'1.0'
-        compile group:'de.java2html',   name:'java2html',  version:'5.0'
+  dependencies {
+    compile project(':addon')
+    compile group:'de.sven-jacobs', name:'loremipsum', version:'1.0'
+    compile group:'de.java2html',   name:'java2html',  version:'5.0'
+  }
+
+  vaadin {
+    widgetset = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
+    serverPort 7676
+    debug true
+
+    devmode { 
+      superDevMode true 
     }
 
-    vaadin {
-        widgetset = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
-	serverPort 7676
-	debug true
-
-        devmode {
-            superDevMode true
-        }
-
-	testbench {
-		enabled true
-	}
-
-	plugin {
-		logToConsole true
-	}	
-
+    testbench { 
+      enabled true 
     }
 
-    war {
-        // WAR filename
-        archiveName = 'DragDropLayouts7.war'
-
-        // Include widgetset
-        dependsOn test, vaadinCompileWidgetset
-
-        // Add sources
-        webInf{
-            into('classes'){
-                from sourceSets.main.allJava
-            }
-        }
+    plugin { 
+      logToConsole true 
     }
+  }
 
-   test {
-	dependsOn vaadinCompileWidgetset
-	systemProperties = System.properties
-   }
+  war {
+    // WAR filename
+    archiveName = 'DragDropLayouts7.war'
+
+    // Include widgetset
+    dependsOn test, vaadinCompileWidgetset
+
+    // Add sources
+    webInf{
+      into('classes'){ 
+        from sourceSets.main.allJava 
+       }
+    }
+  }
+
+  test {
+    dependsOn vaadinCompileWidgetset
+    systemProperties = System.properties
+  }
 }
