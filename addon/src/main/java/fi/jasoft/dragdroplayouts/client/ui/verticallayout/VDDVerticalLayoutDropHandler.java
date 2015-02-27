@@ -73,7 +73,7 @@ public class VDDVerticalLayoutDropHandler extends VDDAbstractDropHandler<VDDVert
       public void accepted(VDragEvent event) {
         Slot slot = getSlot(event.getElementOver());
         if (slot != null) {
-          getLayout().emphasis(slot.getWidget(), event);
+          getLayout().emphasis(slot, event);
         } else {
           getLayout().emphasis(getLayout(), event);
         }

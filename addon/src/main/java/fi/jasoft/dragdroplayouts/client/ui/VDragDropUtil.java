@@ -14,7 +14,7 @@
 package fi.jasoft.dragdroplayouts.client.ui;
 
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.user.client.Element;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
