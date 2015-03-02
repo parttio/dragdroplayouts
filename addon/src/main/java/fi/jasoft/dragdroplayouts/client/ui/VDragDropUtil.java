@@ -314,7 +314,8 @@ public final class VDragDropUtil {
       // Table rows are paintable but we do not want to drag them so
       // search for next paintable which should be the table itself
       w = w.getParent();
-      while (!(w instanceof Paintable)) {
+      
+      while (!(w instanceof VScrollTable)) {
         w = w.getParent();
       }
     } else if (w.getParent().getParent().getParent() instanceof VTwinColSelect) {
