@@ -8,8 +8,8 @@ subprojects {
   apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
   sourceCompatibility = 1.6
   targetCompatibility = 1.6
-  vaadin { 
-    version '7.4.0' 
+  vaadin {
+    version '7.4.0'
   }
 }
 
@@ -40,16 +40,16 @@ project(':addon'){
     dependsOn test
 
     // Include sources
-    sourceSets.main.java.srcDirs.each{ 
-      from it 
+    sourceSets.main.java.srcDirs.each{
+      from it
     }
-    
+
     manifest {
       // the manifest of the default jar is of type OsgiManifest
       name = 'dragdroplayouts'
-      /* 
+      /*
        it seems we need to export the client-side stuff too to make it easier to include the jar file as project dependency
-       instruction 'Export-Package', '!fi.jasoft.dragdroplayouts.client.*', '*' 
+       instruction 'Export-Package', '!fi.jasoft.dragdroplayouts.client.*', '*'
        */
       instruction 'Import-Package', '!com.google.gwt.*', '!com.vaadin.client.*', '*'
       instruction 'Bundle-Vendor', 'johndevs'
@@ -79,16 +79,16 @@ project(':demo'){
     serverPort 7676
     debug true
 
-    devmode { 
-      superDevMode true 
+    devmode {
+      superDevMode true
     }
 
-    testbench { 
-      enabled true 
+    testbench {
+      enabled true
     }
 
-    plugin { 
-      logToConsole true 
+    plugin {
+      logToConsole true
     }
   }
 
@@ -101,8 +101,8 @@ project(':demo'){
 
     // Add sources
     webInf{
-      into('classes'){ 
-        from sourceSets.main.allJava 
+      into('classes'){
+        from sourceSets.main.allJava
        }
     }
   }

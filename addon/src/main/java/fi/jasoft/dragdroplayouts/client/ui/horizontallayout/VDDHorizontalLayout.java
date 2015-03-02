@@ -229,16 +229,19 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements VHasDragMo
 
     currentlyEmphasised = container;
 
-    UIObject.setStyleName(container.getElement(), OVER, true);
-
+    HorizontalDropLocation location = null;
+    
     // Add drop location specific style
-    if (container.getElement().equals(this.getElement())) {
-      UIObject.setStyleName(container.getElement(), OVER + "-"
-          + HorizontalDropLocation.CENTER.toString().toLowerCase(), true);
+    if (currentlyEmphasised != this) {
+        location = getHorizontalDropLocation(container, event);
+
     } else {
-      UIObject.setStyleName(container.getElement(),
-          OVER + "-" + getHorizontalDropLocation(container, event).toString().toLowerCase(), true);
+        location = HorizontalDropLocation.CENTER;
     }
+    
+    UIObject.setStyleName(currentlyEmphasised.getElement(), OVER, true);
+    UIObject.setStyleName(currentlyEmphasised.getElement(), OVER + "-"
+            + location.toString().toLowerCase(), true);
   }
 
   /**

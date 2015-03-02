@@ -189,16 +189,19 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
 
     currentlyEmphasised = container;
 
-    UIObject.setStyleName(container.getElement(), OVER, true);
-
+    VerticalDropLocation location = null;
+    
     // Add drop location specific style
-    if (container != this) {
-      UIObject.setStyleName(container.getElement(),
-          OVER + "-" + getVerticalDropLocation(container, event).toString().toLowerCase(), true);
+    if (currentlyEmphasised != this) {
+        location = getVerticalDropLocation(currentlyEmphasised, event);
+
     } else {
-      UIObject.setStyleName(container.getElement(), OVER + "-"
-          + VerticalDropLocation.MIDDLE.toString().toLowerCase(), true);
+        location = VerticalDropLocation.MIDDLE;
     }
+    
+    UIObject.setStyleName(currentlyEmphasised.getElement(), OVER, true);
+    UIObject.setStyleName(currentlyEmphasised.getElement(), OVER + "-"
+            + location.toString().toLowerCase(), true);
   }
 
   /**
