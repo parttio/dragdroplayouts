@@ -92,6 +92,7 @@ public class HTML5Support {
       NativeEvent nativeEvent = event.getNativeEvent();
       if (validate(nativeEvent) && vaadinDragEvent != null) {
         nativeEvent.preventDefault();
+        nativeEvent.stopPropagation();
         vaadinDragEvent.setCurrentGwtEvent(nativeEvent);
         VDragAndDropManager.get().setCurrentDropHandler(dropHandler);
         dropHandler.dragOver(vaadinDragEvent);
