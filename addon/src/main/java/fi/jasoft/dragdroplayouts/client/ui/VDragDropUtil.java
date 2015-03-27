@@ -302,10 +302,10 @@ public final class VDragDropUtil {
       }
       if (w instanceof VCaption) {
         ComponentConnector ownerConnector = ((VCaption) w).getOwner();
-        owner = ownerConnector.getWidget();
+        owner = ownerConnector == null ? null : ownerConnector.getWidget();
       } else if (w instanceof VFormLayout.Caption) {
         ComponentConnector ownerConnector = ((VFormLayout.Caption) w).getOwner();
-        owner = ownerConnector.getWidget();
+        owner = ownerConnector == null ? null : ownerConnector.getWidget();
       }
       if (owner != null) {
         w = owner;
