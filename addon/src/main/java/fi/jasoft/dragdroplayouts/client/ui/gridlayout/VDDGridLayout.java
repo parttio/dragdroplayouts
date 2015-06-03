@@ -18,7 +18,6 @@ import java.util.Map;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -143,7 +142,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
 			ddetails.put(Constants.DROP_DETAIL_EMPTY_CELL, cell != null);
 
 			// Get class information from child
-			if(cell != null) {
+			if(cell != null && cell.slot != null) {
 				ComponentConnector child = cell.slot.getChild();
 				if (child != null) {
 					String className = child.getWidget().getClass().getName();
