@@ -13,12 +13,11 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui;
 
-import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
@@ -27,6 +26,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.AbstractConnector;
+import com.vaadin.client.ui.VAccordion.StackItem;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VFilterSelect;
 import com.vaadin.client.ui.VFormLayout;
@@ -168,8 +168,10 @@ public final class VDragDropUtil {
     // Create transferable
     VTransferable transferable = new VTransferable();
     transferable.setDragSource(Util.findConnectorFor(accordion));
+    
+    StackItem parent = (StackItem) tabCaption.getParent();
     transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
-        Util.findConnectorFor(tabCaption.getParent()));
+        Util.findConnectorFor(parent.getChildWidget()));
     transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
         accordion.getWidgetIndex(tabCaption.getParent()));
     transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN, MouseEventDetailsBuilder
