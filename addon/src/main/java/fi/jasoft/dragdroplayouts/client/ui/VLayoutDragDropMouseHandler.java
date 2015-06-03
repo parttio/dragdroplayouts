@@ -37,6 +37,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.VAccordion;
 import com.vaadin.client.ui.VAccordion.StackItem;
 import com.vaadin.client.ui.VCssLayout;
@@ -172,6 +173,11 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler, TouchStart
     // Get target widget
     Element targetElement = Element.as(event.getEventTarget());;
     Widget target = Util.findWidget(targetElement, null);
+    
+    if (isEventOnScrollBar(event)) {
+        return;
+    }
+    
 
     // Abort if drag mode is caption mode and widget is not a caption
     boolean isPanelCaption =
@@ -391,6 +397,38 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler, TouchStart
       }
     });
 
+  }
+
+  /*
+   * Whether the event was performed on a scrollbar.
+   */
+  private boolean isEventOnScrollBar(NativeEvent event) {
+      Element element = Element.as(event.getEventTarget());;
+
+      if (WidgetUtil.mayHaveScrollBars(element)) {
+
+          final int nativeScrollbarSize = WidgetUtil.getNativeScrollbarSize();
+
+          int x = WidgetUtil.getTouchOrMouseClientX(event) - element.getAbsoluteLeft();
+          int y = WidgetUtil.getTouchOrMouseClientY(event) - element.getAbsoluteTop();
+
+          // Hopefully we have horizontal scroll.
+          final int scrollWidth = element.getScrollWidth();
+          final int clientWidth = element.getClientWidth();
+          if (scrollWidth > clientWidth && clientWidth - nativeScrollbarSize < x) {
+              return true;
+          }
+
+          // Hopefully we have vertical scroll.
+          final int scrollHeight = element.getScrollHeight();
+          final int clientHeight = element.getClientHeight();
+          if (scrollHeight > clientHeight && clientHeight - nativeScrollbarSize < y) {
+              return true;
+          }
+
+      }
+
+    return false;
   }
 
   /**
