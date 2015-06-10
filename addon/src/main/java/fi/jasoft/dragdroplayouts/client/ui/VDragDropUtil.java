@@ -138,19 +138,20 @@ public final class VDragDropUtil {
    */
   private static VTransferable createTabsheetTransferableFromMouseDown(VDDTabSheet tabsheet,
       Widget tab, NativeEvent event) {
+	ComponentConnector connector= Util.findConnectorFor(tabsheet);
 
-    // Create transferable
-    VTransferable transferable = new VTransferable();
-    transferable.setDragSource(Util.findConnectorFor(tabsheet));
-    if (tabsheet != tab) {
-      transferable
-          .setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, Util.findConnectorFor(tabsheet));
-      transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX, tabsheet.getTabPosition(tab));
-    }
-    transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN, MouseEventDetailsBuilder
-        .buildMouseEventDetails(event).serialize());
+	// Create transferable
+	VTransferable transferable = new VTransferable();
+	transferable.setDragSource(connector);
+	if (tabsheet != tab) {
+	  transferable
+	      .setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, connector);
+	  transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX, tabsheet.getTabPosition(tab));
+	}
+	transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN, MouseEventDetailsBuilder
+	    .buildMouseEventDetails(event).serialize());
 
-    return transferable;
+	return transferable;
   }
 
   /**
@@ -163,17 +164,18 @@ public final class VDragDropUtil {
    * @return
    */
   private static VTransferable createAccordionTransferableFromMouseDown(VDDAccordion accordion,
-      VCaption tabCaption, NativeEvent event) {
+      Widget tab, NativeEvent event) {
 
     // Create transferable
     VTransferable transferable = new VTransferable();
     transferable.setDragSource(Util.findConnectorFor(accordion));
-    
-    StackItem parent = (StackItem) tabCaption.getParent();
-    transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
-        Util.findConnectorFor(parent.getChildWidget()));
-    transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
-        accordion.getWidgetIndex(tabCaption.getParent()));
+    if(accordion != tab){
+        StackItem parent = (StackItem) tab.getParent();
+	    transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
+	        Util.findConnectorFor(parent.getChildWidget()));
+	    transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
+	        accordion.getWidgetIndex(tab.getParent()));
+    }
     transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN, MouseEventDetailsBuilder
         .buildMouseEventDetails(event).serialize());
 
@@ -198,19 +200,20 @@ public final class VDragDropUtil {
 
     // Special treatment for Tabsheet
     if (root instanceof VDDTabSheet) {
-      if (isCaption(target) || target == root) {
+      if (target instanceof TabCaption || target == root) {
         // We are dragging a tabsheet tab, handle it
         return createTabsheetTransferableFromMouseDown((VDDTabSheet) root, target, event);
       } else {
+        // Do not allow dragging content, only the "tab"
         return null;
       }
     }
 
     // Special treatment for Accordion
     if (root instanceof VDDAccordion) {
-      if (isCaption(target) || target == root) {
+      if (target instanceof StackItem || target == root) {
         // We are dragging a Accordion tab, handle it
-        return createAccordionTransferableFromMouseDown((VDDAccordion) root, (VCaption) target,
+        return createAccordionTransferableFromMouseDown((VDDAccordion) root, target,
             event);
       } else {
         // Do not allow dragging content, only the "tab"
@@ -288,11 +291,6 @@ public final class VDragDropUtil {
     return isCaption(w) || w instanceof VButton || w instanceof VLink;
   }
 
-  private static final native Widget getTabsheetTabOwner(TabCaption tab)
-  /*-{
-      return tab.@com.vaadin.client.ui.VTabsheet.TabCaption::getTab().getTabsheet();
-  }-*/;
-
   public static Widget getTransferableWidget(Widget w) {
 
     if (isCaption(w)) {
@@ -300,7 +298,7 @@ public final class VDragDropUtil {
       Widget owner = null;
       if (w instanceof TabCaption) {
         TabCaption caption = (TabCaption) w;
-        owner = getTabsheetTabOwner(caption);
+        owner = caption.getTab().getTabsheet();
       }
       if (w instanceof VCaption) {
         ComponentConnector ownerConnector = ((VCaption) w).getOwner();
