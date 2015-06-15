@@ -363,10 +363,6 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
     return iframeCoverUtility;
   }
 
-  VLayoutDragDropMouseHandler getMouseHandler() {
-    return ddHandler;
-  }
-
   public double getHorizontalDropRatio() {
     return horizontalDropRatio;
   }

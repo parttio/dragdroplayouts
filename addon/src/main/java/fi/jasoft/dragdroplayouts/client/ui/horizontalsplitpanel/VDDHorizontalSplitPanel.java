@@ -275,10 +275,6 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements VH
     return iframeCoverUtility;
   }
 
-  VLayoutDragDropMouseHandler getMouseHandler() {
-    return ddMouseHandler;
-  }
-
   @Override
   public void setDragFilter(VDragFilter filter) {
     this.dragFilter = filter;

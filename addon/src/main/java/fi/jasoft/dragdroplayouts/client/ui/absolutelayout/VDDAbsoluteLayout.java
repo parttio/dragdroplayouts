@@ -141,10 +141,6 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     return iframeCoverUtility;
   }
 
-  VLayoutDragDropMouseHandler getMouseHandler() {
-    return ddHandler;
-  }
-
   public LayoutDragMode getDragMode() {
     return ddHandler.getDragMode();
   }

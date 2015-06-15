@@ -278,10 +278,6 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical implements VHasDr
     return iframeCoverUtility;
   }
 
-  VLayoutDragDropMouseHandler getMouseHandler() {
-    return ddMouseHandler;
-  }
-
   @Override
   public void setDragFilter(VDragFilter filter) {
     this.dragFilter = filter;

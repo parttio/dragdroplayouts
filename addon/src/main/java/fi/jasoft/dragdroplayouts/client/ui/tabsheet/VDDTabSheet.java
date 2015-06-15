@@ -331,10 +331,6 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
     return iframeCoverUtility;
   }
 
-  VLayoutDragDropMouseHandler getMouseHandler() {
-    return ddMouseHandler;
-  }
-
   @Override
   public void setDragFilter(VDragFilter filter) {
     this.dragFilter = filter;

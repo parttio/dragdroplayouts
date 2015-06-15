@@ -357,10 +357,6 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     return iframeCoverUtility;
   }
 
-  VLayoutDragDropMouseHandler getMouseHandler() {
-    return ddMouseHandler;
-  }
-
   public float getTabTopBottomDropRatio() {
     return tabTopBottomDropRatio;
   }

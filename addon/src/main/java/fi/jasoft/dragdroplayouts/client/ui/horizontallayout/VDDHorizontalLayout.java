@@ -276,10 +276,6 @@ public class VDDHorizontalLayout extends VHorizontalLayout implements VHasDragMo
     return iframeCoverUtility;
   }
 
-  VLayoutDragDropMouseHandler getMouseHandler() {
-    return ddMouseHandler;
-  }
-
   public double getCellLeftRightDropRatio() {
     return cellLeftRightDropRatio;
   }
