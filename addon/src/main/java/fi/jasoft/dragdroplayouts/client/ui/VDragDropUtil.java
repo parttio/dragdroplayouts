@@ -22,6 +22,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -32,6 +33,7 @@ import com.vaadin.client.ui.VFilterSelect;
 import com.vaadin.client.ui.VFormLayout;
 import com.vaadin.client.ui.VLink;
 import com.vaadin.client.ui.VScrollTable;
+import com.vaadin.client.ui.VTabsheet.Tab;
 import com.vaadin.client.ui.VTabsheet.TabCaption;
 import com.vaadin.client.ui.VTwinColSelect;
 import com.vaadin.client.ui.dd.VTransferable;
@@ -137,20 +139,13 @@ public final class VDragDropUtil {
    * @return
    */
   private static VTransferable createTabsheetTransferableFromMouseDown(VDDTabSheet tabsheet,
-      Widget tab, NativeEvent event) {
-	ComponentConnector connector= Util.findConnectorFor(tabsheet);
-
-	// Create transferable
+      TabCaption tab, NativeEvent event) {
 	VTransferable transferable = new VTransferable();
-	transferable.setDragSource(connector);
-	if (tabsheet != tab) {
-	  transferable
-	      .setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, connector);
-	  transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX, tabsheet.getTabPosition(tab));
-	}
+	transferable.setDragSource(Util.findConnectorFor(tabsheet));
+    transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT, tabsheet.getTab(tabsheet.getTabPosition(tab)));
+    transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX, tabsheet.getTabPosition(tab));
 	transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN, MouseEventDetailsBuilder
 	    .buildMouseEventDetails(event).serialize());
-
 	return transferable;
   }
 
@@ -163,22 +158,13 @@ public final class VDragDropUtil {
    * @param root The root widget
    * @return
    */
-  private static VTransferable createAccordionTransferableFromMouseDown(VDDAccordion accordion,
-      Widget tab, NativeEvent event) {
-
-    // Create transferable
+  private static VTransferable createAccordionTransferableFromMouseDown(VDDAccordion accordion, StackItem tab, NativeEvent event) {
     VTransferable transferable = new VTransferable();
     transferable.setDragSource(Util.findConnectorFor(accordion));
-    if(accordion != tab){
-        StackItem parent = (StackItem) tab.getParent();
-	    transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,
-	        Util.findConnectorFor(parent.getChildWidget()));
-	    transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX,
-	        accordion.getWidgetIndex(tab.getParent()));
-    }
+    transferable.setData(Constants.TRANSFERABLE_DETAIL_COMPONENT,accordion.getTab(accordion.getTabPosition(tab)));
+    transferable.setData(Constants.TRANSFERABLE_DETAIL_INDEX, accordion.getTabPosition(tab));
     transferable.setData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN, MouseEventDetailsBuilder
-        .buildMouseEventDetails(event).serialize());
-
+    	    .buildMouseEventDetails(event).serialize());
     return transferable;
   }
 
@@ -200,27 +186,28 @@ public final class VDragDropUtil {
 
     // Special treatment for Tabsheet
     if (root instanceof VDDTabSheet) {
-      if (target instanceof TabCaption || target == root) {
-        // We are dragging a tabsheet tab, handle it
-        return createTabsheetTransferableFromMouseDown((VDDTabSheet) root, target, event);
-      } else {
-        // Do not allow dragging content, only the "tab"
-        return null;
-      }
+    	VDDTabSheet tabsheet = (VDDTabSheet) root;
+    	TabCaption tab = WidgetUtil.findWidget(target.getElement(), TabCaption.class);
+    	if(tab != null && tabsheet.getElement().isOrHasChild(tab.getElement())){
+    		return createTabsheetTransferableFromMouseDown(tabsheet, tab, event);      
+    	} else {
+    		// Not a tab
+    		return null;
+    	}
     }
 
     // Special treatment for Accordion
     if (root instanceof VDDAccordion) {
-      if (target instanceof StackItem || target == root) {
-        // We are dragging a Accordion tab, handle it
-        return createAccordionTransferableFromMouseDown((VDDAccordion) root, target,
-            event);
-      } else {
-        // Do not allow dragging content, only the "tab"
-        return null;
-      }
-    }
-
+    	VDDAccordion accordion = (VDDAccordion) root;
+    	StackItem tab = WidgetUtil.findWidget(target.getElement(), StackItem.class);
+    	if(tab != null && accordion.getElement().isOrHasChild(tab.getElement())){
+    		return createAccordionTransferableFromMouseDown(accordion, tab, event);
+    	} else {
+    		// Not on tab
+    		return null;
+    	}
+    }	
+      
     // Ensure we have the right widget
     target = getTransferableWidget(target);
 
