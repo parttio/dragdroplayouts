@@ -295,12 +295,7 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#getTabPosition
-   * (com.google.gwt.user.client.ui.Widget)
-   */
+  @Override
   public int getTabPosition(Widget tab) {
     if (tab instanceof TabCaption) {
       tab = tab.getParent();
@@ -308,21 +303,12 @@ public class VDDTabSheet extends VTabsheet implements VHasDragMode,
     return tabBar.getWidgetIndex(tab);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#
-   * getTabContentPosition(com.google.gwt.user.client.ui.Widget)
-   */
+  @Override
   public int getTabContentPosition(Widget content) {
     return tabPanel.getWidgetIndex(content);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter#getDragFilter ()
-   */
+  @Override
   public VDragFilter getDragFilter() {
     return dragFilter;
   }

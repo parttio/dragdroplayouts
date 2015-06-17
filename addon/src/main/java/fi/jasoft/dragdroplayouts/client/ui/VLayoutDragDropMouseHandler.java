@@ -231,11 +231,12 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler, TouchStart
       parent = Util.findConnectorFor(tabsheet);
 
     } else if (root instanceof VDDAccordion) {
-      StackItem item = ((VDDAccordion) root).getTabByElement(DOM.asOld(targetElement));
       w = target;
       parent = Util.findConnectorFor(root);
-      if (item.getComponent() != null) {
-        c = Util.findConnectorFor(item.getComponent());
+
+      StackItem tab = WidgetUtil.findWidget(targetElement, StackItem.class);
+      if(tab != null && root.getElement().isOrHasChild(tab.getElement())){
+         c = ((VDDAccordion)root).getTab(((VDDAccordion)root).getTabPosition(tab));
       }
 
     } else if (transferable.getData(Constants.TRANSFERABLE_DETAIL_COMPONENT) != null) {

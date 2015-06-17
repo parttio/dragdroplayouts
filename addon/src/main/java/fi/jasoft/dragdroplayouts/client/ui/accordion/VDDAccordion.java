@@ -21,9 +21,12 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.VAccordion;
+import com.vaadin.client.ui.VAccordion.StackItem;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
@@ -60,8 +63,6 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
   private VDDAccordionDropHandler dropHandler;
 
   private StackItem currentlyEmphasised;
-
-  private final Map<Element, StackItem> elementTabMap = new HashMap<Element, StackItem>();
 
   private final Widget spacer;
 
@@ -172,42 +173,29 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
    * @param event The drag event
    */
   protected void updateDragDetails(VDragEvent event) {
-    if (event.getElementOver() == null) {
-      return;
-    }
+		if (event.getElementOver() == null) {
+			return;
+		}
 
-    StackItem tab = getTabByElement(event.getElementOver());
-    if (tab != null) {
-      // Add index
-      int index = getWidgetIndex(tab);
-      event.getDropDetails().put(Constants.DROP_DETAIL_TO, index);
+		StackItem tab = WidgetUtil.findWidget(event.getElementOver(),
+				StackItem.class);
 
-      // Add drop location
-      VerticalDropLocation location = getDropLocation(tab, event);
-      event.getDropDetails().put(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION, location);
+		if (tab != null && getElement().isOrHasChild(tab.getElement())) {
+			Map<String, Object> dropDetails = event.getDropDetails();
 
-      // Add mouse event details
-      MouseEventDetails details =
-          MouseEventDetailsBuilder.buildMouseEventDetails(event.getCurrentGwtEvent(), getElement());
+			int index = getTabPosition(tab);
+			dropDetails.put(Constants.DROP_DETAIL_TO, index);
 
-      event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT, details.serialize());
-    }
-  }
+			VerticalDropLocation location = getDropLocation(tab, event);
+			dropDetails.put(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION,
+					location);
 
-  public StackItem getTabByElement(Element element) {
-    assert (element != null);
-    StackItem item = elementTabMap.get(element);
-    if (item == null) {
-      for (int i = 0; i < getTabCount(); i++) {
-        StackItem tab = (StackItem) getWidget(i);
-        if (tab.getElement().isOrHasChild(element)) {
-          item = tab;
-          elementTabMap.put(element, tab);
-        }
-      }
-    }
-
-    return item;
+			MouseEventDetails details = MouseEventDetailsBuilder
+					.buildMouseEventDetails(event.getCurrentGwtEvent(),
+							getElement());
+			dropDetails.put(Constants.DROP_DETAIL_MOUSE_EVENT,
+					details.serialize());
+		}
   }
 
   /**
@@ -239,10 +227,8 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
   protected void emphasis(Element element, VDragEvent event) {
 
     // Find the tab
-    StackItem tab = getTabByElement(element);
-
-    if (tab != null && currentlyEmphasised != tab) {
-
+	StackItem tab = WidgetUtil.findWidget(element, StackItem.class);
+    if(tab != null && getElement().isOrHasChild(tab.getElement()) && currentlyEmphasised != tab){
       VerticalDropLocation location = getDropLocation(tab, event);
 
       if (location == VerticalDropLocation.MIDDLE) {
@@ -327,26 +313,30 @@ public class VDDAccordion extends VAccordion implements VHasDragMode,
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#
-   * getTabContentPosition(com.google.gwt.user.client.ui.Widget)
-   */
+  @Override
   public int getTabContentPosition(Widget w) {
-    // TODO Auto-generated method stub
-    return 0;
+	for(int i=0; i < getTabCount(); i++){
+		ComponentConnector tabContent = getTab(i);
+		if(tabContent.getWidget() == w){
+			return i;
+		}
+	}
+	return -1;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer#getTabPosition
-   * (com.google.gwt.user.client.ui.Widget)
-   */
-  public int getTabPosition(Widget tab) {
-    // TODO Auto-generated method stub
-    return 0;
+  @Override
+  public int getTabPosition(Widget tabWidget) {
+	StackItem tab = WidgetUtil.findWidget(tabWidget.getElement(), StackItem.class);
+	if(tab != null && getElement().isOrHasChild(tab.getElement())){
+		int i=0;
+		for(StackItem itm : getStackItems()){
+			if(tab == itm){
+				return i;
+			}
+			i++;
+		}
+	}
+    return -1;
   }
 
   public VDragFilter getDragFilter() {
