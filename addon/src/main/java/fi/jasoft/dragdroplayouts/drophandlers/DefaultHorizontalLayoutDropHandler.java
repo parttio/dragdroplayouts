@@ -65,6 +65,11 @@ public class DefaultHorizontalLayoutDropHandler extends AbstractDefaultLayoutDro
     Component comp = transferable.getComponent();
     int idx = details.getOverIndex();
     int oldIndex = layout.getComponentIndex(comp);
+    
+    if(idx == oldIndex){
+    	// Index did not change
+    	return;
+    }
 
     // Detach
     layout.removeComponent(comp);
