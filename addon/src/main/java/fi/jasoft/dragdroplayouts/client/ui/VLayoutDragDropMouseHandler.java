@@ -320,6 +320,9 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler, TouchStart
       dragImageElement = targetElement;
 
     } else if (root instanceof VAccordion) {
+      /*
+       * Accordion should use the dragged tab as a drag image	
+       */
       dragImageElement = targetElement;
 
     } else if (root instanceof VFormLayout) {
@@ -336,9 +339,9 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler, TouchStart
 
     } else {
       /*
-       * Other layouts uses a enclosing div so we use it.
+       * For other layouts we just use the target element;
        */
-      dragImageElement = w.getElement().getParentElement();
+      dragImageElement = targetElement;
     }
 
     currentDragEvent.createDragImage(dragImageElement, true);

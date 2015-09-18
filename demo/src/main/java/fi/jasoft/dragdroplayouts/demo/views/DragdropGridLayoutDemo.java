@@ -21,9 +21,11 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 import fi.jasoft.dragdroplayouts.DDGridLayout;
+import fi.jasoft.dragdroplayouts.DDVerticalLayout;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.demo.DemoView;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultGridLayoutDropHandler;
+import fi.jasoft.dragdroplayouts.drophandlers.DefaultVerticalLayoutDropHandler;
 
 @SuppressWarnings("serial")
 public class DragdropGridLayoutDemo extends DemoView {
@@ -40,8 +42,11 @@ public class DragdropGridLayoutDemo extends DemoView {
   @Override
   public Component getLayout() {
     // start-source
-    VerticalLayout outer = new VerticalLayout();
+    DDVerticalLayout outer = new DDVerticalLayout();
     outer.setSizeFull();
+    outer.setDragMode(LayoutDragMode.CLONE);
+    outer.setDropHandler(new DefaultVerticalLayoutDropHandler());
+    
     Label lbl =
         new Label(
             "This is a grid layout with 16 cells, try dragging the buttons into an empty cell");
@@ -50,7 +55,7 @@ public class DragdropGridLayoutDemo extends DemoView {
     // Create a drag and droppable grid layout
     final DDGridLayout layout = new DDGridLayout(COLUMNS, ROWS);
     layout.setWidth("400px");
-    layout.setHeight("100%");
+    layout.setHeight("400px");
 
     // Only allow dropping in the center of the grid layout cell
     layout.setComponentHorizontalDropRatio(0);
@@ -76,7 +81,7 @@ public class DragdropGridLayoutDemo extends DemoView {
     }
 
     // end-source
-    return layout;
+    return outer;
   }
 
   @Override
