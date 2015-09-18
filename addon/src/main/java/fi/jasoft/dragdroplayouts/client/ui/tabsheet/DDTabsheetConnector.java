@@ -26,52 +26,53 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.util.HTML5Support;
 
 @Connect(DDTabSheet.class)
-public class DDTabsheetConnector extends TabsheetConnector implements Paintable, VHasDragFilter {
+public class DDTabsheetConnector extends TabsheetConnector
+        implements Paintable, VHasDragFilter {
 
-  private HTML5Support html5Support;
+    private HTML5Support html5Support;
 
-  @Override
-  protected void init() {
-    super.init();
-    VDragDropUtil.listenToStateChangeEvents(this, getWidget());
-  }
-
-  @Override
-  public VDDTabSheet getWidget() {
-    return (VDDTabSheet) super.getWidget();
-  }
-
-  @Override
-  public DDTabSheetState getState() {
-    return (DDTabSheetState) super.getState();
-  }
-
-  @Override
-  public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-    VDDTabsheetDropHandler dropHandler = new VDDTabsheetDropHandler(this);
-    VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
-    if (html5Support != null) {
-      html5Support.disable();
+    @Override
+    protected void init() {
+        super.init();
+        VDragDropUtil.listenToStateChangeEvents(this, getWidget());
     }
-    html5Support = HTML5Support.enable(this, dropHandler);
-  }
 
-  @Override
-  public void onUnregister() {
-    if (html5Support != null) {
-      html5Support.disable();
-      html5Support = null;
+    @Override
+    public VDDTabSheet getWidget() {
+        return (VDDTabSheet) super.getWidget();
     }
-    super.onUnregister();
-  }
 
-  @Override
-  public VDragFilter getDragFilter() {
-    return getWidget().getDragFilter();
-  }
+    @Override
+    public DDTabSheetState getState() {
+        return (DDTabSheetState) super.getState();
+    }
 
-  @Override
-  public void setDragFilter(VDragFilter filter) {
-    getWidget().setDragFilter(filter);
-  }
+    @Override
+    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        VDDTabsheetDropHandler dropHandler = new VDDTabsheetDropHandler(this);
+        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
+        if (html5Support != null) {
+            html5Support.disable();
+        }
+        html5Support = HTML5Support.enable(this, dropHandler);
+    }
+
+    @Override
+    public void onUnregister() {
+        if (html5Support != null) {
+            html5Support.disable();
+            html5Support = null;
+        }
+        super.onUnregister();
+    }
+
+    @Override
+    public VDragFilter getDragFilter() {
+        return getWidget().getDragFilter();
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        getWidget().setDragFilter(filter);
+    }
 }

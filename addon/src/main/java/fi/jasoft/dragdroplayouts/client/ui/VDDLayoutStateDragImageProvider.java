@@ -12,22 +12,23 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDragImageProvider;
 
 public class VDDLayoutStateDragImageProvider implements VDragImageProvider {
 
-  private final DDLayoutState state;
+    private final DDLayoutState state;
 
-  public VDDLayoutStateDragImageProvider(DDLayoutState state) {
-    this.state = state;
-  }
-
-  @Override
-  public Element getDragImageElement(Widget w) {
-    ComponentConnector component = Util.findConnectorFor(w);
-    Connector dragImage = state.referenceImageComponents.get(component);
-
-    if (dragImage != null) {
-      return ConnectorMap.get(component.getConnection()).getElement(dragImage.getConnectorId());
+    public VDDLayoutStateDragImageProvider(DDLayoutState state) {
+        this.state = state;
     }
 
-    return null;
-  }
+    @Override
+    public Element getDragImageElement(Widget w) {
+        ComponentConnector component = Util.findConnectorFor(w);
+        Connector dragImage = state.referenceImageComponents.get(component);
+
+        if (dragImage != null) {
+            return ConnectorMap.get(component.getConnection())
+                    .getElement(dragImage.getConnectorId());
+        }
+
+        return null;
+    }
 
 }

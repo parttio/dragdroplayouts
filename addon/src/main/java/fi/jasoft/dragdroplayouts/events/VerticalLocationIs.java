@@ -27,29 +27,31 @@ import fi.jasoft.dragdroplayouts.client.ui.Constants;
 @SuppressWarnings("serial")
 public final class VerticalLocationIs extends TargetDetailIs {
 
-  /**
-   * Was the drop made top of the centerline of the component
-   */
-  public static final VerticalLocationIs TOP = new VerticalLocationIs(VerticalDropLocation.TOP);
+    /**
+     * Was the drop made top of the centerline of the component
+     */
+    public static final VerticalLocationIs TOP = new VerticalLocationIs(
+            VerticalDropLocation.TOP);
 
-  /**
-   * Was the drop made below the centeline of the component
-   */
-  public static final VerticalLocationIs BOTTOM = new VerticalLocationIs(
-      VerticalDropLocation.BOTTOM);
+    /**
+     * Was the drop made below the centeline of the component
+     */
+    public static final VerticalLocationIs BOTTOM = new VerticalLocationIs(
+            VerticalDropLocation.BOTTOM);
 
-  /**
-   * Was the drop made in the middle of the component
-   */
-  public static final VerticalLocationIs MIDDLE = new VerticalLocationIs(
-      VerticalDropLocation.MIDDLE);
+    /**
+     * Was the drop made in the middle of the component
+     */
+    public static final VerticalLocationIs MIDDLE = new VerticalLocationIs(
+            VerticalDropLocation.MIDDLE);
 
-  /**
-   * A target detail for the vertical location of a drop
-   * 
-   * @param location The drop location
-   */
-  private VerticalLocationIs(VerticalDropLocation location) {
-    super(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION, location.name());
-  }
+    /**
+     * A target detail for the vertical location of a drop
+     * 
+     * @param location
+     *            The drop location
+     */
+    private VerticalLocationIs(VerticalDropLocation location) {
+        super(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION, location.name());
+    }
 }

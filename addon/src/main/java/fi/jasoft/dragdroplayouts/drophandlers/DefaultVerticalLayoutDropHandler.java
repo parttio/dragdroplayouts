@@ -30,156 +30,171 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
  * @since 0.6.0
  */
 @SuppressWarnings("serial")
-public class DefaultVerticalLayoutDropHandler extends AbstractDefaultLayoutDropHandler {
+public class DefaultVerticalLayoutDropHandler
+        extends AbstractDefaultLayoutDropHandler {
 
-  private Alignment dropAlignment;
+    private Alignment dropAlignment;
 
-  /**
-   * Constructor
-   */
-  public DefaultVerticalLayoutDropHandler() {
+    /**
+     * Constructor
+     */
+    public DefaultVerticalLayoutDropHandler() {
 
-  }
-
-  /**
-   * Constructor
-   * 
-   * @param dropCellAlignment The cell alignment of the component after it has been dropped
-   */
-  public DefaultVerticalLayoutDropHandler(Alignment dropCellAlignment) {
-    this.dropAlignment = dropCellAlignment;
-  }
-
-  /**
-   * Called when a component changed location within the layout
-   * 
-   * @param event The drag and drop event
-   */
-  @Override
-  protected void handleComponentReordering(DragAndDropEvent event) {
-    // Component re-ordering
-    LayoutBoundTransferable transferable = (LayoutBoundTransferable) event.getTransferable();
-    VerticalLayoutTargetDetails details = (VerticalLayoutTargetDetails) event.getTargetDetails();
-    AbstractOrderedLayout layout = (AbstractOrderedLayout) details.getTarget();
-    Component comp = transferable.getComponent();
-    int idx = details.getOverIndex();
-    int oldIndex = layout.getComponentIndex(comp);
-    
-    if(idx == oldIndex){
-    	// Index did not change
-    	return;
     }
 
-    // Detach
-    layout.removeComponent(comp);
-
-    // Account for detachment if new index is bigger then old index
-    if (idx > oldIndex) {
-      idx--;
+    /**
+     * Constructor
+     * 
+     * @param dropCellAlignment
+     *            The cell alignment of the component after it has been dropped
+     */
+    public DefaultVerticalLayoutDropHandler(Alignment dropCellAlignment) {
+        this.dropAlignment = dropCellAlignment;
     }
 
-    // Increase index if component is dropped after or above a previous
-    // component
-    VerticalDropLocation loc = details.getDropLocation();
-    if (loc == VerticalDropLocation.MIDDLE || loc == VerticalDropLocation.BOTTOM) {
-      idx++;
+    /**
+     * Called when a component changed location within the layout
+     * 
+     * @param event
+     *            The drag and drop event
+     */
+    @Override
+    protected void handleComponentReordering(DragAndDropEvent event) {
+        // Component re-ordering
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
+        VerticalLayoutTargetDetails details = (VerticalLayoutTargetDetails) event
+                .getTargetDetails();
+        AbstractOrderedLayout layout = (AbstractOrderedLayout) details
+                .getTarget();
+        Component comp = transferable.getComponent();
+        int idx = details.getOverIndex();
+        int oldIndex = layout.getComponentIndex(comp);
+
+        if (idx == oldIndex) {
+            // Index did not change
+            return;
+        }
+
+        // Detach
+        layout.removeComponent(comp);
+
+        // Account for detachment if new index is bigger then old index
+        if (idx > oldIndex) {
+            idx--;
+        }
+
+        // Increase index if component is dropped after or above a previous
+        // component
+        VerticalDropLocation loc = details.getDropLocation();
+        if (loc == VerticalDropLocation.MIDDLE
+                || loc == VerticalDropLocation.BOTTOM) {
+            idx++;
+        }
+
+        // Add component
+        if (idx >= 0) {
+            layout.addComponent(comp, idx);
+        } else {
+            layout.addComponent(comp);
+        }
+
+        // Add component alignment if given
+        if (dropAlignment != null) {
+            layout.setComponentAlignment(comp, dropAlignment);
+        }
+
     }
 
-    // Add component
-    if (idx >= 0) {
-      layout.addComponent(comp, idx);
-    } else {
-      layout.addComponent(comp);
+    /**
+     * Handle a drop from another layout
+     * 
+     * @param event
+     *            The drag and drop event
+     */
+    @Override
+    protected void handleDropFromLayout(DragAndDropEvent event) {
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
+        VerticalLayoutTargetDetails details = (VerticalLayoutTargetDetails) event
+                .getTargetDetails();
+        AbstractOrderedLayout layout = (AbstractOrderedLayout) details
+                .getTarget();
+        Component source = event.getTransferable().getSourceComponent();
+        int idx = (details).getOverIndex();
+        Component comp = transferable.getComponent();
+
+        // Check that we are not dragging an outer layout into an inner
+        // layout
+        Component parent = layout.getParent();
+        while (parent != null) {
+            if (parent == comp) {
+                return;
+            }
+            parent = parent.getParent();
+        }
+
+        // If source is an instance of a component container then remove
+        // it
+        // from there,
+        // the component cannot have two parents.
+        if (source instanceof ComponentContainer) {
+            ComponentContainer sourceLayout = (ComponentContainer) source;
+            sourceLayout.removeComponent(comp);
+        }
+
+        // Increase index if component is dropped after or above a
+        // previous
+        // component
+        VerticalDropLocation loc = (details).getDropLocation();
+        if (loc == VerticalDropLocation.MIDDLE
+                || loc == VerticalDropLocation.BOTTOM) {
+            idx++;
+        }
+
+        // Add component
+        if (idx >= 0) {
+            layout.addComponent(comp, idx);
+        } else {
+            layout.addComponent(comp);
+        }
+
+        // Add component alignment if given
+        if (dropAlignment != null) {
+            layout.setComponentAlignment(comp, dropAlignment);
+        }
     }
 
-    // Add component alignment if given
-    if (dropAlignment != null) {
-      layout.setComponentAlignment(comp, dropAlignment);
+    @Override
+    protected void handleHTML5Drop(DragAndDropEvent event) {
+        VerticalLayoutTargetDetails details = (VerticalLayoutTargetDetails) event
+                .getTargetDetails();
+        AbstractOrderedLayout layout = (AbstractOrderedLayout) details
+                .getTarget();
+        int idx = (details).getOverIndex();
+
+        // Increase index if component is dropped after or above a
+        // previous
+        // component
+        VerticalDropLocation loc = (details).getDropLocation();
+        if (loc == VerticalDropLocation.MIDDLE
+                || loc == VerticalDropLocation.BOTTOM) {
+            idx++;
+        }
+
+        Component comp = resolveComponentFromHTML5Drop(event);
+
+        // Add component
+        if (idx >= 0) {
+            layout.addComponent(comp, idx);
+        } else {
+            layout.addComponent(comp);
+        }
+
+        // Add component alignment if given
+        if (dropAlignment != null) {
+            layout.setComponentAlignment(comp, dropAlignment);
+        }
+
     }
-
-  }
-
-  /**
-   * Handle a drop from another layout
-   * 
-   * @param event The drag and drop event
-   */
-  @Override
-  protected void handleDropFromLayout(DragAndDropEvent event) {
-    LayoutBoundTransferable transferable = (LayoutBoundTransferable) event.getTransferable();
-    VerticalLayoutTargetDetails details = (VerticalLayoutTargetDetails) event.getTargetDetails();
-    AbstractOrderedLayout layout = (AbstractOrderedLayout) details.getTarget();
-    Component source = event.getTransferable().getSourceComponent();
-    int idx = (details).getOverIndex();
-    Component comp = transferable.getComponent();
-
-    // Check that we are not dragging an outer layout into an inner
-    // layout
-    Component parent = layout.getParent();
-    while (parent != null) {
-      if (parent == comp) {
-        return;
-      }
-      parent = parent.getParent();
-    }
-
-    // If source is an instance of a component container then remove
-    // it
-    // from there,
-    // the component cannot have two parents.
-    if (source instanceof ComponentContainer) {
-      ComponentContainer sourceLayout = (ComponentContainer) source;
-      sourceLayout.removeComponent(comp);
-    }
-
-    // Increase index if component is dropped after or above a
-    // previous
-    // component
-    VerticalDropLocation loc = (details).getDropLocation();
-    if (loc == VerticalDropLocation.MIDDLE || loc == VerticalDropLocation.BOTTOM) {
-      idx++;
-    }
-
-    // Add component
-    if (idx >= 0) {
-      layout.addComponent(comp, idx);
-    } else {
-      layout.addComponent(comp);
-    }
-
-    // Add component alignment if given
-    if (dropAlignment != null) {
-      layout.setComponentAlignment(comp, dropAlignment);
-    }
-  }
-
-  @Override
-  protected void handleHTML5Drop(DragAndDropEvent event) {
-    VerticalLayoutTargetDetails details = (VerticalLayoutTargetDetails) event.getTargetDetails();
-    AbstractOrderedLayout layout = (AbstractOrderedLayout) details.getTarget();
-    int idx = (details).getOverIndex();
-
-    // Increase index if component is dropped after or above a
-    // previous
-    // component
-    VerticalDropLocation loc = (details).getDropLocation();
-    if (loc == VerticalDropLocation.MIDDLE || loc == VerticalDropLocation.BOTTOM) {
-      idx++;
-    }
-
-    Component comp = resolveComponentFromHTML5Drop(event);
-
-    // Add component
-    if (idx >= 0) {
-      layout.addComponent(comp, idx);
-    } else {
-      layout.addComponent(comp);
-    }
-
-    // Add component alignment if given
-    if (dropAlignment != null) {
-      layout.setComponentAlignment(comp, dropAlignment);
-    }
-
-  }
 }

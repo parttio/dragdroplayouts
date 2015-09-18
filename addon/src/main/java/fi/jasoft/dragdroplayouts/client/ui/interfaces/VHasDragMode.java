@@ -23,12 +23,12 @@ import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
  */
 public interface VHasDragMode {
 
-  /**
-   * Returns the drag mode
-   * 
-   * @return
-   */
-  LayoutDragMode getDragMode();
+    /**
+     * Returns the drag mode
+     * 
+     * @return
+     */
+    LayoutDragMode getDragMode();
 
-  void setDragMode(LayoutDragMode mode);
+    void setDragMode(LayoutDragMode mode);
 }

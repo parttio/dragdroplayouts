@@ -19,48 +19,49 @@ import com.vaadin.client.ui.dd.VDragEvent;
 
 import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
 
-public class VDDTabsheetDropHandler extends VDDAbstractDropHandler<VDDTabSheet> {
+public class VDDTabsheetDropHandler
+        extends VDDAbstractDropHandler<VDDTabSheet> {
 
-  public VDDTabsheetDropHandler(ComponentConnector connector) {
-    super(connector);
-  }
+    public VDDTabsheetDropHandler(ComponentConnector connector) {
+        super(connector);
+    }
 
-  @Override
-  protected void dragAccepted(VDragEvent drag) {
-    dragOver(drag);
-  }
+    @Override
+    protected void dragAccepted(VDragEvent drag) {
+        dragOver(drag);
+    }
 
-  @Override
-  public boolean drop(VDragEvent drag) {
+    @Override
+    public boolean drop(VDragEvent drag) {
 
-    getLayout().deEmphasis();
+        getLayout().deEmphasis();
 
-    // Update the details
-    getLayout().updateDragDetails(drag);
-    return getLayout().postDropHook(drag) && super.drop(drag);
-  };
+        // Update the details
+        getLayout().updateDragDetails(drag);
+        return getLayout().postDropHook(drag) && super.drop(drag);
+    };
 
-  @Override
-  public void dragOver(VDragEvent drag) {
+    @Override
+    public void dragOver(VDragEvent drag) {
 
-    getLayout().deEmphasis();
+        getLayout().deEmphasis();
 
-    getLayout().updateDragDetails(drag);
+        getLayout().updateDragDetails(drag);
 
-    getLayout().postOverHook(drag);
+        getLayout().postOverHook(drag);
 
-    // Validate the drop
-    validate(new VAcceptCallback() {
-      public void accepted(VDragEvent event) {
-        getLayout().emphasis(event.getElementOver(), event);
-      }
-    }, drag);
-  };
+        // Validate the drop
+        validate(new VAcceptCallback() {
+            public void accepted(VDragEvent event) {
+                getLayout().emphasis(event.getElementOver(), event);
+            }
+        }, drag);
+    };
 
-  @Override
-  public void dragLeave(VDragEvent drag) {
-    getLayout().deEmphasis();
-    getLayout().updateDragDetails(drag);
-    getLayout().postLeaveHook(drag);
-  };
+    @Override
+    public void dragLeave(VDragEvent drag) {
+        getLayout().deEmphasis();
+        getLayout().updateDragDetails(drag);
+        getLayout().postLeaveHook(drag);
+    };
 }

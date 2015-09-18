@@ -18,12 +18,13 @@ import com.vaadin.shared.ui.absolutelayout.AbsoluteLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
 
-public class DDAbsoluteLayoutState extends AbsoluteLayoutState implements DragAndDropAwareState {
+public class DDAbsoluteLayoutState extends AbsoluteLayoutState
+        implements DragAndDropAwareState {
 
-  public DDLayoutState ddState = new DDLayoutState();
+    public DDLayoutState ddState = new DDLayoutState();
 
-  @Override
-  public DDLayoutState getDragAndDropState() {
-    return ddState;
-  }
+    @Override
+    public DDLayoutState getDragAndDropState() {
+        return ddState;
+    }
 }

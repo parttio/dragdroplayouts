@@ -20,57 +20,58 @@ import com.vaadin.client.ui.dd.VDragEvent;
 import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
 import fi.jasoft.dragdroplayouts.client.ui.gridlayout.VDDGridLayout.CellDetails;
 
-public class VDDGridLayoutDropHandler extends VDDAbstractDropHandler<VDDGridLayout> {
+public class VDDGridLayoutDropHandler
+        extends VDDAbstractDropHandler<VDDGridLayout> {
 
-  public VDDGridLayoutDropHandler(ComponentConnector connector) {
-    super(connector);
-  }
+    public VDDGridLayoutDropHandler(ComponentConnector connector) {
+        super(connector);
+    }
 
-  @Override
-  public void dragEnter(VDragEvent drag) {
-    // Add the marker that shows the drop location while
-    // dragging
-    getLayout().postEnterHook(drag);
-  };
+    @Override
+    public void dragEnter(VDragEvent drag) {
+        // Add the marker that shows the drop location while
+        // dragging
+        getLayout().postEnterHook(drag);
+    };
 
-  @Override
-  public boolean drop(VDragEvent drag) {
+    @Override
+    public boolean drop(VDragEvent drag) {
 
-    // Update the detail of the drop
-    getLayout().updateDragDetails(drag);
+        // Update the detail of the drop
+        getLayout().updateDragDetails(drag);
 
-    // Remove emphasis
-    getLayout().deEmphasis();
+        // Remove emphasis
+        getLayout().deEmphasis();
 
-    return getLayout().postDropHook(drag);
-  };
+        return getLayout().postDropHook(drag);
+    };
 
-  @Override
-  public void dragOver(VDragEvent drag) {
+    @Override
+    public void dragOver(VDragEvent drag) {
 
-    // Remove emphasis from previous selection
-    getLayout().deEmphasis();
+        // Remove emphasis from previous selection
+        getLayout().deEmphasis();
 
-    // Update the drop details so we can then validate them
-    getLayout().updateDragDetails(drag);
+        // Update the drop details so we can then validate them
+        getLayout().updateDragDetails(drag);
 
-    getLayout().postOverHook(drag);
+        getLayout().postOverHook(drag);
 
-    // Emphasis drop location
-    validate(new VAcceptCallback() {
-      public void accepted(VDragEvent event) {
-        CellDetails cd = getLayout().getCellDetails(event);
-        if (cd != null) {
-          getLayout().emphasis(cd, event);
-        }
-      }
-    }, drag);
-  };
+        // Emphasis drop location
+        validate(new VAcceptCallback() {
+            public void accepted(VDragEvent event) {
+                CellDetails cd = getLayout().getCellDetails(event);
+                if (cd != null) {
+                    getLayout().emphasis(cd, event);
+                }
+            }
+        }, drag);
+    };
 
-  @Override
-  public void dragLeave(VDragEvent drag) {
-    getLayout().deEmphasis();
-    getLayout().postLeaveHook(drag);
-    super.dragLeave(drag);
-  }
+    @Override
+    public void dragLeave(VDragEvent drag) {
+        getLayout().deEmphasis();
+        getLayout().postLeaveHook(drag);
+        super.dragLeave(drag);
+    }
 }

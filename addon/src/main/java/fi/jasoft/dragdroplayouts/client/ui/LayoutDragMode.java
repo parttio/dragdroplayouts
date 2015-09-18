@@ -21,27 +21,28 @@ package fi.jasoft.dragdroplayouts.client.ui;
  */
 public enum LayoutDragMode {
 
-  /**
-   * Disables dragging components from a layout. This is the default behaviour.
-   */
-  NONE,
+    /**
+     * Disables dragging components from a layout. This is the default
+     * behaviour.
+     */
+    NONE,
 
-  /**
-   * Makes a copy of the component which is shown when dragging.
-   */
-  CLONE,
+    /**
+     * Makes a copy of the component which is shown when dragging.
+     */
+    CLONE,
 
-  /**
-   * The same as {@link LayoutDragMode#CLONE} except that components can only be dragged from their
-   * captions.
-   */
-  CAPTION,
+    /**
+     * The same as {@link LayoutDragMode#CLONE} except that components can only
+     * be dragged from their captions.
+     */
+    CAPTION,
 
-  /**
-   * The same as {@link LayoutDragMode#CLONE} except that the dragged component is not shown, but
-   * instead another component defined by
-   */
-  CLONE_OTHER
+    /**
+     * The same as {@link LayoutDragMode#CLONE} except that the dragged
+     * component is not shown, but instead another component defined by
+     */
+    CLONE_OTHER
 
-  ;
+    ;
 }

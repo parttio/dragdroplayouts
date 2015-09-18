@@ -30,73 +30,81 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
  * @since 0.4.0
  */
 @SuppressWarnings("serial")
-public class DefaultAbsoluteLayoutDropHandler extends AbstractDefaultLayoutDropHandler {
+public class DefaultAbsoluteLayoutDropHandler
+        extends AbstractDefaultLayoutDropHandler {
 
-  /**
-   * Called when a component changed location within the layout
-   * 
-   * @param event The drag and drop event
-   */
-  @Override
-  protected void handleComponentReordering(DragAndDropEvent event) {
-    AbsoluteLayoutTargetDetails details = (AbsoluteLayoutTargetDetails) event.getTargetDetails();
-    DDAbsoluteLayout layout = (DDAbsoluteLayout) details.getTarget();
-    LayoutBoundTransferable transferable = (LayoutBoundTransferable) event.getTransferable();
-    Component component = transferable.getComponent();
+    /**
+     * Called when a component changed location within the layout
+     * 
+     * @param event
+     *            The drag and drop event
+     */
+    @Override
+    protected void handleComponentReordering(DragAndDropEvent event) {
+        AbsoluteLayoutTargetDetails details = (AbsoluteLayoutTargetDetails) event
+                .getTargetDetails();
+        DDAbsoluteLayout layout = (DDAbsoluteLayout) details.getTarget();
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
+        Component component = transferable.getComponent();
 
-    // Get top-left pixel position
-    int leftPixelPosition = details.getRelativeLeft();
-    int topPixelPosition = details.getRelativeTop();
+        // Get top-left pixel position
+        int leftPixelPosition = details.getRelativeLeft();
+        int topPixelPosition = details.getRelativeTop();
 
-    ComponentPosition position = layout.getPosition(component);
+        ComponentPosition position = layout.getPosition(component);
 
-    position.setLeft((float) leftPixelPosition, Sizeable.UNITS_PIXELS);
-    position.setTop((float) topPixelPosition, Sizeable.UNITS_PIXELS);
-  }
-
-  /**
-   * Handle a drop from another layout
-   * 
-   * @param event The drag and drop event
-   */
-  @Override
-  protected void handleDropFromLayout(DragAndDropEvent event) {
-    AbsoluteLayoutTargetDetails details = (AbsoluteLayoutTargetDetails) event.getTargetDetails();
-    LayoutBoundTransferable transferable = (LayoutBoundTransferable) event.getTransferable();
-    Component component = transferable.getComponent();
-    Component source = event.getTransferable().getSourceComponent();
-    DDAbsoluteLayout layout = (DDAbsoluteLayout) details.getTarget();
-    int leftPixelPosition = details.getRelativeLeft();
-    int topPixelPosition = details.getRelativeTop();
-
-    // Check that we are not dragging an outer layout into an
-    // inner
-    // layout
-    Component parent = source.getParent();
-    while (parent != null) {
-      parent = parent.getParent();
+        position.setLeft((float) leftPixelPosition, Sizeable.UNITS_PIXELS);
+        position.setTop((float) topPixelPosition, Sizeable.UNITS_PIXELS);
     }
 
-    // remove component from source
-    if (source instanceof ComponentContainer) {
-      ComponentContainer sourceLayout = (ComponentContainer) source;
-      sourceLayout.removeComponent(component);
+    /**
+     * Handle a drop from another layout
+     * 
+     * @param event
+     *            The drag and drop event
+     */
+    @Override
+    protected void handleDropFromLayout(DragAndDropEvent event) {
+        AbsoluteLayoutTargetDetails details = (AbsoluteLayoutTargetDetails) event
+                .getTargetDetails();
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
+        Component component = transferable.getComponent();
+        Component source = event.getTransferable().getSourceComponent();
+        DDAbsoluteLayout layout = (DDAbsoluteLayout) details.getTarget();
+        int leftPixelPosition = details.getRelativeLeft();
+        int topPixelPosition = details.getRelativeTop();
+
+        // Check that we are not dragging an outer layout into an
+        // inner
+        // layout
+        Component parent = source.getParent();
+        while (parent != null) {
+            parent = parent.getParent();
+        }
+
+        // remove component from source
+        if (source instanceof ComponentContainer) {
+            ComponentContainer sourceLayout = (ComponentContainer) source;
+            sourceLayout.removeComponent(component);
+        }
+
+        // Add component to absolute layout
+        layout.addComponent(component, "left:" + leftPixelPosition + "px;top:"
+                + topPixelPosition + "px");
     }
 
-    // Add component to absolute layout
-    layout.addComponent(component, "left:" + leftPixelPosition + "px;top:" + topPixelPosition
-        + "px");
-  }
+    @Override
+    protected void handleHTML5Drop(DragAndDropEvent event) {
+        AbsoluteLayoutTargetDetails details = (AbsoluteLayoutTargetDetails) event
+                .getTargetDetails();
+        DDAbsoluteLayout layout = (DDAbsoluteLayout) details.getTarget();
 
-  @Override
-  protected void handleHTML5Drop(DragAndDropEvent event) {
-    AbsoluteLayoutTargetDetails details = (AbsoluteLayoutTargetDetails) event.getTargetDetails();
-    DDAbsoluteLayout layout = (DDAbsoluteLayout) details.getTarget();
+        int leftPixelPosition = details.getRelativeLeft();
+        int topPixelPosition = details.getRelativeTop();
+        layout.addComponent(resolveComponentFromHTML5Drop(event), "left:"
+                + leftPixelPosition + "px;top:" + topPixelPosition + "px");
 
-    int leftPixelPosition = details.getRelativeLeft();
-    int topPixelPosition = details.getRelativeTop();
-    layout.addComponent(resolveComponentFromHTML5Drop(event), "left:" + leftPixelPosition
-        + "px;top:" + topPixelPosition + "px");
-
-  }
+    }
 }

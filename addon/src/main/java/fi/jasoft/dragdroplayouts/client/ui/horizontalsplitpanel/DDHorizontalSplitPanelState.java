@@ -18,13 +18,13 @@ import com.vaadin.shared.ui.splitpanel.HorizontalSplitPanelState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
 
-public class DDHorizontalSplitPanelState extends HorizontalSplitPanelState implements
-    DragAndDropAwareState {
+public class DDHorizontalSplitPanelState extends HorizontalSplitPanelState
+        implements DragAndDropAwareState {
 
-  public DDLayoutState ddState = new DDLayoutState();
+    public DDLayoutState ddState = new DDLayoutState();
 
-  @Override
-  public DDLayoutState getDragAndDropState() {
-    return ddState;
-  }
+    @Override
+    public DDLayoutState getDragAndDropState() {
+        return ddState;
+    }
 }

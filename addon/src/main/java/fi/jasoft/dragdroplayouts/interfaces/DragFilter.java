@@ -26,21 +26,22 @@ import com.vaadin.ui.Component;
  */
 public interface DragFilter extends Serializable {
 
-  /**
-   * Is the component draggable
-   * 
-   * @param component The component to test
-   * @return Is the given component draggable or not
-   */
-  boolean isDraggable(Component component);
+    /**
+     * Is the component draggable
+     * 
+     * @param component
+     *            The component to test
+     * @return Is the given component draggable or not
+     */
+    boolean isDraggable(Component component);
 
-  /**
-   * A filter for allowing dragging all components in a layout (default)
-   */
-  static final DragFilter ALL = new DragFilterLiteral(true);
+    /**
+     * A filter for allowing dragging all components in a layout (default)
+     */
+    static final DragFilter ALL = new DragFilterLiteral(true);
 
-  /**
-   * A filter for preventing dragging any component in a layout
-   */
-  static final DragFilter NONE = new DragFilterLiteral(false);
+    /**
+     * A filter for preventing dragging any component in a layout
+     */
+    static final DragFilter NONE = new DragFilterLiteral(false);
 }

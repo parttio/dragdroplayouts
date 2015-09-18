@@ -19,17 +19,18 @@ import com.vaadin.shared.ui.orderedlayout.VerticalLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
 
-public class DDVerticalLayoutState extends VerticalLayoutState implements DragAndDropAwareState {
+public class DDVerticalLayoutState extends VerticalLayoutState
+        implements DragAndDropAwareState {
 
-  public static final float DEFAULT_VERTICAL_DROP_RATIO = 0.2f;
+    public static final float DEFAULT_VERTICAL_DROP_RATIO = 0.2f;
 
-  @DelegateToWidget
-  public float cellTopBottomDropRatio = DEFAULT_VERTICAL_DROP_RATIO;
+    @DelegateToWidget
+    public float cellTopBottomDropRatio = DEFAULT_VERTICAL_DROP_RATIO;
 
-  public DDLayoutState ddState = new DDLayoutState();
+    public DDLayoutState ddState = new DDLayoutState();
 
-  @Override
-  public DDLayoutState getDragAndDropState() {
-    return ddState;
-  }
+    @Override
+    public DDLayoutState getDragAndDropState() {
+        return ddState;
+    }
 }

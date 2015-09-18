@@ -20,58 +20,59 @@ import com.vaadin.client.ui.dd.VDragEvent;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
 
-public class VDDHorizontalSplitPanelDropHandler extends
-    VDDAbstractDropHandler<VDDHorizontalSplitPanel> {
+public class VDDHorizontalSplitPanelDropHandler
+        extends VDDAbstractDropHandler<VDDHorizontalSplitPanel> {
 
-  public VDDHorizontalSplitPanelDropHandler(ComponentConnector connector) {
-    super(connector);
-  }
-
-  @Override
-  protected void dragAccepted(VDragEvent drag) {
-    dragOver(drag);
-  }
-
-  @Override
-  public boolean drop(VDragEvent drag) {
-
-    // Un-emphasis any selections
-    getLayout().deEmphasis();
-
-    // Update the details
-    getLayout().updateDragDetails(drag);
-    return getLayout().postDropHook(drag) && super.drop(drag);
-  };
-
-  @Override
-  public void dragOver(VDragEvent drag) {
-
-    getLayout().deEmphasis();
-
-    getLayout().updateDragDetails(drag);
-
-    getLayout().postOverHook(drag);
-
-    ComponentConnector widgetConnector =
-        (ComponentConnector) drag.getTransferable()
-            .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
-
-    if (widgetConnector != null && getLayout().equals(widgetConnector.getWidget())) {
-      return;
+    public VDDHorizontalSplitPanelDropHandler(ComponentConnector connector) {
+        super(connector);
     }
 
-    // Validate the drop
-    validate(new VAcceptCallback() {
-      public void accepted(VDragEvent event) {
-        getLayout().emphasis(event.getElementOver());
-      }
-    }, drag);
-  };
+    @Override
+    protected void dragAccepted(VDragEvent drag) {
+        dragOver(drag);
+    }
 
-  @Override
-  public void dragLeave(VDragEvent drag) {
-    getLayout().deEmphasis();
-    getLayout().updateDragDetails(drag);
-    getLayout().postLeaveHook(drag);
-  };
+    @Override
+    public boolean drop(VDragEvent drag) {
+
+        // Un-emphasis any selections
+        getLayout().deEmphasis();
+
+        // Update the details
+        getLayout().updateDragDetails(drag);
+        return getLayout().postDropHook(drag) && super.drop(drag);
+    };
+
+    @Override
+    public void dragOver(VDragEvent drag) {
+
+        getLayout().deEmphasis();
+
+        getLayout().updateDragDetails(drag);
+
+        getLayout().postOverHook(drag);
+
+        ComponentConnector widgetConnector = (ComponentConnector) drag
+                .getTransferable()
+                .getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
+
+        if (widgetConnector != null
+                && getLayout().equals(widgetConnector.getWidget())) {
+            return;
+        }
+
+        // Validate the drop
+        validate(new VAcceptCallback() {
+            public void accepted(VDragEvent event) {
+                getLayout().emphasis(event.getElementOver());
+            }
+        }, drag);
+    };
+
+    @Override
+    public void dragLeave(VDragEvent drag) {
+        getLayout().deEmphasis();
+        getLayout().updateDragDetails(drag);
+        getLayout().postLeaveHook(drag);
+    };
 }

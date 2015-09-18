@@ -41,146 +41,149 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  * @author John Ahlroos / www.jasoft.fi
  */
 @SuppressWarnings("serial")
-public class DDAbsoluteLayout extends AbsoluteLayout implements LayoutDragSource, DropTarget,
-    ShimSupport, LegacyComponent, DragImageReferenceSupport, DragFilterSupport {
+public class DDAbsoluteLayout extends AbsoluteLayout
+        implements LayoutDragSource, DropTarget, ShimSupport, LegacyComponent,
+        DragImageReferenceSupport, DragFilterSupport {
 
-  // Drop handler which handles dd drop events
-  private DropHandler dropHandler;
+    // Drop handler which handles dd drop events
+    private DropHandler dropHandler;
 
-  // A filter for dragging components.
-  private DragFilter dragFilter = DragFilter.ALL;
+    // A filter for dragging components.
+    private DragFilter dragFilter = DragFilter.ALL;
 
-  private DragImageProvider dragImageProvider;
+    private DragImageProvider dragImageProvider;
 
-  /**
-   * Creates an AbsoluteLayout with full size.
-   */
-  public DDAbsoluteLayout() {
-    super();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void paintContent(PaintTarget target) throws PaintException {
-
-    // Paint the drop handler criterions
-    if (dropHandler != null && isEnabled()) {
-      dropHandler.getAcceptCriterion().paint(target);
+    /**
+     * Creates an AbsoluteLayout with full size.
+     */
+    public DDAbsoluteLayout() {
+        super();
     }
-  }
 
-  /**
-   * Get the drophandler which handles component drops on the layout
-   */
-  public DropHandler getDropHandler() {
-    return dropHandler;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public void paintContent(PaintTarget target) throws PaintException {
 
-  /**
-   * Sets the drop handler which handles component drops on the layout
-   * 
-   * @param dropHandler The drop handler to set
-   */
-  public void setDropHandler(DropHandler dropHandler) {
-    if (this.dropHandler != dropHandler) {
-      this.dropHandler = dropHandler;
-      markAsDirty();
+        // Paint the drop handler criterions
+        if (dropHandler != null && isEnabled()) {
+            dropHandler.getAcceptCriterion().paint(target);
+        }
     }
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  public TargetDetails translateDropTargetDetails(Map<String, Object> clientVariables) {
-    return new AbsoluteLayoutTargetDetails(this, clientVariables);
-  }
+    /**
+     * Get the drophandler which handles component drops on the layout
+     */
+    public DropHandler getDropHandler() {
+        return dropHandler;
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public Transferable getTransferable(Map<String, Object> rawVariables) {
-    return new LayoutBoundTransferable(this, rawVariables);
-  }
+    /**
+     * Sets the drop handler which handles component drops on the layout
+     * 
+     * @param dropHandler
+     *            The drop handler to set
+     */
+    public void setDropHandler(DropHandler dropHandler) {
+        if (this.dropHandler != dropHandler) {
+            this.dropHandler = dropHandler;
+            markAsDirty();
+        }
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public LayoutDragMode getDragMode() {
-    return getState().ddState.dragMode;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public TargetDetails translateDropTargetDetails(
+            Map<String, Object> clientVariables) {
+        return new AbsoluteLayoutTargetDetails(this, clientVariables);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void setDragMode(LayoutDragMode mode) {
-    getState().ddState.dragMode = mode;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public Transferable getTransferable(Map<String, Object> rawVariables) {
+        return new LayoutBoundTransferable(this, rawVariables);
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void setShim(boolean shim) {
-    getState().ddState.iframeShims = shim;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public LayoutDragMode getDragMode() {
+        return getState().ddState.dragMode;
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public boolean isShimmed() {
-    return getState().ddState.iframeShims;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public void setDragMode(LayoutDragMode mode) {
+        getState().ddState.dragMode = mode;
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public DragFilter getDragFilter() {
-    return dragFilter;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public void setShim(boolean shim) {
+        getState().ddState.iframeShims = shim;
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void setDragFilter(DragFilter dragFilter) {
-    this.dragFilter = dragFilter;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isShimmed() {
+        return getState().ddState.iframeShims;
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public DDAbsoluteLayoutState getState() {
-    return (DDAbsoluteLayoutState) super.getState();
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public DragFilter getDragFilter() {
+        return dragFilter;
+    }
 
-  @Override
-  protected DDAbsoluteLayoutState getState(boolean markAsDirty) {
-    return (DDAbsoluteLayoutState) super.getState(markAsDirty);
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public void setDragFilter(DragFilter dragFilter) {
+        this.dragFilter = dragFilter;
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void changeVariables(Object source, Map<String, Object> variables) {
-    // TODO Auto-generated method stub
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public DDAbsoluteLayoutState getState() {
+        return (DDAbsoluteLayoutState) super.getState();
+    }
 
-  }
+    @Override
+    protected DDAbsoluteLayoutState getState(boolean markAsDirty) {
+        return (DDAbsoluteLayoutState) super.getState(markAsDirty);
+    }
 
-  @Override
-  public void beforeClientResponse(boolean initial) {
-    super.beforeClientResponse(initial);
-    DDUtil.onBeforeClientResponse(this, getState());
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        // TODO Auto-generated method stub
 
-  @Override
-  public void setDragImageProvider(DragImageProvider provider) {
-    this.dragImageProvider = provider;
-    markAsDirty();
-  }
+    }
 
-  @Override
-  public DragImageProvider getDragImageProvider() {
-    return this.dragImageProvider;
-  }
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
+        DDUtil.onBeforeClientResponse(this, getState());
+    }
+
+    @Override
+    public void setDragImageProvider(DragImageProvider provider) {
+        this.dragImageProvider = provider;
+        markAsDirty();
+    }
+
+    @Override
+    public DragImageProvider getDragImageProvider() {
+        return this.dragImageProvider;
+    }
 }

@@ -26,52 +26,54 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.util.HTML5Support;
 
 @Connect(DDFormLayout.class)
-public class DDFormLayoutConnector extends FormLayoutConnector implements Paintable, VHasDragFilter {
+public class DDFormLayoutConnector extends FormLayoutConnector
+        implements Paintable, VHasDragFilter {
 
-  private HTML5Support html5Support;
+    private HTML5Support html5Support;
 
-  @Override
-  public VDDFormLayout getWidget() {
-    return (VDDFormLayout) super.getWidget();
-  }
-
-  @Override
-  public DDFormLayoutState getState() {
-    return (DDFormLayoutState) super.getState();
-  }
-
-  @Override
-  protected void init() {
-    super.init();
-    VDragDropUtil.listenToStateChangeEvents(this, getWidget());
-  }
-
-  public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-    VDDFormLayoutDropHandler dropHandler = new VDDFormLayoutDropHandler(this);
-    VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
-    if (html5Support != null) {
-      html5Support.disable();
+    @Override
+    public VDDFormLayout getWidget() {
+        return (VDDFormLayout) super.getWidget();
     }
-    html5Support = HTML5Support.enable(this, dropHandler);
-  }
 
-  @Override
-  public void onUnregister() {
-    if (html5Support != null) {
-      html5Support.disable();
-      html5Support = null;
+    @Override
+    public DDFormLayoutState getState() {
+        return (DDFormLayoutState) super.getState();
     }
-    super.onUnregister();
-  }
 
-  @Override
-  public VDragFilter getDragFilter() {
-    return getWidget().getDragFilter();
-  }
+    @Override
+    protected void init() {
+        super.init();
+        VDragDropUtil.listenToStateChangeEvents(this, getWidget());
+    }
 
-  @Override
-  public void setDragFilter(VDragFilter filter) {
-    getWidget().setDragFilter(filter);
-  }
+    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        VDDFormLayoutDropHandler dropHandler = new VDDFormLayoutDropHandler(
+                this);
+        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
+        if (html5Support != null) {
+            html5Support.disable();
+        }
+        html5Support = HTML5Support.enable(this, dropHandler);
+    }
+
+    @Override
+    public void onUnregister() {
+        if (html5Support != null) {
+            html5Support.disable();
+            html5Support = null;
+        }
+        super.onUnregister();
+    }
+
+    @Override
+    public VDragFilter getDragFilter() {
+        return getWidget().getDragFilter();
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        getWidget().setDragFilter(filter);
+    }
 
 }

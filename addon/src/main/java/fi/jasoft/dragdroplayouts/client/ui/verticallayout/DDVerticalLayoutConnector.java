@@ -26,52 +26,53 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.util.HTML5Support;
 
 @Connect(DDVerticalLayout.class)
-public class DDVerticalLayoutConnector extends VerticalLayoutConnector implements Paintable,
-    VHasDragFilter {
+public class DDVerticalLayoutConnector extends VerticalLayoutConnector
+        implements Paintable, VHasDragFilter {
 
-  private HTML5Support html5Support;
+    private HTML5Support html5Support;
 
-  @Override
-  public VDDVerticalLayout getWidget() {
-    return (VDDVerticalLayout) super.getWidget();
-  }
-
-  @Override
-  public DDVerticalLayoutState getState() {
-    return (DDVerticalLayoutState) super.getState();
-  }
-
-  @Override
-  public void init() {
-    super.init();
-    VDragDropUtil.listenToStateChangeEvents(this, getWidget());
-  }
-
-  public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-    VDDVerticalLayoutDropHandler dropHandler = new VDDVerticalLayoutDropHandler(this);
-    VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
-    if (html5Support != null) {
-      html5Support.disable();
+    @Override
+    public VDDVerticalLayout getWidget() {
+        return (VDDVerticalLayout) super.getWidget();
     }
-    html5Support = HTML5Support.enable(this, dropHandler);
-  }
 
-  @Override
-  public void onUnregister() {
-    if (html5Support != null) {
-      html5Support.disable();
-      html5Support = null;
+    @Override
+    public DDVerticalLayoutState getState() {
+        return (DDVerticalLayoutState) super.getState();
     }
-    super.onUnregister();
-  }
 
-  @Override
-  public VDragFilter getDragFilter() {
-    return getWidget().getDragFilter();
-  }
+    @Override
+    public void init() {
+        super.init();
+        VDragDropUtil.listenToStateChangeEvents(this, getWidget());
+    }
 
-  @Override
-  public void setDragFilter(VDragFilter filter) {
-    getWidget().setDragFilter(filter);
-  }
+    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        VDDVerticalLayoutDropHandler dropHandler = new VDDVerticalLayoutDropHandler(
+                this);
+        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
+        if (html5Support != null) {
+            html5Support.disable();
+        }
+        html5Support = HTML5Support.enable(this, dropHandler);
+    }
+
+    @Override
+    public void onUnregister() {
+        if (html5Support != null) {
+            html5Support.disable();
+            html5Support = null;
+        }
+        super.onUnregister();
+    }
+
+    @Override
+    public VDragFilter getDragFilter() {
+        return getWidget().getDragFilter();
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        getWidget().setDragFilter(filter);
+    }
 }

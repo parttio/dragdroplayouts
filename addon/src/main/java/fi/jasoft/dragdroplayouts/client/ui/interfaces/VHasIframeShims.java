@@ -15,7 +15,7 @@ package fi.jasoft.dragdroplayouts.client.ui.interfaces;
 
 public interface VHasIframeShims {
 
-  void iframeShimsEnabled(boolean enabled);
+    void iframeShimsEnabled(boolean enabled);
 
-  boolean isIframeShimsEnabled();
+    boolean isIframeShimsEnabled();
 }

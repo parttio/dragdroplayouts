@@ -18,17 +18,18 @@ import com.vaadin.shared.ui.tabsheet.TabsheetState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
 
-public class DDTabSheetState extends TabsheetState implements DragAndDropAwareState {
+public class DDTabSheetState extends TabsheetState
+        implements DragAndDropAwareState {
 
-  public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
+    public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
 
-  public float tabLeftRightDropRatio = DEFAULT_HORIZONTAL_DROP_RATIO;
+    public float tabLeftRightDropRatio = DEFAULT_HORIZONTAL_DROP_RATIO;
 
-  public DDLayoutState ddState = new DDLayoutState();
+    public DDLayoutState ddState = new DDLayoutState();
 
-  @Override
-  public DDLayoutState getDragAndDropState() {
-    return ddState;
-  }
+    @Override
+    public DDLayoutState getDragAndDropState() {
+        return ddState;
+    }
 
 }

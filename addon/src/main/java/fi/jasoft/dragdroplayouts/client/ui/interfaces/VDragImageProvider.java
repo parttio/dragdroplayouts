@@ -5,6 +5,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 public interface VDragImageProvider {
 
-  Element getDragImageElement(Widget w);
+    Element getDragImageElement(Widget w);
 
 }

@@ -19,34 +19,35 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.client.ui.dd.VDragEvent;
 
-public abstract class VDDAbstractDropHandler<W extends Widget> extends VAbstractDropHandler {
+public abstract class VDDAbstractDropHandler<W extends Widget>
+        extends VAbstractDropHandler {
 
-  private final ComponentConnector connector;
+    private final ComponentConnector connector;
 
-  public VDDAbstractDropHandler(ComponentConnector connector) {
-    this.connector = connector;
-  }
+    public VDDAbstractDropHandler(ComponentConnector connector) {
+        this.connector = connector;
+    }
 
-  @Override
-  public ApplicationConnection getApplicationConnection() {
-    return connector.getConnection();
-  }
+    @Override
+    public ApplicationConnection getApplicationConnection() {
+        return connector.getConnection();
+    }
 
-  public void cancelDrag(VDragEvent drag) {
-      dragLeave(drag);
-  }
+    public void cancelDrag(VDragEvent drag) {
+        dragLeave(drag);
+    }
 
-  @Override
-  protected void dragAccepted(VDragEvent drag) {
-    // NOP
-  }
+    @Override
+    protected void dragAccepted(VDragEvent drag) {
+        // NOP
+    }
 
-  @Override
-  public ComponentConnector getConnector() {
-    return connector;
-  }
+    @Override
+    public ComponentConnector getConnector() {
+        return connector;
+    }
 
-  protected W getLayout() {
-    return (W) connector.getWidget();
-  }
+    protected W getLayout() {
+        return (W) connector.getWidget();
+    }
 }

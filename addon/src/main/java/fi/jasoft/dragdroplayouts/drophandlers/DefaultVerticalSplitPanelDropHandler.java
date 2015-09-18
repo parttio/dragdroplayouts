@@ -32,55 +32,58 @@ import fi.jasoft.dragdroplayouts.events.VerticalLocationIs;
  * @since 0.6.0
  */
 @SuppressWarnings("serial")
-public class DefaultVerticalSplitPanelDropHandler extends AbstractDefaultLayoutDropHandler {
+public class DefaultVerticalSplitPanelDropHandler
+        extends AbstractDefaultLayoutDropHandler {
 
-  @Override
-  public AcceptCriterion getAcceptCriterion() {
-    // Only allow dropping in slots, not on the center bar
-    return new Not(VerticalLocationIs.MIDDLE);
-  }
-
-  @Override
-  protected void handleComponentReordering(DragAndDropEvent event) {
-    handleDropFromLayout(event);
-
-  }
-
-  @Override
-  protected void handleDropFromLayout(DragAndDropEvent event) {
-    LayoutBoundTransferable transferable = (LayoutBoundTransferable) event.getTransferable();
-    VerticalSplitPanelTargetDetails details =
-        (VerticalSplitPanelTargetDetails) event.getTargetDetails();
-    Component component = transferable.getComponent();
-    DDVerticalSplitPanel panel = (DDVerticalSplitPanel) details.getTarget();
-    ComponentContainer source = (ComponentContainer) transferable.getSourceComponent();
-
-    // Remove component from its source
-    source.removeComponent(component);
-
-    if (details.getDropLocation() == VerticalDropLocation.TOP) {
-      // Dropped in the left area
-      panel.setFirstComponent(component);
-
-    } else if (details.getDropLocation() == VerticalDropLocation.BOTTOM) {
-      // Dropped in the right area
-      panel.setSecondComponent(component);
+    @Override
+    public AcceptCriterion getAcceptCriterion() {
+        // Only allow dropping in slots, not on the center bar
+        return new Not(VerticalLocationIs.MIDDLE);
     }
-  }
 
-  @Override
-  protected void handleHTML5Drop(DragAndDropEvent event) {
-    VerticalSplitPanelTargetDetails details =
-        (VerticalSplitPanelTargetDetails) event.getTargetDetails();
-    DDVerticalSplitPanel panel = (DDVerticalSplitPanel) details.getTarget();
+    @Override
+    protected void handleComponentReordering(DragAndDropEvent event) {
+        handleDropFromLayout(event);
 
-    if (details.getDropLocation() == VerticalDropLocation.TOP) {
-      // Dropped in the left area
-      panel.setFirstComponent(resolveComponentFromHTML5Drop(event));
-
-    } else if (details.getDropLocation() == VerticalDropLocation.BOTTOM) {
-      // Dropped in the right area
-      panel.setSecondComponent(resolveComponentFromHTML5Drop(event));
     }
-  }
+
+    @Override
+    protected void handleDropFromLayout(DragAndDropEvent event) {
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
+        VerticalSplitPanelTargetDetails details = (VerticalSplitPanelTargetDetails) event
+                .getTargetDetails();
+        Component component = transferable.getComponent();
+        DDVerticalSplitPanel panel = (DDVerticalSplitPanel) details.getTarget();
+        ComponentContainer source = (ComponentContainer) transferable
+                .getSourceComponent();
+
+        // Remove component from its source
+        source.removeComponent(component);
+
+        if (details.getDropLocation() == VerticalDropLocation.TOP) {
+            // Dropped in the left area
+            panel.setFirstComponent(component);
+
+        } else if (details.getDropLocation() == VerticalDropLocation.BOTTOM) {
+            // Dropped in the right area
+            panel.setSecondComponent(component);
+        }
+    }
+
+    @Override
+    protected void handleHTML5Drop(DragAndDropEvent event) {
+        VerticalSplitPanelTargetDetails details = (VerticalSplitPanelTargetDetails) event
+                .getTargetDetails();
+        DDVerticalSplitPanel panel = (DDVerticalSplitPanel) details.getTarget();
+
+        if (details.getDropLocation() == VerticalDropLocation.TOP) {
+            // Dropped in the left area
+            panel.setFirstComponent(resolveComponentFromHTML5Drop(event));
+
+        } else if (details.getDropLocation() == VerticalDropLocation.BOTTOM) {
+            // Dropped in the right area
+            panel.setSecondComponent(resolveComponentFromHTML5Drop(event));
+        }
+    }
 }

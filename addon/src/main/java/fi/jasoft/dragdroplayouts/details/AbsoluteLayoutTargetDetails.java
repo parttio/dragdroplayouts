@@ -23,76 +23,88 @@ import fi.jasoft.dragdroplayouts.client.ui.Constants;
 
 public class AbsoluteLayoutTargetDetails extends TargetDetailsImpl {
 
-  /**
-   * Constructor
-   * 
-   * @param rawDropData Drop data
-   */
-  public AbsoluteLayoutTargetDetails(DDAbsoluteLayout layout, Map<String, Object> rawDropData) {
-    super(rawDropData, layout);
-  }
+    /**
+     * Constructor
+     * 
+     * @param rawDropData
+     *            Drop data
+     */
+    public AbsoluteLayoutTargetDetails(DDAbsoluteLayout layout,
+            Map<String, Object> rawDropData) {
+        super(rawDropData, layout);
+    }
 
-  /**
-   * The absolute left coordinate in pixels measured from the windows left edge
-   * 
-   * @return The amount of pixels from the left edge
-   */
-  public int getAbsoluteLeft() {
-    return Integer.valueOf(getData(Constants.DROP_DETAIL_ABSOLUTE_LEFT).toString());
-  }
+    /**
+     * The absolute left coordinate in pixels measured from the windows left
+     * edge
+     * 
+     * @return The amount of pixels from the left edge
+     */
+    public int getAbsoluteLeft() {
+        return Integer.valueOf(
+                getData(Constants.DROP_DETAIL_ABSOLUTE_LEFT).toString());
+    }
 
-  /**
-   * The absolute top coordinate in pixels measured from the windows top edge
-   * 
-   * @return The amount of pixels from the top edge
-   */
-  public int getAbsoluteTop() {
-    return Integer.valueOf(getData(Constants.DROP_DETAIL_ABSOLUTE_TOP).toString());
-  }
+    /**
+     * The absolute top coordinate in pixels measured from the windows top edge
+     * 
+     * @return The amount of pixels from the top edge
+     */
+    public int getAbsoluteTop() {
+        return Integer.valueOf(
+                getData(Constants.DROP_DETAIL_ABSOLUTE_TOP).toString());
+    }
 
-  /**
-   * The relative left coordinate in pixels measured from the containers left edge
-   * 
-   * @return The amount of pixels from the left edge
-   */
-  public int getRelativeLeft() {
-    return Integer.valueOf(getData(Constants.DROP_DETAIL_RELATIVE_LEFT).toString());
-  }
+    /**
+     * The relative left coordinate in pixels measured from the containers left
+     * edge
+     * 
+     * @return The amount of pixels from the left edge
+     */
+    public int getRelativeLeft() {
+        return Integer.valueOf(
+                getData(Constants.DROP_DETAIL_RELATIVE_LEFT).toString());
+    }
 
-  /**
-   * The relative top coordinate in pixels measured from the containers top edge
-   * 
-   * @return The amount of pixels from the top edge
-   */
-  public int getRelativeTop() {
-    return Integer.valueOf(getData(Constants.DROP_DETAIL_RELATIVE_TOP).toString());
-  }
+    /**
+     * The relative top coordinate in pixels measured from the containers top
+     * edge
+     * 
+     * @return The amount of pixels from the top edge
+     */
+    public int getRelativeTop() {
+        return Integer.valueOf(
+                getData(Constants.DROP_DETAIL_RELATIVE_TOP).toString());
+    }
 
-  /**
-   * The width of the dragged component measured in pixels
-   * 
-   * @return The width in pixels
-   */
-  public int getComponentHeight() {
-    return Integer.valueOf(getData(Constants.DROP_DETAIL_COMPONENT_HEIGHT).toString());
-  }
+    /**
+     * The width of the dragged component measured in pixels
+     * 
+     * @return The width in pixels
+     */
+    public int getComponentHeight() {
+        return Integer.valueOf(
+                getData(Constants.DROP_DETAIL_COMPONENT_HEIGHT).toString());
+    }
 
-  /**
-   * The height of the dragged component measured in pixels
-   * 
-   * @return The height in pixels
-   */
-  public int getComponentWidth() {
-    return Integer.valueOf(getData(Constants.DROP_DETAIL_COMPONENT_WIDTH).toString());
-  }
+    /**
+     * The height of the dragged component measured in pixels
+     * 
+     * @return The height in pixels
+     */
+    public int getComponentWidth() {
+        return Integer.valueOf(
+                getData(Constants.DROP_DETAIL_COMPONENT_WIDTH).toString());
+    }
 
-  /**
-   * Some details about the mouse event
-   * 
-   * @return details about the actual event that caused the event details. Practically mouse move or
-   *         mouse up.
-   */
-  public MouseEventDetails getMouseEvent() {
-    return MouseEventDetails.deSerialize((String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
-  }
+    /**
+     * Some details about the mouse event
+     * 
+     * @return details about the actual event that caused the event details.
+     *         Practically mouse move or mouse up.
+     */
+    public MouseEventDetails getMouseEvent() {
+        return MouseEventDetails.deSerialize(
+                (String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
+    }
 }

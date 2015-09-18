@@ -18,45 +18,47 @@ import com.vaadin.client.ui.dd.VDragEvent;
 
 import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
 
-public class VDDAbsoluteLayoutDropHandler extends VDDAbstractDropHandler<VDDAbsoluteLayout> {
+public class VDDAbsoluteLayoutDropHandler
+        extends VDDAbstractDropHandler<VDDAbsoluteLayout> {
 
-  public VDDAbsoluteLayoutDropHandler(ComponentConnector connector) {
-    super(connector);
-  }
-
-  @Override
-  public boolean drop(VDragEvent drag) {
-    if (super.drop(drag)) {
-      getLayout().updateDragDetails(drag);
-      return getLayout().postDropHook(drag);
+    public VDDAbsoluteLayoutDropHandler(ComponentConnector connector) {
+        super(connector);
     }
-    return false;
-  };
 
-  @Override
-  public void dragEnter(VDragEvent drag) {
-    super.dragEnter(drag);
-    getLayout().updateDragDetails(drag);
-    getLayout().postEnterHook(drag);
-  };
+    @Override
+    public boolean drop(VDragEvent drag) {
+        if (super.drop(drag)) {
+            getLayout().updateDragDetails(drag);
+            return getLayout().postDropHook(drag);
+        }
+        return false;
+    };
 
-  @Override
-  public void dragLeave(VDragEvent drag) {
-    super.dragLeave(drag);
+    @Override
+    public void dragEnter(VDragEvent drag) {
+        super.dragEnter(drag);
+        getLayout().updateDragDetails(drag);
+        getLayout().postEnterHook(drag);
+    };
 
-    // Due to http://dev.vaadin.com/ticket/14880 we need to abort if gwt event is null
-    if (drag.getCurrentGwtEvent() != null) {
-      getLayout().updateDragDetails(drag);
-      getLayout().postLeaveHook(drag);
+    @Override
+    public void dragLeave(VDragEvent drag) {
+        super.dragLeave(drag);
+
+        // Due to http://dev.vaadin.com/ticket/14880 we need to abort if gwt
+        // event is null
+        if (drag.getCurrentGwtEvent() != null) {
+            getLayout().updateDragDetails(drag);
+            getLayout().postLeaveHook(drag);
+        }
+    };
+
+    @Override
+    public void dragOver(VDragEvent drag) {
+        if (drag.getDragImage() != null) {
+            drag.getDragImage().getStyle().setProperty("display", "");
+        }
+        getLayout().updateDragDetails(drag);
+        getLayout().postOverHook(drag);
     }
-  };
-
-  @Override
-  public void dragOver(VDragEvent drag) {
-    if (drag.getDragImage() != null) {
-      drag.getDragImage().getStyle().setProperty("display", "");
-    }
-    getLayout().updateDragDetails(drag);
-    getLayout().postOverHook(drag);
-  }
 }

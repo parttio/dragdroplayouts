@@ -16,28 +16,32 @@ import fi.jasoft.dragdroplayouts.interfaces.DragImageReferenceSupport;
 
 public class DDUtil {
 
-  public static void onBeforeClientResponse(HasComponents layout, DragAndDropAwareState state) {
-    DDLayoutState dragAndDropState = state.getDragAndDropState();
-    Iterator<Component> componentIterator = layout.iterator();
-    dragAndDropState.draggable = new ArrayList<Connector>();
-    dragAndDropState.referenceImageComponents = new HashMap<Connector, Connector>();
-    while (componentIterator.hasNext()) {
-      Component c = componentIterator.next();
+    public static void onBeforeClientResponse(HasComponents layout,
+            DragAndDropAwareState state) {
+        DDLayoutState dragAndDropState = state.getDragAndDropState();
+        Iterator<Component> componentIterator = layout.iterator();
+        dragAndDropState.draggable = new ArrayList<Connector>();
+        dragAndDropState.referenceImageComponents = new HashMap<Connector, Connector>();
+        while (componentIterator.hasNext()) {
+            Component c = componentIterator.next();
 
-      if (layout instanceof DragFilterSupport
-          && ((DragFilterSupport) layout).getDragFilter().isDraggable(c)) {
-        dragAndDropState.draggable.add(c);
-      }
+            if (layout instanceof DragFilterSupport
+                    && ((DragFilterSupport) layout).getDragFilter()
+                            .isDraggable(c)) {
+                dragAndDropState.draggable.add(c);
+            }
 
-      if (layout instanceof DragImageReferenceSupport) {
-        DragImageProvider provider = ((DragImageReferenceSupport) layout).getDragImageProvider();
-        if (provider != null) {
-          Component dragImage = provider.getDragImage(c);
-          if (dragImage != null) {
-            dragAndDropState.referenceImageComponents.put(c, dragImage);
-          }
+            if (layout instanceof DragImageReferenceSupport) {
+                DragImageProvider provider = ((DragImageReferenceSupport) layout)
+                        .getDragImageProvider();
+                if (provider != null) {
+                    Component dragImage = provider.getDragImage(c);
+                    if (dragImage != null) {
+                        dragAndDropState.referenceImageComponents.put(c,
+                                dragImage);
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }

@@ -30,29 +30,33 @@ import fi.jasoft.dragdroplayouts.client.ui.Constants;
 @SuppressWarnings("serial")
 public class LayoutBoundTransferable extends TransferableImpl {
 
-  /**
-   * Default constructor
-   * 
-   * @param sourceComponent The layout from where the drag started
-   * @param rawVariables The details of the drag
-   */
-  public LayoutBoundTransferable(Component sourceComponent, Map<String, Object> rawVariables) {
-    super(sourceComponent, rawVariables);
-  }
+    /**
+     * Default constructor
+     * 
+     * @param sourceComponent
+     *            The layout from where the drag started
+     * @param rawVariables
+     *            The details of the drag
+     */
+    public LayoutBoundTransferable(Component sourceComponent,
+            Map<String, Object> rawVariables) {
+        super(sourceComponent, rawVariables);
+    }
 
-  /**
-   * Get the component being dragged
-   * 
-   * @return The component
-   */
-  public Component getComponent() {
-    return (Component) getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
-  }
+    /**
+     * Get the component being dragged
+     * 
+     * @return The component
+     */
+    public Component getComponent() {
+        return (Component) getData(Constants.TRANSFERABLE_DETAIL_COMPONENT);
+    }
 
-  /**
-   * @return the mouse down event that started the drag and drop operation
-   */
-  public MouseEventDetails getMouseDownEvent() {
-    return MouseEventDetails.deSerialize((String) getData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN));
-  }
+    /**
+     * @return the mouse down event that started the drag and drop operation
+     */
+    public MouseEventDetails getMouseDownEvent() {
+        return MouseEventDetails.deSerialize(
+                (String) getData(Constants.TRANSFERABLE_DETAIL_MOUSEDOWN));
+    }
 }

@@ -19,45 +19,46 @@ import com.vaadin.client.ui.dd.VDragEvent;
 
 import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
 
-public class VDDCssLayoutDropHandler extends VDDAbstractDropHandler<VDDCssLayout> {
+public class VDDCssLayoutDropHandler
+        extends VDDAbstractDropHandler<VDDCssLayout> {
 
-  public VDDCssLayoutDropHandler(ComponentConnector connector) {
-    super(connector);
-  }
+    public VDDCssLayoutDropHandler(ComponentConnector connector) {
+        super(connector);
+    }
 
-  @Override
-  public boolean drop(VDragEvent drag) {
-    getLayout().updateDragDetails(drag);
-    getLayout().detachDragImageFromLayout(drag);
-    return getLayout().postDropHook(drag) && super.drop(drag);
-  };
+    @Override
+    public boolean drop(VDragEvent drag) {
+        getLayout().updateDragDetails(drag);
+        getLayout().detachDragImageFromLayout(drag);
+        return getLayout().postDropHook(drag) && super.drop(drag);
+    };
 
-  @Override
-  public void dragEnter(VDragEvent drag) {
-    super.dragEnter(drag);
-    getLayout().attachDragImageToLayout(drag);
-    getLayout().updateDragDetails(drag);
-    getLayout().postEnterHook(drag);
-  };
+    @Override
+    public void dragEnter(VDragEvent drag) {
+        super.dragEnter(drag);
+        getLayout().attachDragImageToLayout(drag);
+        getLayout().updateDragDetails(drag);
+        getLayout().postEnterHook(drag);
+    };
 
-  @Override
-  public void dragLeave(VDragEvent drag) {
-    super.dragLeave(drag);
-    getLayout().detachDragImageFromLayout(drag);
-    getLayout().postLeaveHook(drag);
-  };
+    @Override
+    public void dragLeave(VDragEvent drag) {
+        super.dragLeave(drag);
+        getLayout().detachDragImageFromLayout(drag);
+        getLayout().postLeaveHook(drag);
+    };
 
-  @Override
-  public void dragOver(VDragEvent drag) {
-    getLayout().updateDragDetails(drag);
-    getLayout().postOverHook(drag);
+    @Override
+    public void dragOver(VDragEvent drag) {
+        getLayout().updateDragDetails(drag);
+        getLayout().postOverHook(drag);
 
-    // Validate the drop
-    validate(new VAcceptCallback() {
-      public void accepted(VDragEvent event) {
-        getLayout().updateDrag(event);
-      }
-    }, drag);
-  }
+        // Validate the drop
+        validate(new VAcceptCallback() {
+            public void accepted(VDragEvent event) {
+                getLayout().updateDrag(event);
+            }
+        }, drag);
+    }
 
 }

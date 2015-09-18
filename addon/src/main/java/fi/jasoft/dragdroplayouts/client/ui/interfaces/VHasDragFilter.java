@@ -23,12 +23,12 @@ import fi.jasoft.dragdroplayouts.client.VDragFilter;
  */
 public interface VHasDragFilter {
 
-  /**
-   * Returns the drag filter used by the layout
-   * 
-   * @return
-   */
-  VDragFilter getDragFilter();
+    /**
+     * Returns the drag filter used by the layout
+     * 
+     * @return
+     */
+    VDragFilter getDragFilter();
 
-  void setDragFilter(VDragFilter filter);
+    void setDragFilter(VDragFilter filter);
 }

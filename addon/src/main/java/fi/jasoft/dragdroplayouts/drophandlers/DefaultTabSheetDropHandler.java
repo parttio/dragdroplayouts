@@ -33,80 +33,87 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
  * @since 0.6.0
  */
 @SuppressWarnings("serial")
-public class DefaultTabSheetDropHandler extends AbstractDefaultLayoutDropHandler {
+public class DefaultTabSheetDropHandler
+        extends AbstractDefaultLayoutDropHandler {
 
-  @Override
-  public AcceptCriterion getAcceptCriterion() {
-    // Only allow drops between tabs
-    return new Not(HorizontalLocationIs.CENTER);
-  }
-
-  @Override
-  protected void handleComponentReordering(DragAndDropEvent event) {
-    LayoutBoundTransferable transferable = (LayoutBoundTransferable) event.getTransferable();
-    TabSheetTargetDetails details = (TabSheetTargetDetails) event.getTargetDetails();
-    DDTabSheet tabSheet = (DDTabSheet) details.getTarget();
-    Component c = transferable.getComponent();
-    Tab tab = tabSheet.getTab(c);
-    HorizontalDropLocation location = details.getDropLocation();
-    int idx = details.getOverIndex();
-
-    if (location == HorizontalDropLocation.LEFT) {
-      // Left of previous tab
-      int originalIndex = tabSheet.getTabPosition(tab);
-      if (originalIndex > idx) {
-        tabSheet.setTabPosition(tab, idx);
-      } else if (idx - 1 >= 0) {
-        tabSheet.setTabPosition(tab, idx - 1);
-      }
-
-    } else if (location == HorizontalDropLocation.RIGHT) {
-      // Right of previous tab
-      int originalIndex = tabSheet.getTabPosition(tab);
-      if (originalIndex > idx) {
-        tabSheet.setTabPosition(tab, idx + 1);
-      } else {
-        tabSheet.setTabPosition(tab, idx);
-      }
+    @Override
+    public AcceptCriterion getAcceptCriterion() {
+        // Only allow drops between tabs
+        return new Not(HorizontalLocationIs.CENTER);
     }
-  }
 
-  @Override
-  protected void handleDropFromLayout(DragAndDropEvent event) {
-    LayoutBoundTransferable transferable = (LayoutBoundTransferable) event.getTransferable();
-    TabSheetTargetDetails details = (TabSheetTargetDetails) event.getTargetDetails();
-    DDTabSheet tabSheet = (DDTabSheet) details.getTarget();
-    Component c = transferable.getComponent();
-    HorizontalDropLocation location = details.getDropLocation();
-    int idx = details.getOverIndex();
-    ComponentContainer source = (ComponentContainer) transferable.getSourceComponent();
+    @Override
+    protected void handleComponentReordering(DragAndDropEvent event) {
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
+        TabSheetTargetDetails details = (TabSheetTargetDetails) event
+                .getTargetDetails();
+        DDTabSheet tabSheet = (DDTabSheet) details.getTarget();
+        Component c = transferable.getComponent();
+        Tab tab = tabSheet.getTab(c);
+        HorizontalDropLocation location = details.getDropLocation();
+        int idx = details.getOverIndex();
 
-    source.removeComponent(c);
-    if (location == HorizontalDropLocation.LEFT) {
-      tabSheet.addTab(c, idx);
-    } else if (location == HorizontalDropLocation.RIGHT) {
-      tabSheet.addTab(c, idx + 1);
+        if (location == HorizontalDropLocation.LEFT) {
+            // Left of previous tab
+            int originalIndex = tabSheet.getTabPosition(tab);
+            if (originalIndex > idx) {
+                tabSheet.setTabPosition(tab, idx);
+            } else if (idx - 1 >= 0) {
+                tabSheet.setTabPosition(tab, idx - 1);
+            }
+
+        } else if (location == HorizontalDropLocation.RIGHT) {
+            // Right of previous tab
+            int originalIndex = tabSheet.getTabPosition(tab);
+            if (originalIndex > idx) {
+                tabSheet.setTabPosition(tab, idx + 1);
+            } else {
+                tabSheet.setTabPosition(tab, idx);
+            }
+        }
     }
-  }
 
-  protected String resolveCaptionFromHTML5Drop(DragAndDropEvent event) {
-    return event.getTransferable().getData("html5Data").toString();
-  }
+    @Override
+    protected void handleDropFromLayout(DragAndDropEvent event) {
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
+        TabSheetTargetDetails details = (TabSheetTargetDetails) event
+                .getTargetDetails();
+        DDTabSheet tabSheet = (DDTabSheet) details.getTarget();
+        Component c = transferable.getComponent();
+        HorizontalDropLocation location = details.getDropLocation();
+        int idx = details.getOverIndex();
+        ComponentContainer source = (ComponentContainer) transferable
+                .getSourceComponent();
 
-  @Override
-  protected void handleHTML5Drop(DragAndDropEvent event) {
-    TabSheetTargetDetails details = (TabSheetTargetDetails) event.getTargetDetails();
-    HorizontalDropLocation location = details.getDropLocation();
-    DDTabSheet tabSheet = (DDTabSheet) details.getTarget();
-    int idx = details.getOverIndex();
-
-    Component c = resolveComponentFromHTML5Drop(event);
-    c.setCaption(resolveCaptionFromHTML5Drop(event));
-
-    if (location == HorizontalDropLocation.LEFT) {
-      tabSheet.addTab(c, idx);
-    } else if (location == HorizontalDropLocation.RIGHT) {
-      tabSheet.addTab(c, idx + 1);
+        source.removeComponent(c);
+        if (location == HorizontalDropLocation.LEFT) {
+            tabSheet.addTab(c, idx);
+        } else if (location == HorizontalDropLocation.RIGHT) {
+            tabSheet.addTab(c, idx + 1);
+        }
     }
-  }
+
+    protected String resolveCaptionFromHTML5Drop(DragAndDropEvent event) {
+        return event.getTransferable().getData("html5Data").toString();
+    }
+
+    @Override
+    protected void handleHTML5Drop(DragAndDropEvent event) {
+        TabSheetTargetDetails details = (TabSheetTargetDetails) event
+                .getTargetDetails();
+        HorizontalDropLocation location = details.getDropLocation();
+        DDTabSheet tabSheet = (DDTabSheet) details.getTarget();
+        int idx = details.getOverIndex();
+
+        Component c = resolveComponentFromHTML5Drop(event);
+        c.setCaption(resolveCaptionFromHTML5Drop(event));
+
+        if (location == HorizontalDropLocation.LEFT) {
+            tabSheet.addTab(c, idx);
+        } else if (location == HorizontalDropLocation.RIGHT) {
+            tabSheet.addTab(c, idx + 1);
+        }
+    }
 }

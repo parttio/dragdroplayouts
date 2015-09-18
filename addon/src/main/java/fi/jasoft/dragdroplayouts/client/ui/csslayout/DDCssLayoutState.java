@@ -19,22 +19,23 @@ import com.vaadin.shared.ui.csslayout.CssLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
 
-public class DDCssLayoutState extends CssLayoutState implements DragAndDropAwareState {
+public class DDCssLayoutState extends CssLayoutState
+        implements DragAndDropAwareState {
 
-  public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
+    public static final float DEFAULT_HORIZONTAL_DROP_RATIO = 0.2f;
 
-  public static final float DEFAULT_VERTICAL_DROP_RATIO = 0.2f;
+    public static final float DEFAULT_VERTICAL_DROP_RATIO = 0.2f;
 
-  @DelegateToWidget
-  public float horizontalDropRatio = DEFAULT_HORIZONTAL_DROP_RATIO;
+    @DelegateToWidget
+    public float horizontalDropRatio = DEFAULT_HORIZONTAL_DROP_RATIO;
 
-  @DelegateToWidget
-  public float verticalDropRatio = DEFAULT_VERTICAL_DROP_RATIO;
+    @DelegateToWidget
+    public float verticalDropRatio = DEFAULT_VERTICAL_DROP_RATIO;
 
-  public DDLayoutState ddState = new DDLayoutState();
+    public DDLayoutState ddState = new DDLayoutState();
 
-  @Override
-  public DDLayoutState getDragAndDropState() {
-    return ddState;
-  }
+    @Override
+    public DDLayoutState getDragAndDropState() {
+        return ddState;
+    }
 }

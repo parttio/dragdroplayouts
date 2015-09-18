@@ -17,10 +17,11 @@ import com.vaadin.client.ui.dd.VHasDropHandler;
 
 import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
 
-public interface VDDHasDropHandler<T extends VDDAbstractDropHandler> extends VHasDropHandler {
+public interface VDDHasDropHandler<T extends VDDAbstractDropHandler>
+        extends VHasDropHandler {
 
-  public void setDropHandler(T drophandler);
+    public void setDropHandler(T drophandler);
 
-  @Override
-  public T getDropHandler();
+    @Override
+    public T getDropHandler();
 }

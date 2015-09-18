@@ -44,167 +44,174 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
  * @since 0.4.0
  */
 @SuppressWarnings("serial")
-public class DDAccordion extends Accordion implements LayoutDragSource, DropTarget, ShimSupport,
-    LegacyComponent, DragImageReferenceSupport, DragFilterSupport {
+public class DDAccordion extends Accordion
+        implements LayoutDragSource, DropTarget, ShimSupport, LegacyComponent,
+        DragImageReferenceSupport, DragFilterSupport {
 
-  /**
-   * The drop handler which handles dropped components in the layout.
-   */
-  private DropHandler dropHandler;
+    /**
+     * The drop handler which handles dropped components in the layout.
+     */
+    private DropHandler dropHandler;
 
-  // A filter for dragging components.
-  private DragFilter dragFilter = DragFilter.ALL;
+    // A filter for dragging components.
+    private DragFilter dragFilter = DragFilter.ALL;
 
-  private DragImageProvider dragImageProvider;
+    private DragImageProvider dragImageProvider;
 
-  /**
-   * {@inheritDoc}
-   */
-  public Transferable getTransferable(Map<String, Object> rawVariables) {
-    if (rawVariables.get("index") != null) {
-      int index = Integer.parseInt(rawVariables.get("index").toString());
-      Iterator<Component> iter = getComponentIterator();
-      int counter = 0;
-      Component c = null;
-      while (iter.hasNext()) {
-        c = iter.next();
-        if (counter == index) {
-          break;
+    /**
+     * {@inheritDoc}
+     */
+    public Transferable getTransferable(Map<String, Object> rawVariables) {
+        if (rawVariables.get("index") != null) {
+            int index = Integer.parseInt(rawVariables.get("index").toString());
+            Iterator<Component> iter = getComponentIterator();
+            int counter = 0;
+            Component c = null;
+            while (iter.hasNext()) {
+                c = iter.next();
+                if (counter == index) {
+                    break;
+                }
+                counter++;
+            }
+
+            rawVariables.put("component", c);
+        } else if (rawVariables.get("component") == null) {
+            rawVariables.put("component", DDAccordion.this);
         }
-        counter++;
-      }
 
-      rawVariables.put("component", c);
-    } else if (rawVariables.get("component") == null) {
-      rawVariables.put("component", DDAccordion.this);
+        return new LayoutBoundTransferable(this, rawVariables);
     }
 
-    return new LayoutBoundTransferable(this, rawVariables);
-  }
-
-  /**
-   * Sets the current handler which handles dropped components on the layout. By setting a drop
-   * handler dropping components on the layout is enabled. By setting the dropHandler to null
-   * dropping is disabled.
-   * 
-   * @param dropHandler The drop handler to handle drop events or null to disable dropping
-   */
-  public void setDropHandler(DropHandler dropHandler) {
-    if (this.dropHandler != dropHandler) {
-      this.dropHandler = dropHandler;
-      requestRepaint();
+    /**
+     * Sets the current handler which handles dropped components on the layout.
+     * By setting a drop handler dropping components on the layout is enabled.
+     * By setting the dropHandler to null dropping is disabled.
+     * 
+     * @param dropHandler
+     *            The drop handler to handle drop events or null to disable
+     *            dropping
+     */
+    public void setDropHandler(DropHandler dropHandler) {
+        if (this.dropHandler != dropHandler) {
+            this.dropHandler = dropHandler;
+            requestRepaint();
+        }
     }
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  public DropHandler getDropHandler() {
-    return dropHandler;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public TargetDetails translateDropTargetDetails(Map<String, Object> clientVariables) {
-    return new AccordionTargetDetails(this, clientVariables);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public LayoutDragMode getDragMode() {
-    return getState().ddState.dragMode;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void setDragMode(LayoutDragMode mode) {
-    getState().ddState.dragMode = mode;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void paintContent(PaintTarget target) throws PaintException {
-    // Add drop handler
-    if (dropHandler != null && isEnabled()) {
-      dropHandler.getAcceptCriterion().paint(target);
+    /**
+     * {@inheritDoc}
+     */
+    public DropHandler getDropHandler() {
+        return dropHandler;
     }
-  }
 
-  /**
-   * Sets the ratio which determines how a tab is divided into drop zones. The ratio is measured
-   * from the left and right borders. For example, setting the ratio to 0.3 will divide the drop
-   * zone in three equal parts (left,middle,right). Setting the ratio to 0.5 will disable dropping
-   * in the middle and setting it to 0 will disable dropping at the sides.
-   * 
-   * @param ratio A ratio between 0 and 0.5. Default is 0.2
-   */
-  public void setComponentVerticalDropRatio(float ratio) {
-    if (ratio != getState().tabTopBottomDropRatio) {
-      if (ratio >= 0 && ratio <= 0.5) {
-        getState().tabTopBottomDropRatio = ratio;
-      } else {
-        throw new IllegalArgumentException("Ratio must be between 0 and 0.5");
-      }
+    /**
+     * {@inheritDoc}
+     */
+    public TargetDetails translateDropTargetDetails(
+            Map<String, Object> clientVariables) {
+        return new AccordionTargetDetails(this, clientVariables);
     }
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void setShim(boolean shim) {
-    getState().ddState.iframeShims = shim;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public LayoutDragMode getDragMode() {
+        return getState().ddState.dragMode;
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public boolean isShimmed() {
-    return getState().ddState.iframeShims;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public void setDragMode(LayoutDragMode mode) {
+        getState().ddState.dragMode = mode;
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public DragFilter getDragFilter() {
-    return dragFilter;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void paintContent(PaintTarget target) throws PaintException {
+        // Add drop handler
+        if (dropHandler != null && isEnabled()) {
+            dropHandler.getAcceptCriterion().paint(target);
+        }
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public void setDragFilter(DragFilter dragFilter) {
-    this.dragFilter = dragFilter;
-  }
+    /**
+     * Sets the ratio which determines how a tab is divided into drop zones. The
+     * ratio is measured from the left and right borders. For example, setting
+     * the ratio to 0.3 will divide the drop zone in three equal parts
+     * (left,middle,right). Setting the ratio to 0.5 will disable dropping in
+     * the middle and setting it to 0 will disable dropping at the sides.
+     * 
+     * @param ratio
+     *            A ratio between 0 and 0.5. Default is 0.2
+     */
+    public void setComponentVerticalDropRatio(float ratio) {
+        if (ratio != getState().tabTopBottomDropRatio) {
+            if (ratio >= 0 && ratio <= 0.5) {
+                getState().tabTopBottomDropRatio = ratio;
+            } else {
+                throw new IllegalArgumentException(
+                        "Ratio must be between 0 and 0.5");
+            }
+        }
+    }
 
-  @Override
-  public DDAccordionState getState() {
-    return (DDAccordionState) super.getState();
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public void setShim(boolean shim) {
+        getState().ddState.iframeShims = shim;
+    }
 
-  @Override
-  public void beforeClientResponse(boolean initial) {
-    super.beforeClientResponse(initial);
-    DDUtil.onBeforeClientResponse(this, getState());
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isShimmed() {
+        return getState().ddState.iframeShims;
+    }
 
-  @Override
-  public void changeVariables(Object source, Map<String, Object> variables) {
-    // FIXME Remove when drag&drop no longer is legacy
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public DragFilter getDragFilter() {
+        return dragFilter;
+    }
 
-  @Override
-  public void setDragImageProvider(DragImageProvider provider) {
-    this.dragImageProvider = provider;
-    markAsDirty();
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public void setDragFilter(DragFilter dragFilter) {
+        this.dragFilter = dragFilter;
+    }
 
-  @Override
-  public DragImageProvider getDragImageProvider() {
-    return this.dragImageProvider;
-  }
+    @Override
+    public DDAccordionState getState() {
+        return (DDAccordionState) super.getState();
+    }
+
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
+        DDUtil.onBeforeClientResponse(this, getState());
+    }
+
+    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        // FIXME Remove when drag&drop no longer is legacy
+    }
+
+    @Override
+    public void setDragImageProvider(DragImageProvider provider) {
+        this.dragImageProvider = provider;
+        markAsDirty();
+    }
+
+    @Override
+    public DragImageProvider getDragImageProvider() {
+        return this.dragImageProvider;
+    }
 }

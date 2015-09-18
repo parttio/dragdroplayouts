@@ -25,15 +25,15 @@ import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 
 public class DDLayoutState extends SharedState {
 
-  // The current drag mode, default is dragging is not supported
-  public LayoutDragMode dragMode = LayoutDragMode.NONE;
+    // The current drag mode, default is dragging is not supported
+    public LayoutDragMode dragMode = LayoutDragMode.NONE;
 
-  // Are the iframes shimmed
-  public boolean iframeShims = true;
+    // Are the iframes shimmed
+    public boolean iframeShims = true;
 
-  // Which connectors are draggable
-  public List<Connector> draggable = new ArrayList<Connector>();
+    // Which connectors are draggable
+    public List<Connector> draggable = new ArrayList<Connector>();
 
-  // Reference drag images
-  public Map<Connector, Connector> referenceImageComponents = new HashMap<Connector, Connector>();
+    // Reference drag images
+    public Map<Connector, Connector> referenceImageComponents = new HashMap<Connector, Connector>();
 }

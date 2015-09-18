@@ -42,267 +42,281 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  * @author John Ahlroos / www.jasoft.fi
  * @since 0.4.0
  */
-public class VDDVerticalSplitPanel extends VSplitPanelVertical implements VHasDragMode,
-    VDDHasDropHandler<VDDVerticalSplitPanelDropHandler>, DragStartListener, VHasDragFilter,
-    VHasDragImageReferenceSupport, VHasIframeShims {
+public class VDDVerticalSplitPanel extends VSplitPanelVertical
+        implements VHasDragMode,
+        VDDHasDropHandler<VDDVerticalSplitPanelDropHandler>, DragStartListener,
+        VHasDragFilter, VHasDragImageReferenceSupport, VHasIframeShims {
 
-  public static final String OVER = "v-ddsplitpanel-over";
+    public static final String OVER = "v-ddsplitpanel-over";
 
-  public static final String OVER_SPLITTER = OVER + "-splitter";
+    public static final String OVER_SPLITTER = OVER + "-splitter";
 
-  private VDDVerticalSplitPanelDropHandler dropHandler;
+    private VDDVerticalSplitPanelDropHandler dropHandler;
 
-  private Element firstContainer;
+    private Element firstContainer;
 
-  private Element secondContainer;
+    private Element secondContainer;
 
-  private Element splitter;
+    private Element splitter;
 
-  private Element currentEmphasis;
+    private Element currentEmphasis;
 
-  private VDragFilter dragFilter;
+    private VDragFilter dragFilter;
 
-  private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
+    private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
-  // The drag mouse handler which handles the creation of the transferable
-  private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(this,
-      LayoutDragMode.NONE);
+    // The drag mouse handler which handles the creation of the transferable
+    private final VLayoutDragDropMouseHandler ddMouseHandler = new VLayoutDragDropMouseHandler(
+            this, LayoutDragMode.NONE);
 
-  private LayoutDragMode mode = LayoutDragMode.NONE;
+    private LayoutDragMode mode = LayoutDragMode.NONE;
 
-  private boolean iframeCovers = false;
+    private boolean iframeCovers = false;
 
-  public VDDVerticalSplitPanel() {
-    super();
-  }
-
-  @Override
-  protected void onLoad() {
-    super.onLoad();
-    ddMouseHandler.addDragStartListener(this);
-    setDragMode(mode);
-    iframeShimsEnabled(iframeCovers);
-  }
-
-  @Override
-  protected void onUnload() {
-    super.onUnload();
-    ddMouseHandler.removeDragStartListener(this);
-    ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
-    iframeCoverUtility.setIframeCoversEnabled(false, getElement(), LayoutDragMode.NONE);
-  }
-
-  @Override
-  protected void constructDom() {
-    super.constructDom();
-
-    // Save references
-    Element wrapper = getElement().getChild(0).cast();
-    firstContainer = wrapper.getChild(0).cast();
-    splitter = wrapper.getChild(1).cast();
-    secondContainer = wrapper.getChild(2).cast();
-  }
-
-  /**
-   * A hook for extended components to post process the the drop before it is sent to the server.
-   * Useful if you don't want to override the whole drop handler.
-   */
-  protected boolean postDropHook(VDragEvent drag) {
-    // Extended classes can add content here...
-    return true;
-  }
-
-  /**
-   * A hook for extended components to post process the the enter event. Useful if you don't want to
-   * override the whole drophandler.
-   */
-  protected void postEnterHook(VDragEvent drag) {
-    // Extended classes can add content here...
-  }
-
-  /**
-   * A hook for extended components to post process the the leave event. Useful if you don't want to
-   * override the whole drophandler.
-   */
-  protected void postLeaveHook(VDragEvent drag) {
-    // Extended classes can add content here...
-  }
-
-  /**
-   * A hook for extended components to post process the the over event. Useful if you don't want to
-   * override the whole drophandler.
-   */
-  protected void postOverHook(VDragEvent drag) {
-    // Extended classes can add content here...
-  }
-
-  /**
-   * Can be used to listen to drag start events, must return true for the drag to commence. Return
-   * false to interrupt the drag:
-   */
-  public boolean dragStart(Widget widget, LayoutDragMode mode) {
-    return getDragMode() != LayoutDragMode.NONE && dragFilter.isDraggable(widget);
-  }
-
-  public void setDropHandler(VDDVerticalSplitPanelDropHandler handler) {
-    dropHandler = handler;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler#getDropHandler()
-   */
-  public VDDVerticalSplitPanelDropHandler getDropHandler() {
-    return dropHandler;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
-   */
-  public LayoutDragMode getDragMode() {
-    return ddMouseHandler.getDragMode();
-  }
-
-  /**
-   * Emphasisizes a container element
-   * 
-   * @param element
-   */
-  protected void emphasis(Element element) {
-    // Remove previous emphasis
-    deEmphasis();
-
-    // validate container
-    if (element == null || !getElement().isOrHasChild(element)) {
-      return;
+    public VDDVerticalSplitPanel() {
+        super();
     }
 
-    if (element == firstContainer || element == secondContainer) {
-      element.addClassName(OVER);
-      currentEmphasis = element;
-    } else if (splitter.isOrHasChild(element)) {
-      currentEmphasis = splitter.getChild(0).cast();
-      currentEmphasis.addClassName(OVER_SPLITTER);
-    }
-  }
-
-  /**
-   * Removes any previous emphasis made by drag&drag
-   */
-  protected void deEmphasis() {
-    if (currentEmphasis != null) {
-      currentEmphasis.removeClassName(OVER);
-      currentEmphasis.removeClassName(OVER_SPLITTER);
-      currentEmphasis = null;
-    }
-  }
-
-  /**
-   * Returns the container element which wraps the first (left-most) component
-   * 
-   * @return
-   */
-  protected Element getFirstContainer() {
-    return firstContainer;
-  }
-
-  /**
-   * Returns the container element which wraps the second (right-most) component
-   * 
-   * @return
-   */
-  protected Element getSecondContainer() {
-    return secondContainer;
-  }
-
-  /**
-   * Returns the splitter element
-   * 
-   * @return
-   */
-  protected Element getSplitter() {
-    return splitter;
-  }
-
-  /**
-   * Updates the drop details while dragging. This is needed to ensure client side criterias can
-   * validate the drop location.
-   * 
-   * @param widget The container which we are hovering over
-   * @param event The drag event
-   */
-  protected void updateDragDetails(VDragEvent event) {
-    Element over = event.getElementOver();
-
-    // Resolve where the drop was made
-    VerticalDropLocation location = null;
-    Widget content = null;
-    if (firstContainer.isOrHasChild(over)) {
-      location = VerticalDropLocation.TOP;
-      content = Util.findWidget(firstContainer, null);
-    } else if (splitter.isOrHasChild(over)) {
-      location = VerticalDropLocation.MIDDLE;
-      content = this;
-    } else if (secondContainer.isOrHasChild(over)) {
-      location = VerticalDropLocation.BOTTOM;
-      content = Util.findWidget(secondContainer, null);
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        ddMouseHandler.addDragStartListener(this);
+        setDragMode(mode);
+        iframeShimsEnabled(iframeCovers);
     }
 
-    event.getDropDetails().put(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION, location);
-
-    if (content != null) {
-      event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS, content.getClass().getName());
-    } else {
-      event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS, this.getClass().getName());
+    @Override
+    protected void onUnload() {
+        super.onUnload();
+        ddMouseHandler.removeDragStartListener(this);
+        ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
+        iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
+                LayoutDragMode.NONE);
     }
 
-    // Add mouse event details
-    MouseEventDetails details =
-        MouseEventDetailsBuilder.buildMouseEventDetails(event.getCurrentGwtEvent(), getElement());
-    event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT, details.serialize());
-  }
+    @Override
+    protected void constructDom() {
+        super.constructDom();
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter#getDragFilter ()
-   */
-  public VDragFilter getDragFilter() {
-    return dragFilter;
-  }
+        // Save references
+        Element wrapper = getElement().getChild(0).cast();
+        firstContainer = wrapper.getChild(0).cast();
+        splitter = wrapper.getChild(1).cast();
+        secondContainer = wrapper.getChild(2).cast();
+    }
 
-  IframeCoverUtility getIframeCoverUtility() {
-    return iframeCoverUtility;
-  }
+    /**
+     * A hook for extended components to post process the the drop before it is
+     * sent to the server. Useful if you don't want to override the whole drop
+     * handler.
+     */
+    protected boolean postDropHook(VDragEvent drag) {
+        // Extended classes can add content here...
+        return true;
+    }
 
-  @Override
-  public void setDragFilter(VDragFilter filter) {
-    this.dragFilter = filter;
-  }
+    /**
+     * A hook for extended components to post process the the enter event.
+     * Useful if you don't want to override the whole drophandler.
+     */
+    protected void postEnterHook(VDragEvent drag) {
+        // Extended classes can add content here...
+    }
 
-  @Override
-  public void iframeShimsEnabled(boolean enabled) {
-    iframeCovers = enabled;
-    iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
-  }
+    /**
+     * A hook for extended components to post process the the leave event.
+     * Useful if you don't want to override the whole drophandler.
+     */
+    protected void postLeaveHook(VDragEvent drag) {
+        // Extended classes can add content here...
+    }
 
-  @Override
-  public boolean isIframeShimsEnabled() {
-    return iframeCovers;
-  }
+    /**
+     * A hook for extended components to post process the the over event. Useful
+     * if you don't want to override the whole drophandler.
+     */
+    protected void postOverHook(VDragEvent drag) {
+        // Extended classes can add content here...
+    }
 
-  @Override
-  public void setDragMode(LayoutDragMode mode) {
-    this.mode = mode;
-    ddMouseHandler.updateDragMode(mode);
-    iframeShimsEnabled(iframeCovers);
-  }
+    /**
+     * Can be used to listen to drag start events, must return true for the drag
+     * to commence. Return false to interrupt the drag:
+     */
+    public boolean dragStart(Widget widget, LayoutDragMode mode) {
+        return getDragMode() != LayoutDragMode.NONE
+                && dragFilter.isDraggable(widget);
+    }
 
-  @Override
-  public void setDragImageProvider(VDragImageProvider provider) {
-    ddMouseHandler.setDragImageProvider(provider);
-  }
+    public void setDropHandler(VDDVerticalSplitPanelDropHandler handler) {
+        dropHandler = handler;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler#getDropHandler()
+     */
+    public VDDVerticalSplitPanelDropHandler getDropHandler() {
+        return dropHandler;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
+     */
+    public LayoutDragMode getDragMode() {
+        return ddMouseHandler.getDragMode();
+    }
+
+    /**
+     * Emphasisizes a container element
+     * 
+     * @param element
+     */
+    protected void emphasis(Element element) {
+        // Remove previous emphasis
+        deEmphasis();
+
+        // validate container
+        if (element == null || !getElement().isOrHasChild(element)) {
+            return;
+        }
+
+        if (element == firstContainer || element == secondContainer) {
+            element.addClassName(OVER);
+            currentEmphasis = element;
+        } else if (splitter.isOrHasChild(element)) {
+            currentEmphasis = splitter.getChild(0).cast();
+            currentEmphasis.addClassName(OVER_SPLITTER);
+        }
+    }
+
+    /**
+     * Removes any previous emphasis made by drag&drag
+     */
+    protected void deEmphasis() {
+        if (currentEmphasis != null) {
+            currentEmphasis.removeClassName(OVER);
+            currentEmphasis.removeClassName(OVER_SPLITTER);
+            currentEmphasis = null;
+        }
+    }
+
+    /**
+     * Returns the container element which wraps the first (left-most) component
+     * 
+     * @return
+     */
+    protected Element getFirstContainer() {
+        return firstContainer;
+    }
+
+    /**
+     * Returns the container element which wraps the second (right-most)
+     * component
+     * 
+     * @return
+     */
+    protected Element getSecondContainer() {
+        return secondContainer;
+    }
+
+    /**
+     * Returns the splitter element
+     * 
+     * @return
+     */
+    protected Element getSplitter() {
+        return splitter;
+    }
+
+    /**
+     * Updates the drop details while dragging. This is needed to ensure client
+     * side criterias can validate the drop location.
+     * 
+     * @param widget
+     *            The container which we are hovering over
+     * @param event
+     *            The drag event
+     */
+    protected void updateDragDetails(VDragEvent event) {
+        Element over = event.getElementOver();
+
+        // Resolve where the drop was made
+        VerticalDropLocation location = null;
+        Widget content = null;
+        if (firstContainer.isOrHasChild(over)) {
+            location = VerticalDropLocation.TOP;
+            content = Util.findWidget(firstContainer, null);
+        } else if (splitter.isOrHasChild(over)) {
+            location = VerticalDropLocation.MIDDLE;
+            content = this;
+        } else if (secondContainer.isOrHasChild(over)) {
+            location = VerticalDropLocation.BOTTOM;
+            content = Util.findWidget(secondContainer, null);
+        }
+
+        event.getDropDetails().put(Constants.DROP_DETAIL_VERTICAL_DROP_LOCATION,
+                location);
+
+        if (content != null) {
+            event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
+                    content.getClass().getName());
+        } else {
+            event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
+                    this.getClass().getName());
+        }
+
+        // Add mouse event details
+        MouseEventDetails details = MouseEventDetailsBuilder
+                .buildMouseEventDetails(event.getCurrentGwtEvent(),
+                        getElement());
+        event.getDropDetails().put(Constants.DROP_DETAIL_MOUSE_EVENT,
+                details.serialize());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter#
+     * getDragFilter ()
+     */
+    public VDragFilter getDragFilter() {
+        return dragFilter;
+    }
+
+    IframeCoverUtility getIframeCoverUtility() {
+        return iframeCoverUtility;
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        this.dragFilter = filter;
+    }
+
+    @Override
+    public void iframeShimsEnabled(boolean enabled) {
+        iframeCovers = enabled;
+        iframeCoverUtility.setIframeCoversEnabled(enabled, getElement(), mode);
+    }
+
+    @Override
+    public boolean isIframeShimsEnabled() {
+        return iframeCovers;
+    }
+
+    @Override
+    public void setDragMode(LayoutDragMode mode) {
+        this.mode = mode;
+        ddMouseHandler.updateDragMode(mode);
+        iframeShimsEnabled(iframeCovers);
+    }
+
+    @Override
+    public void setDragImageProvider(VDragImageProvider provider) {
+        ddMouseHandler.setDragImageProvider(provider);
+    }
 }

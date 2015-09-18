@@ -26,31 +26,33 @@ import com.vaadin.ui.Component;
  */
 final class DragFilterLiteral implements DragFilter {
 
-  private final boolean allowDragging;
+    private final boolean allowDragging;
 
-  /**
-   * Constructor
-   * 
-   * @param allowDragging Should dragging be allowed
-   */
-  public DragFilterLiteral(boolean allowDragging) {
-    this.allowDragging = allowDragging;
-  }
+    /**
+     * Constructor
+     * 
+     * @param allowDragging
+     *            Should dragging be allowed
+     */
+    public DragFilterLiteral(boolean allowDragging) {
+        this.allowDragging = allowDragging;
+    }
 
-  /**
-   * {@inheritDoc}
-   */
-  public boolean isDraggable(Component component) {
-    return allowDragging;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isDraggable(Component component) {
+        return allowDragging;
+    }
 
-  /**
-   * Ensures that DragFilter.ALL or DragFilter.NONE is returned when de-serializing
-   * 
-   * @return
-   * @throws InvalidObjectException
-   */
-  private Object readResolve() throws InvalidObjectException {
-    return allowDragging ? DragFilter.ALL : DragFilter.NONE;
-  }
+    /**
+     * Ensures that DragFilter.ALL or DragFilter.NONE is returned when
+     * de-serializing
+     * 
+     * @return
+     * @throws InvalidObjectException
+     */
+    private Object readResolve() throws InvalidObjectException {
+        return allowDragging ? DragFilter.ALL : DragFilter.NONE;
+    }
 }

@@ -27,62 +27,63 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.util.HTML5Support;
 
 @Connect(DDAbsoluteLayout.class)
-public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector implements Paintable,
-    VHasDragFilter {
+public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
+        implements Paintable, VHasDragFilter {
 
-  private HTML5Support html5Support;
+    private HTML5Support html5Support;
 
-  @Override
-  public VDDAbsoluteLayout getWidget() {
-    return (VDDAbsoluteLayout) super.getWidget();
-  }
-
-  @Override
-  public DDAbsoluteLayoutState getState() {
-    return (DDAbsoluteLayoutState) super.getState();
-  }
-
-  @Override
-  protected void init() {
-    super.init();
-    VDragDropUtil.listenToStateChangeEvents(this, getWidget());
-  }
-
-  /**
-   * 
-   * TODO Remove this when drag & drop is done properly in core
-   */
-  @Override
-  public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-    VDDAbsoluteLayoutDropHandler dropHandler = new VDDAbsoluteLayoutDropHandler(this);
-    VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
-
-    if (html5Support != null) {
-      html5Support.disable();
+    @Override
+    public VDDAbsoluteLayout getWidget() {
+        return (VDDAbsoluteLayout) super.getWidget();
     }
-    html5Support = HTML5Support.enable(this, dropHandler);
-  }
 
-  @Override
-  public void onUnregister() {
-    if (html5Support != null) {
-      html5Support.disable();
-      html5Support = null;
+    @Override
+    public DDAbsoluteLayoutState getState() {
+        return (DDAbsoluteLayoutState) super.getState();
     }
-    super.onUnregister();
-  }
 
-  public LayoutDragMode getDragMode() {
-    return getWidget().getDragMode();
-  }
+    @Override
+    protected void init() {
+        super.init();
+        VDragDropUtil.listenToStateChangeEvents(this, getWidget());
+    }
 
-  @Override
-  public VDragFilter getDragFilter() {
-    return getWidget().getDragFilter();
-  }
+    /**
+     * 
+     * TODO Remove this when drag & drop is done properly in core
+     */
+    @Override
+    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        VDDAbsoluteLayoutDropHandler dropHandler = new VDDAbsoluteLayoutDropHandler(
+                this);
+        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
 
-  @Override
-  public void setDragFilter(VDragFilter filter) {
-    getWidget().setDragFilter(filter);
-  }
+        if (html5Support != null) {
+            html5Support.disable();
+        }
+        html5Support = HTML5Support.enable(this, dropHandler);
+    }
+
+    @Override
+    public void onUnregister() {
+        if (html5Support != null) {
+            html5Support.disable();
+            html5Support = null;
+        }
+        super.onUnregister();
+    }
+
+    public LayoutDragMode getDragMode() {
+        return getWidget().getDragMode();
+    }
+
+    @Override
+    public VDragFilter getDragFilter() {
+        return getWidget().getDragFilter();
+    }
+
+    @Override
+    public void setDragFilter(VDragFilter filter) {
+        getWidget().setDragFilter(filter);
+    }
 }

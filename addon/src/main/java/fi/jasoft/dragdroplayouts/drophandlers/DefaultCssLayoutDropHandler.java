@@ -31,105 +31,117 @@ import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
  * 
  */
 @SuppressWarnings("serial")
-public class DefaultCssLayoutDropHandler extends AbstractDefaultLayoutDropHandler {
+public class DefaultCssLayoutDropHandler
+        extends AbstractDefaultLayoutDropHandler {
 
-  @Override
-  protected void handleComponentReordering(DragAndDropEvent event) {
-    // Component re-ordering
-    LayoutBoundTransferable transferable = (LayoutBoundTransferable) event.getTransferable();
-    CssLayoutTargetDetails details = (CssLayoutTargetDetails) event.getTargetDetails();
-    DDCssLayout layout = (DDCssLayout) details.getTarget();
-    Component comp = transferable.getComponent();
-    int idx = details.getOverIndex();
-    Component over = details.getOverComponent();
+    @Override
+    protected void handleComponentReordering(DragAndDropEvent event) {
+        // Component re-ordering
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
+        CssLayoutTargetDetails details = (CssLayoutTargetDetails) event
+                .getTargetDetails();
+        DDCssLayout layout = (DDCssLayout) details.getTarget();
+        Component comp = transferable.getComponent();
+        int idx = details.getOverIndex();
+        Component over = details.getOverComponent();
 
-    // Detach
-    layout.removeComponent(comp);
+        // Detach
+        layout.removeComponent(comp);
 
-    // Add component
-    if (idx >= 0 && idx < layout.getComponentCount()) {
-      layout.addComponent(comp, idx);
-    } else {
-      layout.addComponent(comp);
-    }
-  }
-
-  @Override
-  protected void handleDropFromLayout(DragAndDropEvent event) {
-    LayoutBoundTransferable transferable = (LayoutBoundTransferable) event.getTransferable();
-    CssLayoutTargetDetails details = (CssLayoutTargetDetails) event.getTargetDetails();
-    DDCssLayout layout = (DDCssLayout) details.getTarget();
-    HorizontalDropLocation hl = details.getHorizontalDropLocation();
-    VerticalDropLocation vl = details.getVerticalDropLocation();
-    Component source = event.getTransferable().getSourceComponent();
-    int idx = (details).getOverIndex();
-    Component comp = transferable.getComponent();
-    Component over = details.getOverComponent();
-
-    if (over == layout) {
-      if (vl == VerticalDropLocation.TOP || hl == HorizontalDropLocation.LEFT) {
-        idx = 0;
-      } else if (vl == VerticalDropLocation.BOTTOM || hl == HorizontalDropLocation.RIGHT) {
-        idx = -1;
-      }
-    } else {
-      if (vl == VerticalDropLocation.BOTTOM || hl == HorizontalDropLocation.RIGHT) {
-        idx++;
-      }
+        // Add component
+        if (idx >= 0 && idx < layout.getComponentCount()) {
+            layout.addComponent(comp, idx);
+        } else {
+            layout.addComponent(comp);
+        }
     }
 
-    // Check that we are not dragging an outer layout into an inner
-    // layout
-    Component parent = layout.getParent();
-    while (parent != null) {
-      if (parent == comp) {
-        return;
-      }
-      parent = parent.getParent();
+    @Override
+    protected void handleDropFromLayout(DragAndDropEvent event) {
+        LayoutBoundTransferable transferable = (LayoutBoundTransferable) event
+                .getTransferable();
+        CssLayoutTargetDetails details = (CssLayoutTargetDetails) event
+                .getTargetDetails();
+        DDCssLayout layout = (DDCssLayout) details.getTarget();
+        HorizontalDropLocation hl = details.getHorizontalDropLocation();
+        VerticalDropLocation vl = details.getVerticalDropLocation();
+        Component source = event.getTransferable().getSourceComponent();
+        int idx = (details).getOverIndex();
+        Component comp = transferable.getComponent();
+        Component over = details.getOverComponent();
+
+        if (over == layout) {
+            if (vl == VerticalDropLocation.TOP
+                    || hl == HorizontalDropLocation.LEFT) {
+                idx = 0;
+            } else if (vl == VerticalDropLocation.BOTTOM
+                    || hl == HorizontalDropLocation.RIGHT) {
+                idx = -1;
+            }
+        } else {
+            if (vl == VerticalDropLocation.BOTTOM
+                    || hl == HorizontalDropLocation.RIGHT) {
+                idx++;
+            }
+        }
+
+        // Check that we are not dragging an outer layout into an inner
+        // layout
+        Component parent = layout.getParent();
+        while (parent != null) {
+            if (parent == comp) {
+                return;
+            }
+            parent = parent.getParent();
+        }
+
+        // If source is an instance of a component container then remove
+        // it
+        // from there,
+        // the component cannot have two parents.
+        if (source instanceof ComponentContainer) {
+            ComponentContainer sourceLayout = (ComponentContainer) source;
+            sourceLayout.removeComponent(comp);
+        }
+
+        // Add component
+        if (idx >= 0 && idx < layout.getComponentCount()) {
+            layout.addComponent(comp, idx);
+        } else {
+            layout.addComponent(comp);
+        }
     }
 
-    // If source is an instance of a component container then remove
-    // it
-    // from there,
-    // the component cannot have two parents.
-    if (source instanceof ComponentContainer) {
-      ComponentContainer sourceLayout = (ComponentContainer) source;
-      sourceLayout.removeComponent(comp);
-    }
+    @Override
+    protected void handleHTML5Drop(DragAndDropEvent event) {
+        CssLayoutTargetDetails details = (CssLayoutTargetDetails) event
+                .getTargetDetails();
+        Component over = details.getOverComponent();
+        DDCssLayout layout = (DDCssLayout) details.getTarget();
+        int idx = (details).getOverIndex();
+        HorizontalDropLocation hl = details.getHorizontalDropLocation();
+        VerticalDropLocation vl = details.getVerticalDropLocation();
 
-    // Add component
-    if (idx >= 0 && idx < layout.getComponentCount()) {
-      layout.addComponent(comp, idx);
-    } else {
-      layout.addComponent(comp);
-    }
-  }
+        if (over == layout) {
+            if (vl == VerticalDropLocation.TOP
+                    || hl == HorizontalDropLocation.LEFT) {
+                idx = 0;
+            } else if (vl == VerticalDropLocation.BOTTOM
+                    || hl == HorizontalDropLocation.RIGHT) {
+                idx = -1;
+            }
+        } else {
+            if (vl == VerticalDropLocation.BOTTOM
+                    || hl == HorizontalDropLocation.RIGHT) {
+                idx++;
+            }
+        }
 
-  @Override
-  protected void handleHTML5Drop(DragAndDropEvent event) {
-    CssLayoutTargetDetails details = (CssLayoutTargetDetails) event.getTargetDetails();
-    Component over = details.getOverComponent();
-    DDCssLayout layout = (DDCssLayout) details.getTarget();
-    int idx = (details).getOverIndex();
-    HorizontalDropLocation hl = details.getHorizontalDropLocation();
-    VerticalDropLocation vl = details.getVerticalDropLocation();
-
-    if (over == layout) {
-      if (vl == VerticalDropLocation.TOP || hl == HorizontalDropLocation.LEFT) {
-        idx = 0;
-      } else if (vl == VerticalDropLocation.BOTTOM || hl == HorizontalDropLocation.RIGHT) {
-        idx = -1;
-      }
-    } else {
-      if (vl == VerticalDropLocation.BOTTOM || hl == HorizontalDropLocation.RIGHT) {
-        idx++;
-      }
+        if (idx >= 0 && idx < layout.getComponentCount()) {
+            layout.addComponent(resolveComponentFromHTML5Drop(event), idx);
+        } else {
+            layout.addComponent(resolveComponentFromHTML5Drop(event));
+        }
     }
-
-    if (idx >= 0 && idx < layout.getComponentCount()) {
-      layout.addComponent(resolveComponentFromHTML5Drop(event), idx);
-    } else {
-      layout.addComponent(resolveComponentFromHTML5Drop(event));
-    }
-  }
 }

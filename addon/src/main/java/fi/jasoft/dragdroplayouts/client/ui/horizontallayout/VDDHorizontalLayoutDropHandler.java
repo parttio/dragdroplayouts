@@ -23,68 +23,69 @@ import com.vaadin.client.ui.orderedlayout.Slot;
 
 import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
 
-public class VDDHorizontalLayoutDropHandler extends VDDAbstractDropHandler<VDDHorizontalLayout> {
+public class VDDHorizontalLayoutDropHandler
+        extends VDDAbstractDropHandler<VDDHorizontalLayout> {
 
-  public VDDHorizontalLayoutDropHandler(ComponentConnector connector) {
-    super(connector);
-  }
-
-  @Override
-  protected void dragAccepted(VDragEvent drag) {
-    dragOver(drag);
-  }
-
-  @Override
-  public boolean drop(VDragEvent drag) {
-
-    // Un-emphasis any selections
-    getLayout().emphasis(null, null);
-
-    // Update the details
-    Widget slot = getSlot(drag.getElementOver());
-    getLayout().updateDragDetails(slot, drag);
-
-    return getLayout().postDropHook(drag) && super.drop(drag);
-  };
-
-  private Slot getSlot(Element e) {
-    return Util.findWidget(e, Slot.class);
-  }
-
-  @Override
-  public void dragOver(VDragEvent drag) {
-
-    // Remove any emphasis
-    getLayout().emphasis(null, null);
-
-    // Update the dropdetails so we can validate the drop
-    Slot slot = getSlot(drag.getElementOver());
-
-    if (slot != null) {
-      getLayout().updateDragDetails(slot, drag);
-    } else {
-      getLayout().updateDragDetails(getLayout(), drag);
+    public VDDHorizontalLayoutDropHandler(ComponentConnector connector) {
+        super(connector);
     }
 
-    getLayout().postOverHook(drag);
+    @Override
+    protected void dragAccepted(VDragEvent drag) {
+        dragOver(drag);
+    }
 
-    // Validate the drop
-    validate(new VAcceptCallback() {
-      public void accepted(VDragEvent event) {
-        Slot slot = getSlot(event.getElementOver());
+    @Override
+    public boolean drop(VDragEvent drag) {
+
+        // Un-emphasis any selections
+        getLayout().emphasis(null, null);
+
+        // Update the details
+        Widget slot = getSlot(drag.getElementOver());
+        getLayout().updateDragDetails(slot, drag);
+
+        return getLayout().postDropHook(drag) && super.drop(drag);
+    };
+
+    private Slot getSlot(Element e) {
+        return Util.findWidget(e, Slot.class);
+    }
+
+    @Override
+    public void dragOver(VDragEvent drag) {
+
+        // Remove any emphasis
+        getLayout().emphasis(null, null);
+
+        // Update the dropdetails so we can validate the drop
+        Slot slot = getSlot(drag.getElementOver());
+
         if (slot != null) {
-          getLayout().emphasis(slot, event);
+            getLayout().updateDragDetails(slot, drag);
         } else {
-          getLayout().emphasis(getLayout(), event);
+            getLayout().updateDragDetails(getLayout(), drag);
         }
-      }
-    }, drag);
-  };
 
-  @Override
-  public void dragLeave(VDragEvent drag) {
-    getLayout().deEmphasis();
-    getLayout().postLeaveHook(drag);
-  }
+        getLayout().postOverHook(drag);
+
+        // Validate the drop
+        validate(new VAcceptCallback() {
+            public void accepted(VDragEvent event) {
+                Slot slot = getSlot(event.getElementOver());
+                if (slot != null) {
+                    getLayout().emphasis(slot, event);
+                } else {
+                    getLayout().emphasis(getLayout(), event);
+                }
+            }
+        }, drag);
+    };
+
+    @Override
+    public void dragLeave(VDragEvent drag) {
+        getLayout().deEmphasis();
+        getLayout().postLeaveHook(drag);
+    }
 
 }
