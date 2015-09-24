@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
@@ -26,9 +27,9 @@ import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -43,11 +44,9 @@ import com.vaadin.client.ui.VAccordion.StackItem;
 import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VFormLayout;
 import com.vaadin.client.ui.VPanel;
-import com.vaadin.client.ui.VSlider;
 import com.vaadin.client.ui.VTabsheet;
 import com.vaadin.client.ui.VTabsheet.Tab;
 import com.vaadin.client.ui.VTabsheet.TabCaption;
-import com.vaadin.client.ui.VTextField;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VTransferable;
@@ -75,6 +74,8 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
     private Widget currentDraggedWidget;
 
     private HandlerRegistration mouseUpHandlerReg;
+
+    private HandlerRegistration mouseDownHandlerReg;
 
     private final List<HandlerRegistration> handlers = new LinkedList<HandlerRegistration>();
 
@@ -127,28 +128,52 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
         return !(hasModifierKey || event.getButton() > NativeEvent.BUTTON_LEFT);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.google.gwt.event.dom.client.TouchStartHandler#onTouchStart(com.google
-     * .gwt.event.dom.client.TouchStartEvent)
-     */
     @Override
     public void onTouchStart(TouchStartEvent event) {
-        initiateDrag(event.getNativeEvent());
+        initiateDragOnMove(event.getNativeEvent());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.google.gwt.event.dom.client.MouseDownHandler#onMouseDown(com.google
-     * .gwt.event.dom.client.MouseDownEvent)
-     */
     @Override
     public void onMouseDown(MouseDownEvent event) {
-        initiateDrag(event.getNativeEvent());
+        initiateDragOnMove(event.getNativeEvent());
+    }
+
+    /**
+     * Initiates the drag only on the first move event
+     * 
+     * @param originalEvent
+     *            the original Mouse Down event
+     */
+    protected void initiateDragOnMove(final NativeEvent originalEvent) {
+        originalEvent.stopPropagation();
+        originalEvent.preventDefault();
+
+        // Manually focus as preventDefault() will also cancel focus
+        EventTarget eventTarget = originalEvent.getEventTarget();
+        if (Element.is(eventTarget)) {
+            Element.as(eventTarget).focus();
+        }
+
+        mouseDownHandlerReg = Event
+                .addNativePreviewHandler(new NativePreviewHandler() {
+
+                    @Override
+                    public void onPreviewNativeEvent(NativePreviewEvent event) {
+                        int type = event.getTypeInt();
+                        if (type == Event.ONMOUSEUP
+                                || type == Event.ONTOUCHCANCEL
+                                || type == Event.ONTOUCHEND) {
+                            mouseDownHandlerReg.removeHandler();
+                            mouseDownHandlerReg = null;
+
+                        } else if (type == Event.ONMOUSEMOVE
+                                || type == Event.ONTOUCHMOVE) {
+                            mouseDownHandlerReg.removeHandler();
+                            mouseDownHandlerReg = null;
+                            initiateDrag(originalEvent);
+                        }
+                    }
+                });
     }
 
     /**
@@ -171,14 +196,14 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             return;
         }
 
-        if (!Element.is(event.getEventTarget())) {
+        EventTarget eventTarget = event.getEventTarget();
+        if (!Element.is(eventTarget)) {
             // Only element nodes are draggable
             return;
         }
 
         // Get target widget
-        Element targetElement = Element.as(event.getEventTarget());
-        ;
+        Element targetElement = Element.as(eventTarget);
         Widget target = Util.findWidget(targetElement, null);
 
         if (isEventOnScrollBar(event)) {
@@ -275,33 +300,12 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             return;
         }
 
-        event.preventDefault();
-        event.stopPropagation();
-
         // Announce drag start to listeners
         for (DragStartListener dl : dragStartListeners) {
             if (!dl.dragStart(w, dragMode)) {
                 VDragAndDropManager.get().interruptDrag();
                 return;
             }
-        }
-
-        /*
-         * A hack to remove slider popup when dragging. This is done by first
-         * focusing the slider and then unfocusing so we get a blur event which
-         * will remove the popup.
-         */
-        if (w instanceof VSlider) {
-            VSlider slider = (VSlider) w;
-            slider.setFocus(true);
-            slider.setFocus(false);
-        }
-
-        /*
-         * Ensure textfields get focus when dragging so they can be used
-         */
-        if (w instanceof VTextField) {
-            ((VTextField) w).setFocus(true);
         }
 
         currentDraggedWidget = w;
