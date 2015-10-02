@@ -19,6 +19,7 @@ import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.SingleComponentContainer;
 import com.vaadin.ui.TabSheet.Tab;
 
 import fi.jasoft.dragdroplayouts.DDAccordion;
@@ -93,10 +94,15 @@ public class DefaultAccordionDropHandler
         Component c = transferable.getComponent();
         int idx = details.getOverIndex();
         VerticalDropLocation location = details.getDropLocation();
-        ComponentContainer source = (ComponentContainer) transferable
-                .getSourceComponent();
 
-        source.removeComponent(c);
+        // Detach from old source
+        Component source = transferable.getSourceComponent();
+        if (source instanceof ComponentContainer) {
+            ((ComponentContainer) source).removeComponent(c);
+        } else if (source instanceof SingleComponentContainer) {
+            ((SingleComponentContainer) source).setContent(null);
+        }
+
         if (location == VerticalDropLocation.TOP) {
             acc.addTab(c, idx);
         } else if (location == VerticalDropLocation.BOTTOM) {

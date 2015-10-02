@@ -19,6 +19,7 @@ import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.SingleComponentContainer;
 import com.vaadin.ui.TabSheet.Tab;
 
 import fi.jasoft.dragdroplayouts.DDTabSheet;
@@ -87,7 +88,13 @@ public class DefaultTabSheetDropHandler
         ComponentContainer source = (ComponentContainer) transferable
                 .getSourceComponent();
 
-        source.removeComponent(c);
+        // Detach from old source
+        if (source instanceof ComponentContainer) {
+            ((ComponentContainer) source).removeComponent(c);
+        } else if (source instanceof SingleComponentContainer) {
+            ((SingleComponentContainer) source).setContent(null);
+        }
+
         if (location == HorizontalDropLocation.LEFT) {
             tabSheet.addTab(c, idx);
         } else if (location == HorizontalDropLocation.RIGHT) {

@@ -20,6 +20,7 @@ import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.SingleComponentContainer;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.DDGridLayout;
@@ -128,10 +129,11 @@ public class DefaultGridLayoutDropHandler
                 parent = parent.getParent();
             }
 
-            // Remove component from its source
+            // Detach from old source
             if (source instanceof ComponentContainer) {
-                ComponentContainer sourceLayout = (ComponentContainer) source;
-                sourceLayout.removeComponent(comp);
+                ((ComponentContainer) source).removeComponent(comp);
+            } else if (source instanceof SingleComponentContainer) {
+                ((SingleComponentContainer) source).setContent(null);
             }
         }
 

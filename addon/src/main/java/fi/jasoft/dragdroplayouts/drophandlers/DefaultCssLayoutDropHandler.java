@@ -18,6 +18,7 @@ import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.SingleComponentContainer;
 
 import fi.jasoft.dragdroplayouts.DDCssLayout;
 import fi.jasoft.dragdroplayouts.DDCssLayout.CssLayoutTargetDetails;
@@ -46,8 +47,13 @@ public class DefaultCssLayoutDropHandler
         int idx = details.getOverIndex();
         Component over = details.getOverComponent();
 
-        // Detach
-        layout.removeComponent(comp);
+        // Detach from old source
+        Component source = transferable.getSourceComponent();
+        if (source instanceof ComponentContainer) {
+            ((ComponentContainer) source).removeComponent(comp);
+        } else if (source instanceof SingleComponentContainer) {
+            ((SingleComponentContainer) source).setContent(null);
+        }
 
         // Add component
         if (idx >= 0 && idx < layout.getComponentCount()) {

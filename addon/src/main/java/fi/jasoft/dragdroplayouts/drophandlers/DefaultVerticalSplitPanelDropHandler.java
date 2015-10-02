@@ -19,6 +19,7 @@ import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.SingleComponentContainer;
 
 import fi.jasoft.dragdroplayouts.DDVerticalSplitPanel;
 import fi.jasoft.dragdroplayouts.DDVerticalSplitPanel.VerticalSplitPanelTargetDetails;
@@ -58,8 +59,12 @@ public class DefaultVerticalSplitPanelDropHandler
         ComponentContainer source = (ComponentContainer) transferable
                 .getSourceComponent();
 
-        // Remove component from its source
-        source.removeComponent(component);
+        // Detach from old source
+        if (source instanceof ComponentContainer) {
+            ((ComponentContainer) source).removeComponent(component);
+        } else if (source instanceof SingleComponentContainer) {
+            ((SingleComponentContainer) source).setContent(null);
+        }
 
         if (details.getDropLocation() == VerticalDropLocation.TOP) {
             // Dropped in the left area

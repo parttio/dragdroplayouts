@@ -19,6 +19,7 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.SingleComponentContainer;
 
 import fi.jasoft.dragdroplayouts.DDHorizontalLayout.HorizontalLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
@@ -133,13 +134,11 @@ public class DefaultHorizontalLayoutDropHandler
             parent = parent.getParent();
         }
 
-        // If source is an instance of a component container then remove
-        // it
-        // from there,
-        // the component cannot have two parents.
+        // Detach from old source
         if (source instanceof ComponentContainer) {
-            ComponentContainer sourceLayout = (ComponentContainer) source;
-            sourceLayout.removeComponent(comp);
+            ((ComponentContainer) source).removeComponent(comp);
+        } else if (source instanceof SingleComponentContainer) {
+            ((SingleComponentContainer) source).setContent(null);
         }
 
         // Increase index if component is dropped after or above a

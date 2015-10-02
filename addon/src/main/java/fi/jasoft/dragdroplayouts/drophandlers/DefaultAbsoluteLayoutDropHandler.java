@@ -18,6 +18,7 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.SingleComponentContainer;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.details.AbsoluteLayoutTargetDetails;
@@ -86,8 +87,9 @@ public class DefaultAbsoluteLayoutDropHandler
 
         // remove component from source
         if (source instanceof ComponentContainer) {
-            ComponentContainer sourceLayout = (ComponentContainer) source;
-            sourceLayout.removeComponent(component);
+            ((ComponentContainer) source).removeComponent(component);
+        } else if (source instanceof SingleComponentContainer) {
+            ((SingleComponentContainer) source).setContent(null);
         }
 
         // Add component to absolute layout

@@ -52,6 +52,7 @@ import fi.jasoft.dragdroplayouts.demo.views.DragdropGridLayoutDemo;
 import fi.jasoft.dragdroplayouts.demo.views.DragdropHorizontalLayoutDemo;
 import fi.jasoft.dragdroplayouts.demo.views.DragdropHorizontalSplitPanelDemo;
 import fi.jasoft.dragdroplayouts.demo.views.DragdropLayoutDraggingDemo;
+import fi.jasoft.dragdroplayouts.demo.views.DragdropPanelDemo;
 import fi.jasoft.dragdroplayouts.demo.views.DragdropTabsheetDemo;
 import fi.jasoft.dragdroplayouts.demo.views.DragdropVerticalLayoutDemo;
 import fi.jasoft.dragdroplayouts.demo.views.DragdropVerticalSplitPanelDemo;
@@ -121,6 +122,7 @@ public class DemoUI extends UI {
       addView(new DragdropGridLayoutDemo(navigator));
       addView(new DragdropCssLayoutDemo(navigator));
       addView(new DragdropFormLayoutDemo(navigator));
+      addView(new DragdropPanelDemo(navigator));
 
       addView(new DragdropLayoutDraggingDemo(navigator));
       addView(new DragdropHorizontalSplitPanelDemo(navigator));

@@ -19,6 +19,7 @@ import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.SingleComponentContainer;
 
 import fi.jasoft.dragdroplayouts.DDHorizontalSplitPanel;
 import fi.jasoft.dragdroplayouts.DDHorizontalSplitPanel.HorizontalSplitPanelTargetDetails;
@@ -58,8 +59,12 @@ public class DefaultHorizontalSplitPanelDropHandler
         DDHorizontalSplitPanel panel = (DDHorizontalSplitPanel) details
                 .getTarget();
 
-        // Remove component from its source
-        source.removeComponent(component);
+        // Detach from old source
+        if (source instanceof ComponentContainer) {
+            ((ComponentContainer) source).removeComponent(component);
+        } else if (source instanceof SingleComponentContainer) {
+            ((SingleComponentContainer) source).setContent(null);
+        }
 
         if (details.getDropLocation() == HorizontalDropLocation.LEFT) {
             // Dropped in the left area
