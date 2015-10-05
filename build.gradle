@@ -71,6 +71,9 @@ project(':addon'){
  * Demo application for demonstrating the addon
  */
 project(':demo'){
+  apply plugin: 'war'
+  apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
+    
   dependencies {
     compile project(':addon')
     compile group:'de.sven-jacobs', name:'loremipsum', version:'1.0'

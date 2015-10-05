@@ -21,6 +21,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.Reindeer;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
@@ -60,6 +62,12 @@ public class DragdropAbsoluteLayoutDemo extends DemoView {
     layout.addComponent(btn, "left:50px; top:50px");
     Link link = new Link("A link to Vaadin", new ExternalResource("http://www.vaadin.com"));
     layout.addComponent(link, "left:200px; top:100px");
+
+        VerticalLayout vl = new VerticalLayout();
+        vl.setWidth("100px");
+        vl.setHeight("30px");
+        vl.setStyleName(Reindeer.LAYOUT_BLACK);
+        layout.addComponent(vl, "left:200px; top:150px");
 
     // end-source
     return layout;

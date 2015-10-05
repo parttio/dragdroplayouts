@@ -13,7 +13,6 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.accordion;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -26,7 +25,6 @@ import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.VAccordion;
-import com.vaadin.client.ui.VAccordion.StackItem;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
@@ -402,5 +400,9 @@ public class VDDAccordion extends VAccordion
     @Override
     public void setDragImageProvider(VDragImageProvider provider) {
         ddMouseHandler.setDragImageProvider(provider);
+    }
+
+    protected final VLayoutDragDropMouseHandler getMouseHandler() {
+        return ddMouseHandler;
     }
 }

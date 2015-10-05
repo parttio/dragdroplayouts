@@ -218,4 +218,8 @@ public class VDDPanel extends VPanel implements VHasDragMode,
     protected void postOverHook(VDragEvent drag) {
         // Extended classes can add content here...
     }
+
+    protected final VLayoutDragDropMouseHandler getMouseHandler() {
+        return ddMouseHandler;
+    }
 }

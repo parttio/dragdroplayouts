@@ -374,4 +374,8 @@ public class VDDTabSheet extends VTabsheet
     public void setDragImageProvider(VDragImageProvider provider) {
         ddMouseHandler.setDragImageProvider(provider);
     }
+
+    protected final VLayoutDragDropMouseHandler getMouseHandler() {
+        return ddMouseHandler;
+    }
 }

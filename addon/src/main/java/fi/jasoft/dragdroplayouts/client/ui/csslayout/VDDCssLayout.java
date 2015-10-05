@@ -435,4 +435,8 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
     public void setDragImageProvider(VDragImageProvider provider) {
         ddHandler.setDragImageProvider(provider);
     }
+
+    protected final VLayoutDragDropMouseHandler getMouseHandler() {
+        return ddHandler;
+    }
 }

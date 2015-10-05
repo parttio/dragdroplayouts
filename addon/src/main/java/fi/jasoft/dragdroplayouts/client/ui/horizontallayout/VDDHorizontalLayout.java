@@ -335,4 +335,8 @@ public class VDDHorizontalLayout extends VHorizontalLayout
     public void setDragImageProvider(VDragImageProvider provider) {
         ddMouseHandler.setDragImageProvider(provider);
     }
+
+    protected final VLayoutDragDropMouseHandler getMouseHandler() {
+        return ddMouseHandler;
+    }
 }

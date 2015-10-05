@@ -482,4 +482,8 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
     public void setDragImageProvider(VDragImageProvider provider) {
         ddMouseHandler.setDragImageProvider(provider);
     }
+
+    protected final VLayoutDragDropMouseHandler getMouseHandler() {
+        return ddMouseHandler;
+    }
 }

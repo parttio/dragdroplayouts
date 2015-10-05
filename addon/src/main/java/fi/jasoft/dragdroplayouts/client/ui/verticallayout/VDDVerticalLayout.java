@@ -334,4 +334,8 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
     public void setDragImageProvider(VDragImageProvider provider) {
         ddMouseHandler.setDragImageProvider(provider);
     }
+
+    protected final VLayoutDragDropMouseHandler getMouseHandler() {
+        return ddMouseHandler;
+    }
 }

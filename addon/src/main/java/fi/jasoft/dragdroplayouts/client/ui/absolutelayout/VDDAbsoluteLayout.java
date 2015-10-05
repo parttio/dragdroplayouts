@@ -238,4 +238,8 @@ public class VDDAbsoluteLayout extends VAbsoluteLayout implements VHasDragMode,
     public void setDragImageProvider(VDragImageProvider provider) {
         ddHandler.setDragImageProvider(provider);
     }
+
+    protected final VLayoutDragDropMouseHandler getMouseHandler() {
+        return ddHandler;
+    }
 }

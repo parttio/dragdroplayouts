@@ -85,6 +85,8 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
     private VDragImageProvider dragImageProvider;
 
+    private boolean startDragOnMove = true;
+
     /**
      * A listener to listen for drag start events
      */
@@ -130,12 +132,20 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
     @Override
     public void onTouchStart(TouchStartEvent event) {
-        initiateDragOnMove(event.getNativeEvent());
+        if (startDragOnMove) {
+            initiateDragOnMove(event.getNativeEvent());
+        } else {
+            initiateDrag(event.getNativeEvent());
+        }
     }
 
     @Override
     public void onMouseDown(MouseDownEvent event) {
-        initiateDragOnMove(event.getNativeEvent());
+        if (startDragOnMove) {
+            initiateDragOnMove(event.getNativeEvent());
+        } else {
+            initiateDrag(event.getNativeEvent());
+        }
     }
 
     /**
@@ -549,5 +559,13 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
     @Override
     public void setDragImageProvider(VDragImageProvider provider) {
         this.dragImageProvider = provider;
+    }
+
+    public boolean isStartDragOnMove() {
+        return startDragOnMove;
+    }
+
+    public void setStartDragOnMove(boolean startDragOnMove) {
+        this.startDragOnMove = startDragOnMove;
     }
 }

@@ -63,5 +63,5 @@ public class VDDTabsheetDropHandler
         getLayout().deEmphasis();
         getLayout().updateDragDetails(drag);
         getLayout().postLeaveHook(drag);
-    };
+    }
 }
