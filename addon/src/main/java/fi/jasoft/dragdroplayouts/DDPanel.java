@@ -50,25 +50,6 @@ public class DDPanel extends Panel
 
     private DragImageProvider dragImageProvider;
 
-    public class DDPanelTargetDetails extends TargetDetailsImpl {
-
-        protected DDPanelTargetDetails(Map<String, Object> rawDropData) {
-            super(rawDropData, DDPanel.this);
-        }
-
-        /**
-         * Some details about the mouse event
-         * 
-         * @return details about the actual event that caused the event details.
-         *         Practically mouse move or mouse up.
-         */
-        public MouseEventDetails getMouseEvent() {
-            return MouseEventDetails.deSerialize(
-                    (String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
-        }
-
-    }
-
     /**
      * @see Panel#Panel()
      */
@@ -102,6 +83,17 @@ public class DDPanel extends Panel
 
         protected PanelTargetDetails(Map<String, Object> rawDropData) {
             super(rawDropData, DDPanel.this);
+        }
+
+        /**
+         * Some details about the mouse event
+         * 
+         * @return details about the actual event that caused the event details.
+         *         Practically mouse move or mouse up.
+         */
+        public MouseEventDetails getMouseEvent() {
+            return MouseEventDetails.deSerialize(
+                    (String) getData(Constants.DROP_DETAIL_MOUSE_EVENT));
         }
     }
 
@@ -157,7 +149,7 @@ public class DDPanel extends Panel
 
     @Override
     public LayoutDragMode getDragMode() {
-        return getState().ddState.dragMode;
+        return getState(false).ddState.dragMode;
     }
 
     @Override

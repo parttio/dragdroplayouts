@@ -19,7 +19,6 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.SingleComponentContainer;
 
 import fi.jasoft.dragdroplayouts.DDPanel;
-import fi.jasoft.dragdroplayouts.DDPanel.DDPanelTargetDetails;
 import fi.jasoft.dragdroplayouts.DDPanel.PanelTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
 
@@ -53,7 +52,7 @@ public class DefaultPanelDropHandler extends AbstractDefaultLayoutDropHandler {
 
     @Override
     protected void handleHTML5Drop(DragAndDropEvent event) {
-        DDPanelTargetDetails details = (DDPanelTargetDetails) event
+        PanelTargetDetails details = (PanelTargetDetails) event
                 .getTargetDetails();
         DDPanel panel = (DDPanel) details.getTarget();
         panel.setContent(resolveComponentFromHTML5Drop(event));
