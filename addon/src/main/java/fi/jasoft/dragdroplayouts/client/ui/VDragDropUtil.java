@@ -33,7 +33,6 @@ import com.vaadin.client.ui.VFilterSelect;
 import com.vaadin.client.ui.VFormLayout;
 import com.vaadin.client.ui.VLink;
 import com.vaadin.client.ui.VScrollTable;
-import com.vaadin.client.ui.VTabsheet.Tab;
 import com.vaadin.client.ui.VTabsheet.TabCaption;
 import com.vaadin.client.ui.VTwinColSelect;
 import com.vaadin.client.ui.dd.VTransferable;

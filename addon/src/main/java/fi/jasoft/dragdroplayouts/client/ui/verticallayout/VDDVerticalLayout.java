@@ -16,6 +16,7 @@ package fi.jasoft.dragdroplayouts.client.ui.verticallayout;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.WidgetCollection;
+import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.VVerticalLayout;
@@ -269,9 +270,10 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
      * Can be used to listen to drag start events, must return true for the drag
      * to commence. Return false to interrupt the drag:
      */
+    @Override
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return ddMouseHandler.getDragMode() != LayoutDragMode.NONE
-                && dragFilter.isDraggable(widget);
+        ComponentConnector layout = Util.findConnectorFor(this);
+        return VDragDropUtil.isDraggingEnabled(layout, widget);
     }
 
     /**

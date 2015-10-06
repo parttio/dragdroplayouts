@@ -83,8 +83,8 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
      * to commence. Return false to interrupt the drag:
      */
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return ddHandler.getDragMode() != LayoutDragMode.NONE
-                && dragFilter.isDraggable(widget);
+        ComponentConnector layout = Util.findConnectorFor(this);
+        return VDragDropUtil.isDraggingEnabled(layout, widget);
     }
 
     /**

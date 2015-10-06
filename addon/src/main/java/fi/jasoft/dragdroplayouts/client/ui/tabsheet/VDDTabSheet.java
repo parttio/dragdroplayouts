@@ -17,6 +17,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
@@ -178,8 +179,10 @@ public class VDDTabSheet extends VTabsheet
      * Can be used to listen to drag start events, must return true for the drag
      * to commence. Return false to interrupt the drag:
      */
+    @Override
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return getDragMode() != LayoutDragMode.NONE;
+        ComponentConnector layout = Util.findConnectorFor(this);
+        return VDragDropUtil.isDraggingEnabled(layout, widget);
     }
 
     /**

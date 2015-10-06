@@ -35,6 +35,7 @@ import fi.jasoft.dragdroplayouts.DDGridLayout;
 import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
@@ -352,8 +353,8 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      * to commence. Return false to interrupt the drag:
      */
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return ddMouseHandler.getDragMode() != LayoutDragMode.NONE
-                && dragFilter.isDraggable(widget);
+        ComponentConnector layout = Util.findConnectorFor(this);
+        return VDragDropUtil.isDraggingEnabled(layout, widget);
     }
 
     /**

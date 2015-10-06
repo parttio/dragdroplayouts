@@ -164,7 +164,8 @@ public class VDDAccordion extends VAccordion
      * to commence. Return false to interrupt the drag:
      */
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return ddMouseHandler.getDragMode() != LayoutDragMode.NONE;
+        ComponentConnector layout = Util.findConnectorFor(this);
+        return VDragDropUtil.isDraggingEnabled(layout, widget);
     }
 
     /**

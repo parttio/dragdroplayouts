@@ -15,6 +15,7 @@ package fi.jasoft.dragdroplayouts.client.ui.horizontalsplitpanel;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.VSplitPanelHorizontal;
@@ -26,6 +27,7 @@ import fi.jasoft.dragdroplayouts.DDHorizontalSplitPanel;
 import fi.jasoft.dragdroplayouts.client.VDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
+import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
@@ -147,9 +149,10 @@ public class VDDHorizontalSplitPanel extends VSplitPanelHorizontal implements
      * Can be used to listen to drag start events, must return true for the drag
      * to commence. Return false to interrupt the drag:
      */
+    @Override
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return getDragMode() != LayoutDragMode.NONE
-                && dragFilter.isDraggable(widget);
+        ComponentConnector layout = Util.findConnectorFor(this);
+        return VDragDropUtil.isDraggingEnabled(layout, widget);
     }
 
     public void setDropHandler(VDDHorizontalSplitPanelDropHandler handler) {

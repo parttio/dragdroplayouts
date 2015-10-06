@@ -17,6 +17,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.VFormLayout;
@@ -291,8 +292,8 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
      */
     @Override
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
-        return ddMouseHandler.getDragMode() != LayoutDragMode.NONE
-                && dragFilter.isDraggable(widget);
+        ComponentConnector layout = Util.findConnectorFor(this);
+        return VDragDropUtil.isDraggingEnabled(layout, widget);
     }
 
     /**
