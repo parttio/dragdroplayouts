@@ -132,20 +132,44 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
     @Override
     public void onTouchStart(TouchStartEvent event) {
-        if (startDragOnMove) {
-            initiateDragOnMove(event.getNativeEvent());
-        } else {
-            initiateDrag(event.getNativeEvent());
+        NativeEvent nativeEvent = event.getNativeEvent();
+        if (isElementNode(nativeEvent) && isChildOfRoot(nativeEvent)) {
+            if (startDragOnMove) {
+                initiateDragOnMove(event.getNativeEvent());
+            } else {
+                initiateDrag(event.getNativeEvent());
+            }
         }
     }
 
     @Override
     public void onMouseDown(MouseDownEvent event) {
-        if (startDragOnMove) {
-            initiateDragOnMove(event.getNativeEvent());
-        } else {
-            initiateDrag(event.getNativeEvent());
+        NativeEvent nativeEvent = event.getNativeEvent();
+        if (isElementNode(nativeEvent) && isChildOfRoot(nativeEvent)) {
+            if (startDragOnMove) {
+                initiateDragOnMove(event.getNativeEvent());
+            } else {
+                initiateDrag(event.getNativeEvent());
+            }
         }
+    }
+
+    private boolean isChildOfRoot(NativeEvent event) {
+        EventTarget eventTarget = event.getEventTarget();
+        Element targetElement = Element.as(eventTarget);
+        if (root.getElement() != targetElement
+                && root.getElement().isOrHasChild(targetElement)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isElementNode(NativeEvent event) {
+        EventTarget eventTarget = event.getEventTarget();
+        if (Element.is(eventTarget)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -206,15 +230,10 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             return;
         }
 
-        EventTarget eventTarget = event.getEventTarget();
-        if (!Element.is(eventTarget)) {
-            // Only element nodes are draggable
-            return;
-        }
-
         // Get target widget
+        EventTarget eventTarget = event.getEventTarget();
         Element targetElement = Element.as(eventTarget);
-        Widget target = Util.findWidget(targetElement, null);
+        Widget target = WidgetUtil.findWidget(targetElement, null);
 
         if (isEventOnScrollBar(event)) {
             return;
@@ -254,7 +273,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
         // Are we trying to drag the root layout
         if (transferable == null) {
-            VConsole.error("Creating transferable on mouse down returned null");
+            VConsole.log("Creating transferable on mouse down returned null");
             return;
         }
 
@@ -297,10 +316,13 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             // Failsafe if no widget was found
             w = root;
             c = Util.findConnectorFor(w);
-            parent = c;
+            parent = (ComponentConnector) c.getParent();
             VConsole.log(
                     "Could not resolve component, using root as component");
         }
+
+        VConsole.log("Dragging widget: " + w);
+        VConsole.log(" in parent: " + parent);
 
         // Ensure component is draggable
         if (!VDragDropUtil.isDraggingEnabled(parent, w)) {

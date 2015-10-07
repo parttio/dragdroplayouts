@@ -13,6 +13,7 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.ui.Widget;
@@ -212,6 +213,9 @@ public final class VDragDropUtil {
             return null;
         }
 
+        VConsole.log("Creating transferable for root:" + root.getElement()
+                + "\t target:" + target.getElement());
+
         // Special treatment for Tabsheet
         if (root instanceof VDDTabSheet) {
             VDDTabSheet tabsheet = (VDDTabSheet) root;
@@ -223,6 +227,7 @@ public final class VDragDropUtil {
                         event);
             } else {
                 // Not a tab
+                VConsole.error("Not on tab");
                 return null;
             }
         }
@@ -238,6 +243,7 @@ public final class VDragDropUtil {
                         event);
             } else {
                 // Not on tab
+                VConsole.error("Not on tab");
                 return null;
             }
         }
@@ -274,12 +280,30 @@ public final class VDragDropUtil {
         }
 
         // Consistency check
-        if (target == null || root == target || layoutConnector == null) {
-            // No draggable layouts found, abort
+        if (target == null) {
+            VConsole.error("Target was null");
+            return null;
+        }
+        if (root == target) {
+            /*
+             * Dispatch event again so parent layout can handle the drag of the
+             * root
+             */
+            target.getElement().dispatchEvent(createMouseDownEvent(event));
+            return null;
+        }
+        if (layoutConnector == null) {
+            VConsole.error("No layout connector was found");
             return null;
         }
 
         return createTransferable(layoutConnector, widgetConnector, event);
+    }
+
+    private static NativeEvent createMouseDownEvent(NativeEvent e) {
+        return Document.get().createMouseDownEvent(0, e.getScreenX(),
+                e.getScreenY(), e.getClientX(), e.getClientY(), e.getCtrlKey(),
+                e.getAltKey(), e.getShiftKey(), e.getMetaKey(), e.getButton());
     }
 
     private static VTransferable createTransferable(ComponentConnector layout,
