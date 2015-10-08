@@ -27,12 +27,6 @@ public class VDDVerticalSplitPanelDropHandler
         super(connector);
     }
 
-	@Override
-	public void dragEnter(VDragEvent drag) {
-		// Add the marker that shows the drop location while
-		// dragging
-		getLayout().postEnterHook(drag);
-	};
 
     @Override
     protected void dragAccepted(VDragEvent drag) {
@@ -74,7 +68,15 @@ public class VDDVerticalSplitPanelDropHandler
                 getLayout().emphasis(event.getElementOver());
             }
         }, drag);
-    };
+    }
+
+    @Override
+    public void dragEnter(VDragEvent drag) {
+        super.dragEnter(drag);
+        getLayout().updateDragDetails(drag);
+        getLayout().postEnterHook(drag);
+    }
+
 
     @Override
     public void dragLeave(VDragEvent drag) {
