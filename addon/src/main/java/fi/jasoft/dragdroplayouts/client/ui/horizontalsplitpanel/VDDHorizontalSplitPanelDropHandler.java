@@ -70,6 +70,13 @@ public class VDDHorizontalSplitPanelDropHandler
     };
 
     @Override
+    public void dragEnter(VDragEvent drag) {
+        super.dragEnter(drag);
+        getLayout().updateDragDetails(drag);
+        getLayout().postEnterHook(drag);
+    }
+
+    @Override
     public void dragLeave(VDragEvent drag) {
         getLayout().deEmphasis();
         getLayout().updateDragDetails(drag);

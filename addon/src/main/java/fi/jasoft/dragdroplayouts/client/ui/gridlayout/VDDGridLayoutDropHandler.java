@@ -29,10 +29,10 @@ public class VDDGridLayoutDropHandler
 
     @Override
     public void dragEnter(VDragEvent drag) {
-        // Add the marker that shows the drop location while
-        // dragging
+        super.dragEnter(drag);
+        getLayout().updateDragDetails(drag);
         getLayout().postEnterHook(drag);
-    };
+    }
 
     @Override
     public boolean drop(VDragEvent drag) {
@@ -66,7 +66,7 @@ public class VDDGridLayoutDropHandler
                 }
             }
         }, drag);
-    };
+    }
 
     @Override
     public void dragLeave(VDragEvent drag) {

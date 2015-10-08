@@ -31,7 +31,7 @@ public class VDDCssLayoutDropHandler
         getLayout().updateDragDetails(drag);
         getLayout().detachDragImageFromLayout(drag);
         return getLayout().postDropHook(drag) && super.drop(drag);
-    };
+    }
 
     @Override
     public void dragEnter(VDragEvent drag) {
@@ -39,14 +39,14 @@ public class VDDCssLayoutDropHandler
         getLayout().attachDragImageToLayout(drag);
         getLayout().updateDragDetails(drag);
         getLayout().postEnterHook(drag);
-    };
+    }
 
     @Override
     public void dragLeave(VDragEvent drag) {
         super.dragLeave(drag);
         getLayout().detachDragImageFromLayout(drag);
         getLayout().postLeaveHook(drag);
-    };
+    }
 
     @Override
     public void dragOver(VDragEvent drag) {
