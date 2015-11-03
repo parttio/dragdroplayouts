@@ -9,7 +9,7 @@ subprojects {
   sourceCompatibility = 1.6
   targetCompatibility = 1.6
   vaadin {
-    version = project.hasProperty('VAADIN_VERSION') ? getProperty('VAADIN_VERSION') : '7.5.4'
+    version = project.hasProperty('VAADIN_VERSION') ? getProperty('VAADIN_VERSION') : '7.6.0.beta1'
   }
 }
 
