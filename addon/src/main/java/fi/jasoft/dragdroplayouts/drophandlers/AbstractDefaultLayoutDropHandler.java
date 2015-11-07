@@ -72,10 +72,21 @@ public abstract class AbstractDefaultLayoutDropHandler implements DropHandler {
         DDAbsoluteLayout parent = (DDAbsoluteLayout) comp.getParent();
         ComponentPosition position = parent.getPosition(comp);
 
-        float x = position.getLeftValue() + movex;
-        float y = position.getTopValue() + movey;
-        position.setLeft(x, Sizeable.UNITS_PIXELS);
-        position.setTop(y, Sizeable.UNITS_PIXELS);
+        if (position.getLeftValue() != null) {
+        	float x = position.getLeftValue() + movex;
+        	position.setLeft(x, Sizeable.UNITS_PIXELS);
+        } else if (position.getRightValue() != null) {
+        	float x = position.getRightValue() - movex;
+        	position.setRight(x, Sizeable.UNITS_PIXELS);
+        }
+
+        if (position.getTopValue() != null) {
+	        float y = position.getTopValue() + movey;
+	        position.setTop(y, Sizeable.UNITS_PIXELS);
+        } else if (position.getBottomValue() != null) {
+        	float y = position.getBottomValue() - movey;
+	        position.setBottom(y, Sizeable.UNITS_PIXELS);
+        }
     }
 
     public void drop(DragAndDropEvent event) {
