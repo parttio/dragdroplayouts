@@ -32,8 +32,13 @@ project(':addon'){
   apply plugin: 'maven'
   apply plugin: 'osgi'
 
+  configurations {
+      deploy
+  }
+
   dependencies{
     testCompile     group:'junit',  name:'junit',   version: '4.8.+'
+    deploy 'org.apache.maven.wagon:wagon-ssh:2.2'
   }
 
   vaadin {
@@ -71,6 +76,34 @@ project(':addon'){
 
   task createAddonPom {
     pom{ artifactId = 'dragdroplayouts' }.writeTo("META-INF/maven/fi.jasoft/dragdroplayouts/pom.xml")
+  }
+
+  artifacts {
+      archives jar
+  }
+
+  uploadArchives {
+      dependsOn createAddonPom
+      repositories.mavenDeployer {
+          def snapshotRepositoryUrl = System.getProperty('PLUGIN_MAVEN_SNAPSHOT_REPOSITORY')
+          def snapshotRepositoryUser = System.getProperty('PLUGIN_MAVEN_SNAPSHOT_REPOSITORY_USER')
+          def snapshotRepositoryPassword = System.getProperty('PLUGIN_MAVEN_SNAPSHOT_REPOSITORY_PASSWORD')
+          def snapshotRepositoryPrivateKey = System.getProperty('PLUGIN_MAVEN_SNAPSHOT_REPOSITORY_KEY')
+
+          configuration = configurations.deploy
+
+          snapshotRepository( url: snapshotRepositoryUrl ) {
+             authentication(
+                     userName: snapshotRepositoryUser,
+                     password: snapshotRepositoryPassword,
+                     privateKey: snapshotRepositoryPrivateKey
+             )
+          }
+
+          addFilter('jar') {artifact, file ->
+              artifact.ext == 'jar'
+          }
+      }
   }
 }
 
