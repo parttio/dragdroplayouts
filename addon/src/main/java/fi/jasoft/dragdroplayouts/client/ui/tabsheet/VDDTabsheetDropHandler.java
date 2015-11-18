@@ -56,7 +56,14 @@ public class VDDTabsheetDropHandler
                 getLayout().emphasis(event.getElementOver(), event);
             }
         }, drag);
-    };
+    }
+
+    @Override
+    public void dragEnter(VDragEvent drag) {
+        super.dragEnter(drag);
+        getLayout().updateDragDetails(drag);
+        getLayout().postEnterHook(drag);
+    }
 
     @Override
     public void dragLeave(VDragEvent drag) {

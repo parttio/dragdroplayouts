@@ -80,7 +80,19 @@ public class VDDVerticalLayoutDropHandler
                 }
             }
         }, drag);
-    };
+    }
+
+    @Override
+    public void dragEnter(VDragEvent drag) {
+        super.dragEnter(drag);
+        Slot slot = getSlot(drag.getElementOver());
+        if (slot != null) {
+            getLayout().updateDragDetails(slot, drag);
+        } else {
+            getLayout().updateDragDetails(getLayout(), drag);
+        }
+        getLayout().postEnterHook(drag);
+    }
 
     @Override
     public void dragLeave(VDragEvent drag) {

@@ -39,7 +39,7 @@ public class VDDAbsoluteLayoutDropHandler
         super.dragEnter(drag);
         getLayout().updateDragDetails(drag);
         getLayout().postEnterHook(drag);
-    };
+    }
 
     @Override
     public void dragLeave(VDragEvent drag) {

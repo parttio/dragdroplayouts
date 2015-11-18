@@ -14,12 +14,12 @@
 package fi.jasoft.dragdroplayouts.client.ui.formlayout;
 
 import com.vaadin.shared.annotations.DelegateToWidget;
-import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
+import com.vaadin.shared.ui.orderedlayout.FormLayoutState;
 
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
 
-public class DDFormLayoutState extends AbstractOrderedLayoutState
+public class DDFormLayoutState extends FormLayoutState
         implements DragAndDropAwareState {
 
     public static final float DEFAULT_VERTICAL_DROP_RATIO = 0.3333f;
