@@ -89,10 +89,6 @@ project(':demo'){
       superDevMode true
     }
 
-    testbench {
-      enabled true
-    }
-
     plugin {
       logToConsole true
     }
