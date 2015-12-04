@@ -21,10 +21,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.VerticalLayout;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
-import fi.jasoft.dragdroplayouts.DDPanel;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.demo.DemoView;
 import fi.jasoft.dragdroplayouts.drophandlers.DefaultAbsoluteLayoutDropHandler;
@@ -62,24 +60,6 @@ public class DragdropAbsoluteLayoutDemo extends DemoView {
     layout.addComponent(btn, "left:50px; top:50px");
     Link link = new Link("A link to Vaadin", new ExternalResource("http://www.vaadin.com"));
     layout.addComponent(link, "left:200px; top:100px");
-
-    DDPanel ddPanel = new DDPanel();
-    ddPanel.setWidth("200px");
-    ddPanel.setHeight("200px");
-    ddPanel.setDragMode(LayoutDragMode.CLONE);
-    ddPanel.setDropHandler(new DefaultAbsoluteLayoutDropHandler());
-    layout.addComponent(ddPanel, "left:20px; top:200px");
-
-    VerticalLayout content = new VerticalLayout(new Button("a"));
-    content.setSizeFull();
-    ddPanel.setContent(content);
-
-    DDPanel ddPanel2 = new DDPanel();
-    ddPanel2.setWidth("200px");
-    ddPanel2.setHeight("200px");
-    ddPanel2.setDragMode(LayoutDragMode.CLONE);
-    ddPanel2.setDropHandler(new DefaultAbsoluteLayoutDropHandler());
-        layout.addComponent(ddPanel2, "left:220px; top:200px");
 
     // end-source
     return layout;

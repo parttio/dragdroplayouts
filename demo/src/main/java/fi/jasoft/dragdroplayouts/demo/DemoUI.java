@@ -24,6 +24,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
@@ -135,13 +136,16 @@ public class DemoUI extends UI {
 
       // addView(new DragdropIframeDragging(navigator));
 
-    } catch (Exception e) {
+    } catch (Exception e) {       
       e.printStackTrace();
+      return;
     }
 
     hl.addComponent(selection = createViewSelection(), 0);
 
-    navigator.navigateTo(DragdropAbsoluteLayoutDemo.NAME);
+    if(Page.getCurrent().getUriFragment() == null){
+        navigator.navigateTo(DragdropAbsoluteLayoutDemo.NAME);
+    }    
   }
 
   private void addView(DemoView view) throws IllegalArgumentException, IllegalAccessException,
