@@ -35,7 +35,7 @@ public class DragdropPanelDemo extends DemoView {
 
     @Override
     public Component getLayout() {
-
+        // start-source
         HorizontalLayout layout = new HorizontalLayout();
         layout.setSizeFull();
         layout.setMargin(true);
@@ -59,6 +59,7 @@ public class DragdropPanelDemo extends DemoView {
         panel2.setDropHandler(new DefaultPanelDropHandler());
         layout.addComponent(panel2);
 
+        // end-source
         return new VerticalLayout(
                 new Label(
                         "In this demo you can drag the button from one Panel to the other one"),

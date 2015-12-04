@@ -54,14 +54,14 @@ public abstract class DemoView extends CustomComponent implements View {
       StringBuilder codelines = new StringBuilder();
       String line = reader.readLine();
       while (line != null) {
-        if (line.contains("//start-source")) {
-          inCodeBlock = true;
-        } else if (line.contains("//end-source")) {
-          inCodeBlock = false;
+        if (line.contains("// start-source")) {
+            inCodeBlock = true;
+        } else if (line.contains("// end-source")) {
+            inCodeBlock = false;
         } else if (inCodeBlock) {
-          codelines.append(line);
-          codelines.append("\n");
-        }
+            codelines.append(line);
+            codelines.append("\n");
+        } 
         line = reader.readLine();
       }
 
