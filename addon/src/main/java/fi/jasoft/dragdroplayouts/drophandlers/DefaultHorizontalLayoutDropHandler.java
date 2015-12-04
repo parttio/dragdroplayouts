@@ -19,6 +19,7 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.SingleComponentContainer;
 
 import fi.jasoft.dragdroplayouts.DDHorizontalLayout.HorizontalLayoutTargetDetails;
@@ -195,5 +196,10 @@ public class DefaultHorizontalLayoutDropHandler
         if (dropAlignment != null) {
             layout.setComponentAlignment(comp, dropAlignment);
         }
+    }
+
+    @Override
+    public Class<HorizontalLayout> getTargetLayoutType() {
+        return HorizontalLayout.class;
     }
 }

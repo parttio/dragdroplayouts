@@ -20,6 +20,7 @@ import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.SingleComponentContainer;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
 
 import fi.jasoft.dragdroplayouts.DDTabSheet;
@@ -122,5 +123,10 @@ public class DefaultTabSheetDropHandler
         } else if (location == HorizontalDropLocation.RIGHT) {
             tabSheet.addTab(c, idx + 1);
         }
+    }
+
+    @Override
+    public Class<TabSheet> getTargetLayoutType() {
+        return TabSheet.class;
     }
 }

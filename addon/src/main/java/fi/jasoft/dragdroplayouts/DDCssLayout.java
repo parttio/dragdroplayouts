@@ -184,9 +184,10 @@ public class DDCssLayout extends CssLayout
      *            The drop handler to set
      */
     public void setDropHandler(DropHandler dropHandler) {
+        DDUtil.verifyHandlerType(this, dropHandler);
         if (this.dropHandler != dropHandler) {
             this.dropHandler = dropHandler;
-            requestRepaint();
+            markAsDirty();
         }
     }
 

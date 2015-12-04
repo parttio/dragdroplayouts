@@ -18,6 +18,7 @@ import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.SingleComponentContainer;
 
 import fi.jasoft.dragdroplayouts.DDCssLayout;
@@ -149,5 +150,10 @@ public class DefaultCssLayoutDropHandler
         } else {
             layout.addComponent(resolveComponentFromHTML5Drop(event));
         }
+    }
+
+    @Override
+    public Class<CssLayout> getTargetLayoutType() {
+        return CssLayout.class;
     }
 }

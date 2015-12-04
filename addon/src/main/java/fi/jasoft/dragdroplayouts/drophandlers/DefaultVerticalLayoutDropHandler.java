@@ -20,6 +20,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.SingleComponentContainer;
+import com.vaadin.ui.VerticalLayout;
 
 import fi.jasoft.dragdroplayouts.DDVerticalLayout.VerticalLayoutTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
@@ -195,5 +196,10 @@ public class DefaultVerticalLayoutDropHandler
             layout.setComponentAlignment(comp, dropAlignment);
         }
 
+    }
+
+    @Override
+    public Class<VerticalLayout> getTargetLayoutType() {
+        return VerticalLayout.class;
     }
 }

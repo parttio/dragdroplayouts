@@ -20,6 +20,7 @@ import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.SingleComponentContainer;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
@@ -176,6 +177,11 @@ public class DefaultGridLayoutDropHandler
         if (dropAlignment != null) {
             layout.setComponentAlignment(component, dropAlignment);
         }
+    }
+
+    @Override
+    public Class<GridLayout> getTargetLayoutType() {
+        return GridLayout.class;
     }
 
 }

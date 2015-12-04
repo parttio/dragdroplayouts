@@ -251,9 +251,10 @@ public class DDGridLayout extends GridLayout
      * {@inheritDoc}
      */
     public void setDropHandler(DropHandler dropHandler) {
+        DDUtil.verifyHandlerType(this, dropHandler);
         if (dropHandler != this.dropHandler) {
             this.dropHandler = dropHandler;
-            requestRepaint();
+            markAsDirty();
         }
     }
 

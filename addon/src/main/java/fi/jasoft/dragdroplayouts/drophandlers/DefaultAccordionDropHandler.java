@@ -17,6 +17,7 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
+import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.SingleComponentContainer;
@@ -139,5 +140,10 @@ public class DefaultAccordionDropHandler
     @Override
     public AcceptCriterion getAcceptCriterion() {
         return new Not(VerticalLocationIs.MIDDLE);
+    }
+
+    @Override
+    public Class<Accordion> getTargetLayoutType() {
+        return Accordion.class;
     }
 }

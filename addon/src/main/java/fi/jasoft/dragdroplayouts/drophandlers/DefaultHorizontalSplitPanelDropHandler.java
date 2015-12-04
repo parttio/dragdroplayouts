@@ -19,6 +19,7 @@ import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.SingleComponentContainer;
 
 import fi.jasoft.dragdroplayouts.DDHorizontalSplitPanel;
@@ -92,5 +93,10 @@ public class DefaultHorizontalSplitPanelDropHandler
             panel.setSecondComponent(resolveComponentFromHTML5Drop(event));
         }
 
+    }
+
+    @Override
+    public Class<HorizontalSplitPanel> getTargetLayoutType() {
+        return HorizontalSplitPanel.class;
     }
 }

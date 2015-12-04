@@ -15,6 +15,7 @@ package fi.jasoft.dragdroplayouts.drophandlers;
 
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.server.Sizeable;
+import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -108,5 +109,10 @@ public class DefaultAbsoluteLayoutDropHandler
         layout.addComponent(resolveComponentFromHTML5Drop(event), "left:"
                 + leftPixelPosition + "px;top:" + topPixelPosition + "px");
 
+    }
+
+    @Override
+    public Class<AbsoluteLayout> getTargetLayoutType() {
+        return AbsoluteLayout.class;
     }
 }

@@ -22,6 +22,7 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.SingleComponentContainer;
 
 import fi.jasoft.dragdroplayouts.DDFormLayout;
@@ -206,5 +207,10 @@ public class DefaultFormLayoutDropHandler
                 Constants.DROP_DETAIL_TO, "-1");
         return new Or(isOverEmptyLayout, VerticalLocationIs.TOP,
                 VerticalLocationIs.BOTTOM);
+    }
+
+    @Override
+    public Class<FormLayout> getTargetLayoutType() {
+        return FormLayout.class;
     }
 }

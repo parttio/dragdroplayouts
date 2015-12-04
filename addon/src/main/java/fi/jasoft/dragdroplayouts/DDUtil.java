@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.vaadin.event.dd.DropHandler;
 import com.vaadin.shared.Connector;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;
 
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
+import fi.jasoft.dragdroplayouts.drophandlers.AbstractDefaultLayoutDropHandler;
 import fi.jasoft.dragdroplayouts.interfaces.DragFilterSupport;
 import fi.jasoft.dragdroplayouts.interfaces.DragImageProvider;
 import fi.jasoft.dragdroplayouts.interfaces.DragImageReferenceSupport;
@@ -41,6 +43,19 @@ public class DDUtil {
                                 dragImage);
                     }
                 }
+            }
+        }
+    }
+
+    public static void verifyHandlerType(HasComponents layout,
+            DropHandler handler) {
+        if (handler instanceof AbstractDefaultLayoutDropHandler) {
+            AbstractDefaultLayoutDropHandler dropHandler = (AbstractDefaultLayoutDropHandler) handler;
+            if (!dropHandler.getTargetLayoutType()
+                    .isAssignableFrom(layout.getClass())) {
+                throw new IllegalArgumentException("Cannot add a handler for "
+                        + dropHandler.getTargetLayoutType() + " to a "
+                        + layout.getClass());
             }
         }
     }

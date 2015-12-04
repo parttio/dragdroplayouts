@@ -23,6 +23,7 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.Label;
 
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
@@ -41,6 +42,8 @@ public abstract class AbstractDefaultLayoutDropHandler implements DropHandler {
     protected abstract void handleComponentReordering(DragAndDropEvent event);
 
     protected abstract void handleDropFromLayout(DragAndDropEvent event);
+
+    public abstract Class<? extends HasComponents> getTargetLayoutType();
 
     protected void handleHTML5Drop(DragAndDropEvent event) {
         throw new RuntimeException("HTML5 support not implemented by layout");

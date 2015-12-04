@@ -148,9 +148,10 @@ public class DDHorizontalSplitPanel extends HorizontalSplitPanel
      *            dropping
      */
     public void setDropHandler(DropHandler dropHandler) {
+        DDUtil.verifyHandlerType(this, dropHandler);
         if (this.dropHandler != dropHandler) {
             this.dropHandler = dropHandler;
-            requestRepaint();
+            markAsDirty();
         }
     }
 

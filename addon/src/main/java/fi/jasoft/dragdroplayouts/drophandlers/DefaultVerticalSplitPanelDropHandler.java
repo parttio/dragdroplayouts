@@ -20,6 +20,7 @@ import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.SingleComponentContainer;
+import com.vaadin.ui.VerticalSplitPanel;
 
 import fi.jasoft.dragdroplayouts.DDVerticalSplitPanel;
 import fi.jasoft.dragdroplayouts.DDVerticalSplitPanel.VerticalSplitPanelTargetDetails;
@@ -45,7 +46,6 @@ public class DefaultVerticalSplitPanelDropHandler
     @Override
     protected void handleComponentReordering(DragAndDropEvent event) {
         handleDropFromLayout(event);
-
     }
 
     @Override
@@ -90,5 +90,10 @@ public class DefaultVerticalSplitPanelDropHandler
             // Dropped in the right area
             panel.setSecondComponent(resolveComponentFromHTML5Drop(event));
         }
+    }
+
+    @Override
+    public Class<VerticalSplitPanel> getTargetLayoutType() {
+        return VerticalSplitPanel.class;
     }
 }

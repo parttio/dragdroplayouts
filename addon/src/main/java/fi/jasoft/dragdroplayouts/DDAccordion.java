@@ -93,9 +93,10 @@ public class DDAccordion extends Accordion
      *            dropping
      */
     public void setDropHandler(DropHandler dropHandler) {
+        DDUtil.verifyHandlerType(this, dropHandler);
         if (this.dropHandler != dropHandler) {
             this.dropHandler = dropHandler;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
