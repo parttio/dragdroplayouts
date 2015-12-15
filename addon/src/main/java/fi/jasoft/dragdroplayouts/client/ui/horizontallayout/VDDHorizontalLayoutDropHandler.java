@@ -13,10 +13,12 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.horizontallayout;
 
-import com.google.gwt.user.client.Element;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.orderedlayout.Slot;
@@ -42,14 +44,50 @@ public class VDDHorizontalLayoutDropHandler
         getLayout().emphasis(null, null);
 
         // Update the details
-        Widget slot = getSlot(drag.getElementOver());
+        Widget slot = getSlot(drag.getElementOver(), drag.getCurrentGwtEvent());
         getLayout().updateDragDetails(slot, drag);
 
         return getLayout().postDropHook(drag) && super.drop(drag);
-    };
+    }
 
-    private Slot getSlot(Element e) {
-        return Util.findWidget(e, Slot.class);
+    private Slot getSlot(Element e, NativeEvent event) {
+        Slot slot = null;
+        if (getLayout().getElement() == e) {
+            // Most likely between components, use the closes one in that case
+            slot = findSlotHorizontally(12, event);
+        } else {
+            slot = WidgetUtil.findWidget(e, Slot.class);
+        }
+        return slot;
+    }
+
+    private Slot findSlotAtPosition(int clientX, int clientY,
+            NativeEvent event) {
+        com.google.gwt.dom.client.Element elementUnderMouse = WidgetUtil
+                .getElementFromPoint(clientX, clientY);
+        if (getLayout().getElement() != elementUnderMouse) {
+            return getSlot(DOM.asOld(elementUnderMouse), event);
+        }
+        return null;
+    }
+
+    private Slot findSlotHorizontally(int spacerSize, NativeEvent event) {
+        int counter = 0;
+        Slot slotLeft, slotRight;
+        int clientX = event.getClientX();
+        int clientY = event.getClientY();
+        while (counter < spacerSize) {
+            counter++;
+            slotRight = findSlotAtPosition(clientX + counter, clientY, event);
+            slotLeft = findSlotAtPosition(clientX - counter, clientY, event);
+            if (slotRight != null) {
+                return slotRight;
+            }
+            if (slotLeft != null) {
+                return slotLeft;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -58,8 +96,7 @@ public class VDDHorizontalLayoutDropHandler
         // Remove any emphasis
         getLayout().emphasis(null, null);
 
-        // Update the dropdetails so we can validate the drop
-        Slot slot = getSlot(drag.getElementOver());
+        Slot slot = getSlot(drag.getElementOver(), drag.getCurrentGwtEvent());
 
         if (slot != null) {
             getLayout().updateDragDetails(slot, drag);
@@ -72,7 +109,8 @@ public class VDDHorizontalLayoutDropHandler
         // Validate the drop
         validate(new VAcceptCallback() {
             public void accepted(VDragEvent event) {
-                Slot slot = getSlot(event.getElementOver());
+                Slot slot = getSlot(event.getElementOver(),
+                        event.getCurrentGwtEvent());
                 if (slot != null) {
                     getLayout().emphasis(slot, event);
                 } else {
@@ -85,7 +123,7 @@ public class VDDHorizontalLayoutDropHandler
     @Override
     public void dragEnter(VDragEvent drag) {
         super.dragEnter(drag);
-        Slot slot = getSlot(drag.getElementOver());
+        Slot slot = getSlot(drag.getElementOver(), drag.getCurrentGwtEvent());
         if (slot != null) {
             getLayout().updateDragDetails(slot, drag);
         } else {
