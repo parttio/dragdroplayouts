@@ -15,7 +15,6 @@ package fi.jasoft.dragdroplayouts.client.ui.horizontallayout;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.WidgetUtil;
@@ -23,10 +22,10 @@ import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.orderedlayout.Slot;
 
-import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
+import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractOrderedLayoutDropHandler;
 
 public class VDDHorizontalLayoutDropHandler
-        extends VDDAbstractDropHandler<VDDHorizontalLayout> {
+        extends VDDAbstractOrderedLayoutDropHandler<VDDHorizontalLayout> {
 
     public VDDHorizontalLayoutDropHandler(ComponentConnector connector) {
         super(connector);
@@ -50,7 +49,8 @@ public class VDDHorizontalLayoutDropHandler
         return getLayout().postDropHook(drag) && super.drop(drag);
     }
 
-    private Slot getSlot(Element e, NativeEvent event) {
+    @Override
+    protected Slot getSlot(Element e, NativeEvent event) {
         Slot slot = null;
         if (getLayout().getElement() == e) {
             // Most likely between components, use the closes one in that case
@@ -59,35 +59,6 @@ public class VDDHorizontalLayoutDropHandler
             slot = WidgetUtil.findWidget(e, Slot.class);
         }
         return slot;
-    }
-
-    private Slot findSlotAtPosition(int clientX, int clientY,
-            NativeEvent event) {
-        com.google.gwt.dom.client.Element elementUnderMouse = WidgetUtil
-                .getElementFromPoint(clientX, clientY);
-        if (getLayout().getElement() != elementUnderMouse) {
-            return getSlot(DOM.asOld(elementUnderMouse), event);
-        }
-        return null;
-    }
-
-    private Slot findSlotHorizontally(int spacerSize, NativeEvent event) {
-        int counter = 0;
-        Slot slotLeft, slotRight;
-        int clientX = event.getClientX();
-        int clientY = event.getClientY();
-        while (counter < spacerSize) {
-            counter++;
-            slotRight = findSlotAtPosition(clientX + counter, clientY, event);
-            slotLeft = findSlotAtPosition(clientX - counter, clientY, event);
-            if (slotRight != null) {
-                return slotRight;
-            }
-            if (slotLeft != null) {
-                return slotLeft;
-            }
-        }
-        return null;
     }
 
     @Override
