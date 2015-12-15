@@ -13,18 +13,19 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.verticallayout;
 
-import com.google.gwt.user.client.Element;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.orderedlayout.Slot;
 
-import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
+import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractOrderedLayoutDropHandler;
 
 public class VDDVerticalLayoutDropHandler
-        extends VDDAbstractDropHandler<VDDVerticalLayout> {
+        extends VDDAbstractOrderedLayoutDropHandler<VDDVerticalLayout> {
 
     public VDDVerticalLayoutDropHandler(ComponentConnector connector) {
         super(connector);
@@ -42,14 +43,22 @@ public class VDDVerticalLayoutDropHandler
         getLayout().emphasis(null, null);
 
         // Update the details
-        Widget slot = getSlot(drag.getElementOver());
+        Widget slot = getSlot(drag.getElementOver(), drag.getCurrentGwtEvent());
         getLayout().updateDragDetails(slot, drag);
 
         return getLayout().postDropHook(drag) && super.drop(drag);
     };
 
-    private Slot getSlot(Element e) {
-        return Util.findWidget(e, Slot.class);
+    @Override
+    protected Slot getSlot(Element e, NativeEvent event) {
+        Slot slot = null;
+        if (getLayout().getElement() == e) {
+            // Most likely between components, use the closes one in that case
+            slot = findSlotVertically(12, event);
+        } else {
+            slot = WidgetUtil.findWidget(e, Slot.class);
+        }
+        return slot;
     }
 
     @Override
@@ -59,7 +68,7 @@ public class VDDVerticalLayoutDropHandler
         getLayout().emphasis(null, null);
 
         // Update the dropdetails so we can validate the drop
-        Slot slot = getSlot(drag.getElementOver());
+        Slot slot = getSlot(drag.getElementOver(), drag.getCurrentGwtEvent());
 
         if (slot != null) {
             getLayout().updateDragDetails(slot, drag);
@@ -72,7 +81,8 @@ public class VDDVerticalLayoutDropHandler
         // Validate the drop
         validate(new VAcceptCallback() {
             public void accepted(VDragEvent event) {
-                Slot slot = getSlot(event.getElementOver());
+                Slot slot = getSlot(event.getElementOver(),
+                        event.getCurrentGwtEvent());
                 if (slot != null) {
                     getLayout().emphasis(slot, event);
                 } else {
@@ -85,7 +95,7 @@ public class VDDVerticalLayoutDropHandler
     @Override
     public void dragEnter(VDragEvent drag) {
         super.dragEnter(drag);
-        Slot slot = getSlot(drag.getElementOver());
+        Slot slot = getSlot(drag.getElementOver(), drag.getCurrentGwtEvent());
         if (slot != null) {
             getLayout().updateDragDetails(slot, drag);
         } else {
