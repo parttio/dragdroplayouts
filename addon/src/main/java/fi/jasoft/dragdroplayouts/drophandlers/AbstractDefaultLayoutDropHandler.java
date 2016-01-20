@@ -75,7 +75,9 @@ public abstract class AbstractDefaultLayoutDropHandler implements DropHandler {
         if (position.getLeftValue() != null) {
         	float x = position.getLeftValue() + movex;
         	position.setLeft(x, Sizeable.UNITS_PIXELS);
-        } else if (position.getRightValue() != null) {
+        }
+
+        if (position.getRightValue() != null) {
         	float x = position.getRightValue() - movex;
         	position.setRight(x, Sizeable.UNITS_PIXELS);
         }
@@ -83,7 +85,9 @@ public abstract class AbstractDefaultLayoutDropHandler implements DropHandler {
         if (position.getTopValue() != null) {
 	        float y = position.getTopValue() + movey;
 	        position.setTop(y, Sizeable.UNITS_PIXELS);
-        } else if (position.getBottomValue() != null) {
+        }
+
+        if (position.getBottomValue() != null) {
         	float y = position.getBottomValue() - movey;
 	        position.setBottom(y, Sizeable.UNITS_PIXELS);
         }
