@@ -17,6 +17,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.WidgetCollection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.UIDL;
@@ -526,4 +527,27 @@ public final class VDragDropUtil {
     /*-{
         return slot.@com.vaadin.client.ui.orderedlayout.Slot::layout;
     }-*/;
+
+    /**
+     * Finds a slots index in a collection of slots and captions
+     * 
+     * @param children
+     *            the children.
+     * @param slot
+     *            the slot to find.
+     * @return the index of the slot
+     */
+    public static int findSlotIndex(WidgetCollection children, Slot slot) {
+        int index = -1;
+        for (int i = 0; i < children.size(); i++) {
+            Widget w = children.get(i);
+            if (w instanceof Slot) {
+                index++;
+                if (w == slot) {
+                    break;
+                }
+            }
+        }
+        return index;
+    }
 }
