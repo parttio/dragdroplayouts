@@ -395,7 +395,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             /*
              * For other layouts we just use the target element;
              */
-            dragImageElement = targetElement;
+            dragImageElement = w.getElement();
         }
 
         currentDragEvent.createDragImage(dragImageElement, true);
