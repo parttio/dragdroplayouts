@@ -37,6 +37,8 @@ import com.vaadin.client.ui.VScrollTable;
 import com.vaadin.client.ui.VTabsheet.TabCaption;
 import com.vaadin.client.ui.VTwinColSelect;
 import com.vaadin.client.ui.dd.VTransferable;
+import com.vaadin.client.ui.orderedlayout.Slot;
+import com.vaadin.client.ui.orderedlayout.VAbstractOrderedLayout;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Button;
@@ -512,4 +514,16 @@ public final class VDragDropUtil {
             }
         }
     }
+
+    /**
+     * Returns the parent layout that the slot belongs to
+     * 
+     * @param slot
+     *            the slot
+     * @return the layout
+     */
+    public static native VAbstractOrderedLayout getSlotLayout(Slot slot)
+    /*-{
+        return slot.@com.vaadin.client.ui.orderedlayout.Slot::layout;
+    }-*/;
 }
