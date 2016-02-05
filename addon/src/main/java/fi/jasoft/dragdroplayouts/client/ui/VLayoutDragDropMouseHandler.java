@@ -177,54 +177,48 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
      * Initiates the drag only on the first move event
      * 
      * @param originalEvent
-     *            the original Mouse Down event
+     *            the original Mouse Down event. Only events on elements are
+     *            passed in here (Element.as() is safe without check here)
      */
     protected void initiateDragOnMove(final NativeEvent originalEvent) {
         EventTarget eventTarget = originalEvent.getEventTarget();
-        
+
         boolean stopEventPropagation = false;
-        
+
         Element targetElement = Element.as(eventTarget);
         Widget target = WidgetUtil.findWidget(targetElement, null);
-        
-        Widget targetParent = WidgetUtil.findWidget(targetElement.getParentElement(), null);
-        
+        Widget targetParent = target.getParent();
+
         // Stop event propagation and prevent default behaviour if
         // - target is *not* a VTabsheet.TabCaption or
         // - drag mode is caption mode and widget is caption
         boolean isTabCaption = targetParent instanceof VTabsheet.TabCaption;
-        
-        boolean isPanelCaption = targetParent instanceof VPanel && targetElement
-                .getParentElement().getClassName().contains("v-panel-caption");
-        boolean isCaption = isPanelCaption
-                || VDragDropUtil.isCaptionOrCaptionless(targetParent);        
+        boolean isCaption = VDragDropUtil.isCaptionOrCaptionless(targetParent);
 
-        if(dragMode == LayoutDragMode.CLONE && isTabCaption == false) {
-            
+        if (dragMode == LayoutDragMode.CLONE && isTabCaption == false) {
+
             stopEventPropagation = true;
-        
+
             // overwrite stopEventPropagation flag again if root implements
             // VHasDragFilter and target is not part of the drag filter
-            if(root instanceof VHasDragFilter) {
-                if(((VHasDragFilter) root).getDragFilter().isDraggable(target) == false) {
+            if (root instanceof VHasDragFilter) {
+                if (((VHasDragFilter) root).getDragFilter()
+                        .isDraggable(target) == false) {
                     stopEventPropagation = false;
                 }
             }
-
         }
-        
-        if(dragMode == LayoutDragMode.CAPTION && isCaption) {
+
+        if (dragMode == LayoutDragMode.CAPTION && isCaption) {
             stopEventPropagation = true;
         }
 
-        if(stopEventPropagation) {
+        if (stopEventPropagation) {
             originalEvent.stopPropagation();
-            originalEvent.preventDefault();            
-        
+            originalEvent.preventDefault();
+
             // Manually focus as preventDefault() will also cancel focus
-            if (Element.is(eventTarget)) {
-                Element.as(eventTarget).focus();
-            }
+            targetElement.focus();
         }
 
         mouseDownHandlerReg = Event

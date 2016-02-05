@@ -329,7 +329,9 @@ public final class VDragDropUtil {
      * @return True if the widget is a caption widget, false otherwise
      */
     public static boolean isCaption(Widget w) {
-        return w instanceof VCaption || w instanceof VFormLayout.Caption;
+        return w instanceof VCaption || w instanceof VFormLayout.Caption
+                || w instanceof TabCaption
+                || w.getElement().getClassName().contains("v-panel-caption");
     }
 
     /**
