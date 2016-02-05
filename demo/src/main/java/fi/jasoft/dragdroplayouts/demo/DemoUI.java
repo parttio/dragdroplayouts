@@ -57,7 +57,6 @@ import fi.jasoft.dragdroplayouts.demo.views.DragdropPanelDemo;
 import fi.jasoft.dragdroplayouts.demo.views.DragdropTabsheetDemo;
 import fi.jasoft.dragdroplayouts.demo.views.DragdropVerticalLayoutDemo;
 import fi.jasoft.dragdroplayouts.demo.views.DragdropVerticalSplitPanelDemo;
-import fi.jasoft.dragdroplayouts.demo.views.MyUI;
 
 @Theme("demo")
 public class DemoUI extends UI {
@@ -136,7 +135,6 @@ public class DemoUI extends UI {
             addView(new DragdropCaptionModeDemo(navigator));
 
             // addView(new DragdropIframeDragging(navigator));
-            addView(new MyUI(navigator));
 
         } catch (Exception e) {
             e.printStackTrace();
