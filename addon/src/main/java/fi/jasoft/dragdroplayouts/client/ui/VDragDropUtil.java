@@ -525,6 +525,7 @@ public final class VDragDropUtil {
      */
     public static native VAbstractOrderedLayout getSlotLayout(Slot slot)
     /*-{
+        if(slot == null) return null;
         return slot.@com.vaadin.client.ui.orderedlayout.Slot::layout;
     }-*/;
 

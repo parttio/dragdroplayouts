@@ -59,10 +59,17 @@ public class VDDVerticalLayoutDropHandler
             slot = findSlotVertically(12, event);
         } else {
             slot = WidgetUtil.findWidget(e, Slot.class);
+            if (slot == null) {
+                return null;
+            }
             VAbstractOrderedLayout layout = VDragDropUtil.getSlotLayout(slot);
-            while (layout != getLayout()) {
+            while (layout != getLayout() && getLayout().getElement()
+                    .isOrHasChild(e.getParentElement())) {
                 e = e.getParentElement();
                 slot = WidgetUtil.findWidget(e, Slot.class);
+                if (slot == null) {
+                    return null;
+                }
                 layout = VDragDropUtil.getSlotLayout(slot);
             }
         }
