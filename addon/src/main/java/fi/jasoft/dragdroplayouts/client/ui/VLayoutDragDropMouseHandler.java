@@ -203,11 +203,15 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             
             stopEventPropagation = true;
         
-            // overwrite stopEventPropagation flag again if root implements
-            // VHasDragFilter and target is not part of the drag filter
+            // overwrite stopEventPropagation flag again if
+            // - root implements VHasDragFilter but
+            // - target is not part of its drag filter and
+            // - target is not a GWT Label based widget
             if(root instanceof VHasDragFilter) {
                 if(((VHasDragFilter) root).getDragFilter().isDraggable(target) == false) {
-                    stopEventPropagation = false;
+                    if((target instanceof LabelBase) == false) {
+                        stopEventPropagation = false;
+                    }
                 }
             }
 
