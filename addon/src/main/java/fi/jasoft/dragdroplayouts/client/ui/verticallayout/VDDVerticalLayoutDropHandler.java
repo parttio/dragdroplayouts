@@ -21,8 +21,10 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.orderedlayout.Slot;
+import com.vaadin.client.ui.orderedlayout.VAbstractOrderedLayout;
 
 import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractOrderedLayoutDropHandler;
+import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
 
 public class VDDVerticalLayoutDropHandler
         extends VDDAbstractOrderedLayoutDropHandler<VDDVerticalLayout> {
@@ -57,6 +59,19 @@ public class VDDVerticalLayoutDropHandler
             slot = findSlotVertically(12, event);
         } else {
             slot = WidgetUtil.findWidget(e, Slot.class);
+            if (slot == null) {
+                return null;
+            }
+            VAbstractOrderedLayout layout = VDragDropUtil.getSlotLayout(slot);
+            while (layout != getLayout() && getLayout().getElement()
+                    .isOrHasChild(e.getParentElement())) {
+                e = e.getParentElement();
+                slot = WidgetUtil.findWidget(e, Slot.class);
+                if (slot == null) {
+                    return null;
+                }
+                layout = VDragDropUtil.getSlotLayout(slot);
+            }
         }
         return slot;
     }

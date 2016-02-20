@@ -165,16 +165,8 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
         int index = -1;
         if (widget instanceof Slot) {
             WidgetCollection captionsAndSlots = getChildren();
-            int realIndex = 0;
-            for (int i = 0; i < captionsAndSlots.size(); i++) {
-                Widget w = captionsAndSlots.get(i);
-                if (w == widget) {
-                    index = realIndex;
-                    break;
-                } else if (w instanceof Slot) {
-                    realIndex++;
-                }
-            }
+            index = VDragDropUtil.findSlotIndex(captionsAndSlots,
+                    (Slot) widget);
         }
 
         event.getDropDetails().put(Constants.DROP_DETAIL_TO, index);
