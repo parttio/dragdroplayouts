@@ -54,6 +54,7 @@ import com.vaadin.client.ui.dd.VTransferable;
 import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
 import fi.jasoft.dragdroplayouts.client.ui.formlayout.VDDFormLayout;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDragImageProvider;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragImageReferenceSupport;
 
 /**
@@ -176,16 +177,48 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
      * Initiates the drag only on the first move event
      * 
      * @param originalEvent
-     *            the original Mouse Down event
+     *            the original Mouse Down event. Only events on elements are
+     *            passed in here (Element.as() is safe without check here)
      */
     protected void initiateDragOnMove(final NativeEvent originalEvent) {
-        originalEvent.stopPropagation();
-        originalEvent.preventDefault();
-
-        // Manually focus as preventDefault() will also cancel focus
         EventTarget eventTarget = originalEvent.getEventTarget();
-        if (Element.is(eventTarget)) {
-            Element.as(eventTarget).focus();
+
+        boolean stopEventPropagation = false;
+
+        Element targetElement = Element.as(eventTarget);
+        Widget target = WidgetUtil.findWidget(targetElement, null);
+        Widget targetParent = target.getParent();
+
+        // Stop event propagation and prevent default behaviour if
+        // - target is *not* a VTabsheet.TabCaption or
+        // - drag mode is caption mode and widget is caption
+        boolean isTabCaption = targetParent instanceof VTabsheet.TabCaption;
+        boolean isCaption = VDragDropUtil.isCaptionOrCaptionless(targetParent);
+
+        if (dragMode == LayoutDragMode.CLONE && isTabCaption == false) {
+
+            stopEventPropagation = true;
+
+            // overwrite stopEventPropagation flag again if root implements
+            // VHasDragFilter and target is not part of the drag filter
+            if (root instanceof VHasDragFilter) {
+                if (((VHasDragFilter) root).getDragFilter()
+                        .isDraggable(target) == false) {
+                    stopEventPropagation = false;
+                }
+            }
+        }
+
+        if (dragMode == LayoutDragMode.CAPTION && isCaption) {
+            stopEventPropagation = true;
+        }
+
+        if (stopEventPropagation) {
+            originalEvent.stopPropagation();
+            originalEvent.preventDefault();
+
+            // Manually focus as preventDefault() will also cancel focus
+            targetElement.focus();
         }
 
         mouseDownHandlerReg = Event
@@ -395,7 +428,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             /*
              * For other layouts we just use the target element;
              */
-            dragImageElement = targetElement;
+            dragImageElement = w.getElement();
         }
 
         currentDragEvent.createDragImage(dragImageElement, true);

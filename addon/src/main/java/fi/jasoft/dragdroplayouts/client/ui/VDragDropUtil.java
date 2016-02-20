@@ -17,6 +17,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.WidgetCollection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.UIDL;
@@ -37,6 +38,8 @@ import com.vaadin.client.ui.VScrollTable;
 import com.vaadin.client.ui.VTabsheet.TabCaption;
 import com.vaadin.client.ui.VTwinColSelect;
 import com.vaadin.client.ui.dd.VTransferable;
+import com.vaadin.client.ui.orderedlayout.Slot;
+import com.vaadin.client.ui.orderedlayout.VAbstractOrderedLayout;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Button;
@@ -326,7 +329,9 @@ public final class VDragDropUtil {
      * @return True if the widget is a caption widget, false otherwise
      */
     public static boolean isCaption(Widget w) {
-        return w instanceof VCaption || w instanceof VFormLayout.Caption;
+        return w instanceof VCaption || w instanceof VFormLayout.Caption
+                || w instanceof TabCaption
+                || w.getElement().getClassName().contains("v-panel-caption");
     }
 
     /**
@@ -511,5 +516,41 @@ public final class VDragDropUtil {
                 widget.getDropHandler().updateAcceptRules(acceptCrit);
             }
         }
+    }
+
+    /**
+     * Returns the parent layout that the slot belongs to
+     * 
+     * @param slot
+     *            the slot
+     * @return the layout
+     */
+    public static native VAbstractOrderedLayout getSlotLayout(Slot slot)
+    /*-{
+        if(slot == null) return null;
+        return slot.@com.vaadin.client.ui.orderedlayout.Slot::layout;
+    }-*/;
+
+    /**
+     * Finds a slots index in a collection of slots and captions
+     * 
+     * @param children
+     *            the children.
+     * @param slot
+     *            the slot to find.
+     * @return the index of the slot
+     */
+    public static int findSlotIndex(WidgetCollection children, Slot slot) {
+        int index = -1;
+        for (int i = 0; i < children.size(); i++) {
+            Widget w = children.get(i);
+            if (w instanceof Slot) {
+                index++;
+                if (w == slot) {
+                    break;
+                }
+            }
+        }
+        return index;
     }
 }
