@@ -47,6 +47,7 @@ public class DDPanelConnector extends PanelConnector implements VHasDragFilter {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        super.updateFromUIDL(uidl, client);
         VDDPanelDropHandler dropHandler = new VDDPanelDropHandler(this);
         VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
         if (html5Support != null) {
