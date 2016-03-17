@@ -18,7 +18,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.VPanel;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.shared.MouseEventDetails;
@@ -169,10 +169,7 @@ public class VDDPanel extends VPanel implements VHasDragMode,
     protected void updateDragDetails(VDragEvent event) {
         Element over = event.getElementOver();
 
-        Widget content = Util.findWidget(over, null);
-        if (content != null) {
-            VConsole.log(content.getElement().toString());
-        }
+        Widget content = WidgetUtil.findWidget(over, null);
 
         if (content != null && content != this) {
             event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,
