@@ -48,13 +48,15 @@ public class DDVerticalSplitPanelConnector extends VerticalSplitPanelConnector
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        VDDVerticalSplitPanelDropHandler dropHandler = new VDDVerticalSplitPanelDropHandler(
-                this);
-        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
+        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, new VDDVerticalSplitPanelDropHandler(this));
         if (html5Support != null) {
             html5Support.disable();
+            html5Support = null;
         }
-        html5Support = HTML5Support.enable(this, dropHandler);
+        VDDVerticalSplitPanelDropHandler dropHandler = getWidget().getDropHandler();
+        if (dropHandler != null) {
+            html5Support = HTML5Support.enable(this, dropHandler);
+        }
     }
 
     @Override

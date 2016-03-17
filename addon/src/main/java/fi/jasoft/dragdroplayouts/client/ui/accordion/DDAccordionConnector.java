@@ -57,12 +57,15 @@ public class DDAccordionConnector extends AccordionConnector
      * TODO Remove this when drag & drop is done properly in core
      */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        VDDAccordionDropHandler dropHandler = new VDDAccordionDropHandler(this);
-        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
+        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, new VDDAccordionDropHandler(this));
         if (html5Support != null) {
             html5Support.disable();
+            html5Support = null;
         }
-        html5Support = HTML5Support.enable(this, dropHandler);
+        VDDAccordionDropHandler dropHandler = getWidget().getDropHandler();
+        if (dropHandler != null) {
+            html5Support = HTML5Support.enable(this, dropHandler);
+        }
     }
 
     @Override

@@ -48,13 +48,15 @@ public class DDHorizontalSplitPanelConnector extends
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        VDDHorizontalSplitPanelDropHandler dropHandler = new VDDHorizontalSplitPanelDropHandler(
-                this);
-        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
+        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, new VDDHorizontalSplitPanelDropHandler(this));
         if (html5Support != null) {
             html5Support.disable();
+            html5Support = null;
         }
-        html5Support = HTML5Support.enable(this, dropHandler);
+        VDDHorizontalSplitPanelDropHandler dropHandler = getWidget().getDropHandler();
+        if (dropHandler != null) {
+            html5Support = HTML5Support.enable(this, dropHandler);
+        }
     }
 
     @Override
