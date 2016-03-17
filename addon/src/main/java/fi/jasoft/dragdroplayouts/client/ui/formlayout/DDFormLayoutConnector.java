@@ -48,13 +48,15 @@ public class DDFormLayoutConnector extends FormLayoutConnector
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        VDDFormLayoutDropHandler dropHandler = new VDDFormLayoutDropHandler(
-                this);
-        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
+        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, new VDDFormLayoutDropHandler(this));
         if (html5Support != null) {
             html5Support.disable();
+            html5Support = null;
         }
-        html5Support = HTML5Support.enable(this, dropHandler);
+        VDDFormLayoutDropHandler dropHandler = getWidget().getDropHandler();
+        if (dropHandler != null) {
+            html5Support = HTML5Support.enable(this, dropHandler);
+        }
     }
 
     @Override

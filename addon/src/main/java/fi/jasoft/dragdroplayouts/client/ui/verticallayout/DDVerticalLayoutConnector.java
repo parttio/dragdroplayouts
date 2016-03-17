@@ -48,13 +48,15 @@ public class DDVerticalLayoutConnector extends VerticalLayoutConnector
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        VDDVerticalLayoutDropHandler dropHandler = new VDDVerticalLayoutDropHandler(
-                this);
-        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
+        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, new VDDVerticalLayoutDropHandler(this));
         if (html5Support != null) {
             html5Support.disable();
+            html5Support = null;
         }
-        html5Support = HTML5Support.enable(this, dropHandler);
+        VDDVerticalLayoutDropHandler dropHandler = getWidget().getDropHandler();
+        if (dropHandler != null) {
+            html5Support = HTML5Support.enable(this, dropHandler);
+        }
     }
 
     @Override

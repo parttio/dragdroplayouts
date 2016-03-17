@@ -170,7 +170,9 @@ public class VDDPanel extends VPanel implements VHasDragMode,
         Element over = event.getElementOver();
 
         Widget content = Util.findWidget(over, null);
-        VConsole.log(content.getElement().toString());
+        if (content != null) {
+            VConsole.log(content.getElement().toString());
+        }
 
         if (content != null && content != this) {
             event.getDropDetails().put(Constants.DROP_DETAIL_OVER_CLASS,

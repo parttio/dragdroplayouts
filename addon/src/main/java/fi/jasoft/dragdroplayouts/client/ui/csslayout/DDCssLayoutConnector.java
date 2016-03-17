@@ -48,12 +48,15 @@ public class DDCssLayoutConnector extends CssLayoutConnector
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        VDDCssLayoutDropHandler dropHandler = new VDDCssLayoutDropHandler(this);
-        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
+        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, new VDDCssLayoutDropHandler(this));
         if (html5Support != null) {
             html5Support.disable();
+            html5Support = null;
         }
-        html5Support = HTML5Support.enable(this, dropHandler);
+        VDDCssLayoutDropHandler dropHandler = getWidget().getDropHandler();
+        if (dropHandler != null) {
+            html5Support = HTML5Support.enable(this, dropHandler);
+        }
     }
 
     @Override

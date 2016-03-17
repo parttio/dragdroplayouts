@@ -48,13 +48,15 @@ public class DDHorizontalLayoutConnector extends HorizontalLayoutConnector
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        VDDHorizontalLayoutDropHandler dropHandler = new VDDHorizontalLayoutDropHandler(
-                this);
-        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
+        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, new VDDHorizontalLayoutDropHandler(this));
         if (html5Support != null) {
             html5Support.disable();
+            html5Support = null;
         }
-        html5Support = HTML5Support.enable(this, dropHandler);
+        VDDHorizontalLayoutDropHandler dropHandler = getWidget().getDropHandler();
+        if (dropHandler != null) {
+            html5Support = HTML5Support.enable(this, dropHandler);
+        }
     }
 
     @Override

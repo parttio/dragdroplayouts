@@ -54,14 +54,15 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
      */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        VDDAbsoluteLayoutDropHandler dropHandler = new VDDAbsoluteLayoutDropHandler(
-                this);
-        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, dropHandler);
-
+        VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, new VDDAbsoluteLayoutDropHandler(this));
         if (html5Support != null) {
             html5Support.disable();
+            html5Support = null;
         }
-        html5Support = HTML5Support.enable(this, dropHandler);
+        VDDAbsoluteLayoutDropHandler dropHandler = getWidget().getDropHandler();
+        if (dropHandler != null) {
+            html5Support = HTML5Support.enable(this, dropHandler);
+        }
     }
 
     @Override
