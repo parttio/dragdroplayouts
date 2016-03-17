@@ -118,25 +118,17 @@ public class VDDTabSheet extends VTabsheet
                 LayoutDragMode.NONE);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler#getDropHandler()
-     */
+    @Override
     public VDDTabsheetDropHandler getDropHandler() {
         return dropHandler;
     }
 
+    @Override
     public void setDropHandler(VDDTabsheetDropHandler handler) {
         this.dropHandler = handler;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.jasoft.dragdroplayouts.client.ui.VHasDragMode#getDragMode()
-     */
+    @Override
     public LayoutDragMode getDragMode() {
         return ddMouseHandler.getDragMode();
     }
@@ -347,10 +339,16 @@ public class VDDTabSheet extends VTabsheet
         this.dragFilter = filter;
     }
 
+    /**
+     * Get the distribution of how a drop should be interpreted over a tab
+     */
     public double getTabLeftRightDropRatio() {
         return tabLeftRightDropRatio;
     }
 
+    /**
+     * Set the distribution of how a drop should be interpreted over a tab
+     */
     public void setTabLeftRightDropRatio(double tabLeftRightDropRatio) {
         this.tabLeftRightDropRatio = tabLeftRightDropRatio;
     }
