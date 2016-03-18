@@ -85,7 +85,7 @@ public class HTML5Support {
         public void onDrop(DropEvent event) {
             timer.cancel();
             NativeEvent nativeEvent = event.getNativeEvent();
-            if (validate(nativeEvent)) {
+            if (validate(nativeEvent) && vaadinDragEvent != null) {
                 nativeEvent.preventDefault();
                 nativeEvent.stopPropagation();
 
