@@ -31,6 +31,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.LabelBase;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
@@ -199,12 +200,15 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
             stopEventPropagation = true;
 
-            // overwrite stopEventPropagation flag again if root implements
-            // VHasDragFilter and target is not part of the drag filter
+            // overwrite stopEventPropagation flag again if
+            // - root implements VHasDragFilter but
+            // - target is not part of its drag filter and
+            // - target is not a GWT Label based widget
             if (root instanceof VHasDragFilter) {
                 if (((VHasDragFilter) root).getDragFilter()
-                        .isDraggable(target) == false) {
-                    stopEventPropagation = false;
+                        .isDraggable(target) == false &&
+					(target instanceof LabelBase) == false) {
+                        stopEventPropagation = false;
                 }
             }
         }
