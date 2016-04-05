@@ -24,8 +24,8 @@ import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.event.dom.client.TouchStartHandler;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
+import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
@@ -65,7 +65,7 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragImageReferenceSupp
  * @since 0.4.0
  */
 public class VLayoutDragDropMouseHandler implements MouseDownHandler,
-        TouchStartHandler, VHasDragImageReferenceSupport {
+        TouchMoveHandler, VHasDragImageReferenceSupport {
 
     public static final String ACTIVE_DRAG_SOURCE_STYLENAME = "v-dd-active-drag-source";
 
@@ -133,7 +133,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
     }
 
     @Override
-    public void onTouchStart(TouchStartEvent event) {
+    public void onTouchMove(TouchMoveEvent event) {
         NativeEvent nativeEvent = event.getNativeEvent();
         if (isElementNode(nativeEvent) && isChildOfRoot(nativeEvent)) {
             if (startDragOnMove) {
@@ -583,12 +583,12 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
                 handlers.add(
                         root.addDomHandler(this, MouseDownEvent.getType()));
                 handlers.add(
-                        root.addDomHandler(this, TouchStartEvent.getType()));
+                        root.addDomHandler(this, TouchMoveEvent.getType()));
             } else {
                 handlers.add(attachTarget.addDomHandler(this,
                         MouseDownEvent.getType()));
                 handlers.add(attachTarget.addDomHandler(this,
-                        TouchStartEvent.getType()));
+                        TouchMoveEvent.getType()));
             }
         }
     }
