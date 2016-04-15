@@ -140,7 +140,7 @@ project(':demo'){
     archiveName = 'DragDropLayouts7.war'
 
     // Include widgetset
-    dependsOn test, vaadinCompileWidgetset
+    dependsOn test, vaadinCompile
 
     // Add sources
     webInf{
@@ -151,7 +151,7 @@ project(':demo'){
   }
 
   test {
-    dependsOn vaadinCompileWidgetset
+    dependsOn vaadinCompile
     systemProperties = System.properties
   }
 }
