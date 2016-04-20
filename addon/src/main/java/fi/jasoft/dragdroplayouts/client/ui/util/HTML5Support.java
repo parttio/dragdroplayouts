@@ -163,6 +163,9 @@ public class HTML5Support {
 
             Element target = Element.as(event.getEventTarget());
             Widget widget = Util.findWidget(target, null);
+            if (widget == null) {
+                return false;
+            }
 
             ComponentConnector connector = Util.findConnectorFor(widget);
             while (connector == null) {
