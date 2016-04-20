@@ -125,14 +125,6 @@ project(':demo'){
     widgetset = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
     serverPort 7676
     debug true
-
-    devmode {
-      superDevMode true
-    }
-
-    plugin {
-      logToConsole true
-    }
   }
 
   war {
@@ -140,7 +132,8 @@ project(':demo'){
     archiveName = 'DragDropLayouts7.war'
 
     // Include widgetset
-    dependsOn test, vaadinCompile
+    dependsOn 'vaadinCompile'
+    dependsOn 'test' 
 
     // Add sources
     webInf{
@@ -151,7 +144,7 @@ project(':demo'){
   }
 
   test {
-    dependsOn vaadinCompile
+    dependsOn 'vaadinCompile'
     systemProperties = System.properties
   }
 }
