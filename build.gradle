@@ -25,7 +25,7 @@ project(':addon'){
     deploy      'org.apache.maven.wagon:wagon-ssh:2.2'
   }
 
-  vaadin {
+  project.vaadin {
     addon {
       author 'John Ahlroos'
       license 'Apache 2.0'
