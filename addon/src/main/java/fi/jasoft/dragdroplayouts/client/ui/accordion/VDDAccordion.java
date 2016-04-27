@@ -172,8 +172,6 @@ public class VDDAccordion extends VAccordion
      * Updates the drop details while dragging. This is needed to ensure client
      * side criterias can validate the drop location.
      * 
-     * @param widget
-     *            The container which we are hovering over
      * @param event
      *            The drag event
      */
@@ -309,7 +307,7 @@ public class VDDAccordion extends VAccordion
     }
 
     /**
-     * Removes any previous emphasis made by drag&drop
+     * Removes any previous emphasis made by drag&amp;drop
      */
     protected void deEmphasis() {
         if (currentlyEmphasised != null) {
