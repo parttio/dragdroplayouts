@@ -138,6 +138,23 @@ public class DDTabSheet extends TabSheet
         }
     }
 
+    /**
+     * Creates a new tabsheet
+     */
+    public DDTabSheet() {
+        super();
+    }
+
+    /**
+     * Creates a new tabsheet with tabs
+     * 
+     * @param tabs
+     *            the tabs to add to the tabsheet
+     */
+    public DDTabSheet(Component... tabs) {
+        super(tabs);
+    }
+
     public Transferable getTransferable(Map<String, Object> rawVariables) {
         if (rawVariables.get(Constants.TRANSFERABLE_DETAIL_INDEX) != null) {
             // We dragged a tab, substitute component with tab content

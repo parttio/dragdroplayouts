@@ -22,6 +22,7 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyComponent;
 
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
@@ -58,6 +59,16 @@ public class DDAbsoluteLayout extends AbsoluteLayout
      */
     public DDAbsoluteLayout() {
         super();
+    }
+
+    /**
+     * Construct a absolute layout with child components
+     * 
+     * @param components
+     *            the child components to add
+     */
+    public DDAbsoluteLayout(Component... components) {
+        addComponents(components);
     }
 
     /**
