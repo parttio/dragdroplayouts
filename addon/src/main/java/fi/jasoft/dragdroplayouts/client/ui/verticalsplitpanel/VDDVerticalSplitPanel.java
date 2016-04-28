@@ -198,7 +198,7 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical
     }
 
     /**
-     * Removes any previous emphasis made by drag&drag
+     * Removes any previous emphasis made by drag&amp;drag
      */
     protected void deEmphasis() {
         if (currentEmphasis != null) {
@@ -240,8 +240,6 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical
      * Updates the drop details while dragging. This is needed to ensure client
      * side criterias can validate the drop location.
      * 
-     * @param widget
-     *            The container which we are hovering over
      * @param event
      *            The drag event
      */

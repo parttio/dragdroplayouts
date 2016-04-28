@@ -230,7 +230,7 @@ public class VDDGridLayout extends VGridLayout implements VHasDragMode,
      * Emphasizes a component container when user is hovering a dragged
      * component over the container.
      * 
-     * @param container
+     * @param cell
      *            The container
      * @param event
      */

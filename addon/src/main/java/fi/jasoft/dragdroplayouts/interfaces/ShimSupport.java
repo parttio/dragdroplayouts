@@ -30,14 +30,14 @@ public interface ShimSupport {
      * False to disable the iframe shim used to enable dragging iframe based
      * components (defaults to true).
      * 
-     * @return Are the iframes shimmed
+     * @param shim Are the iframes shimmed
      */
     void setShim(boolean shim);
 
     /**
      * Are shims used over iframes so dragging is possible
      * 
-     * @return
+     * @return Are the iframes shimmed
      */
     boolean isShimmed();
 

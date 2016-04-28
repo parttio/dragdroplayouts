@@ -131,8 +131,8 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
      * cell. By default the cell is devided into three parts: left,center,right
      * with the ratios 10%,80%,10%;
      * 
-     * @param container
-     *            The widget container
+     * @param rowElement
+     *            The row
      * @param event
      *            The drag event
      * @return The horizontal drop location
@@ -211,7 +211,7 @@ public class VDDFormLayout extends VFormLayout implements VHasDragMode,
      * ĆhildComponentContainer. Passing null as the container removes any
      * previous emphasis.
      * 
-     * @param container
+     * @param widget
      *            The container which we are hovering over
      * @param event
      *            The drag event

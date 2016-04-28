@@ -57,7 +57,7 @@ public interface LayoutDragSource extends DragSource {
      * By default the drag filter permits dragging all components when the
      * layout drag mode allows it.
      * 
-     * @param dragFilter
+     * @return dragFilter
      *            The filter to use, by default {@link DragFilter#ALL} is used.
      */
     DragFilter getDragFilter();
