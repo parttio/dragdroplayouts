@@ -113,6 +113,7 @@ project(':demo'){
   vaadinRun {
     serverPort 7676
     debug true
+    classesDir 'bin'
   }
 
   war {

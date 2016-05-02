@@ -61,6 +61,23 @@ public class DDCssLayout extends CssLayout
     private DragImageProvider dragImageProvider;
 
     /**
+     * Construct a new Css layout
+     */
+    public DDCssLayout() {
+        super();
+    }
+
+    /**
+     * Construct a new css layout with child components
+     * 
+     * @param components
+     *            the children of the css layout
+     */
+    public DDCssLayout(Component... components) {
+        super(components);
+    }
+
+    /**
      * Target details for dropping on a absolute layout.
      */
     public class CssLayoutTargetDetails extends TargetDetailsImpl {

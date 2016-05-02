@@ -55,7 +55,7 @@ public class VDDVerticalLayoutDropHandler
     protected Slot getSlot(Element e, NativeEvent event) {
         Slot slot = null;
         if (getLayout().getElement() == e) {
-            // Most likely between components, use the closes one in that case
+            // Most likely between components, use the closest one in that case
             slot = findSlotVertically(12, event);
         } else {
             slot = WidgetUtil.findWidget(e, Slot.class);

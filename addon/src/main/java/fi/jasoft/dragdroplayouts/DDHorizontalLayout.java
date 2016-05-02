@@ -140,6 +140,23 @@ public class DDHorizontalLayout extends HorizontalLayout
     }
 
     /**
+     * Construct a new horizontal layout
+     */
+    public DDHorizontalLayout() {
+        super();
+    }
+
+    /**
+     * Construct a new horizontal layout with children
+     * 
+     * @param components
+     *            the child components to add
+     */
+    public DDHorizontalLayout(Component... components) {
+        super(components);
+    }
+
+    /**
      * {@inheritDoc}
      * 
      */

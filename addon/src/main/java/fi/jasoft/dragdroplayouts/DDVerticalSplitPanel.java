@@ -112,6 +112,25 @@ public class DDVerticalSplitPanel extends VerticalSplitPanel
         }
     }
 
+    /**
+     * Constructs a new vertical splitpanel
+     */
+    public DDVerticalSplitPanel() {
+        super();
+    }
+
+    /**
+     * Constructs a new vertical splitpanel with children
+     * 
+     * @param firstChild
+     *            the first child component
+     * @param secondChild
+     *            the second child component
+     */
+    public DDVerticalSplitPanel(Component firstChild, Component secondChild) {
+        super(firstChild, secondChild);
+    }
+
     /*
      * (non-Javadoc)
      * 

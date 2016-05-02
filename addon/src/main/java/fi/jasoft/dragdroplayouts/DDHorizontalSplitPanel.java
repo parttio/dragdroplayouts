@@ -112,6 +112,25 @@ public class DDHorizontalSplitPanel extends HorizontalSplitPanel
         }
     }
 
+    /**
+     * Creates a new split panel
+     */
+    public DDHorizontalSplitPanel() {
+        super();
+    }
+
+    /**
+     * Creates a new split panel with children
+     * 
+     * @param firstChild
+     *            the first child
+     * @param secondChild
+     *            the second child
+     */
+    public DDHorizontalSplitPanel(Component firstChild, Component secondChild) {
+        super(firstChild, secondChild);
+    }
+
     /*
      * (non-Javadoc)
      * 
