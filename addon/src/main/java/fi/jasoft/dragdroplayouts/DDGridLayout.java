@@ -250,7 +250,6 @@ public class DDGridLayout extends GridLayout
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
         if (dropHandler != null && isEnabled()) {
             dropHandler.getAcceptCriterion().paint(target);
         }
