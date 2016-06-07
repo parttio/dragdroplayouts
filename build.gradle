@@ -4,24 +4,15 @@ allprojects {
   apply plugin: 'eclipse-wtp'
 }
 
-subprojects {
-  apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
-  sourceCompatibility = 1.6
-  targetCompatibility = 1.6
-
-  vaadin {
-    version = project.hasProperty('VAADIN_VERSION') ? getProperty('VAADIN_VERSION') : '7.6.0.beta1'
-  }
-}
-
 task wrapper(type: Wrapper) {
-        gradleVersion = '2.8'
+    gradleVersion = '2.12'
 }
 
 /**
  * Vaadin addon project
  */
 project(':addon'){
+  apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
   apply plugin: 'maven'
   apply plugin: 'osgi'
 
@@ -34,9 +25,7 @@ project(':addon'){
     deploy      'org.apache.maven.wagon:wagon-ssh:2.2'
   }
 
-  vaadin {
-    widgetset = 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
-
+  project.vaadin {
     addon {
       author 'John Ahlroos'
       license 'Apache 2.0'
@@ -113,7 +102,7 @@ project(':addon'){
  * Demo application for demonstrating the addon
  */
 project(':demo'){
-  apply plugin: 'war'
+  apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
     
   dependencies {
     compile project(':addon')
@@ -121,18 +110,10 @@ project(':demo'){
     compile group:'de.java2html',   name:'java2html',  version:'5.0'
   }
 
-  vaadin {
-    widgetset = 'fi.jasoft.dragdroplayouts.demo.DemoWidgetSet'
+  vaadinRun {
     serverPort 7676
     debug true
-
-    devmode {
-      superDevMode true
-    }
-
-    plugin {
-      logToConsole true
-    }
+    classesDir 'bin'
   }
 
   war {
@@ -140,7 +121,8 @@ project(':demo'){
     archiveName = 'DragDropLayouts7.war'
 
     // Include widgetset
-    dependsOn test, vaadinCompileWidgetset
+    dependsOn 'vaadinCompile'
+    dependsOn 'test' 
 
     // Add sources
     webInf{
@@ -151,7 +133,7 @@ project(':demo'){
   }
 
   test {
-    dependsOn vaadinCompileWidgetset
+    dependsOn 'vaadinCompile'
     systemProperties = System.properties
   }
 }

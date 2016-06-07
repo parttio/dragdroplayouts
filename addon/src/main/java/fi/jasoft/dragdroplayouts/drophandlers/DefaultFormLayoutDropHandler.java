@@ -45,8 +45,6 @@ public class DefaultFormLayoutDropHandler
     /**
      * Constructor
      * 
-     * @param dropCellAlignment
-     *            The cell alignment of the component after it has been dropped
      */
     public DefaultFormLayoutDropHandler() {
 

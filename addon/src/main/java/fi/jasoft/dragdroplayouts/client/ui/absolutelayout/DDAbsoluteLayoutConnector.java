@@ -50,7 +50,7 @@ public class DDAbsoluteLayoutConnector extends AbsoluteLayoutConnector
 
     /**
      * 
-     * TODO Remove this when drag & drop is done properly in core
+     * TODO Remove this when drag &amp; drop is done properly in core
      */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

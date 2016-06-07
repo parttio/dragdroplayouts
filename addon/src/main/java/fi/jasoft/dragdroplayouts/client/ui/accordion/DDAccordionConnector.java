@@ -54,7 +54,7 @@ public class DDAccordionConnector extends AccordionConnector
 
     /**
      * 
-     * TODO Remove this when drag & drop is done properly in core
+     * TODO Remove this when drag &amp; drop is done properly in core
      */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, new VDDAccordionDropHandler(this));

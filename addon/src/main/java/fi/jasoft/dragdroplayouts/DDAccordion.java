@@ -59,6 +59,23 @@ public class DDAccordion extends Accordion
     private DragImageProvider dragImageProvider;
 
     /**
+     * Construct a new accordion
+     */
+    public DDAccordion() {
+        super();
+    }
+
+    /**
+     * Construct a new accordion with the provided tabs
+     * 
+     * @param components
+     *            the components provided as tabs
+     */
+    public DDAccordion(Component... components) {
+        super(components);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public Transferable getTransferable(Map<String, Object> rawVariables) {

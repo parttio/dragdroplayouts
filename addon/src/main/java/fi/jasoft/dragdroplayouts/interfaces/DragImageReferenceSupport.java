@@ -7,17 +7,16 @@ public interface DragImageReferenceSupport {
      * image will be shown instead of the component when the user drag a
      * component in the layout.
      * 
-     * @param component
-     *            The component in the layout
+     * @param provider
+     *            The image provider
      * 
-     * @param reference
-     *            The reference component to show
      */
     void setDragImageProvider(DragImageProvider provider);
 
     /**
      * Returns the drag image provider
      * 
+     * @return the image provider
      */
     DragImageProvider getDragImageProvider();
 }

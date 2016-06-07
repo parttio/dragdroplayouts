@@ -131,6 +131,23 @@ public class DDVerticalLayout extends VerticalLayout
     }
 
     /**
+     * Creates a new vertical layout
+     */
+    public DDVerticalLayout() {
+        super();
+    }
+
+    /**
+     * Creates a new vertical layout with children
+     * 
+     * @param components
+     *            the child components to add to the layout
+     */
+    public DDVerticalLayout(Component... components) {
+        super(components);
+    }
+
+    /**
      * {@inheritDoc}
      * 
      */

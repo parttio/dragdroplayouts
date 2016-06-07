@@ -217,6 +217,10 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             stopEventPropagation = true;
         }
 
+        if (isElementNotDraggable(targetElement)) {
+            stopEventPropagation = false;
+        }
+
         if (stopEventPropagation) {
             originalEvent.stopPropagation();
             originalEvent.preventDefault();
@@ -247,6 +251,11 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
                 });
     }
 
+    private boolean isElementNotDraggable(Element targetElement) {
+        // do not try to drag tabsheet close button it breaks close on touch devices
+        return targetElement.getClassName().contains("v-tabsheet-caption-close");
+    }
+
     /**
      * Called when the dragging a component should be initiated by both a mouse
      * down event as well as a touch start event
@@ -273,6 +282,12 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
         Widget target = WidgetUtil.findWidget(targetElement, null);
 
         if (isEventOnScrollBar(event)) {
+            return;
+        }
+
+        // do not drag close button of TabSheet tab
+        if (isElementNotDraggable(targetElement)) {
+            VDragAndDropManager.get().interruptDrag();
             return;
         }
 

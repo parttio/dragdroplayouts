@@ -223,6 +223,22 @@ public class DDGridLayout extends GridLayout
     }
 
     /**
+     * Constructor for grid of given size (number of cells). Note that grid's
+     * final size depends on the items that are added into the grid. Grid grows
+     * if you add components outside the grid's area.
+     * 
+     * @param columns
+     *            Number of columns in the grid.
+     * @param rows
+     *            Number of rows in the grid.
+     * @param children
+     *            Child components
+     */
+    public DDGridLayout(int columns, int rows, Component... children) {
+        super(columns, rows, children);
+    }
+
+    /**
      * Constructs an empty grid layout that is extended as needed.
      */
     public DDGridLayout() {

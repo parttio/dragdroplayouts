@@ -272,8 +272,8 @@ public class VDDHorizontalLayout extends VHorizontalLayout
      * Creates a drop handler if one does not already exist and updates it from
      * the details received from the server.
      * 
-     * @param childUidl
-     *            The UIDL
+     * @param dropHandler
+     *            The drop handler
      */
     public void setDropHandler(VDDHorizontalLayoutDropHandler dropHandler) {
         this.dropHandler = dropHandler;

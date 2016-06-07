@@ -136,6 +136,23 @@ public class DDFormLayout extends FormLayout
         }
     }
 
+    /**
+     * Construct a new form layout
+     */
+    public DDFormLayout() {
+        super();
+    }
+
+    /**
+     * Construct a new form layout with children
+     * 
+     * @param components
+     *            the child components of the layout
+     */
+    public DDFormLayout(Component... components) {
+        super(components);
+    }
+
     /*
      * (non-Javadoc)
      * 
