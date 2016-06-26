@@ -46,6 +46,8 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
  */
 public class HTML5Support {
 
+    protected static DragOverHandler globalDragOverHandler = null;
+
     private final List<HandlerRegistration> handlers = new ArrayList<HandlerRegistration>();
 
     public static class HTML5DragHandler
@@ -116,6 +118,13 @@ public class HTML5Support {
             if (validate(nativeEvent) && vaadinDragEvent != null) {
                 nativeEvent.preventDefault();
                 nativeEvent.stopPropagation();
+
+                // event stopped, just notify global handler
+                // Haulmont API
+                if (globalDragOverHandler != null) {
+                    globalDragOverHandler.onDragOver(event);
+                }
+
                 vaadinDragEvent.setCurrentGwtEvent(nativeEvent);
                 VDragAndDropManager.get().setCurrentDropHandler(dropHandler);
                 dropHandler.dragOver(vaadinDragEvent);
@@ -216,5 +225,13 @@ public class HTML5Support {
             handlerRegistration.removeHandler();
         }
         handlers.clear();
+    }
+
+    public static DragOverHandler getGlobalDragOverHandler() {
+        return globalDragOverHandler;
+    }
+
+    public static void setGlobalDragOverHandler(DragOverHandler globalDragOverHandler) {
+        HTML5Support.globalDragOverHandler = globalDragOverHandler;
     }
 }
