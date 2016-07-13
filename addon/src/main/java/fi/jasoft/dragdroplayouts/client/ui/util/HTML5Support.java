@@ -47,6 +47,8 @@ import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
 public class HTML5Support {
 
     protected static DragOverHandler globalDragOverHandler = null;
+    protected static DropHandler globalDropHandler = null;
+    protected static DragEnterHandler globalDragEnterHandler = null;
 
     private final List<HandlerRegistration> handlers = new ArrayList<HandlerRegistration>();
 
@@ -90,6 +92,12 @@ public class HTML5Support {
             if (validate(nativeEvent) && vaadinDragEvent != null) {
                 nativeEvent.preventDefault();
                 nativeEvent.stopPropagation();
+
+                // event stopped, just notify global handler
+                // Haulmont API
+                if (globalDropHandler != null) {
+                    globalDropHandler.onDrop(event);
+                }
 
                 vaadinDragEvent.setCurrentGwtEvent(nativeEvent);
                 VDragAndDropManager.get().setCurrentDropHandler(dropHandler);
@@ -163,6 +171,10 @@ public class HTML5Support {
                 nativeEvent.preventDefault();
                 nativeEvent.stopPropagation();
             }
+
+            if (globalDragEnterHandler != null) {
+                globalDragEnterHandler.onDragEnter(event);
+            }
         }
 
         private boolean validate(NativeEvent event) {
@@ -227,11 +239,33 @@ public class HTML5Support {
         handlers.clear();
     }
 
+    // Haulmont API
     public static DragOverHandler getGlobalDragOverHandler() {
         return globalDragOverHandler;
     }
 
+    // Haulmont API
     public static void setGlobalDragOverHandler(DragOverHandler globalDragOverHandler) {
         HTML5Support.globalDragOverHandler = globalDragOverHandler;
+    }
+
+    // Haulmont API
+    public static DropHandler getGlobalDropHandler() {
+        return globalDropHandler;
+    }
+
+    // Haulmont API
+    public static void setGlobalDropHandler(DropHandler globalDropHandler) {
+        HTML5Support.globalDropHandler = globalDropHandler;
+    }
+
+    // Haulmont API
+    public static DragEnterHandler getGlobalDragEnterHandler() {
+        return globalDragEnterHandler;
+    }
+
+    // Haulmont API
+    public static void setGlobalDragEnterHandler(DragEnterHandler globalDragEnterHandler) {
+        HTML5Support.globalDragEnterHandler = globalDragEnterHandler;
     }
 }
