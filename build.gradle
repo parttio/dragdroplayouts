@@ -38,9 +38,13 @@ project(':addon'){
     }
   }
 
+  task createAddonPom {
+    pom{ artifactId = 'dragdroplayouts' }.writeTo("${sourceSets.main.output.resourcesDir}/META-INF/maven/fi.jasoft/dragdroplayouts/pom.xml")
+  }
+
   jar {
     baseName = 'dragdroplayouts'
-    dependsOn test
+    dependsOn test, createAddonPom
 
     // Include sources
     sourceSets.main.java.srcDirs.each{
@@ -69,9 +73,6 @@ project(':addon'){
       baseName = 'dragdroplayouts'
   }
 
-  task createAddonPom {
-    pom{ artifactId = 'dragdroplayouts' }.writeTo("META-INF/maven/fi.jasoft/dragdroplayouts/pom.xml")
-  }
 
   artifacts {
       archives jar
