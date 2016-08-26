@@ -4,6 +4,11 @@ allprojects {
   apply plugin: 'eclipse-wtp'
 }
 
+subprojects {
+  apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
+  vaadin.version = '7.7.+'
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.12'
 }
@@ -12,7 +17,7 @@ task wrapper(type: Wrapper) {
  * Vaadin addon project
  */
 project(':addon'){
-  apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
+  
   apply plugin: 'maven'
   apply plugin: 'osgi'
 
@@ -21,11 +26,11 @@ project(':addon'){
   }
 
   dependencies{
-    testCompile group:'junit',  name:'junit',   version: '4.8.+'
+    testCompile 'junit:junit:4.8.+'
     deploy      'org.apache.maven.wagon:wagon-ssh:2.2'
   }
 
-  project.vaadin {
+  vaadin {
     addon {
       author 'John Ahlroos'
       license 'Apache 2.0'
@@ -102,8 +107,7 @@ project(':addon'){
  * Demo application for demonstrating the addon
  */
 project(':demo'){
-  apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
-    
+
   dependencies {
     compile project(':addon')
     compile group:'de.sven-jacobs', name:'loremipsum', version:'1.0'

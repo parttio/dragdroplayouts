@@ -245,15 +245,16 @@ public class DDGridLayout extends GridLayout
         super();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
         if (dropHandler != null && isEnabled()) {
             dropHandler.getAcceptCriterion().paint(target);
         }
+    }
+
+    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        // To be compatible with Designer drag & drop
     }
 
     /**
@@ -394,4 +395,5 @@ public class DDGridLayout extends GridLayout
     public DragImageProvider getDragImageProvider() {
         return this.dragImageProvider;
     }
+
 }
