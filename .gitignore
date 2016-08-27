@@ -16,3 +16,5 @@ demo/src/main/webapp/VAADIN/widgetsets/
 addon/GWT development mode for addon.launch
 /build/
 /bin/
+/demo/
+/addon/
