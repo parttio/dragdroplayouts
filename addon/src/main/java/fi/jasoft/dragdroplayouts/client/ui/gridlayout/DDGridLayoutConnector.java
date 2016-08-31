@@ -49,7 +49,6 @@ public class DDGridLayoutConnector extends GridLayoutConnector
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        super.updateFromUIDL(uidl, client);
         VDragDropUtil.updateDropHandlerFromUIDL(uidl, this, new VDDGridLayoutDropHandler(this));
         if (html5Support != null) {
             html5Support.disable();
