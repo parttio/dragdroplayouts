@@ -33,11 +33,12 @@ project(':addon'){
   }
 
   vaadin {
-    addon {
-      author 'John Ahlroos'
-      license 'Apache 2.0'
-      title 'DragDropLayouts'
-    }
+      widgetset 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
+      addon {
+          author 'John Ahlroos'
+          license 'Apache 2.0'
+          title 'DragDropLayouts'
+      }
   }
 
   task createAddonPom {
