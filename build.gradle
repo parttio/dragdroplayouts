@@ -6,7 +6,8 @@ allprojects {
 
 subprojects {
   apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
-  vaadin.version = '7.7.+'
+  vaadin.version = '8.0.0.alpha2'
+  vaadinCompile.userAgent = 'ie10,gecko1_8,safari'
 }
 
 task wrapper(type: Wrapper) {

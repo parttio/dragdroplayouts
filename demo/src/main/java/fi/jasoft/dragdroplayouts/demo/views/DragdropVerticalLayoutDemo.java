@@ -60,4 +60,9 @@ public class DragdropVerticalLayoutDemo extends DemoView {
   public String getCaption() {
     return "Vertical layout";
   }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
 }

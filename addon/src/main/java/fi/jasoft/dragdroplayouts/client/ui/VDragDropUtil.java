@@ -31,12 +31,9 @@ import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.VAccordion.StackItem;
 import com.vaadin.client.ui.VButton;
-import com.vaadin.client.ui.VFilterSelect;
 import com.vaadin.client.ui.VFormLayout;
 import com.vaadin.client.ui.VLink;
-import com.vaadin.client.ui.VScrollTable;
 import com.vaadin.client.ui.VTabsheet.TabCaption;
-import com.vaadin.client.ui.VTwinColSelect;
 import com.vaadin.client.ui.dd.VTransferable;
 import com.vaadin.client.ui.orderedlayout.Slot;
 import com.vaadin.client.ui.orderedlayout.VAbstractOrderedLayout;
@@ -369,20 +366,6 @@ public final class VDragDropUtil {
             if (owner != null) {
                 w = owner;
             }
-        } else if (w instanceof VScrollTable.VScrollTableBody.VScrollTableRow) {
-            // Table rows are paintable but we do not want to drag them so
-            // search for next paintable which should be the table itself
-            w = w.getParent();
-
-            while (!(w instanceof VScrollTable)) {
-                w = w.getParent();
-            }
-        } else if (w.getParent().getParent()
-                .getParent() instanceof VTwinColSelect) {
-            // TwinColSelect has paintable buttons..
-            w = w.getParent().getParent().getParent();
-        } else if (w.getParent() instanceof VFilterSelect) {
-            w = w.getParent();
         } else {
             // Ensure we are dealing with a Vaadin component
             ComponentConnector connector = Util.findConnectorFor(w);

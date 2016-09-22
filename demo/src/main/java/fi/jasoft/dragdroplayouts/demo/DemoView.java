@@ -79,4 +79,6 @@ public abstract class DemoView extends CustomComponent implements View {
 
   public abstract String getCaption();
 
+    public abstract String getName();
+
 }

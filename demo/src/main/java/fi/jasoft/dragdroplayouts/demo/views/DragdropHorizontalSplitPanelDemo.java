@@ -90,4 +90,9 @@ public class DragdropHorizontalSplitPanelDemo extends DemoView {
   public String getCaption() {
     return "Horizontal split panel";
   }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
 }

@@ -81,4 +81,9 @@ public class DragdropVerticalSplitPanelDemo extends DemoView {
   public String getCaption() {
     return "Vertical split panel";
   }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
 }

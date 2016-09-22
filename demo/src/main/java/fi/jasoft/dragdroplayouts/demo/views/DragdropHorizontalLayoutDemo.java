@@ -63,4 +63,9 @@ public class DragdropHorizontalLayoutDemo extends DemoView {
   public String getCaption() {
     return "Horizontal layout";
   }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
 }

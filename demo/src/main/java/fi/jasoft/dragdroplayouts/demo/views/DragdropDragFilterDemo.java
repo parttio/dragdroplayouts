@@ -69,4 +69,9 @@ public class DragdropDragFilterDemo extends DemoView {
   public String getCaption() {
     return "Drag filters";
   }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
 }
