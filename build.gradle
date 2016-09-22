@@ -8,6 +8,8 @@ subprojects {
   apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
   vaadin.version = '8.0.0.alpha2'
   vaadinCompile.userAgent = 'ie10,gecko1_8,safari'
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
 }
 
 task wrapper(type: Wrapper) {
@@ -32,11 +34,12 @@ project(':addon'){
   }
 
   vaadin {
-    addon {
-      author 'John Ahlroos'
-      license 'Apache 2.0'
-      title 'DragDropLayouts'
-    }
+      widgetset 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
+      addon {
+          author 'John Ahlroos'
+          license 'Apache 2.0'
+          title 'DragDropLayouts'
+      }
   }
 
   task createAddonPom {
