@@ -1,5 +1,7 @@
 # DragDropLayouts
 
+# This project has reached End-Of-Life (EOL) and is no longer maintained.
+
 [![Build Status](https://travis-ci.org/johndevs/dragdroplayouts.svg?branch=master)](https://travis-ci.org/johndevs/dragdroplayouts)
 
 Currently when you want to drag and drop between layouts you will have to wrap the source component in a DragAndDropWrapper. 
