@@ -58,24 +58,15 @@ public class DragdropCssLayoutDemo extends DemoView {
         new Label(
             "This is an CSS layout, the positions are defined by css rules. Try dragging the components around.");
     cssLayout.addComponent(lbl);
-    Button btn = new Button("Button 1", new Button.ClickListener() {
-      public void buttonClick(ClickEvent event) {
-        Notification.show("Click!");
-      }
-    });
-    cssLayout.addComponent(btn);
-    btn = new Button("Button 2", new Button.ClickListener() {
-      public void buttonClick(ClickEvent event) {
-        Notification.show("Click!");
-      }
-    });
-    cssLayout.addComponent(btn);
-    btn = new Button("Button 3", new Button.ClickListener() {
-      public void buttonClick(ClickEvent event) {
-        Notification.show("Click!");
-      }
-    });
-    cssLayout.addComponent(btn);
+    for (int i=0; i < 20; i++)
+    {
+        Button btn = new Button("Button "+i, new Button.ClickListener() {
+          public void buttonClick(ClickEvent event) {
+            Notification.show("Click!");
+          }
+        });
+        cssLayout.addComponent(btn);
+    }
     // end-source
     return cssLayout;
   }

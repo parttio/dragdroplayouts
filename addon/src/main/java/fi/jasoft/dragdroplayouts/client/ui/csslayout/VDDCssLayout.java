@@ -219,12 +219,31 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
             return;
         }
 
+        Element e= getElement();
         Widget widget = (Widget) Util.findWidget(over, null);
         if (widget == null) {
             // Null check
             return;
         }
-
+        else
+        {
+            // Solve https://github.com/johndevs/dragdroplayouts/issues/58
+            Widget parentWidget= widget.getParent();
+            Element pE= parentWidget != null ? parentWidget.getElement() : null;
+            // Check for direct child (not child of child)
+            while (widget != null && pE != null && !e.equals(pE))
+            {
+                widget= widget.getParent();
+                parentWidget= widget.getParent();
+                pE= parentWidget != null ? parentWidget.getElement() : null;
+            }
+            if (widget != null)
+            {
+                event.setElementOver(widget.getElement());
+                over= widget.getElement();
+            }
+        } 
+        
         int offset = 0;
         int index = -1;
         for (int i = 0; i < getElement().getChildCount(); i++) {
