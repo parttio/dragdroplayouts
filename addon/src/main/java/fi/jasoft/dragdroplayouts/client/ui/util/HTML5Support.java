@@ -26,14 +26,12 @@ import com.google.gwt.event.dom.client.DragOverHandler;
 import com.google.gwt.event.dom.client.DropEvent;
 import com.google.gwt.event.dom.client.DropHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
-import com.vaadin.client.ui.dd.VDropHandler;
 import com.vaadin.client.ui.dd.VTransferable;
 
 import fi.jasoft.dragdroplayouts.client.ui.VDDAbstractDropHandler;
@@ -61,24 +59,6 @@ public class HTML5Support {
 
         private VDDAbstractDropHandler<? extends Widget> dropHandler;
 
-        private Timer timer = new Timer() {
-
-            @Override
-            public void run() {
-                VDropHandler currentDropHandler = VDragAndDropManager.get()
-                        .getCurrentDropHandler();
-
-                if (currentDropHandler == dropHandler) {
-                    dropHandler.cancelDrag(vaadinDragEvent);
-
-                    VDragAndDropManager.get().setCurrentDropHandler(null);
-                    VDragAndDropManager.get().interruptDrag();
-                    vaadinDragEvent = null;
-                }
-            }
-
-        };
-
         public HTML5DragHandler(ComponentConnector connector,
                 VDDAbstractDropHandler<? extends Widget> handler) {
             this.connector = connector;
@@ -87,7 +67,6 @@ public class HTML5Support {
 
         @Override
         public void onDrop(DropEvent event) {
-            timer.cancel();
             NativeEvent nativeEvent = event.getNativeEvent();
             if (validate(nativeEvent) && vaadinDragEvent != null) {
                 nativeEvent.preventDefault();
@@ -121,7 +100,6 @@ public class HTML5Support {
 
         @Override
         public void onDragOver(DragOverEvent event) {
-            timer.cancel();
             NativeEvent nativeEvent = event.getNativeEvent();
             if (validate(nativeEvent) && vaadinDragEvent != null) {
                 nativeEvent.preventDefault();
@@ -136,13 +114,11 @@ public class HTML5Support {
                 vaadinDragEvent.setCurrentGwtEvent(nativeEvent);
                 VDragAndDropManager.get().setCurrentDropHandler(dropHandler);
                 dropHandler.dragOver(vaadinDragEvent);
-                timer.schedule(500);
             }
         }
 
         @Override
         public void onDragEnter(DragEnterEvent event) {
-            timer.cancel();
             NativeEvent nativeEvent = event.getNativeEvent();
 
             if (validate(nativeEvent)) {
