@@ -32,3 +32,4 @@ Please see the version table below to decide which version to use in your projec
 | 7.0.x+ | 1.0.x            |
 | 7.2.x+ | 1.1.x            |
 | 7.6.x+ | 1.2.x            |
+| 7.7.x+ | 1.3.x            |

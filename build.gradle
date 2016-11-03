@@ -4,6 +4,13 @@ allprojects {
   apply plugin: 'eclipse-wtp'
 }
 
+subprojects {
+  apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
+  vaadin.version = '7.7.+'
+  sourceCompatibility = 1.7
+  targetCompatibility = 1.7
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.12'
 }
@@ -12,7 +19,7 @@ task wrapper(type: Wrapper) {
  * Vaadin addon project
  */
 project(':addon'){
-  apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
+  
   apply plugin: 'maven'
   apply plugin: 'osgi'
 
@@ -21,21 +28,26 @@ project(':addon'){
   }
 
   dependencies{
-    testCompile group:'junit',  name:'junit',   version: '4.8.+'
+    testCompile 'junit:junit:4.8.+'
     deploy      'org.apache.maven.wagon:wagon-ssh:2.2'
   }
 
-  project.vaadin {
-    addon {
-      author 'John Ahlroos'
-      license 'Apache 2.0'
-      title 'DragDropLayouts'
-    }
+  vaadin {
+      widgetset 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
+      addon {
+          author 'John Ahlroos'
+          license 'Apache 2.0'
+          title 'DragDropLayouts'
+      }
+  }
+
+  task createAddonPom {
+    pom{ artifactId = 'dragdroplayouts' }.writeTo("${sourceSets.main.output.resourcesDir}/META-INF/maven/fi.jasoft/dragdroplayouts/pom.xml")
   }
 
   jar {
     baseName = 'dragdroplayouts'
-    dependsOn test
+    dependsOn test, createAddonPom
 
     // Include sources
     sourceSets.main.java.srcDirs.each{
@@ -64,9 +76,6 @@ project(':addon'){
       baseName = 'dragdroplayouts'
   }
 
-  task createAddonPom {
-    pom{ artifactId = 'dragdroplayouts' }.writeTo("META-INF/maven/fi.jasoft/dragdroplayouts/pom.xml")
-  }
 
   artifacts {
       archives jar
@@ -106,8 +115,7 @@ project(':addon'){
  * Demo application for demonstrating the addon
  */
 project(':demo'){
-  apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
-    
+
   dependencies {
     compile project(':addon')
     compile group:'de.sven-jacobs', name:'loremipsum', version:'1.0'
