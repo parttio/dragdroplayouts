@@ -1,14 +1,23 @@
+plugins {
+    id 'fi.jasoft.plugin.vaadin' version '1.0' apply false
+}
+
 allprojects {
-  group='org.vaadin.addons'
+  group = 'org.vaadin.addons'
   version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : 'development';
   apply plugin: 'eclipse-wtp'
 }
 
 subprojects {
-  apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
-  vaadin.version = '7.7.+'
+  apply plugin: 'fi.jasoft.plugin.vaadin'
+  vaadin {
+      version = '7.7.3'
+  }
   sourceCompatibility = 1.7
   targetCompatibility = 1.7
+
+  javadoc.enabled = false
+  vaadinJavadocJar.enabled = false
 }
 
 task wrapper(type: Wrapper) {
@@ -19,7 +28,7 @@ task wrapper(type: Wrapper) {
  * Vaadin addon project
  */
 project(':addon'){
-  
+  apply plugin: 'java'
   apply plugin: 'maven'
   apply plugin: 'osgi'
 
@@ -27,13 +36,12 @@ project(':addon'){
       deploy
   }
 
-  dependencies{
+  dependencies {
     testCompile 'junit:junit:4.8.+'
     deploy      'org.apache.maven.wagon:wagon-ssh:2.2'
   }
 
   vaadin {
-      widgetset 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
       addon {
           author 'John Ahlroos'
           license 'Apache 2.0'
@@ -110,11 +118,11 @@ project(':addon'){
   }
 }
 
-
 /*
  * Demo application for demonstrating the addon
  */
 project(':demo'){
+  apply plugin: 'java'
 
   dependencies {
     compile project(':addon')
