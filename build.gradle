@@ -114,7 +114,7 @@ project(':addon'){
   }
 
   configurations.archives.artifacts.removeAll {
-      it.file =~ 'war'
+      it.file =~ 'war' || it.file =~ 'javadoc'
   }
 }
 
