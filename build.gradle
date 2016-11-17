@@ -1,7 +1,23 @@
+plugins {
+    id 'fi.jasoft.plugin.vaadin' version '1.0' apply false
+}
+
 allprojects {
-  group='fi.jasoft'
+  group = 'org.vaadin.addons'
   version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : 'development';
   apply plugin: 'eclipse-wtp'
+}
+
+subprojects {
+  apply plugin: 'fi.jasoft.plugin.vaadin'
+  vaadin {
+      version = '7.7.3'
+  }
+  sourceCompatibility = 1.7
+  targetCompatibility = 1.7
+
+  javadoc.enabled = false
+  vaadinJavadocJar.enabled = false
 }
 
 task wrapper(type: Wrapper) {
@@ -12,7 +28,7 @@ task wrapper(type: Wrapper) {
  * Vaadin addon project
  */
 project(':addon'){
-  apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
+  apply plugin: 'java'
   apply plugin: 'maven'
   apply plugin: 'osgi'
 
@@ -20,22 +36,26 @@ project(':addon'){
       deploy
   }
 
-  dependencies{
-    testCompile group:'junit',  name:'junit',   version: '4.8.+'
+  dependencies {
+    testCompile 'junit:junit:4.8.+'
     deploy      'org.apache.maven.wagon:wagon-ssh:2.2'
   }
 
-  project.vaadin {
-    addon {
-      author 'John Ahlroos'
-      license 'Apache 2.0'
-      title 'DragDropLayouts'
-    }
+  vaadin {
+      addon {
+          author 'John Ahlroos'
+          license 'Apache 2.0'
+          title 'DragDropLayouts'
+      }
+  }
+
+  task createAddonPom {
+    pom{ artifactId = 'dragdroplayouts' }.writeTo("${sourceSets.main.output.resourcesDir}/META-INF/maven/fi.jasoft/dragdroplayouts/pom.xml")
   }
 
   jar {
     baseName = 'dragdroplayouts'
-    dependsOn test
+    dependsOn test, createAddonPom
 
     // Include sources
     sourceSets.main.java.srcDirs.each{
@@ -64,9 +84,6 @@ project(':addon'){
       baseName = 'dragdroplayouts'
   }
 
-  task createAddonPom {
-    pom{ artifactId = 'dragdroplayouts' }.writeTo("META-INF/maven/fi.jasoft/dragdroplayouts/pom.xml")
-  }
 
   artifacts {
       archives jar
@@ -95,15 +112,18 @@ project(':addon'){
           }
       }
   }
-}
 
+  configurations.archives.artifacts.removeAll {
+      it.file =~ 'war' || it.file =~ 'javadoc'
+  }
+}
 
 /*
  * Demo application for demonstrating the addon
  */
 project(':demo'){
-  apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
-    
+  apply plugin: 'java'
+
   dependencies {
     compile project(':addon')
     compile group:'de.sven-jacobs', name:'loremipsum', version:'1.0'
