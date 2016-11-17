@@ -2,7 +2,7 @@
 
 # This project has reached End-Of-Life (EOL) and is no longer maintained.
 
-[![Build Status](https://travis-ci.org/johndevs/dragdroplayouts.svg?branch=master)](https://travis-ci.org/johndevs/dragdroplayouts)
+[![Build Status](https://travis-ci.org/johndevs/dragdroplayouts.svg?branch=master)](https://travis-ci.org/johndevs/dragdroplayouts) 
 
 Currently when you want to drag and drop between layouts you will have to wrap the source component in a DragAndDropWrapper. 
 Many times this is adequate but it tends to add some complexity to the code and yet another element in the DOM. It would 
@@ -11,6 +11,8 @@ be much nicer if the layouts would handle this for you.
 To solve this issue I have extended the core layouts and implemented the necessary functionality so the layouts are valid 
 drag sources and drop targets. This means that in your code you don't have to concern yourself with the drag and drop when 
 adding components, only enable drag&drop in the layout and you are ready to go!
+
+A running demo can be found [here](http://apps-johndevs.rhcloud.com/dragdroplayouts)
 
 Currently supported layouts are:
 
