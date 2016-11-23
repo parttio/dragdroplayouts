@@ -1,5 +1,5 @@
 allprojects {
-  group='fi.jasoft'
+  group='org.vaadin.addons'
   version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : 'development';
   apply plugin: 'eclipse-wtp'
 }
@@ -104,6 +104,10 @@ project(':addon'){
               artifact.ext == 'jar'
           }
       }
+  }
+
+  configurations.archives.artifacts.removeAll {
+      it.file =~ 'war'
   }
 }
 
