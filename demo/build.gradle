@@ -1,0 +1,42 @@
+plugins {
+    id 'fi.jasoft.plugin.vaadin' version '1.0'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+vaadin.version = '8.0.0.alpha2'
+vaadinCompile.userAgent = 'ie10,gecko1_8,safari'
+
+dependencies {
+  compile project(':addon')
+  compile group:'de.sven-jacobs', name:'loremipsum', version:'1.0'
+  compile group:'de.java2html',   name:'java2html',  version:'5.0'
+}
+
+vaadinRun {
+  serverPort 7676
+  debug true
+  classesDir 'bin'
+}
+
+war {
+  // WAR filename
+  archiveName = 'DragDropLayouts7.war'
+
+  // Include widgetset
+  dependsOn 'vaadinCompile'
+  dependsOn 'test'
+
+  // Add sources
+  webInf{
+    into('classes'){
+      from sourceSets.main.allJava
+     }
+  }
+}
+
+test {
+  dependsOn 'vaadinCompile'
+  systemProperties = System.properties
+}

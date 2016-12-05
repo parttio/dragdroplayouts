@@ -21,7 +21,7 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.12'
+    gradleVersion = '3.1.0'
 }
 
 /**
@@ -154,7 +154,7 @@ project(':demo'){
 
     // Include widgetset
     dependsOn 'vaadinCompile'
-    dependsOn 'test' 
+    dependsOn 'test'
 
     // Add sources
     webInf{
