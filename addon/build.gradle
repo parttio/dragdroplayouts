@@ -1,0 +1,96 @@
+plugins {
+    id 'fi.jasoft.plugin.vaadin' version '1.0'
+    id 'maven'
+    id 'osgi'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+vaadin.version = '8.0.0.alpha2'
+
+configurations {
+    deploy
+}
+
+dependencies{
+  testCompile 'junit:junit:4.8.+'
+  deploy      'org.apache.maven.wagon:wagon-ssh:2.2'
+}
+
+vaadinCompile {
+    userAgent 'ie10,gecko1_8,safari'
+    widgetset 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
+}    
+
+vaadin {    
+    addon {
+        author 'John Ahlroos'
+        license 'Apache 2.0'
+        title 'DragDropLayouts'
+    }
+}
+
+task createAddonPom {
+  pom{ artifactId = 'dragdroplayouts' }.writeTo("${sourceSets.main.output.resourcesDir}/META-INF/maven/fi.jasoft/dragdroplayouts/pom.xml")
+}
+
+jar {
+  baseName = 'dragdroplayouts'
+  dependsOn test, createAddonPom
+
+  // Include sources
+  sourceSets.main.java.srcDirs.each{
+    from it
+  }
+
+  manifest {
+    // the manifest of the default jar is of type OsgiManifest
+    name = 'dragdroplayouts'
+    /*
+     it seems we need to export the client-side stuff too to make it easier to include the jar file as project dependency
+     instruction 'Export-Package', '!fi.jasoft.dragdroplayouts.client.*', '*'
+     */
+    instruction 'Import-Package', '!com.google.gwt.*', '!com.vaadin.client.*', '*'
+    instruction 'Bundle-Vendor', 'johndevs'
+    instruction 'Bundle-Description', 'Drag and drop layouts addon'
+    instruction 'Bundle-DocURL', 'https://github.com/johndevs/dragdroplayouts'
+  }
+}
+
+vaadinSourcesJar {
+    baseName = 'dragdroplayouts'
+}
+
+vaadinJavadocJar {
+    baseName = 'dragdroplayouts'
+}
+
+
+artifacts {
+    archives jar
+}
+
+uploadArchives {
+    dependsOn createAddonPom
+    repositories.mavenDeployer {
+        def snapshotRepositoryUrl = System.getProperty('PLUGIN_MAVEN_SNAPSHOT_REPOSITORY')
+        def snapshotRepositoryUser = System.getProperty('PLUGIN_MAVEN_SNAPSHOT_REPOSITORY_USER')
+        def snapshotRepositoryPassword = System.getProperty('PLUGIN_MAVEN_SNAPSHOT_REPOSITORY_PASSWORD')
+        def snapshotRepositoryPrivateKey = System.getProperty('PLUGIN_MAVEN_SNAPSHOT_REPOSITORY_KEY')
+
+        configuration = configurations.deploy
+
+        snapshotRepository( url: snapshotRepositoryUrl ) {
+           authentication(
+                   userName: snapshotRepositoryUser,
+                   password: snapshotRepositoryPassword,
+                   privateKey: snapshotRepositoryPrivateKey
+           )
+        }
+
+        addFilter('jar') {artifact, file ->
+            artifact.ext == 'jar'
+        }
+    }
+}
