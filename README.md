@@ -1,6 +1,6 @@
 # DragDropLayouts
 
-[![Build Status](https://travis-ci.org/johndevs/dragdroplayouts.svg?branch=master)](https://travis-ci.org/johndevs/dragdroplayouts) 
+[![Build Status](https://travis-ci.org/parttio/dragdroplayouts.svg?branch=master)](https://travis-ci.org/parttio/dragdroplayouts) 
 
 Currently when you want to drag and drop between layouts you will have to wrap the source component in a DragAndDropWrapper. 
 Many times this is adequate but it tends to add some complexity to the code and yet another element in the DOM. It would 
