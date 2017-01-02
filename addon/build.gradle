@@ -7,7 +7,7 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-vaadin.version = '8.0.0.alpha2'
+vaadin.version = '8.0.0.beta1'
 
 configurations {
     deploy
@@ -19,7 +19,9 @@ dependencies{
 }
 
 vaadinCompile {
-    userAgent 'ie10,gecko1_8,safari'
+    // Remove opera,ie8,ie9,ie10 permutations
+    // Starting from IE11 permutation is the same as for gecko1_8
+    userAgent 'gecko1_8,safari'
     widgetset 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
 }    
 
