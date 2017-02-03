@@ -54,7 +54,7 @@ jar {
     instruction 'Import-Package', '!com.google.gwt.*', '!com.vaadin.client.*', '*'
     instruction 'Bundle-Vendor', 'johndevs'
     instruction 'Bundle-Description', 'Drag and drop layouts addon'
-    instruction 'Bundle-DocURL', 'https://github.com/johndevs/dragdroplayouts'
+    instruction 'Bundle-DocURL', 'https://github.com/parttio/dragdroplayouts'
   }
 }
 
