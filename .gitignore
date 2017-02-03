@@ -1,19 +1,8 @@
-# Ignored in root project
-.gradle
-
-#Ignored in all projects
-**/.classpath
-**/.project
-**/.settings
-**/META-INF
-**/build
-**/bin
-
-# Specific ignores
-addon/src/main/webapp/VAADIN/
-demo/src/main/webapp/VAADIN/gwt-unitCache/
-demo/src/main/webapp/VAADIN/themes/demo/styles.css
-demo/src/main/webapp/VAADIN/widgetsets/
-addon/GWT development mode for addon.launch
-classes/
-
+.classpath
+.project
+.settings
+*.iml
+.idea
+styles.css
+dragdroplayouts-demo/target
+target

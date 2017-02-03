@@ -1,9 +1,0 @@
-allprojects {
-  group='fi.jasoft'
-  version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : 'development';
-  apply plugin: 'eclipse-wtp'
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.3'
-}
