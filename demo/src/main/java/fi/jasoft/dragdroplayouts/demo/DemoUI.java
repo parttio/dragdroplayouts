@@ -24,7 +24,7 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
@@ -101,7 +101,7 @@ public class DemoUI extends UI {
             @Override
             public boolean beforeViewChange(ViewChangeEvent event) {
                 DemoView view = (DemoView) event.getNewView();
-                selection.setSelectedItem(view);
+                selection.getSelectionModel().select(view);
                 codeLabel.setValue(getFormattedSourceCode(view.getSource()));
                 return true;
             }
@@ -158,12 +158,11 @@ public class DemoUI extends UI {
 
         Grid<DemoView> select = new Grid<>();
 
-        select.addColumn("caption", (view) -> view.getCaption());
+        select.addColumn(view -> view.getCaption());
         select.setWidth("200px");
         select.setHeight("100%");
-        select.setImmediate(true);
         select.addSelectionListener((change) -> {
-            navigator.navigateTo(change.getValue().getName());
+            navigator.navigateTo(change.getFirstSelectedItem().get().getName());
         });
 
         select.setItems(views);
