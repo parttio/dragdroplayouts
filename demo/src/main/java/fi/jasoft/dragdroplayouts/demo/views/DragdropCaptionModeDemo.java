@@ -14,7 +14,7 @@
 package fi.jasoft.dragdroplayouts.demo.views;
 
 import com.vaadin.navigator.Navigator;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
