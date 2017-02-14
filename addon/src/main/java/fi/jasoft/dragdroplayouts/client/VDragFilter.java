@@ -18,7 +18,6 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.ui.VAccordion.StackItem;
-
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 
 public class VDragFilter {

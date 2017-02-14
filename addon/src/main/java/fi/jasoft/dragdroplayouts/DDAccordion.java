@@ -13,9 +13,6 @@
  */
 package fi.jasoft.dragdroplayouts;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
@@ -25,17 +22,14 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyComponent;
-
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.accordion.DDAccordionState;
 import fi.jasoft.dragdroplayouts.details.AccordionTargetDetails;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
-import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
-import fi.jasoft.dragdroplayouts.interfaces.DragFilterSupport;
-import fi.jasoft.dragdroplayouts.interfaces.DragImageProvider;
-import fi.jasoft.dragdroplayouts.interfaces.DragImageReferenceSupport;
-import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
-import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
+import fi.jasoft.dragdroplayouts.interfaces.*;
+
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Accordion with drag and drop support
@@ -46,7 +40,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 @SuppressWarnings("serial")
 public class DDAccordion extends Accordion
         implements LayoutDragSource, DropTarget, ShimSupport, LegacyComponent,
-        DragImageReferenceSupport, DragFilterSupport {
+        DragImageReferenceSupport, DragFilterSupport, DragGrabFilterSupport, HasDragCaptionProvider {
 
     /**
      * The drop handler which handles dropped components in the layout.
@@ -56,7 +50,11 @@ public class DDAccordion extends Accordion
     // A filter for dragging components.
     private DragFilter dragFilter = DragFilter.ALL;
 
+    private DragGrabFilter dragGrabFilter;
+
     private DragImageProvider dragImageProvider;
+
+    private DragCaptionProvider dragCaptionProvider;
 
     /**
      * Construct a new accordion
@@ -98,6 +96,17 @@ public class DDAccordion extends Accordion
         }
 
         return new LayoutBoundTransferable(this, rawVariables);
+    }
+
+
+    @Override
+    public void setDragCaptionProvider(DragCaptionProvider provider) {
+        this.dragCaptionProvider = provider;
+    }
+
+    @Override
+    public DragCaptionProvider getDragCaptionProvider() {
+        return dragCaptionProvider;
     }
 
     /**
@@ -231,5 +240,15 @@ public class DDAccordion extends Accordion
     @Override
     public DragImageProvider getDragImageProvider() {
         return this.dragImageProvider;
+    }
+
+    @Override
+    public DragGrabFilter getDragGrabFilter() {
+        return dragGrabFilter;
+    }
+
+    @Override
+    public void setDragGrabFilter(DragGrabFilter dragGrabFilter) {
+        this.dragGrabFilter = dragGrabFilter;
     }
 }

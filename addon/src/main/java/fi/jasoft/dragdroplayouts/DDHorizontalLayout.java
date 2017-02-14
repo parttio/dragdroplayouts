@@ -13,8 +13,6 @@
  */
 package fi.jasoft.dragdroplayouts;
 
-import java.util.Map;
-
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
@@ -27,18 +25,14 @@ import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.LegacyComponent;
-
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.horizontallayout.DDHorizontalLayoutState;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
-import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
-import fi.jasoft.dragdroplayouts.interfaces.DragFilterSupport;
-import fi.jasoft.dragdroplayouts.interfaces.DragImageProvider;
-import fi.jasoft.dragdroplayouts.interfaces.DragImageReferenceSupport;
-import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
-import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
+import fi.jasoft.dragdroplayouts.interfaces.*;
+
+import java.util.Map;
 
 /**
  * Horizontal layout with drag and drop support
@@ -49,7 +43,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 @SuppressWarnings("serial")
 public class DDHorizontalLayout extends HorizontalLayout
         implements LayoutDragSource, DropTarget, ShimSupport, LegacyComponent,
-        DragFilterSupport, DragImageReferenceSupport {
+        DragFilterSupport, DragImageReferenceSupport, DragGrabFilterSupport, HasDragCaptionProvider {
 
     /**
      * The drop handler which handles dropped components in the layout.
@@ -59,7 +53,31 @@ public class DDHorizontalLayout extends HorizontalLayout
     // A filter for dragging components.
     private DragFilter dragFilter = DragFilter.ALL;
 
+    private DragGrabFilter dragGrabFilter;
+
     private DragImageProvider dragImageProvider;
+
+    private DragCaptionProvider dragCaptionProvider;
+
+    @Override
+    public DragGrabFilter getDragGrabFilter() {
+        return dragGrabFilter;
+    }
+
+    @Override
+    public void setDragGrabFilter(DragGrabFilter dragGrabFilter) {
+        this.dragGrabFilter = dragGrabFilter;
+    }
+
+    @Override
+    public void setDragCaptionProvider(DragCaptionProvider provider) {
+        this.dragCaptionProvider = provider;
+    }
+
+    @Override
+    public DragCaptionProvider getDragCaptionProvider() {
+        return dragCaptionProvider;
+    }
 
     /**
      * Contains the component over which the drop was made and the index on

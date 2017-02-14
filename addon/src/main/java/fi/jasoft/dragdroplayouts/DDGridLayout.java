@@ -13,8 +13,6 @@
  */
 package fi.jasoft.dragdroplayouts;
 
-import java.util.Map;
-
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
@@ -28,17 +26,13 @@ import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.LegacyComponent;
-
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.gridlayout.DDGridLayoutState;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
-import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
-import fi.jasoft.dragdroplayouts.interfaces.DragFilterSupport;
-import fi.jasoft.dragdroplayouts.interfaces.DragImageProvider;
-import fi.jasoft.dragdroplayouts.interfaces.DragImageReferenceSupport;
-import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
-import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
+import fi.jasoft.dragdroplayouts.interfaces.*;
+
+import java.util.Map;
 
 /**
  * Grid layout with drag and drop support
@@ -49,14 +43,38 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 @SuppressWarnings("serial")
 public class DDGridLayout extends GridLayout
         implements LayoutDragSource, DropTarget, ShimSupport, LegacyComponent,
-        DragFilterSupport, DragImageReferenceSupport {
+        DragFilterSupport, DragImageReferenceSupport, DragGrabFilterSupport, HasDragCaptionProvider {
 
     private DropHandler dropHandler;
 
     // A filter for dragging components.
     private DragFilter dragFilter = DragFilter.ALL;
 
+    private DragGrabFilter dragGrabFilter;
+
     private DragImageProvider dragImageProvider;
+
+    private DragCaptionProvider dragCaptionProvider;
+
+    @Override
+    public DragGrabFilter getDragGrabFilter() {
+        return dragGrabFilter;
+    }
+
+    @Override
+    public void setDragGrabFilter(DragGrabFilter dragGrabFilter) {
+        this.dragGrabFilter = dragGrabFilter;
+    }
+
+    @Override
+    public void setDragCaptionProvider(DragCaptionProvider provider) {
+        this.dragCaptionProvider = provider;
+    }
+
+    @Override
+    public DragCaptionProvider getDragCaptionProvider() {
+        return dragCaptionProvider;
+    }
 
     /**
      * Target details for a drop event
