@@ -13,15 +13,11 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
@@ -34,33 +30,26 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.LabelBase;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.Util;
-import com.vaadin.client.VCaption;
-import com.vaadin.client.VConsole;
-import com.vaadin.client.WidgetUtil;
-import com.vaadin.client.ui.VAccordion;
+import com.vaadin.client.*;
+import com.vaadin.client.ui.*;
 import com.vaadin.client.ui.VAccordion.StackItem;
-import com.vaadin.client.ui.VCssLayout;
-import com.vaadin.client.ui.VFormLayout;
-import com.vaadin.client.ui.VPanel;
-import com.vaadin.client.ui.VTabsheet;
 import com.vaadin.client.ui.VTabsheet.Tab;
 import com.vaadin.client.ui.VTabsheet.TabCaption;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VTransferable;
-
+import fi.jasoft.dragdroplayouts.client.VGrabFilter;
 import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
 import fi.jasoft.dragdroplayouts.client.ui.formlayout.VDDFormLayout;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDragImageProvider;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragImageReferenceSupport;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.*;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Mouse handler for starting component drag operations
- * 
+ *
  * @author John Ahlroos / www.jasoft.fi
  * @since 0.4.0
  */
@@ -68,6 +57,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
         TouchStartHandler, VHasDragImageReferenceSupport {
 
     public static final String ACTIVE_DRAG_SOURCE_STYLENAME = "v-dd-active-drag-source";
+    public static final String ACTIVE_DRAG_CUSTOM_IMAGE_STYLENAME = "v-dd-active-drag-custom-image";
 
     private LayoutDragMode dragMode = LayoutDragMode.NONE;
 
@@ -95,7 +85,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
     public interface DragStartListener {
         /**
          * Called when a drag is about to begin
-         * 
+         *
          * @param widget
          *            The widget which is about to be dragged
          * @param mode
@@ -107,7 +97,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
     /**
      * Constructor
-     * 
+     *
      * @param root
      *            The root element
      * @param dragMode
@@ -121,7 +111,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
     /**
      * Is the mouse down event a valid mouse drag event, i.e. left mouse button
      * is pressed without any modifier keys
-     * 
+     *
      * @param event
      *            The mouse event
      * @return Is the mouse event a valid drag event
@@ -176,7 +166,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
     /**
      * Initiates the drag only on the first move event
-     * 
+     *
      * @param originalEvent
      *            the original Mouse Down event. Only events on elements are
      *            passed in here (Element.as() is safe without check here)
@@ -208,6 +198,13 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
                         .isDraggable(target) == false &&
 					(target instanceof LabelBase) == false) {
                         stopEventPropagation = false;
+                }
+            }
+
+            if (root instanceof VHasGrabFilter) {
+                VGrabFilter grabFilter = ((VHasGrabFilter) root).getGrabFilter();
+                if (grabFilter != null && !grabFilter.isGrabbable(root, target)) {
+                    return;
                 }
             }
         }
@@ -281,10 +278,10 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
     /**
      * Called when the dragging a component should be initiated by both a mouse
      * down event as well as a touch start event
-     * 
+     *
      * FIXME This method is a BIG hack to circumvent Vaadin's very poor client
      * side API's. This will break often. Refactor once Vaadin gets a grip.
-     * 
+     *
      * @param event
      */
     protected void initiateDrag(NativeEvent event) {
@@ -423,13 +420,31 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
         /*
          * Create the drag image
          */
-        com.google.gwt.dom.client.Element dragImageElement = dragImageProvider == null
-                ? null : dragImageProvider.getDragImageElement(w);
+        boolean hasDragCaption = false;
+
+        com.google.gwt.dom.client.Element dragImageElement = null;
+        if (root instanceof VHasDragCaptionProvider) {
+            VDragCaptionProvider dragCaptionProvider =
+                    ((VHasDragCaptionProvider) root).getDragCaptionProvider();
+            if (dragCaptionProvider != null) {
+                hasDragCaption = true;
+                dragImageElement = dragCaptionProvider
+                        .getDragCaptionElement(currentDraggedWidget);
+            }
+        }
+
+        if (!hasDragCaption && dragImageProvider != null) {
+            dragImageElement = dragImageProvider.getDragImageElement(w);
+        }
 
         if (dragImageElement != null) {
 
             // Set stylename to proxy component as well
-            dragImageElement.addClassName(ACTIVE_DRAG_SOURCE_STYLENAME);
+            if (hasDragCaption) {
+                dragImageElement.addClassName(ACTIVE_DRAG_CUSTOM_IMAGE_STYLENAME);
+            } else {
+                dragImageElement.addClassName(ACTIVE_DRAG_SOURCE_STYLENAME);
+            }
 
         } else if (root instanceof VCssLayout) {
             /*
@@ -472,13 +487,22 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             dragImageElement = w.getElement();
         }
 
-        currentDragEvent.createDragImage(dragImageElement, true);
-        Element clone = currentDragEvent.getDragImage();
+        Element clone;
+        if (hasDragCaption) {
+            currentDragEvent.setDragImage(dragImageElement);
+            clone = dragImageElement;
+        } else {
+            currentDragEvent.createDragImage(dragImageElement, true);
+            clone = currentDragEvent.getDragImage();
+        }
+
         assert(clone != null);
 
         // Lock drag image dimensions
-        clone.getStyle().setWidth(dragImageElement.getOffsetWidth(), Unit.PX);
-        clone.getStyle().setHeight(dragImageElement.getOffsetHeight(), Unit.PX);
+        if (!hasDragCaption) {
+            clone.getStyle().setWidth(dragImageElement.getOffsetWidth(), Style.Unit.PX);
+            clone.getStyle().setHeight(dragImageElement.getOffsetHeight(), Style.Unit.PX);
+        }
 
         if (c != null && c.delegateCaptionHandling()
                 && !(root instanceof VTabsheet)
@@ -576,7 +600,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
     /**
      * Set the current drag mode
-     * 
+     *
      * @param dragMode
      *            The drag mode to use
      */
@@ -595,7 +619,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
     /**
      * Add a drag start listener to monitor drag starts
-     * 
+     *
      * @param listener
      */
     public void addDragStartListener(DragStartListener listener) {
@@ -604,7 +628,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
     /**
      * Remove a drag start listener
-     * 
+     *
      * @param listener
      */
     public void removeDragStartListener(DragStartListener listener) {

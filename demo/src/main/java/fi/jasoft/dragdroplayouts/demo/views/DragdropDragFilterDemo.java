@@ -18,7 +18,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
-
 import fi.jasoft.dragdroplayouts.DDAbsoluteLayout;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.demo.DemoView;
@@ -44,11 +43,7 @@ public class DragdropDragFilterDemo extends DemoView {
     layout.setDragMode(LayoutDragMode.CLONE);
 
     // Limit dragging to only buttons
-    layout.setDragFilter(new DragFilter() {
-      public boolean isDraggable(Component component) {
-        return component instanceof Button;
-      }
-    });
+    layout.setDragFilter((DragFilter) component -> component instanceof Button);
 
     // Enable dropping components
     layout.setDropHandler(new DefaultAbsoluteLayoutDropHandler());
