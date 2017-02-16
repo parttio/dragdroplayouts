@@ -233,6 +233,12 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
                     @Override
                     public void onPreviewNativeEvent(NativePreviewEvent event) {
+                        //Haulmont API. mouseDownHandlerReg is null when
+                        //fast click by left and right mouse button by DragAndDrop layout
+                        if (mouseDownHandlerReg == null) {
+                            return;
+                        }
+
                         int type = event.getTypeInt();
                         if (type == Event.ONMOUSEUP
                                 || type == Event.ONTOUCHCANCEL
