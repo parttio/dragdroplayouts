@@ -76,6 +76,18 @@ project(':addon'){
     }
   }
 
+  // required for Windows build due to gradle vaadin plugin bug
+  task fixWidgetSetCssRef(dependsOn: vaadinUpdateWidgetset) {
+      doLast {
+          def wsFile = project.file('src/main/resources/fi/jasoft/dragdroplayouts/DragDropLayoutsWidgetSet.gwt.xml')
+
+          def fixedXml = wsFile.text.replace("fi_jasoft_dragdroplayouts\\", "fi_jasoft_dragdroplayouts/")
+          wsFile.write(fixedXml)
+      }
+  }
+
+  processResources.dependsOn fixWidgetSetCssRef
+
   vaadinSourcesJar {
       baseName = 'dragdroplayouts'
   }
