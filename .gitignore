@@ -13,6 +13,7 @@
 addon/src/main/webapp/VAADIN/
 demo/src/main/webapp/VAADIN/gwt-unitCache/
 demo/src/main/webapp/VAADIN/themes/demo/styles.css
+demo/src/main/webapp/VAADIN/themes/demo/styles.css.gz
 demo/src/main/webapp/VAADIN/widgetsets/
 addon/GWT development mode for addon.launch
 classes/
