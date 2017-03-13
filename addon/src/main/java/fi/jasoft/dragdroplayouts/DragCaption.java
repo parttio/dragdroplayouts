@@ -2,6 +2,9 @@ package fi.jasoft.dragdroplayouts;
 
 import com.vaadin.server.Resource;
 
+/**
+ * Drag caption definition: icon and caption.
+ */
 public class DragCaption {
     protected String caption;
     protected Resource icon;
