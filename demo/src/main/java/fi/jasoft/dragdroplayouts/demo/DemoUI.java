@@ -116,6 +116,7 @@ public class DemoUI extends UI {
             addView(new DragdropAccordionDemo(navigator));
 
             addView(new DragdropDragFilterDemo(navigator));
+            addView(new DragdropDragGrabFilterDemo(navigator));
             addView(new DragdropCaptionModeDemo(navigator));
 
             addView(new DragdropV7VerticalLayoutDemo(navigator));
