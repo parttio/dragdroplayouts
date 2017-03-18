@@ -15,6 +15,7 @@ package fi.jasoft.dragdroplayouts.client.ui.interfaces;
 
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.SharedState;
+import fi.jasoft.dragdroplayouts.client.ui.DragCaptionInfo;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 
 import java.util.ArrayList;
@@ -31,15 +32,14 @@ public class DDLayoutState extends SharedState {
     public boolean iframeShims = true;
 
     // Which connectors are draggable
-    public List<Connector> draggable = new ArrayList<Connector>();
+    public List<Connector> draggable = new ArrayList<>();
 
     // Which connectors cannot be used as anchor
-    public List<Connector> nonGrabbable = new ArrayList<Connector>();
+    public List<Connector> nonGrabbable = new ArrayList<>();
 
     // Reference drag images
-    public Map<Connector, Connector> referenceImageComponents = new HashMap<Connector, Connector>();
+    public Map<Connector, Connector> referenceImageComponents = new HashMap<>();
 
-    public Map<Connector, String> dragCaptions = new HashMap<>();
-
-    public Map<Connector, String> dragIcons = new HashMap<>();
+    // Custom DragCaption's with icon and caption
+    public Map<Connector, DragCaptionInfo> dragCaptions = new HashMap<>();
 }

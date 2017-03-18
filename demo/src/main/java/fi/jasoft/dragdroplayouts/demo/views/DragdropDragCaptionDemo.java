@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 John Ahlroos
+ * Copyright 2015 Yuriy Artamonov
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -46,8 +46,11 @@ public class DragdropDragCaptionDemo extends DemoView {
         panel1.setDropHandler(new DefaultPanelDropHandler());
 
         panel1.setDragCaptionProvider(component ->
-                new DragCaption("Custom drag caption for "
-                        + component.getClass().getSimpleName(), VaadinIcons.AIRPLANE));
+                new DragCaption(
+                        "<u>Custom drag caption:</u><br/>" + component.getClass().getSimpleName(),
+                        VaadinIcons.AIRPLANE,
+                        ContentMode.HTML)
+        );
 
         layout.addComponent(panel1);
 

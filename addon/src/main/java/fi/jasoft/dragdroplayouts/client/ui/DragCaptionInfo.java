@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Nikita Petunin, Yuriy Artamonov
+ * Copyright 2015 Yuriy Artamonov
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -11,12 +11,14 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package fi.jasoft.dragdroplayouts.interfaces;
+package fi.jasoft.dragdroplayouts.client.ui;
 
-/**
- * Container that has {@link DragCaptionProvider}.
- */
-public interface HasDragCaptionProvider {
-    void setDragCaptionProvider(DragCaptionProvider provider);
-    DragCaptionProvider getDragCaptionProvider();
+import com.vaadin.shared.ui.ContentMode;
+
+import java.io.Serializable;
+
+public class DragCaptionInfo implements Serializable {
+    public String caption;
+    public String iconKey;
+    public ContentMode contentMode;
 }
