@@ -21,20 +21,24 @@ import com.vaadin.client.ui.VAccordion;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 
 public class VGrabFilter {
-    private final DDLayoutState state;
+    protected final DDLayoutState state;
 
     public VGrabFilter(DDLayoutState state) {
         this.state = state;
     }
 
-    public boolean isGrabbable(Widget root, Widget widget) {
+    public boolean canBeGrabbed(Widget root, Widget widget) {
         if (state.nonGrabbable != null) {
-            return findConnectorFor(root, widget);
+            return canBeGrabbedRecursive(root, widget);
         }
         return true;
     }
 
-    private boolean findConnectorFor(Widget root, Widget widget) {
+    protected boolean canBeGrabbedRecursive(Widget root, Widget widget) {
+        if (widget == root) {
+            return true;
+        }
+
         ComponentConnector connector;
         if (!isCaptionForAccordion(widget)) {
             connector = Util.findConnectorFor(widget);
@@ -47,19 +51,19 @@ public class VGrabFilter {
         }
 
         Widget parent = widget.getParent();
-        if (parent != null && parent == root) {
+        if (parent == null || parent == root) {
             return true;
         }
 
-        return findConnectorFor(root, parent);
+        return canBeGrabbedRecursive(root, parent);
     }
 
-    private ComponentConnector findConnectorForAccordionCaption(Widget widget) {
+    protected ComponentConnector findConnectorForAccordionCaption(Widget widget) {
         VAccordion.StackItem parent = (VAccordion.StackItem) widget.getParent();
         return Util.findConnectorFor(parent.getChildWidget());
     }
 
-    private boolean isCaptionForAccordion(Widget widget) {
+    protected boolean isCaptionForAccordion(Widget widget) {
         if (widget == null) {
             return false;
         }

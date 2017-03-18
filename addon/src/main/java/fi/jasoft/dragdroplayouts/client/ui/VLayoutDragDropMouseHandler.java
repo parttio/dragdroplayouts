@@ -204,7 +204,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
             if (root instanceof VHasGrabFilter) {
                 VGrabFilter grabFilter = ((VHasGrabFilter) root).getGrabFilter();
-                if (grabFilter != null && !grabFilter.isGrabbable(root, target)) {
+                if (grabFilter != null && !grabFilter.canBeGrabbed(root, target)) {
                     return;
                 }
             }
