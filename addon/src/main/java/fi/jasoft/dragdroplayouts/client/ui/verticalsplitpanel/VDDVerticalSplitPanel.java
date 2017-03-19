@@ -22,20 +22,12 @@ import com.vaadin.client.ui.VSplitPanelVertical;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
-
 import fi.jasoft.dragdroplayouts.DDVerticalSplitPanel;
 import fi.jasoft.dragdroplayouts.client.VDragFilter;
-import fi.jasoft.dragdroplayouts.client.ui.Constants;
-import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
-import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
+import fi.jasoft.dragdroplayouts.client.VGrabFilter;
+import fi.jasoft.dragdroplayouts.client.ui.*;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDragImageProvider;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragImageReferenceSupport;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.*;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 /**
@@ -47,13 +39,16 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 public class VDDVerticalSplitPanel extends VSplitPanelVertical
         implements VHasDragMode,
         VDDHasDropHandler<VDDVerticalSplitPanelDropHandler>, DragStartListener,
-        VHasDragFilter, VHasDragImageReferenceSupport, VHasIframeShims {
+        VHasDragFilter, VHasDragImageReferenceSupport, VHasIframeShims,
+        VHasGrabFilter, VHasDragCaptionProvider {
 
     public static final String OVER = "v-ddsplitpanel-over";
 
     public static final String OVER_SPLITTER = OVER + "-splitter";
 
     private VDDVerticalSplitPanelDropHandler dropHandler;
+
+    private VGrabFilter grabFilter;
 
     private Element firstContainer;
 
@@ -64,6 +59,8 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical
     private Element currentEmphasis;
 
     private VDragFilter dragFilter;
+
+    private VDragCaptionProvider dragCaption;
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
@@ -77,6 +74,16 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical
 
     public VDDVerticalSplitPanel() {
         super();
+    }
+
+    @Override
+    public void setDragCaptionProvider(VDragCaptionProvider dragCaption) {
+        this.dragCaption = dragCaption;
+    }
+
+    @Override
+    public VDragCaptionProvider getDragCaptionProvider() {
+        return dragCaption;
     }
 
     @Override
@@ -323,5 +330,15 @@ public class VDDVerticalSplitPanel extends VSplitPanelVertical
 
     protected final VLayoutDragDropMouseHandler getMouseHandler() {
         return ddMouseHandler;
+    }
+
+    @Override
+    public VGrabFilter getGrabFilter() {
+        return grabFilter;
+    }
+
+    @Override
+    public void setGrabFilter(VGrabFilter grabFilter) {
+        this.grabFilter = grabFilter;
     }
 }

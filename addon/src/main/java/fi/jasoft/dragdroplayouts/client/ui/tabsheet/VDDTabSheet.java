@@ -26,21 +26,12 @@ import com.vaadin.client.ui.VTabsheetPanel;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
-
 import fi.jasoft.dragdroplayouts.DDTabSheet;
 import fi.jasoft.dragdroplayouts.client.VDragFilter;
-import fi.jasoft.dragdroplayouts.client.ui.Constants;
-import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
-import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
+import fi.jasoft.dragdroplayouts.client.VGrabFilter;
+import fi.jasoft.dragdroplayouts.client.ui.*;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDragImageProvider;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragImageReferenceSupport;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.*;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 /**
@@ -52,7 +43,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 public class VDDTabSheet extends VTabsheet
         implements VHasDragMode, VDDHasDropHandler<VDDTabsheetDropHandler>,
         DragStartListener, VDDTabContainer, VHasDragFilter,
-        VHasDragImageReferenceSupport, VHasIframeShims {
+        VHasDragImageReferenceSupport, VHasIframeShims, VHasGrabFilter, VHasDragCaptionProvider {
 
     public static final String CLASSNAME_NEW_TAB = "new-tab";
     public static final String CLASSNAME_NEW_TAB_LEFT = "new-tab-left";
@@ -71,6 +62,10 @@ public class VDDTabSheet extends VTabsheet
     private final Element newTab = DOM.createDiv();
 
     private VDragFilter dragFilter;
+
+    private VDragCaptionProvider dragCaption;
+
+    private VGrabFilter grabFilter;
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
@@ -98,6 +93,16 @@ public class VDDTabSheet extends VTabsheet
         Element tBody = tabBar.getElement();
         spacer = tBody.getChild(tBody.getChildCount() - 1).getChild(0)
                 .getChild(0).cast();
+    }
+
+    @Override
+    public void setDragCaptionProvider(VDragCaptionProvider dragCaption) {
+        this.dragCaption = dragCaption;
+    }
+
+    @Override
+    public VDragCaptionProvider getDragCaptionProvider() {
+        return dragCaption;
     }
 
     @Override
@@ -376,5 +381,15 @@ public class VDDTabSheet extends VTabsheet
 
     protected final VLayoutDragDropMouseHandler getMouseHandler() {
         return ddMouseHandler;
+    }
+
+    @Override
+    public VGrabFilter getGrabFilter() {
+        return grabFilter;
+    }
+
+    @Override
+    public void setGrabFilter(VGrabFilter grabFilter) {
+        this.grabFilter = grabFilter;
     }
 }

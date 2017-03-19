@@ -25,20 +25,12 @@ import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
-
 import fi.jasoft.dragdroplayouts.DDCssLayout;
 import fi.jasoft.dragdroplayouts.client.VDragFilter;
-import fi.jasoft.dragdroplayouts.client.ui.Constants;
-import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
-import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
+import fi.jasoft.dragdroplayouts.client.VGrabFilter;
+import fi.jasoft.dragdroplayouts.client.ui.*;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDragImageProvider;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragImageReferenceSupport;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.*;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 /**
@@ -50,7 +42,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
  */
 public class VDDCssLayout extends VCssLayout implements VHasDragMode,
         VDDHasDropHandler<VDDCssLayoutDropHandler>, DragStartListener,
-        VHasDragFilter, VHasIframeShims, VHasDragImageReferenceSupport {
+        VHasDragFilter, VHasIframeShims, VHasDragImageReferenceSupport, VHasGrabFilter, VHasDragCaptionProvider {
 
     public static final String DRAG_SHADOW_STYLE_NAME = "v-ddcsslayout-drag-shadow";
 
@@ -62,6 +54,10 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     private VDragFilter dragFilter;
+
+    private VDragCaptionProvider dragCaption;
+
+    private VGrabFilter grabFilter;
 
     private double horizontalDropRatio = DDCssLayoutState.DEFAULT_HORIZONTAL_DROP_RATIO;
 
@@ -85,6 +81,16 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
     public boolean dragStart(Widget widget, LayoutDragMode mode) {
         ComponentConnector layout = Util.findConnectorFor(this);
         return VDragDropUtil.isDraggingEnabled(layout, widget);
+    }
+
+    @Override
+    public void setDragCaptionProvider(VDragCaptionProvider dragCaption) {
+        this.dragCaption = dragCaption;
+    }
+
+    @Override
+    public VDragCaptionProvider getDragCaptionProvider() {
+        return dragCaption;
     }
 
     /**
@@ -438,5 +444,15 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
 
     protected final VLayoutDragDropMouseHandler getMouseHandler() {
         return ddHandler;
+    }
+
+    @Override
+    public VGrabFilter getGrabFilter() {
+        return grabFilter;
+    }
+
+    @Override
+    public void setGrabFilter(VGrabFilter grabFilter) {
+        this.grabFilter = grabFilter;
     }
 }

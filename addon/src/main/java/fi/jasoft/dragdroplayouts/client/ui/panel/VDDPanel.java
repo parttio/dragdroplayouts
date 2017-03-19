@@ -22,24 +22,17 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.VPanel;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.shared.MouseEventDetails;
-
 import fi.jasoft.dragdroplayouts.client.VDragFilter;
-import fi.jasoft.dragdroplayouts.client.ui.Constants;
-import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
-import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
+import fi.jasoft.dragdroplayouts.client.VGrabFilter;
+import fi.jasoft.dragdroplayouts.client.ui.*;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDragImageProvider;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragImageReferenceSupport;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.*;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 
 public class VDDPanel extends VPanel implements VHasDragMode,
         VDDHasDropHandler<VDDPanelDropHandler>, DragStartListener,
-        VHasDragFilter, VHasDragImageReferenceSupport, VHasIframeShims {
+        VHasDragFilter, VHasDragImageReferenceSupport, VHasIframeShims,
+        VHasGrabFilter, VHasDragCaptionProvider {
 
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
@@ -51,6 +44,10 @@ public class VDDPanel extends VPanel implements VHasDragMode,
             this, LayoutDragMode.NONE);
 
     private VDragFilter dragFilter;
+
+    private VDragCaptionProvider dragCaption;
+
+    private VGrabFilter grabFilter;
 
     private VDDPanelDropHandler dropHandler;
 
@@ -73,6 +70,16 @@ public class VDDPanel extends VPanel implements VHasDragMode,
         ddMouseHandler.updateDragMode(LayoutDragMode.NONE);
         iframeCoverUtility.setIframeCoversEnabled(false, getElement(),
                 LayoutDragMode.NONE);
+    }
+
+    @Override
+    public void setDragCaptionProvider(VDragCaptionProvider dragCaption) {
+        this.dragCaption = dragCaption;
+    }
+
+    @Override
+    public VDragCaptionProvider getDragCaptionProvider() {
+        return dragCaption;
     }
 
     @Override
@@ -221,5 +228,15 @@ public class VDDPanel extends VPanel implements VHasDragMode,
 
     protected final VLayoutDragDropMouseHandler getMouseHandler() {
         return ddMouseHandler;
+    }
+
+    @Override
+    public VGrabFilter getGrabFilter() {
+        return grabFilter;
+    }
+
+    @Override
+    public void setGrabFilter(VGrabFilter grabFilter) {
+        this.grabFilter = grabFilter;
     }
 }
