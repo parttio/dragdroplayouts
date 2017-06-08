@@ -1,5 +1,8 @@
 # Ignored in root project
 .gradle
+.idea
+
+*.iml
 
 #Ignored in all projects
 **/.classpath
