@@ -18,6 +18,8 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.ui.VAccordion.StackItem;
+import com.vaadin.client.ui.composite.CompositeConnector;
+
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
 
 public class VDragFilter {
@@ -29,9 +31,21 @@ public class VDragFilter {
     }
 
     public boolean isDraggable(Widget widget) {
-        ComponentConnector component = findConnectorFor(widget);
+        ComponentConnector connector = findConnectorFor(widget);
         if (state.draggable != null) {
-            return state.draggable.contains(component);
+            if (state.draggable.contains(connector)) {
+                return true;
+            }
+
+            // parent is the layout
+            // child is the child of the layout, i.e. possibly a composite
+            while (connector != null
+                    && connector.getParent() instanceof CompositeConnector) {
+                connector = (ComponentConnector) connector.getParent();
+                if (state.draggable.contains(connector)) {
+                    return true;
+                }
+            }
         }
         return false;
     }
