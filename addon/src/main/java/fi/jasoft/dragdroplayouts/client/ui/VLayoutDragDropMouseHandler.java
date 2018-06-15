@@ -183,10 +183,11 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
         // Stop event propagation and prevent default behaviour if
         // - target is *not* a VTabsheet.TabCaption or
         // - drag mode is caption mode and widget is caption
-        boolean isTabCaption = isTabCaptionText(target);
+        boolean isTabCaption = targetParent instanceof VTabsheet.TabCaption;
         boolean isCaption = VDragDropUtil.isCaptionOrCaptionless(targetParent);
 
-        if (dragMode == LayoutDragMode.CLONE && !isTabCaption) {
+        if (dragMode == LayoutDragMode.CLONE && isTabCaption == false) {
+
             stopEventPropagation = true;
 
             // overwrite stopEventPropagation flag again if
@@ -203,7 +204,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
             if (root instanceof VHasGrabFilter) {
                 VGrabFilter grabFilter = ((VHasGrabFilter) root).getGrabFilter();
-                if (grabFilter != null && !grabFilter.isGrabbable(root, target)) {
+                if (grabFilter != null && !grabFilter.canBeGrabbed(root, target)) {
                     return;
                 }
             }
@@ -230,12 +231,6 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
 
                     @Override
                     public void onPreviewNativeEvent(NativePreviewEvent event) {
-                        //Haulmont API. mouseDownHandlerReg is null when
-                        //fast click by left and right mouse button by DragAndDrop layout
-                        if (mouseDownHandlerReg == null) {
-                            return;
-                        }
-
                         int type = event.getTypeInt();
                         if (type == Event.ONMOUSEUP
                                 || type == Event.ONTOUCHCANCEL
@@ -253,26 +248,9 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
                 });
     }
 
-    // Allow dragging only for caption text of Tab to avoid bugs on touch-devices
-    protected boolean isTabCaptionText(Widget target) {
-        Widget parent = target;
-
-        while (parent != null) {
-            if (parent instanceof Tab) {
-                return true;
-            }
-
-            parent = parent.getParent();
-        }
-
-        return false;
-    }
-
     private boolean isElementNotDraggable(Element targetElement) {
         // do not try to drag tabsheet close button it breaks close on touch devices
-        return targetElement.getClassName().contains("v-tabsheet-caption-close")
-                || (targetElement.getClassName().contains("v-caption") &&
-                    targetElement.getParentElement().getClassName().contains("v-tabsheet-tabitem"));
+        return targetElement.getClassName().contains("v-tabsheet-caption-close");
     }
 
     /**

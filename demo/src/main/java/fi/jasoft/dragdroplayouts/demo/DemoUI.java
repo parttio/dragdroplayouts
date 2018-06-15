@@ -20,21 +20,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnHeaderMode;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -43,40 +40,27 @@ import de.java2html.javasource.JavaSource;
 import de.java2html.javasource.JavaSourceParser;
 import de.java2html.options.JavaSourceConversionOptions;
 import de.java2html.util.IllegalConfigurationException;
-import fi.jasoft.dragdroplayouts.demo.views.DragdropAbsoluteLayoutDemo;
-import fi.jasoft.dragdroplayouts.demo.views.DragdropAccordionDemo;
-import fi.jasoft.dragdroplayouts.demo.views.DragdropCaptionModeDemo;
-import fi.jasoft.dragdroplayouts.demo.views.DragdropCssLayoutDemo;
-import fi.jasoft.dragdroplayouts.demo.views.DragdropDragFilterDemo;
-import fi.jasoft.dragdroplayouts.demo.views.DragdropFormLayoutDemo;
-import fi.jasoft.dragdroplayouts.demo.views.DragdropGridLayoutDemo;
-import fi.jasoft.dragdroplayouts.demo.views.DragdropHorizontalLayoutDemo;
-import fi.jasoft.dragdroplayouts.demo.views.DragdropHorizontalSplitPanelDemo;
-import fi.jasoft.dragdroplayouts.demo.views.DragdropLayoutDraggingDemo;
-import fi.jasoft.dragdroplayouts.demo.views.DragdropPanelDemo;
-import fi.jasoft.dragdroplayouts.demo.views.DragdropTabsheetDemo;
-import fi.jasoft.dragdroplayouts.demo.views.DragdropVerticalLayoutDemo;
-import fi.jasoft.dragdroplayouts.demo.views.DragdropVerticalSplitPanelDemo;
+import fi.jasoft.dragdroplayouts.demo.views.*;
 
 @Theme("demo")
 public class DemoUI extends UI {
 
     private Navigator navigator;
 
-    private Table selection;
+    private Grid<DemoView> selection;
 
-    private final List<DemoView> views = new ArrayList<DemoView>();
+    private final List<DemoView> views = new ArrayList<>();
 
     private Label codeLabel = new Label("", ContentMode.HTML);
 
     @Override
     protected void init(VaadinRequest request) {
 
-        HorizontalLayout content = new HorizontalLayout();
+        VerticalLayout content = new VerticalLayout();
         content.setSizeFull();
         setContent(content);
 
-        Label header = new Label("DragDropLayouts for Vaadin 7");
+        Label header = new Label("DragDropLayouts for Vaadin 8");
         header.setStyleName(ValoTheme.LABEL_H1);
         content.addComponent(header);
 
@@ -104,7 +88,7 @@ public class DemoUI extends UI {
             @Override
             public boolean beforeViewChange(ViewChangeEvent event) {
                 DemoView view = (DemoView) event.getNewView();
-                selection.setValue(view);
+                selection.getSelectionModel().select(view);
                 codeLabel.setValue(getFormattedSourceCode(view.getSource()));
                 return true;
             }
@@ -132,10 +116,15 @@ public class DemoUI extends UI {
             addView(new DragdropAccordionDemo(navigator));
 
             addView(new DragdropDragFilterDemo(navigator));
+            addView(new DragdropDragGrabFilterDemo(navigator));
             addView(new DragdropCaptionModeDemo(navigator));
 
-            // addView(new DragdropIframeDragging(navigator));
+            addView(new DragdropV7VerticalLayoutDemo(navigator));
+            addView(new DragdropV7HorizontalLayoutDemo(navigator));
 
+            addView(new DragdropDragCaptionDemo(navigator));
+
+            // addView(new DragdropIframeDragging(navigator));
         } catch (Exception e) {
             e.printStackTrace();
             return;
@@ -157,45 +146,17 @@ public class DemoUI extends UI {
         views.add(view);
     }
 
-    private Table createViewSelection() {
+    private Grid<DemoView> createViewSelection() {
+        Grid<DemoView> select = new Grid<>();
 
-        Table select = new Table();
-        select.addGeneratedColumn("caption", new Table.ColumnGenerator() {
-
-            @Override
-            public Object generateCell(Table source, Object itemId,
-                    Object columnId) {
-                return ((DemoView) itemId).getCaption();
-            }
-        });
-        select.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
-        select.setNullSelectionAllowed(false);
-        select.setImmediate(true);
-        select.setItemCaptionMode(ItemCaptionMode.PROPERTY);
-        select.setItemCaptionPropertyId("caption");
+        select.addColumn(view -> view.getCaption());
         select.setWidth("200px");
         select.setHeight("100%");
-        select.setPageLength(this.views.size());
-        select.setSelectable(true);
+        select.addSelectionListener((change) ->
+                navigator.navigateTo(change.getFirstSelectedItem().get().getName())
+        );
 
-        select.addValueChangeListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                DemoView view = (DemoView) event.getProperty().getValue();
-                String name;
-                try {
-                    name = view.getClass().getDeclaredField("NAME").get(view)
-                            .toString();
-                    navigator.navigateTo(name);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        select.addItems(this.views);
-
+        select.setItems(views);
         return select;
     }
 

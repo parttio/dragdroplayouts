@@ -84,4 +84,9 @@ public class DragdropTabsheetDemo extends DemoView {
   public String getCaption() {
     return "Tabsheet";
   }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
 }

@@ -69,4 +69,9 @@ public class DragdropAbsoluteLayoutDemo extends DemoView {
   public String getCaption() {
     return "Absolute layout";
   }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
 }

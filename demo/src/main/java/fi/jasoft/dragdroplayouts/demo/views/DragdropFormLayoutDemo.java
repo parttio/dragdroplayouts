@@ -73,4 +73,9 @@ public class DragdropFormLayoutDemo extends DemoView {
   public String getCaption() {
     return "Form layout";
   }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
 }

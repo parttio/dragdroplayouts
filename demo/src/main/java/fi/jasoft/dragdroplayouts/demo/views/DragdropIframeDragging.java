@@ -112,4 +112,9 @@ public class DragdropIframeDragging extends DemoView {
     return "Dragging iframes";
   }
 
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
 }

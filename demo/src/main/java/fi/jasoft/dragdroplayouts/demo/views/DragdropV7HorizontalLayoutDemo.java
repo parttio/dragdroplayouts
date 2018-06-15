@@ -18,47 +18,51 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 
-import fi.jasoft.dragdroplayouts.DDVerticalLayout;
+import fi.jasoft.dragdroplayouts.v7.DDHorizontalLayout;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.demo.DemoView;
-import fi.jasoft.dragdroplayouts.drophandlers.DefaultVerticalLayoutDropHandler;
+import fi.jasoft.dragdroplayouts.v7.drophandlers
+        .DefaultHorizontalLayoutDropHandler;
 
 @SuppressWarnings("serial")
-public class DragdropVerticalLayoutDemo extends DemoView {
+public class DragdropV7HorizontalLayoutDemo extends DemoView {
 
-  public static final String NAME = "dd-vertical-layout";
+  public static final String NAME = "dd-v7-horizontal-layout";
 
-  private static final float EQUAL_VERTICAL_RATIO = 0.3f;
+  private static final float EQUAL_HORIZONTAL_RATIO = 0.3f;
 
-  public DragdropVerticalLayoutDemo(Navigator navigator) {
+  public DragdropV7HorizontalLayoutDemo(Navigator navigator) {
     super(navigator);
   }
 
   @Override
   public Component getLayout() {
     // start-source
-    final DDVerticalLayout layout = new DDVerticalLayout();
-    layout.setComponentVerticalDropRatio(EQUAL_VERTICAL_RATIO);
+    final DDHorizontalLayout layout = new DDHorizontalLayout();
+    layout.setComponentHorizontalDropRatio(EQUAL_HORIZONTAL_RATIO);
     layout.setDragMode(LayoutDragMode.CLONE);
-    layout.setDropHandler(new DefaultVerticalLayoutDropHandler());
+    layout.setDropHandler(new DefaultHorizontalLayoutDropHandler());
 
-    layout.addComponent(new Label("These components are stacked vertically, try reordering them"));
-    Button btn = new Button("Button 1");
-    btn.setWidth("100px");
-    layout.addComponent(btn);
-    btn = new Button("Button 2");
-    btn.setWidth("150px");
-    layout.addComponent(btn);
-    btn = new Button("Button 3");
-    btn.setWidth("200px");
-    layout.addComponent(btn);
+    layout
+        .addComponent(new Label("These components are stacked horizontally, try reordering them"));
+    Button btn1 = new Button("Button 1");
+    btn1.setWidth("100px");
+    layout.addComponent(btn1);
+
+    Button btn2 = new Button("Button 2");
+    btn2.setWidth("150px");
+    layout.addComponent(btn2);
+
+    Button btn3 = new Button("Button 3");
+    btn3.setWidth("200px");
+    layout.addComponent(btn3);
     // end-source
     return layout;
   }
 
   @Override
   public String getCaption() {
-    return "Vertical layout";
+    return "Horizontal layout (V7)";
   }
 
     @Override

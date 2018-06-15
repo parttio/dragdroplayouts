@@ -1,7 +1,6 @@
 allprojects {
-  group = 'org.vaadin.addons'
-  version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : '1.3-SNAPSHOT';
-
+  group='fi.jasoft'
+  version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : 'development';
   apply plugin: 'eclipse-wtp'
 }
 

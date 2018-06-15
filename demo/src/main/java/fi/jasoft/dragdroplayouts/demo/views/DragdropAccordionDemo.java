@@ -98,4 +98,9 @@ public class DragdropAccordionDemo extends DemoView {
   public String getCaption() {
     return "Accordion";
   }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
 }

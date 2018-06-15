@@ -84,4 +84,9 @@ public class DragdropCssLayoutDemo extends DemoView {
   public String getCaption() {
     return "CSSLayout";
   }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
 }

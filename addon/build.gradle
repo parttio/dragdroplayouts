@@ -1,32 +1,32 @@
 plugins {
-    id 'fi.jasoft.plugin.vaadin' version '1.0'
+    id 'fi.jasoft.plugin.vaadin' version '1.1.2'
     id 'maven'
     id 'osgi'
 }
 
-subprojects {
-  apply plugin: 'fi.jasoft.plugin.vaadin'
-  vaadin {
-      version = '7.7.3'
-  }
-  sourceCompatibility = 1.7
-  targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
-  javadoc.enabled = false
-  vaadinJavadocJar.enabled = false
-}
+vaadin.version = '8.0.0'
 
 configurations {
     deploy
 }
 
 dependencies{
+  compile     "com.vaadin:vaadin-compatibility-server:${vaadin.version}"
+  compile     "com.vaadin:vaadin-compatibility-client:${vaadin.version}"
+  compile     "com.vaadin:vaadin-compatibility-shared:${vaadin.version}"
   testCompile 'junit:junit:4.8.+'
   deploy      'org.apache.maven.wagon:wagon-ssh:2.2'
 }
 
 vaadinCompile {
+    // Remove opera,ie8,ie9,ie10 permutations
+    // Starting from IE11 permutation is the same as for gecko1_8
+    userAgent 'gecko1_8,safari'
     widgetset 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
+    sourcePaths 'client', 'v7/client'
 }    
 
 vaadin {    
@@ -35,7 +35,6 @@ vaadin {
         license 'Apache 2.0'
         title 'DragDropLayouts'
     }
-    version = '7.7.3'
 }
 
 task createAddonPom {
@@ -47,7 +46,7 @@ jar {
   dependsOn test, createAddonPom
 
   // Include sources
-  sourceSets.main.java.srcDirs.each {
+  sourceSets.main.java.srcDirs.each{
     from it
   }
 
@@ -65,27 +64,14 @@ jar {
   }
 }
 
-// required for Windows build due to gradle vaadin plugin bug
-task fixWidgetSetCssRef(dependsOn: vaadinUpdateWidgetset) {
-    doLast {
-        def wsFile = project.file('src/main/resources/fi/jasoft/dragdroplayouts/DragDropLayoutsWidgetSet.gwt.xml')
-
-        def fixedXml = wsFile.text.replace("fi_jasoft_dragdroplayouts\\", "fi_jasoft_dragdroplayouts/")
-        wsFile.write(fixedXml)
-    }
-}
-
-processResources.dependsOn fixWidgetSetCssRef
-
 vaadinSourcesJar {
     baseName = 'dragdroplayouts'
 }
 
-javadoc.enabled = false
-
 vaadinJavadocJar {
     baseName = 'dragdroplayouts'
 }
+
 
 artifacts {
     archives jar
@@ -112,9 +98,5 @@ uploadArchives {
         addFilter('jar') {artifact, file ->
             artifact.ext == 'jar'
         }
-    }
-
-    configurations.archives.artifacts.removeAll {
-        it.file =~ 'war' || it.file =~ 'javadoc'
     }
 }

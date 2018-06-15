@@ -18,19 +18,20 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 
-import fi.jasoft.dragdroplayouts.DDVerticalLayout;
+import fi.jasoft.dragdroplayouts.v7.DDVerticalLayout;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.demo.DemoView;
-import fi.jasoft.dragdroplayouts.drophandlers.DefaultVerticalLayoutDropHandler;
+import fi.jasoft.dragdroplayouts.v7.drophandlers
+        .DefaultVerticalLayoutDropHandler;
 
 @SuppressWarnings("serial")
-public class DragdropVerticalLayoutDemo extends DemoView {
+public class DragdropV7VerticalLayoutDemo extends DemoView {
 
-  public static final String NAME = "dd-vertical-layout";
+  public static final String NAME = "dd-v7-vertical-layout";
 
   private static final float EQUAL_VERTICAL_RATIO = 0.3f;
 
-  public DragdropVerticalLayoutDemo(Navigator navigator) {
+  public DragdropV7VerticalLayoutDemo(Navigator navigator) {
     super(navigator);
   }
 
@@ -58,7 +59,7 @@ public class DragdropVerticalLayoutDemo extends DemoView {
 
   @Override
   public String getCaption() {
-    return "Vertical layout";
+    return "Vertical layout (V7)";
   }
 
     @Override
