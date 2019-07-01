@@ -13,6 +13,10 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
@@ -20,8 +24,8 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.event.dom.client.TouchStartHandler;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
+import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
@@ -30,22 +34,33 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.LabelBase;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.*;
-import com.vaadin.client.ui.*;
+import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.Util;
+import com.vaadin.client.VCaption;
+import com.vaadin.client.VConsole;
+import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.ui.VAccordion;
 import com.vaadin.client.ui.VAccordion.StackItem;
+import com.vaadin.client.ui.VCssLayout;
+import com.vaadin.client.ui.VFormLayout;
+import com.vaadin.client.ui.VPanel;
+import com.vaadin.client.ui.VTabsheet;
 import com.vaadin.client.ui.VTabsheet.Tab;
 import com.vaadin.client.ui.VTabsheet.TabCaption;
+import com.vaadin.client.ui.composite.CompositeConnector;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VTransferable;
+
 import fi.jasoft.dragdroplayouts.client.VGrabFilter;
 import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
 import fi.jasoft.dragdroplayouts.client.ui.formlayout.VDDFormLayout;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.*;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDragImageProvider;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragCaptionProvider;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragImageReferenceSupport;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasGrabFilter;
 
 /**
  * Mouse handler for starting component drag operations
@@ -54,7 +69,7 @@ import java.util.List;
  * @since 0.4.0
  */
 public class VLayoutDragDropMouseHandler implements MouseDownHandler,
-        TouchStartHandler, VHasDragImageReferenceSupport {
+        TouchMoveHandler, VHasDragImageReferenceSupport {
 
     public static final String ACTIVE_DRAG_SOURCE_STYLENAME = "v-dd-active-drag-source";
     public static final String ACTIVE_DRAG_CUSTOM_IMAGE_STYLENAME = "v-dd-active-drag-custom-image";
@@ -123,7 +138,7 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
     }
 
     @Override
-    public void onTouchStart(TouchStartEvent event) {
+    public void onTouchMove(TouchMoveEvent event) {
         NativeEvent nativeEvent = event.getNativeEvent();
         if (isElementNode(nativeEvent) && isChildOfRoot(nativeEvent)) {
             if (startDragOnMove) {
@@ -360,6 +375,11 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
             w = connector.getWidget();
             c = Util.findConnectorFor(w);
             parent = (ComponentConnector) c.getParent();
+            while (parent instanceof CompositeConnector) {
+                // parent should be the layout
+                // w is the child of the layout, i.e. possibly a composite
+                parent = (ComponentConnector) parent.getParent();
+            }
 
         } else {
             // Failsafe if no widget was found
@@ -622,12 +642,12 @@ public class VLayoutDragDropMouseHandler implements MouseDownHandler,
                 handlers.add(
                         root.addDomHandler(this, MouseDownEvent.getType()));
                 handlers.add(
-                        root.addDomHandler(this, TouchStartEvent.getType()));
+                        root.addDomHandler(this, TouchMoveEvent.getType()));
             } else {
                 handlers.add(attachTarget.addDomHandler(this,
                         MouseDownEvent.getType()));
                 handlers.add(attachTarget.addDomHandler(this,
-                        TouchStartEvent.getType()));
+                        TouchMoveEvent.getType()));
             }
         }
     }

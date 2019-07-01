@@ -42,4 +42,6 @@ public class DDLayoutState extends SharedState {
 
     // Custom DragCaption's with icon and caption
     public Map<Connector, DragCaptionInfo> dragCaptions = new HashMap<>();
+
+    public Map<Connector, String> dragIcons = new HashMap<>();
 }
