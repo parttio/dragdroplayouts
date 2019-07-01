@@ -1,6 +1,13 @@
 plugins {
-    id 'fi.jasoft.plugin.vaadin' version '1.1.2'
+    id 'fi.jasoft.plugin.vaadin' version '1.1.12'
 }
+
+repositories {
+        maven {
+            url 'https://csp.edag.de/nexus/repository/gradle-plugins'
+        }
+    }
+
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

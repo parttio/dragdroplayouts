@@ -1,2 +1,12 @@
+
+pluginManagement {
+    repositories {
+        maven {
+            url 'https://csp.edag.de/nexus/repository/gradle-plugins'
+        }
+    }
+}
+
 include 'addon'
 include 'demo'
+

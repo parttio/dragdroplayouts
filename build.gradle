@@ -1,9 +1,17 @@
 allprojects {
   group='fi.jasoft'
-  version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : 'development';
-  apply plugin: 'eclipse-wtp'
+  // version = project.hasProperty('BUILD_VERSION') ? getProperty('BUILD_VERSION') : 'development';
+    version = '1.5.0-edag';
+    apply plugin: 'eclipse-wtp'
 }
 
+ repositories {
+        maven {
+            url 'https://csp.edag.de/nexus/repository/gradle-plugins'
+        }
+    }
+    
 task wrapper(type: Wrapper) {
     gradleVersion = '3.1'
 }
+
