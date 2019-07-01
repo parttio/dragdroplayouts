@@ -14,9 +14,9 @@ configurations {
 }
 
 dependencies{
-  compile     "com.vaadin:vaadin-compatibility-server:${vaadin.version}"
-  compile     "com.vaadin:vaadin-compatibility-client:${vaadin.version}"
-  compile     "com.vaadin:vaadin-compatibility-shared:${vaadin.version}"
+  compile     "com.vaadin:vaadin-server:${vaadin.version}"
+  compile     "com.vaadin:vaadin-client:${vaadin.version}"
+  compile     "com.vaadin:vaadin-shared:${vaadin.version}"
   testCompile 'junit:junit:4.8.+'
   deploy      'org.apache.maven.wagon:wagon-ssh:2.2'
 }
@@ -26,7 +26,7 @@ vaadinCompile {
     // Starting from IE11 permutation is the same as for gecko1_8
     userAgent 'gecko1_8,safari'
     widgetset 'fi.jasoft.dragdroplayouts.DragDropLayoutsWidgetSet'
-    sourcePaths 'client', 'v7/client'
+    sourcePaths 'client'
 }    
 
 vaadin {    
