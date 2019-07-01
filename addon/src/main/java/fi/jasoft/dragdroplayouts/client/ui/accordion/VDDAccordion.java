@@ -13,8 +13,6 @@
  */
 package fi.jasoft.dragdroplayouts.client.ui.accordion;
 
-import java.util.Map;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -28,22 +26,15 @@ import com.vaadin.client.ui.VAccordion;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
-
 import fi.jasoft.dragdroplayouts.DDAccordion;
 import fi.jasoft.dragdroplayouts.client.VDragFilter;
-import fi.jasoft.dragdroplayouts.client.ui.Constants;
-import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
-import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler;
+import fi.jasoft.dragdroplayouts.client.VGrabFilter;
+import fi.jasoft.dragdroplayouts.client.ui.*;
 import fi.jasoft.dragdroplayouts.client.ui.VLayoutDragDropMouseHandler.DragStartListener;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDTabContainer;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDragImageProvider;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragImageReferenceSupport;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.*;
 import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
+
+import java.util.Map;
 
 /**
  * Client side implementation for {@link DDAccordion}
@@ -54,7 +45,7 @@ import fi.jasoft.dragdroplayouts.client.ui.util.IframeCoverUtility;
 public class VDDAccordion extends VAccordion
         implements VHasDragMode, VDDHasDropHandler<VDDAccordionDropHandler>,
         DragStartListener, VDDTabContainer, VHasDragFilter,
-        VHasDragImageReferenceSupport, VHasIframeShims {
+        VHasDragImageReferenceSupport, VHasIframeShims, VHasGrabFilter, VHasDragCaptionProvider {
 
     public static final String CLASSNAME_OVER = "dd-over";
     public static final String CLASSNAME_SPACER = "spacer";
@@ -71,6 +62,10 @@ public class VDDAccordion extends VAccordion
 
     private VDragFilter dragFilter;
 
+    private VDragCaptionProvider dragCaption;
+
+    private VGrabFilter grabFilter;
+
     private final IframeCoverUtility iframeCoverUtility = new IframeCoverUtility();
 
     private float tabTopBottomDropRatio = DDAccordionState.DEFAULT_VERTICAL_RATIO;
@@ -83,6 +78,16 @@ public class VDDAccordion extends VAccordion
         spacer = GWT.create(HTML.class);
         spacer.setWidth("100%");
         spacer.setStyleName(CLASSNAME_SPACER);
+    }
+
+    @Override
+    public void setDragCaptionProvider(VDragCaptionProvider dragCaption) {
+        this.dragCaption = dragCaption;
+    }
+
+    @Override
+    public VDragCaptionProvider getDragCaptionProvider() {
+        return dragCaption;
     }
 
     @Override
@@ -403,5 +408,15 @@ public class VDDAccordion extends VAccordion
 
     protected final VLayoutDragDropMouseHandler getMouseHandler() {
         return ddMouseHandler;
+    }
+
+    @Override
+    public VGrabFilter getGrabFilter() {
+        return grabFilter;
+    }
+
+    @Override
+    public void setGrabFilter(VGrabFilter grabFilter) {
+        this.grabFilter = grabFilter;
     }
 }

@@ -18,7 +18,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.VerticalLayout;
 
 import fi.jasoft.dragdroplayouts.DDGridLayout;
 import fi.jasoft.dragdroplayouts.DDVerticalLayout;
@@ -88,4 +87,9 @@ public class DragdropGridLayoutDemo extends DemoView {
   public String getCaption() {
     return "Grid layout";
   }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
 }

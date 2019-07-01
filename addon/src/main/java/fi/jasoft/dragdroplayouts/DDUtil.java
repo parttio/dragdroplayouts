@@ -1,20 +1,36 @@
+/*
+ * Copyright 2015 John Ahlroos
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package fi.jasoft.dragdroplayouts;
+
+import com.vaadin.event.dd.DropHandler;
+import com.vaadin.server.AbstractClientConnector;
+import com.vaadin.server.ClientConnectorResources;
+import com.vaadin.server.KeyMapper;
+import com.vaadin.server.Resource;
+import com.vaadin.shared.Connector;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.HasComponents;
+import fi.jasoft.dragdroplayouts.client.ui.DragCaptionInfo;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
+import fi.jasoft.dragdroplayouts.drophandlers.AbstractDefaultLayoutDropHandler;
+import fi.jasoft.dragdroplayouts.interfaces.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-
-import com.vaadin.event.dd.DropHandler;
-import com.vaadin.shared.Connector;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.HasComponents;
-
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
-import fi.jasoft.dragdroplayouts.drophandlers.AbstractDefaultLayoutDropHandler;
-import fi.jasoft.dragdroplayouts.interfaces.DragFilterSupport;
-import fi.jasoft.dragdroplayouts.interfaces.DragImageProvider;
-import fi.jasoft.dragdroplayouts.interfaces.DragImageReferenceSupport;
+import java.util.List;
 
 public class DDUtil {
 
@@ -22,8 +38,26 @@ public class DDUtil {
             DragAndDropAwareState state) {
         DDLayoutState dragAndDropState = state.getDragAndDropState();
         Iterator<Component> componentIterator = layout.iterator();
-        dragAndDropState.draggable = new ArrayList<Connector>();
-        dragAndDropState.referenceImageComponents = new HashMap<Connector, Connector>();
+
+        dragAndDropState.draggable = new ArrayList<>();
+        dragAndDropState.referenceImageComponents = new HashMap<>();
+        dragAndDropState.nonGrabbable = new ArrayList<>();
+        dragAndDropState.dragCaptions = new HashMap<>();
+
+        if (layout instanceof AbstractClientConnector) {
+            for (DragCaptionInfo dci : dragAndDropState.dragCaptions.values()) {
+                if (dci.iconKey != null) {
+                    ClientConnectorResources.setResource(
+                            (AbstractClientConnector) layout,
+                            dci.iconKey,
+                            null
+                    );
+                }
+            }
+        }
+
+        KeyMapper<Resource> keyMapper = new KeyMapper<>();
+
         while (componentIterator.hasNext()) {
             Component c = componentIterator.next();
 
@@ -31,6 +65,42 @@ public class DDUtil {
                     && ((DragFilterSupport) layout).getDragFilter()
                             .isDraggable(c)) {
                 dragAndDropState.draggable.add(c);
+            }
+
+            if (layout instanceof DragGrabFilterSupport) {
+                DragGrabFilter dragGrabFilter = ((DragGrabFilterSupport) layout).getDragGrabFilter();
+                if (dragGrabFilter != null) {
+                    addNonGrabbedComponents(dragAndDropState.nonGrabbable, c, dragGrabFilter);
+                }
+            }
+
+            if (layout instanceof HasDragCaptionProvider) {
+                DragCaptionProvider dragCaptionProvider = ((HasDragCaptionProvider) layout)
+                        .getDragCaptionProvider();
+
+                if (dragCaptionProvider != null) {
+                    DragCaption dragCaption = dragCaptionProvider.getDragCaption(c);
+
+                    if (dragCaption != null) {
+                        String dragIconKey = null;
+                        if (dragCaption.getIcon() != null
+                                && layout instanceof AbstractClientConnector) {
+                            dragIconKey = keyMapper.key(dragCaption.getIcon());
+                            ClientConnectorResources.setResource(
+                                    (AbstractClientConnector) layout,
+                                    dragIconKey,
+                                    dragCaption.getIcon()
+                            );
+                        }
+
+                        DragCaptionInfo dci = new DragCaptionInfo();
+                        dci.caption = dragCaption.getCaption();
+                        dci.contentMode = dragCaption.getContentMode();
+                        dci.iconKey = dragIconKey;
+
+                        dragAndDropState.dragCaptions.put(c, dci);
+                    }
+                }
             }
 
             if (layout instanceof DragImageReferenceSupport) {
@@ -43,6 +113,18 @@ public class DDUtil {
                                 dragImage);
                     }
                 }
+            }
+        }
+    }
+
+    private static void addNonGrabbedComponents(List<Connector> nonGrabbable, Component component,
+                                                DragGrabFilter dragGrabFilter) {
+        if (!dragGrabFilter.canBeGrabbed(component)) {
+            nonGrabbable.add(component);
+        } else if (component instanceof HasComponents
+                && !(component instanceof LayoutDragSource)) {
+            for (Component child : ((HasComponents) component)) {
+                addNonGrabbedComponents(nonGrabbable, child, dragGrabFilter);
             }
         }
     }

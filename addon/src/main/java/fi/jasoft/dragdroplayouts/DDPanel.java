@@ -13,8 +13,6 @@
  */
 package fi.jasoft.dragdroplayouts;
 
-import java.util.Map;
-
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
@@ -26,21 +24,17 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.Panel;
-
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.panel.DDPanelState;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
-import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
-import fi.jasoft.dragdroplayouts.interfaces.DragFilterSupport;
-import fi.jasoft.dragdroplayouts.interfaces.DragImageProvider;
-import fi.jasoft.dragdroplayouts.interfaces.DragImageReferenceSupport;
-import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
-import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
+import fi.jasoft.dragdroplayouts.interfaces.*;
+
+import java.util.Map;
 
 public class DDPanel extends Panel
         implements LayoutDragSource, DropTarget, ShimSupport, LegacyComponent,
-        DragFilterSupport, DragImageReferenceSupport {
+        DragFilterSupport, DragImageReferenceSupport, DragGrabFilterSupport, HasDragCaptionProvider {
 
     // Drop handler which handles dd drop events
     private DropHandler dropHandler;
@@ -48,7 +42,11 @@ public class DDPanel extends Panel
     // A filter for dragging components.
     private DragFilter dragFilter = DragFilter.ALL;
 
+    private DragGrabFilter dragGrabFilter;
+
     private DragImageProvider dragImageProvider;
+
+    private DragCaptionProvider dragCaptionProvider;
 
     /**
      * @see Panel#Panel()
@@ -76,6 +74,26 @@ public class DDPanel extends Panel
      */
     public DDPanel(String caption, Component content) {
         super(caption, content);
+    }
+
+    @Override
+    public void setDragCaptionProvider(DragCaptionProvider provider) {
+        this.dragCaptionProvider = provider;
+    }
+
+    @Override
+    public DragCaptionProvider getDragCaptionProvider() {
+        return dragCaptionProvider;
+    }
+
+    @Override
+    public DragGrabFilter getDragGrabFilter() {
+        return dragGrabFilter;
+    }
+
+    @Override
+    public void setDragGrabFilter(DragGrabFilter dragGrabFilter) {
+        this.dragGrabFilter = dragGrabFilter;
     }
 
     @SuppressWarnings("serial")

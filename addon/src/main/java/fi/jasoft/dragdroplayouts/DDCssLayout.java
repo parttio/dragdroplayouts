@@ -13,8 +13,6 @@
  */
 package fi.jasoft.dragdroplayouts;
 
-import java.util.Map;
-
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
@@ -28,17 +26,13 @@ import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.LegacyComponent;
-
 import fi.jasoft.dragdroplayouts.client.ui.Constants;
 import fi.jasoft.dragdroplayouts.client.ui.LayoutDragMode;
 import fi.jasoft.dragdroplayouts.client.ui.csslayout.DDCssLayoutState;
 import fi.jasoft.dragdroplayouts.events.LayoutBoundTransferable;
-import fi.jasoft.dragdroplayouts.interfaces.DragFilter;
-import fi.jasoft.dragdroplayouts.interfaces.DragFilterSupport;
-import fi.jasoft.dragdroplayouts.interfaces.DragImageProvider;
-import fi.jasoft.dragdroplayouts.interfaces.DragImageReferenceSupport;
-import fi.jasoft.dragdroplayouts.interfaces.LayoutDragSource;
-import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
+import fi.jasoft.dragdroplayouts.interfaces.*;
+
+import java.util.Map;
 
 /**
  * CssLayout with drag and drop support
@@ -50,7 +44,7 @@ import fi.jasoft.dragdroplayouts.interfaces.ShimSupport;
 @SuppressWarnings("serial")
 public class DDCssLayout extends CssLayout
         implements LayoutDragSource, DropTarget, ShimSupport, LegacyComponent,
-        DragFilterSupport, DragImageReferenceSupport {
+        DragFilterSupport, DragImageReferenceSupport, DragGrabFilterSupport, HasDragCaptionProvider {
 
     // Drop handler which handles dd drop events
     private DropHandler dropHandler;
@@ -58,7 +52,11 @@ public class DDCssLayout extends CssLayout
     // A filter for dragging components.
     private DragFilter dragFilter = DragFilter.ALL;
 
+    private DragGrabFilter dragGrabFilter;
+
     private DragImageProvider dragImageProvider;
+
+    private DragCaptionProvider dragCaptionProvider;
 
     /**
      * Construct a new Css layout
@@ -75,6 +73,26 @@ public class DDCssLayout extends CssLayout
      */
     public DDCssLayout(Component... components) {
         super(components);
+    }
+
+    @Override
+    public void setDragCaptionProvider(DragCaptionProvider provider) {
+        this.dragCaptionProvider = provider;
+    }
+
+    @Override
+    public DragCaptionProvider getDragCaptionProvider() {
+        return dragCaptionProvider;
+    }
+
+    @Override
+    public DragGrabFilter getDragGrabFilter() {
+        return dragGrabFilter;
+    }
+
+    @Override
+    public void setDragGrabFilter(DragGrabFilter dragGrabFilter) {
+        this.dragGrabFilter = dragGrabFilter;
     }
 
     /**

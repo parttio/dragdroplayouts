@@ -70,4 +70,9 @@ public class DragdropLayoutDraggingDemo extends DemoView {
   public String getCaption() {
     return "Dragging inner layouts";
   }
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
 }

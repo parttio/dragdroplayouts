@@ -18,16 +18,19 @@ import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.formlayout.FormLayoutConnector;
 import com.vaadin.shared.ui.Connect;
-
 import fi.jasoft.dragdroplayouts.DDFormLayout;
 import fi.jasoft.dragdroplayouts.client.VDragFilter;
+import fi.jasoft.dragdroplayouts.client.VGrabFilter;
+import fi.jasoft.dragdroplayouts.client.ui.VDragCaptionProvider;
 import fi.jasoft.dragdroplayouts.client.ui.VDragDropUtil;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragCaptionProvider;
 import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasGrabFilter;
 import fi.jasoft.dragdroplayouts.client.ui.util.HTML5Support;
 
 @Connect(DDFormLayout.class)
 public class DDFormLayoutConnector extends FormLayoutConnector
-        implements Paintable, VHasDragFilter {
+        implements Paintable, VHasDragFilter, VHasGrabFilter, VHasDragCaptionProvider {
 
     private HTML5Support html5Support;
 
@@ -42,9 +45,29 @@ public class DDFormLayoutConnector extends FormLayoutConnector
     }
 
     @Override
+    public void setDragCaptionProvider(VDragCaptionProvider dragCaption) {
+        getWidget().setDragCaptionProvider(dragCaption);
+    }
+
+    @Override
+    public VDragCaptionProvider getDragCaptionProvider() {
+        return getWidget().getDragCaptionProvider();
+    }
+
+    @Override
     protected void init() {
         super.init();
         VDragDropUtil.listenToStateChangeEvents(this, getWidget());
+    }
+
+    @Override
+    public VGrabFilter getGrabFilter() {
+        return getWidget().getGrabFilter();
+    }
+
+    @Override
+    public void setGrabFilter(VGrabFilter grabFilter) {
+        getWidget().setGrabFilter(grabFilter);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

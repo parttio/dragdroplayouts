@@ -18,25 +18,15 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.WidgetCollection;
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
-import com.vaadin.client.VCaption;
-import com.vaadin.client.VConsole;
-import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.*;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
-import com.vaadin.client.ui.AbstractComponentConnector;
-import com.vaadin.client.ui.AbstractConnector;
+import com.vaadin.client.ui.*;
 import com.vaadin.client.ui.VAccordion.StackItem;
 import com.vaadin.client.ui.VButton;
-import com.vaadin.client.ui.VFilterSelect;
 import com.vaadin.client.ui.VFormLayout;
 import com.vaadin.client.ui.VLink;
-import com.vaadin.client.ui.VScrollTable;
 import com.vaadin.client.ui.VTabsheet.TabCaption;
-import com.vaadin.client.ui.VTwinColSelect;
 import com.vaadin.client.ui.dd.VTransferable;
 import com.vaadin.client.ui.orderedlayout.Slot;
 import com.vaadin.client.ui.orderedlayout.VAbstractOrderedLayout;
@@ -44,16 +34,10 @@ import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Link;
-
 import fi.jasoft.dragdroplayouts.client.VDragFilter;
+import fi.jasoft.dragdroplayouts.client.VGrabFilter;
 import fi.jasoft.dragdroplayouts.client.ui.accordion.VDDAccordion;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.DDLayoutState;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.DragAndDropAwareState;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VDDHasDropHandler;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragFilter;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragImageReferenceSupport;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasDragMode;
-import fi.jasoft.dragdroplayouts.client.ui.interfaces.VHasIframeShims;
+import fi.jasoft.dragdroplayouts.client.ui.interfaces.*;
 import fi.jasoft.dragdroplayouts.client.ui.tabsheet.VDDTabSheet;
 
 /**
@@ -369,20 +353,6 @@ public final class VDragDropUtil {
             if (owner != null) {
                 w = owner;
             }
-        } else if (w instanceof VScrollTable.VScrollTableBody.VScrollTableRow) {
-            // Table rows are paintable but we do not want to drag them so
-            // search for next paintable which should be the table itself
-            w = w.getParent();
-
-            while (!(w instanceof VScrollTable)) {
-                w = w.getParent();
-            }
-        } else if (w.getParent().getParent()
-                .getParent() instanceof VTwinColSelect) {
-            // TwinColSelect has paintable buttons..
-            w = w.getParent().getParent().getParent();
-        } else if (w.getParent() instanceof VFilterSelect) {
-            w = w.getParent();
         } else {
             // Ensure we are dealing with a Vaadin component
             ComponentConnector connector = Util.findConnectorFor(w);
@@ -490,6 +460,18 @@ public final class VDragDropUtil {
                 if (widget instanceof VHasDragFilter) {
                     ((VHasDragFilter) widget)
                             .setDragFilter(new VDragFilter(state));
+                }
+
+                if (widget instanceof VHasGrabFilter) {
+                    ((VHasGrabFilter) widget)
+                            .setGrabFilter(new VGrabFilter(state));
+                }
+
+                if (widget instanceof VHasDragCaptionProvider) {
+                    if (state.dragCaptions.size() > 0) {
+                        ((VHasDragCaptionProvider) widget)
+                                .setDragCaptionProvider(new VDragCaptionProvider(connector));
+                    }
                 }
 
                 if (widget instanceof VHasDragImageReferenceSupport) {

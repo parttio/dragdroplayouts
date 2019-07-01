@@ -71,4 +71,9 @@ public class DragdropPanelDemo extends DemoView {
         return "Panel";
     }
 
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
 }
